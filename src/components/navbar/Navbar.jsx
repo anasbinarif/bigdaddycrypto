@@ -8,7 +8,7 @@ const Navbar = async () => {
 
     return (
         <AppBar
-            position="static"
+            position="fixed"
             sx={{
                 backgroundColor: "#111826",
                 borderBottom: "1px solid #444444",

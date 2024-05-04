@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteConfirmationDialog from '@/components/AlertDialog/AlertDialog';
 import { sessionAtom } from "@/app/stores/sessionStore";
 import { getCategoryColor, getUserPortfolio } from '@/lib/data';
+import AlertBar from '@/components/customAllert/Alert';
 
 const CategoryColorBar = styled(Box)(({ color }) => ({
     width: 4,
@@ -19,20 +20,61 @@ const CategoryColorBar = styled(Box)(({ color }) => ({
 
 const PortfolioComponent = () => {
     const [sessionJotai] = useAtom(sessionAtom);
-    const [portfolio, setPortfolio] = useAtom(portfolioAtom);
+    const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
     const [deleteIconIndex, setDeleteIconIndex] = useState(null);
     const [selectedAsset, setSelectedAsset] = useState(null);
     const [loadingPortfolio, setLoadingPortfolio] = useState(false)
+
+    const [alert, setAlert] = useState({
+        open: false,
+        message: '',
+        severity: 'error'
+    });
 
     const handleDeleteClick = (asset) => {
         setSelectedAsset(asset);
     };
 
-    const handleDeleteConfirm = () => {
-        // Perform delete action here
-        console.log({ selectedAsset });
+    const handleDeleteConfirm = async () => {
+        const portfolioId = portfolio._id;
+        const CoinGeckoID = selectedAsset.CoinGeckoID;
+        console.log(CoinGeckoID, portfolioId);
+
+        try {
+            // Call the API to delete the coin from the portfolio
+            const response = await fetch('/api/deleteCoinPortfolio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ portfolioId, CoinGeckoID })
+            });
+
+            const data = await response.json();
+
+            // Handle response
+            if (response.ok) {
+                console.log('Success:', data.message);
+                setSelectedAsset(null);
+                // Remove the asset from the local state to update the UI
+                setPortfolio(prevState => ({
+                    ...prevState,
+                    assets: prevState.assets.filter(asset => asset.CoinGeckoID !== CoinGeckoID)
+                }));
+                // alert('Coin removed successfully');
+                setAlert({ open: true, message: "Coin removed successfully", severity: 'success' });
+            } else {
+                throw new Error(data.message || 'Failed to delete the coin');
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+            alert('Error removing coin: ' + error.message);
+        }
+
+        // Close the dialog regardless of success or failure
         handleCloseDialog();
     };
+
 
     const handleCloseDialog = () => {
         setSelectedAsset(null);
@@ -50,7 +92,7 @@ const PortfolioComponent = () => {
     }, [sessionJotai?.user.id]);
 
     useEffect(() => {
-        if (portfolio.userId) {
+        if (portfolio.userId && portfolio?.assets.length > 0) {
             setLoadingPortfolio(true)
         }
     }, [portfolio])
@@ -64,7 +106,13 @@ const PortfolioComponent = () => {
     };
 
 
-    return (
+    return (<>
+        <AlertBar
+            open={alert.open}
+            message={alert.message}
+            severity={alert.severity}
+            onClose={() => setAlert({ ...alert, open: false })}
+        />
         <Box sx={{ width: '100%', backgroundColor: '#202530', p: 2, display: "flex", borderRadius: "2px", position: "sticky", top: "92px" }}>
             <Box sx={{ p: 3 }}>
                 <Typography variant="h4" gutterBottom>
@@ -128,6 +176,7 @@ const PortfolioComponent = () => {
                 asset={selectedAsset}
             />
         </Box>
+    </>
     );
 };
 

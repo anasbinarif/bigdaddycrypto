@@ -18,18 +18,17 @@ export const DonutCard = () => {
         const fetchData = async () => {
             if (sessionJotai?.user) {
                 const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-                console.log("ya looo", userPortfolio.calculation);
                 setPortfolioCalculations(userPortfolio.calculation)
                 setLoadingPortfolio(true)
             }
 
         };
         fetchData();
-    }, [sessionJotai?.user.id]);
+    }, [sessionJotai?.user.id, portfolio]);
     return (
         <Box sx={{ display: "flex", bgcolor: "#202530", color: 'white', height: "100%", borderRadius: 2, alignItems: "center", position: "relative", padding: "20px" }}>
-            <DonutLegend />
-            <DonutChart />
+            <DonutLegend portfolioCalculations={portfolioCalculations} />
+            <DonutChart portfolioCalculations={portfolioCalculations}/>
         </Box>
     )
 }

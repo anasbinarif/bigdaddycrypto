@@ -4,7 +4,7 @@ const AlertBar = ({ open, message, severity, onClose }) => {
     if (!open) return null;
     return (
         <Box sx={{
-            position: 'absolute',
+            position: 'fixed',
             top: '5%',
             left: '90%',
             transform: 'translate(-50%, -50%)',

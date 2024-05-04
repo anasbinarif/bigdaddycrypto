@@ -102,7 +102,6 @@ export const getUserPortfolio = async (userId) => {
         none: 0
     };
     const data = await res.json();
-    console.log("wtf man", data.data.assets);
     let count = 0;
     await data.data.assets.forEach(asset => {
         const category = asset.Category.toLowerCase();

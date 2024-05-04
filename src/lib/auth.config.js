@@ -9,7 +9,6 @@ export const authConfig = {
                 token.id = user.id;
                 token.isAdmin = user.isAdmin;
             }
-            console.log("chal raha hai ya nahi");
             return token;
         },
         async session({ session, token }) {

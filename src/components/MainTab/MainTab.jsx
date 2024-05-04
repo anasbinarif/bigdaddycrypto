@@ -32,7 +32,7 @@ export default function ColorTabs() {
     };
 
     return (
-        <Box sx={{ width: '100%', bgcolor: '#111826', padding: '2%', }}>
+        <Box sx={{ width: '100%', bgcolor: '#111826', padding: '2%', marginTop: "65px" }}>
             <Tabs
                 value={value}
                 onChange={handleChange}

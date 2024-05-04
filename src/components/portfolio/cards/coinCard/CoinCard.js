@@ -59,9 +59,10 @@ const CoinCard = ({ coin }) => {
         const res = await storeUserPortfolioCoin(userId, coin);
         console.log("Server response:", res);
 
+
         if (res.ok) {
             const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-            setPortfolio(userPortfolio.data)
+            setPortfolio(userPortfolio.data.data)
         } else {
             console.error('Error handling the portfolio update:', res.message);
         }

@@ -4,13 +4,13 @@ import { NextResponse } from "next/server";
 
 export async function POST(req, res) {
     const { userId, coin } = await req.json();
-    console.log("debug price", coin);
+    console.log("debug price", coin, userId);
 
     try {
         const userPortfolio = await Portfolio.findOne({ userId: userId });
+        console.log("debug userPortfolio", userPortfolio);
 
         if (!userPortfolio) {
-            // If no portfolio exists, create one
             const newPortfolio = new Portfolio({
                 userId: objectId,
                 assets: [coin]
