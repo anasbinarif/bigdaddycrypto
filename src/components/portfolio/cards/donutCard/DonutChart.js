@@ -1,42 +1,48 @@
 import React from 'react';
 import { Chart } from "react-google-charts";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 
-// React Chart Component
-const DonutChart = () => {
+const categoriesDisplay = {
+    "ai": 'AI',
+    "web3": 'Web3/ Anonymität',
+    "defi": 'DeFi',
+    "green": 'Grüne Coins',
+    "metaverse": 'Gaming/ Metaverse',
+    "btc": 'BTC- Zusammenhang',
+    "cbdc": 'CBDC- Netzwerke',
+    "ecommerce": 'eCommerce',
+    "nft": 'Tokenisierung/ RWA',
+};
+
+const categoryColors = {
+    'AI': '#FFD700',
+    'metaverse': '#00BFFF',
+    'DEFI': '#1155bb',
+    'WEB3': '#DC143C',
+    'GREEN': '#00aa66',
+    'BTC': '#FF9900',
+    'CBDC': '#667788',
+    'ECOMMERCE': '#8833bb',
+    'NFT': '#ff5aac',
+};
+
+const DonutChart = ({ portfolioCalculations }) => {
+    // Prepare the data for the chart using portfolioCalculations
     const data = [
         ["Category", "Percentage"],
-        [`AI`, 5.1],
-        ["Web3", 18.2],
-        ["DeFi", 6.1],
-        ["Grüne Coins", 11.5],
-        ["Gaming", 4.6],
-        ["BTC", 17.2],
-        ["CBDC", 18.3],
-        ["ECommerce", 4.5],
-        ["Tokenisierung", 14.5],
+        ...Object.entries(portfolioCalculations.percentages || {}).map(([key, value]) => {
+            return [categoriesDisplay[key] || key, parseFloat(value.replace('%', ''))]
+        })
     ];
 
     // Define custom colors for each category
-    const colors = ['#FFD700', '#DC143C', '#1155bb', '#00aa66', '#00BFFF', '#FF9900', '#667788', '#8833bb', '#ff5aac'];
+    const colors = data.slice(1).map(item => categoryColors[item[0].toUpperCase()] || '#CCCCCC');
 
     const options = {
-        // title: "Score und Allocation",
         pieHole: 0.8,
-        // pieSliceText: 'none',
-        is3D: false,
         pieSliceText: 'none',
-        titleTextStyle: {
-            color: 'white',
-            fontSize: 17,
-        },
-        legend: {
-            position: 'none',
-            textStyle: {
-                color: 'white',
-                fontSize: 12,
-            }
-        },
+        is3D: false,
+        legend: { position: 'none' },
         tooltip: {
             textStyle: { color: 'black' }, showColorCode: true
         },
@@ -49,6 +55,9 @@ const DonutChart = () => {
             duration: 1500,
         },
         pieSliceBorderColor: 'none',
+        textStyle: {
+            color: 'white',
+        }
     };
 
     return (
