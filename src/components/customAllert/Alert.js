@@ -1,27 +1,24 @@
-import {Alert, Box} from "@mui/material";
+import { Alert, Box } from "@mui/material";
 
-const Allert = () => {
+const AlertBar = ({ open, message, severity, onClose }) => {
+    if (!open) return null;
     return (
         <Box sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            backgroundColor: "#111826",
+            position: 'absolute',
+            top: '5%',
+            left: '90%',
+            transform: 'translate(-50%, -50%)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            width: '100vw'
         }}>
-            {alert.open && (
-                <Alert
-                    severity={alert.severity}
-                    onClose={() => setAlert({...alert, open: false})}
-                    sx={{ width: '100%', mb: 2 }} // Adjust the width as necessary
-                >
-                    {alert.message}
-                </Alert>
-            )}
-            {/* Rest of your form components here */}
+            <Alert severity={severity} onClose={onClose}>
+                {message}
+            </Alert>
         </Box>
     )
 }
 
-export default Allert;
+export default AlertBar;
