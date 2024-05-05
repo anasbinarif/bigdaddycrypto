@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Chart } from "react-google-charts";
 import { Box } from "@mui/material";
 
@@ -26,16 +26,14 @@ const categoryColors = {
     'NFT': '#ff5aac',
 };
 
-const DonutChart = ({ portfolioCalculations }) => {
-    // Prepare the data for the chart using portfolioCalculations
-    const data = [
+const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
+    const data = loadingPortfolio ? [
         ["Category", "Percentage"],
         ...Object.entries(portfolioCalculations.percentages || {}).map(([key, value]) => {
             return [categoriesDisplay[key] || key, parseFloat(value.replace('%', ''))]
         })
-    ];
+    ] : [["Category", "Percentage"],  ["AI", 100.0],];
 
-    // Define custom colors for each category
     const colors = data.slice(1).map(item => categoryColors[item[0].toUpperCase()] || '#CCCCCC');
 
     const options = {

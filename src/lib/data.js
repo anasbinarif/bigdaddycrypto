@@ -162,6 +162,30 @@ export const setCoinObject = (coin) => {
     };
 }
 
+// export const setCoinObject = (coin) => {
+//     return {
+//         Name: coin["Name"],
+//         Ticker: coin["Ticker"],
+//         Category: coin["Category"],
+//         Potential: coin["Potential"],
+//         Sicherheit: coin["Sicherheit"],
+//         MarketCap: coin["Current Market Cap (EUR)"],
+//         Bottom: coin["lowestLow24hr"],
+//         Top: coin["highestHigh24hr"],
+//         Price: coin["Current Price"],
+//         LastPriceUpdate: new Date(),
+//         CoinGeckoID: coin["CoinGeckoID"],
+//         cgPrice: coin["Current Price"],
+//         cgImageURL: coin["cgImageURL"],
+//         TrendPercentage: null,
+//         reflinkBitvavo: "",
+//         reflinkBitpanda: "",
+//         reflinkMexc: "",
+//         reflinkKucoin: "",
+//         UserHolding: 0
+//     };
+// }
+
 export const getCategoryColor = (category) => {
     switch (category.toLowerCase()) {
         case 'ai': return '#FFD700';

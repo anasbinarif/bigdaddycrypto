@@ -28,7 +28,7 @@ export const DonutCard = () => {
     return (
         <Box sx={{ display: "flex", bgcolor: "#202530", color: 'white', height: "100%", borderRadius: 2, alignItems: "center", position: "relative", padding: "20px" }}>
             <DonutLegend portfolioCalculations={portfolioCalculations} />
-            <DonutChart portfolioCalculations={portfolioCalculations}/>
+            <DonutChart portfolioCalculations={portfolioCalculations} loadingPortfolio={loadingPortfolio}/>
         </Box>
     )
 }

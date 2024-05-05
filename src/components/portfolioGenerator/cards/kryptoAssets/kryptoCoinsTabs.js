@@ -63,6 +63,31 @@ const ScrollableKryptoTabs = () => {
         });
     }, []);
 
+    useEffect(() => {
+        const apiKey = 'CG-XAPzMYbZ8Q8KoqGdwscqrr6f';
+        const url = `https://pro-api.coingecko.com/api/v3/coins/bitcoin?x_cg_pro_api_key=${apiKey}`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const priceEUR = data.market_data.current_price.eur;
+                const marketCapEUR = data.market_data.market_cap.eur;
+                const volumeEUR = data.market_data.total_volume.eur;
+
+                console.log('Bitcoin data:', data);
+                console.log('Price in EUR:', priceEUR);
+                console.log('Market cap in EUR:', marketCapEUR);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
