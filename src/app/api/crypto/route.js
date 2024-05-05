@@ -78,7 +78,7 @@ async function getCoinBottom([category, ticker, cgImageURL, Name, Ticker, Potent
             const responsePriceData = await fetch(`${urlPriceData}?${paramsPriceData.toString()}`);
             if (responsePriceData.ok) {
                 const dataPriceData = await responsePriceData.json();
-                console.log("responsePriceData", ticker)
+                // console.log("responsePriceData", ticker)
                 const prices = dataPriceData.prices;
 
                 if (prices && prices.length > 0) {

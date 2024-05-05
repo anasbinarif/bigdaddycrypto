@@ -70,7 +70,7 @@ const ScrollableKryptoTabs = () => {
     // Mapping categories to their respective data entries
     const categorizedData = tabLabels.reduce((acc, label) => {
         const categoryName = categoryMapping[label]; // Direct mapping to category
-        acc[label] = data.filter(item => item.Category === categoryName);
+        acc[label] = data.filter(item => item && item.Category === categoryName);
         return acc;
     }, {});
 
