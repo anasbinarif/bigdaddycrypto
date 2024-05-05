@@ -24,6 +24,7 @@ const PortfolioComponent = () => {
     const [deleteIconIndex, setDeleteIconIndex] = useState(null);
     const [selectedAsset, setSelectedAsset] = useState(null);
     const [loadingPortfolio, setLoadingPortfolio] = useState(false)
+    const [assetsLeangth, setAssetsLeangth] = useState(0)  
 
     const [alert, setAlert] = useState({
         open: false,
@@ -94,8 +95,12 @@ const PortfolioComponent = () => {
     useEffect(() => {
         if (portfolio.userId && portfolio?.assets.length > 0) {
             setLoadingPortfolio(true)
+            const len =  portfolio?.assets.length;
+            setAssetsLeangth(len);
+            console.log("length of user assets", len);
         }
     }, [portfolio])
+
 
     const handleMouseEnter = (index) => {
         setDeleteIconIndex(index);
@@ -116,7 +121,7 @@ const PortfolioComponent = () => {
         <Box sx={{ width: '100%', backgroundColor: '#202530', p: 2, display: "flex", borderRadius: "2px", position: "sticky", top: "92px" }}>
             <Box sx={{ p: 3 }}>
                 <Typography variant="h4" gutterBottom>
-                    Portfolio ({portfolio?.assets?.length ? portfolio.assets.length : 0})
+                    Portfolio ({assetsLeangth})
                 </Typography>
                 <Typography variant="subtitle1" gutterBottom>
                     Passe die Gewichtung der Assets an, um ihren tatsächlichen Anteil im Portfolio besser wiederzuspiegeln.

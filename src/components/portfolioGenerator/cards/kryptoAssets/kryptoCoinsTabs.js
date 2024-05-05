@@ -56,7 +56,7 @@ const ScrollableKryptoTabs = () => {
         getCoinData().then(data => {
             setData(data.data); // Assuming the data structure is as shown earlier
             setLoading(false); // Set loading false after fetching
-            console.log("debugging 101",  data.data)
+            console.log("debugging 101", data.data)
         }).catch(error => {
             console.error("Error fetching data:", error);
             setLoading(false);
@@ -85,7 +85,15 @@ const ScrollableKryptoTabs = () => {
                 aria-label="scrollable auto tabs example"
             >
                 {tabLabels.map((label) => (
-                    <Tab key={label} icon={<ColorCircle color={categoryColors[label]} />} iconPosition="start" label={label} />
+                    <Tab
+                        key={label}
+                        icon={<ColorCircle color={categoryColors[label]} />}
+                        iconPosition="start"
+                        label={label}
+                        sx={{
+                            color: 'white',
+                        }}
+                    />
                 ))}
             </Tabs>
             {tabLabels.map((label, index) => (
@@ -94,7 +102,9 @@ const ScrollableKryptoTabs = () => {
                         {loading ? (
                             Array.from(new Array(15)).map((_, idx) => <CoinCardSkeleton key={idx} />)
                         ) : (
-                            categorizedData[label].map(coin => <CoinCard key={coin.CoinGeckoID} coin={coin} />)
+                            categorizedData[label].map((coin, index) => (
+                                <CoinCard key={`${coin.CoinGeckoID}-${index}`} coin={coin} />
+                            ))
                         )}
                     </Box>
                 </TabPanel>

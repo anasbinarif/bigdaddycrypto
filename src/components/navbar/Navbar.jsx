@@ -4,7 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import Link from "@/components/navbar/Link";
 import { SessionProvider } from "next-auth/react";
 
-const Navbar = async () => {
+const Navbar = () => {
 
     return (
         <AppBar
