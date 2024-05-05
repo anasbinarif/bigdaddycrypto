@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Tabs, Tab, SvgIcon, Box, Typography } from '@mui/material';
 import { categoryColors, getCoinData } from "@/lib/data";
 import CoinCard from '../coinCard/CoinCard';
-import CoinCardSkeleton from "@/components/portfolio/cards/coinCard/CoinCardSkeleton";
-import { SessionProvider } from "next-auth/react";
+import CoinCardSkeleton from "@/components/portfolioGenerator/cards/coinCard/CoinCardSkeleton";
 
 const ColorCircle = ({ color }) => (
     <SvgIcon>
@@ -57,6 +56,7 @@ const ScrollableKryptoTabs = () => {
         getCoinData().then(data => {
             setData(data.data); // Assuming the data structure is as shown earlier
             setLoading(false); // Set loading false after fetching
+            console.log("debugging 101",  data.data)
         }).catch(error => {
             console.error("Error fetching data:", error);
             setLoading(false);
@@ -84,7 +84,7 @@ const ScrollableKryptoTabs = () => {
                 allowScrollButtonsMobile
                 aria-label="scrollable auto tabs example"
             >
-                {tabLabels.map((label, index) => (
+                {tabLabels.map((label) => (
                     <Tab key={label} icon={<ColorCircle color={categoryColors[label]} />} iconPosition="start" label={label} />
                 ))}
             </Tabs>

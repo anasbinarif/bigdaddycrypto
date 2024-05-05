@@ -1,5 +1,4 @@
-import { Portfolio, User } from "@/lib/models";
-import mongoose from "mongoose";
+import { Portfolio } from "@/lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req, res) {
@@ -29,7 +28,7 @@ export async function POST(req, res) {
             }
             await userPortfolio.save();
             return NextResponse.json({
-                message: index > -1 ? "Coin removed from portfolio." : "Coin added to portfolio."
+                message: index > -1 ? "Coin removed from portfolioGenerator." : "Coin added to portfolioGenerator."
             }, { status: 200 });
         }
     } catch (error) {

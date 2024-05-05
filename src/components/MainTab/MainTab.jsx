@@ -2,7 +2,9 @@
 import * as React from 'react';
 import { Tabs, Tab, Box, Typography } from '@mui/material';
 import { useState } from "react";
-import PortfolioDisplay from '../portfolio/PortfolioDisplay';
+import PortfolioDisplay from '@/components/portfolioGenerator/PortfolioDisplay';
+import AssetManagerDisplay from "@/components/AssetManager/AssetManagerDisplay";
+import PortfolioUbersicht from "@/components/portfolioÜbersicht/PortfolioÜbersicht";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -73,10 +75,10 @@ export default function ColorTabs() {
                 <PortfolioDisplay/>
             </TabPanel>
             <TabPanel value={value} index="two">
-                Content for Asset Manager
+                <AssetManagerDisplay/>
             </TabPanel>
             <TabPanel value={value} index="three">
-                Content for Portfolio Übersicht
+                <PortfolioUbersicht/>
             </TabPanel>
         </Box>
     );

@@ -6,7 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import { green, grey, red, yellow } from '@mui/material/colors';
+import { green, yellow } from '@mui/material/colors';
 import { Box } from '@mui/material';
 
 function BewertungCard() {

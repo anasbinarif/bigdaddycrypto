@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, Typography, Box, Avatar, styled } from '@mui/material';
-import { useSession } from 'next-auth/react';
-import { getUserPortfolio, setCoinObject, storeUserPortfolioCoin } from '@/lib/data';
+import { getUserPortfolio, storeUserPortfolioCoin } from '@/lib/data';
 import { portfolioAtom } from '@/app/stores/portfolioStore';
 import { useAtom } from 'jotai';
 import { sessionAtom } from '@/app/stores/sessionStore';
@@ -31,7 +30,7 @@ const CoinCard = ({ coin }) => {
 
     // const { data: session, status } = useSession();
     const [sessionJotai] = useAtom(sessionAtom);
-    const [portfolio, setPortfolio] = useAtom(portfolioAtom);
+    const [, setPortfolio] = useAtom(portfolioAtom);
 
     const getCategoryColor = (category) => {
         switch (category.toLowerCase()) {
@@ -64,7 +63,7 @@ const CoinCard = ({ coin }) => {
             const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
             setPortfolio(userPortfolio.data.data)
         } else {
-            console.error('Error handling the portfolio update:', res.message);
+            console.error('Error handling the portfolioGenerator update:', res.message);
         }
     };
 

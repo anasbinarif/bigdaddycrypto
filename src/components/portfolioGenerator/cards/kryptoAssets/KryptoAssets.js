@@ -1,6 +1,6 @@
 import {Box, Divider} from "@mui/material"
 import KryptoFilter from "./kryptoFilter"
-import ScrollableKryptoTabs from "@/components/portfolio/cards/kryptoAssets/kryptoCoinsTabs";
+import ScrollableKryptoTabs from "@/components/portfolioGenerator/cards/kryptoAssets/kryptoCoinsTabs";
 
 const KryptoAssets = () => {
   return (

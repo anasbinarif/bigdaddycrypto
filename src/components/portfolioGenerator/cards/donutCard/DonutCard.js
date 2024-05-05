@@ -9,7 +9,7 @@ import {sessionAtom} from "@/app/stores/sessionStore";
 
 
 export const DonutCard = () => {
-    const [portfolio, setPortfolio] = useAtom(portfolioAtom);
+    const [portfolio] = useAtom(portfolioAtom);
     const [loadingPortfolio, setLoadingPortfolio] = useState(false)
     const [portfolioCalculations, setPortfolioCalculations] = useState({})
     const [sessionJotai] = useAtom(sessionAtom);

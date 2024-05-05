@@ -1,7 +1,7 @@
 // src/components/PortfolioComponent.js
 import React, { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
-import { Box, Typography, Avatar, Card, CardContent, Grid, Tooltip, IconButton, styled } from '@mui/material';
+import { Box, Typography, Avatar, Card, Grid, Tooltip, IconButton, styled } from '@mui/material';
 import { portfolioAtom } from '@/app/stores/portfolioStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteConfirmationDialog from '@/components/AlertDialog/AlertDialog';
@@ -41,7 +41,7 @@ const PortfolioComponent = () => {
         console.log(CoinGeckoID, portfolioId);
 
         try {
-            // Call the API to delete the coin from the portfolio
+            // Call the API to delete the coin from the portfolioGenerator
             const response = await fetch('/api/deleteCoinPortfolio', {
                 method: 'POST',
                 headers: {
@@ -124,7 +124,7 @@ const PortfolioComponent = () => {
                 {loadingPortfolio && <Grid sx={{
                     borderRadius: "4px", overflow: 'auto',
                     scrollbarColor: '#555559 #333339',
-                    maxHeight: '300px',
+                    maxHeight: '500px',
                 }}>
                     {loadingPortfolio && portfolio.assets.map((asset, index) => (
                         <Grid item key={index} xs={12} sm={6} md={15}>
