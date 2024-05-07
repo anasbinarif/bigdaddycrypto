@@ -3,9 +3,11 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import {DonutCard} from "@/components/portfolioGenerator/cards/donutCard/DonutCard";
+import { DonutCard } from "@/components/portfolioGenerator/cards/donutCard/DonutCard";
 import BewertungCard from "@/components/portfolioGenerator/cards/Bewertung";
 import GridExample from "@/components/portfolioÜbersicht/portfolioTable/Table";
+import Card from "@mui/material/Card";
+import { Typography } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -20,23 +22,32 @@ export default function PortfolioUbersicht() {
             <Grid container spacing={2}>
                 {/* Left column for detailed assets information */}
                 <Grid item xs={12} md={8}>
-                    <GridExample/>
+                    <GridExample />
                     {/*<Item>Portfolio details here</Item>*/}
                 </Grid>
                 {/* Right column for portfolio overview and scoring */}
                 <Grid item xs={12} md={4}>
-                    <a target="_blank" rel="noopener noreferrer"
-                       href="https://bigdaddycrypto.de/portfolio/comment/index.php">
-                        <Item sx={{backgroundColor: "#1188ff", cursor: "pointer", color: "white"}}>
-                            Jetzt Kommentar von BigDaddy anfragen
-                        </Item>
-                    </a>
-                    <Grid container spacing={2} sx={{marginTop: "10px"}}>
+                    <Card sx={{
+                        padding: "15px",
+                        backgroundColor: "#1188ff",
+                        cursor: "pointer",
+                        display: 'flex', // Makes the card flex container
+                        alignItems: 'center', // Centers the content vertically
+                        justifyContent: 'center' // Centers the content horizontally
+                    }}>
+                        <a target="_blank" rel="noopener noreferrer"
+                            href="https://bigdaddycrypto.de/portfolio/comment/index.php">
+                            <Typography sx={{ backgroundColor: "#1188ff", color: "white" }}>
+                                Jetzt Kommentar von BigDaddy anfragen
+                            </Typography>
+                        </a>
+                    </Card>
+                    <Grid container spacing={2} sx={{ marginTop: "10px" }}>
                         <Grid item xs={6} md={12}>
                             <Item>Overview item 1</Item>
                         </Grid>
                         <Grid item xs={6} md={12}>
-                            <DonutCard/>
+                            <DonutCard />
                         </Grid>
                         <Grid item xs={6} md={12}>
                             <BewertungCard />

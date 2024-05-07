@@ -2,12 +2,10 @@ import React, {useEffect, useState} from "react";
 import { AgGridReact } from "ag-grid-react"; // React Grid Logic
 import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import {useAtom} from "jotai/index";
-import {portfolioAtom} from "@/app/stores/portfolioStore";
-import {getAssets, getCoinData} from "@/lib/data"; // Theme
+import {getCoinData} from "@/lib/data"; // Theme
 
 // Create new GridExample component
-const GridExample = () => {
+const CryptoTable = () => {
 
     const [loading, setLoading] = useState(false)
     // const [data, setData] = useState()
@@ -63,4 +61,4 @@ const GridExample = () => {
     );
 };
 
-export default GridExample;
+export default CryptoTable;
