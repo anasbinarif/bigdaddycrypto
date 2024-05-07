@@ -1,8 +1,10 @@
 "use client"
-import { AppBar, Toolbar, Typography, IconButton, Box } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import Link from "@/components/navbar/Link";
+import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
+import NavbarLink from "@/components/navbar/Link";
+import Link from "next/link";
+import Image from "next/image";
+import HomeIcon from "../../../public/assets/svg/bdc.svg"
 
 const Navbar = () => {
 
@@ -15,16 +17,18 @@ const Navbar = () => {
             }}
         >
             <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Link style={{ display: "flex", alignItems: "center" }} href="/" >
                     <IconButton color="inherit">
-                        <HomeIcon />
+                        <Image src={HomeIcon} alt="Home Icon"
+                               style={{ width: "auto", height: "35px", cursor: "pointer",
+                                   backgroundColor: "white", borderRadius: "50%", padding: "2px" }}/>
                     </IconButton>
                     <Typography variant="body1" sx={{ ml: 1 }}>
                         Portfolio Generator 2.1
                     </Typography>
-                </Box>
+                </Link>
                 <SessionProvider>
-                    <Link />
+                    <NavbarLink />
                 </SessionProvider>
             </Toolbar>
         </AppBar>

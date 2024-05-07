@@ -1,12 +1,15 @@
 "use client"
 import Link from "next/link";
-import { useState } from "react";
-import { Box, TextField, Checkbox, Button, Typography, FormControlLabel } from "@mui/material";
+import {useEffect, useState} from "react";
+import { Box, TextField, Button, Typography, FormControlLabel } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AlertBar from "@/components/customAllert/Alert";
+import {useAtom} from "jotai/index";
+import {sessionAtom} from "@/app/stores/sessionStore";
 
 const LoginPage = () => {
+  const [sessionJotai] = useAtom(sessionAtom);
   const router = useRouter();
   const [alert, setAlert] = useState({
     open: false,
@@ -32,6 +35,12 @@ const LoginPage = () => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
   };
+
+  useEffect(() => {
+    if (sessionJotai?.user) {
+      router.push("/")
+    }
+  }, []);
 
   async function handleLogin() {
     let hasErrors = false;

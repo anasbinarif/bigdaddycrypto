@@ -1,12 +1,9 @@
 // src/components/PortfolioComponent.js
-import React, { useEffect, useState } from 'react';
-import { useAtom } from 'jotai';
+import React, { useState } from 'react';
 import { Box, Typography, Avatar, Card, Grid, Tooltip, IconButton, styled } from '@mui/material';
-import { portfolioAtom } from '@/app/stores/portfolioStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteConfirmationDialog from '@/components/AlertDialog/AlertDialog';
-import { sessionAtom } from "@/app/stores/sessionStore";
-import { getCategoryColor, getUserPortfolio } from '@/lib/data';
+import { getCategoryColor } from '@/lib/data';
 import AlertBar from '@/components/customAllert/Alert';
 
 const CategoryColorBar = styled(Box)(({ color }) => ({
@@ -18,13 +15,13 @@ const CategoryColorBar = styled(Box)(({ color }) => ({
     top: 0,
 }));
 
-const PortfolioComponent = () => {
-    const [sessionJotai] = useAtom(sessionAtom);
-    const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLeangth}) => {
+    // const [sessionJotai] = useAtom(sessionAtom);
+    // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
     const [deleteIconIndex, setDeleteIconIndex] = useState(null);
     const [selectedAsset, setSelectedAsset] = useState(null);
-    const [loadingPortfolio, setLoadingPortfolio] = useState(false)
-    const [assetsLeangth, setAssetsLeangth] = useState(0)  
+    // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
+    // const [assetsLeangth, setAssetsLeangth] = useState(0)
 
     const [alert, setAlert] = useState({
         open: false,
@@ -81,25 +78,25 @@ const PortfolioComponent = () => {
         setSelectedAsset(null);
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (sessionJotai?.user) {
-                const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-                setPortfolio(userPortfolio.data.data)
-            }
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         if (sessionJotai?.user) {
+    //             const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+    //             setPortfolio(userPortfolio.data.data)
+    //         }
+    //
+    //     };
+    //     fetchData();
+    // }, [sessionJotai?.user.id]);
 
-        };
-        fetchData();
-    }, [sessionJotai?.user.id]);
-
-    useEffect(() => {
-        if (portfolio.userId && portfolio?.assets.length > 0) {
-            setLoadingPortfolio(true)
-            const len =  portfolio?.assets.length;
-            setAssetsLeangth(len);
-            console.log("length of user assets", len);
-        }
-    }, [portfolio])
+    // useEffect(() => {
+    //     if (portfolio.userId && portfolio?.assets.length > 0) {
+    //         setLoadingPortfolio(true)
+    //         const len = portfolio?.assets.length;
+    //         setAssetsLeangth(len);
+    //         console.log("length of user assets", len);
+    //     }
+    // }, [portfolio])
 
 
     const handleMouseEnter = (index) => {
@@ -126,7 +123,7 @@ const PortfolioComponent = () => {
                 <Typography variant="subtitle1" gutterBottom>
                     Passe die Gewichtung der Assets an, um ihren tatsächlichen Anteil im Portfolio besser wiederzuspiegeln.
                 </Typography>
-                {loadingPortfolio && <Grid sx={{
+                {loadingPortfolio ? <Grid sx={{
                     borderRadius: "4px", overflow: 'auto',
                     scrollbarColor: '#555559 #333339',
                     maxHeight: '500px',
@@ -172,7 +169,10 @@ const PortfolioComponent = () => {
                             </Card>
                         </Grid>
                     ))}
-                </Grid>}
+                </Grid> : <Card sx={{ height: "300px", backgroundColor: "#23252b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Typography sx={{ color: 'gray' }}>Keine Einträge</Typography>
+                </Card>
+                }
             </Box>
             <DeleteConfirmationDialog
                 open={Boolean(selectedAsset)}

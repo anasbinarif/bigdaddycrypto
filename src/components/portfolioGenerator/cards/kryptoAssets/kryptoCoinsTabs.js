@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, Tab, SvgIcon, Box, Typography } from '@mui/material';
-import { categoryColors, getCoinData } from "@/lib/data";
+import {categoryColors, getAssets, getCoinData} from "@/lib/data";
 import CoinCard from '../coinCard/CoinCard';
 import CoinCardSkeleton from "@/components/portfolioGenerator/cards/coinCard/CoinCardSkeleton";
 
@@ -30,7 +30,7 @@ function TabPanel(props) {
     );
 }
 
-const ScrollableKryptoTabs = () => {
+const ScrollableKryptoTabs = ({portfolio, loadingPortfolio, userID}) => {
     const [value, setValue] = useState(0);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -52,47 +52,27 @@ const ScrollableKryptoTabs = () => {
     };
 
     useEffect(() => {
-        setLoading(true); // Set loading true while fetching
-        getCoinData().then(data => {
-            setData(data.data); // Assuming the data structure is as shown earlier
-            setLoading(false); // Set loading false after fetching
-            console.log("debugging 101", data.data)
+        console.log("hello bro whats up")
+        setLoading(true);
+        getAssets().then(data => {
+            setData(data.data);
+            // console.log("tetsingwtfman", data)
+            setLoading(false);
         }).catch(error => {
             console.error("Error fetching data:", error);
             setLoading(false);
         });
-    }, []);
+    }, [userID]);
 
-    useEffect(() => {
-        const apiKey = 'CG-XAPzMYbZ8Q8KoqGdwscqrr6f';
-        const url = `https://pro-api.coingecko.com/api/v3/coins/bitcoin?x_cg_pro_api_key=${apiKey}`;
-
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const priceEUR = data.market_data.current_price.eur;
-                const marketCapEUR = data.market_data.market_cap.eur;
-                const volumeEUR = data.market_data.total_volume.eur;
-
-                console.log('Bitcoin data:', data);
-                console.log('Price in EUR:', priceEUR);
-                console.log('Market cap in EUR:', marketCapEUR);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }, []);
+    const checkCoinSelected = (coin) => {
+        if (!portfolio) return false;
+        return portfolio?.assets.some(asset => asset.CoinGeckoID === coin.CoinGeckoID);
+    }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    // Mapping categories to their respective data entries
     const categorizedData = tabLabels.reduce((acc, label) => {
         const categoryName = categoryMapping[label]; // Direct mapping to category
         acc[label] = data.filter(item => item && item.Category === categoryName);
@@ -128,7 +108,7 @@ const ScrollableKryptoTabs = () => {
                             Array.from(new Array(15)).map((_, idx) => <CoinCardSkeleton key={idx} />)
                         ) : (
                             categorizedData[label].map((coin, index) => (
-                                <CoinCard key={`${coin.CoinGeckoID}-${index}`} coin={coin} />
+                                <CoinCard key={`${coin.CoinGeckoID}-${index}`} coin={coin} selected={checkCoinSelected(coin)} />
                             ))
                         )}
                     </Box>

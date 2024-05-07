@@ -6,6 +6,7 @@ import { portfolioAtom } from "@/app/stores/portfolioStore";
 import { useAtom } from "jotai";
 import {getUserPortfolio} from "@/lib/data";
 import {sessionAtom} from "@/app/stores/sessionStore";
+import DonutLegendSkeleton from "@/components/portfolioGenerator/cards/donutCard/DonutLegendSkeleton";
 
 
 export const DonutCard = () => {
@@ -27,7 +28,7 @@ export const DonutCard = () => {
     }, [sessionJotai?.user.id, portfolio]);
     return (
         <Box sx={{ display: "flex", bgcolor: "#202530", color: 'white', height: "100%", borderRadius: 2, alignItems: "center", position: "relative", padding: "20px" }}>
-            <DonutLegend portfolioCalculations={portfolioCalculations} />
+            {loadingPortfolio ? <DonutLegend portfolioCalculations={portfolioCalculations}/> : <DonutLegendSkeleton/>}
             <DonutChart portfolioCalculations={portfolioCalculations} loadingPortfolio={loadingPortfolio}/>
         </Box>
     )

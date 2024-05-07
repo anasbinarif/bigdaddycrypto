@@ -25,7 +25,12 @@ export default function PortfolioUbersicht() {
                 </Grid>
                 {/* Right column for portfolio overview and scoring */}
                 <Grid item xs={12} md={4}>
-                    <Item sx={{backgroundColor: "#1188ff", cursor: "pointer", color: "white"}}>Jetzt Kommentar von BigDaddy anfragen</Item>
+                    <a target="_blank" rel="noopener noreferrer"
+                       href="https://bigdaddycrypto.de/portfolio/comment/index.php">
+                        <Item sx={{backgroundColor: "#1188ff", cursor: "pointer", color: "white"}}>
+                            Jetzt Kommentar von BigDaddy anfragen
+                        </Item>
+                    </a>
                     <Grid container spacing={2} sx={{marginTop: "10px"}}>
                         <Grid item xs={6} md={12}>
                             <Item>Overview item 1</Item>

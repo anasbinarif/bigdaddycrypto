@@ -1,7 +1,7 @@
 import { Portfolio } from "@/lib/models";
 import { NextResponse } from "next/server";
 
-export async function POST(req, res) {
+export async function POST(req) {
     const { userId, coin } = await req.json();
     console.log("debug price", coin, userId);
 
@@ -11,7 +11,7 @@ export async function POST(req, res) {
 
         if (!userPortfolio) {
             const newPortfolio = new Portfolio({
-                userId: objectId,
+                userId: userId,
                 assets: [coin]
             });
             await newPortfolio.save();

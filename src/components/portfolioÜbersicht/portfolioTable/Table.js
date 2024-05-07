@@ -3,20 +3,27 @@ import { AgGridReact } from "ag-grid-react"; // React Grid Logic
 import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {useAtom} from "jotai/index";
-import {portfolioAtom} from "@/app/stores/portfolioStore"; // Theme
+import {portfolioAtom} from "@/app/stores/portfolioStore";
+import {getAssets, getCoinData} from "@/lib/data"; // Theme
 
 // Create new GridExample component
 const GridExample = () => {
 
-    const [loadingPortfolio, setLoadingPortfolio] = useState(false)
-    const [portfolio] = useAtom(portfolioAtom, { assets: [] });
+    const [loading, setLoading] = useState(false)
+    // const [data, setData] = useState()
 
     useEffect(() => {
-        if (portfolio.userId && portfolio?.assets.length > 0) {
-            setLoadingPortfolio(true)
-            console.log("table data", portfolio)
-        }
-    }, [portfolio])
+        setLoading(true);
+        getCoinData().then(data => {
+            // setData(data.data);
+            console.log("tetsingwtfman", data.data)
+            setLoading(false);
+        }).catch(error => {
+            console.error("Error fetching data:", error);
+            setLoading(false);
+        });
+    }, []);
+
     // Row Data: The data to be displayed.
     const [rowData, setRowData] = useState([
         { make: "Tesla", model: "Model Y", price: 64950, electric: true },

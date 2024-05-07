@@ -1,26 +1,21 @@
 import React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Chip from '@mui/material/Chip';
-import Box from '@mui/material/Box';
-import BitpandaIcon from '../icons/BitpandaIcon';
+import Image from "next/image";
+import Bitpanda from "../../../../public/assets/images/bitpanda.webp";
 
 function BitpandaCard() {
     return (
         <Card sx={{ bgcolor: "#00d578", borderRadius: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100%" }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'white' }}>
-                <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <BitpandaIcon/>
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', mt: 2 }}>
-                        Bitpanda
-                    </Typography>
-                </Box>
-                <Chip
-                    label="Unterstützt meine Arbeit und genießt lebenslange Vorteile."
-                    color="default"
-                    sx={{ mb: 2, fontWeight: 'bold' }}
-                />
+                <a target="_blank" rel="noopener noreferrer" href="https://www.bitpanda.com/en?irclickid=Vc3zsX0JRxyKRViQNMVIXXdjUkHT9oXHexPzXE0&utm_source=Impact&utm_medium=Affiliates&utm_campaign=4425080&utm_content=Online%20Tracking%20Link&utm_term=upRocket%20AI%20GmbH&ref=615250356669422741&tag=affiliates&subid1=&irgwc=1#">
+                    <Image
+                        src={Bitpanda}
+                        alt="Background Image"
+                        placeholder="blur"
+                        style={{ maxWidth: "100%", height: "300px", cursor: "pointer" }}
+                    />
+                </a>
             </CardContent>
         </Card>
     );

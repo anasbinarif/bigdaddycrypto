@@ -1,16 +1,14 @@
 'use client';
-import {Inter, Roboto} from 'next/font/google';
+import {Roboto} from 'next/font/google';
 import { createTheme } from '@mui/material/styles';
-
-const roboto = Roboto({
+Roboto({
     weight: ['300', '400', '500', '700'],
     subsets: ['latin'],
     display: 'swap',
 });
-
 const theme = createTheme({
     typography: {
-        fontFamily: roboto.style.fontFamily,
+        fontFamily: "sans-serif"
     },
 });
 

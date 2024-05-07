@@ -4,6 +4,7 @@ import { getUserPortfolio, storeUserPortfolioCoin } from '@/lib/data';
 import { portfolioAtom } from '@/app/stores/portfolioStore';
 import { useAtom } from 'jotai';
 import { sessionAtom } from '@/app/stores/sessionStore';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 // Styled components to align with your design
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -15,16 +16,17 @@ const StyledCard = styled(Card)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 }));
 
-const CategoryColorBar = styled(Box)(({ color }) => ({
+const CategoryColorBar = styled(Box)(({ color, selected }) => ({
     width: 4,
     height: '100%',
     backgroundColor: color,
     position: 'absolute',
     left: 0,
     top: 0,
+    display: `${selected ? "none": "block"}`
 }));
 
-const CoinCard = ({ coin }) => {
+const CoinCard = ({ coin, selected }) => {
     const { Name, cgImageURL, Ticker, Potential, Sicherheit, Category } = coin;
 
 
@@ -55,6 +57,7 @@ const CoinCard = ({ coin }) => {
 
     const handleDoubleClick = async () => {
         const userId = sessionJotai?.user.id;
+        console.log("double clicked", userId, coin)
         const res = await storeUserPortfolioCoin(userId, coin);
         console.log("Server response:", res);
 
@@ -69,8 +72,13 @@ const CoinCard = ({ coin }) => {
 
 
     return (
-        <StyledCard onDoubleClick={handleDoubleClick} sx={{ cursor: "pointer" }}>
-            <CategoryColorBar color={getCategoryColor(Category)} />
+        <StyledCard onDoubleClick={handleDoubleClick} sx={{
+            cursor: "pointer",
+            border: `${selected ? "1px solid #00aa66aa": "none"}`,
+            backgroundColor: `${selected ? "#00aa6633" : "none"}`
+        }}>
+            <CategoryColorBar color={getCategoryColor(Category)} selected={selected} />
+            <CheckCircleIcon sx={{color: "#00aa66", display: `${selected ? "block" : "none"}`}}/>
             <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1 }}>
                     <Avatar src={cgImageURL} sx={{ width: 35, height: 35, marginRight: 1 }} />

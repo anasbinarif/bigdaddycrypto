@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { green, yellow } from '@mui/material/colors';
 import { Box } from '@mui/material';
+import CustomizedTooltips from "@/components/toolTip/CustomizedTooltip";
 
 function BewertungCard() {
     return (
@@ -16,29 +17,64 @@ function BewertungCard() {
                 <Typography sx={{ fontSize: 14, fontWeight: 'bold' }} gutterBottom>
                     Bewertung
                 </Typography>
-                <List sx={{bgcolor: "#00000033", borderRadius: "8px"}} >
-                    {[
-                        { text: 'Abdeckung von Hype-Themen', color: green[500] },
-                        { text: 'Doppelte Abdeckung von Hype-Themen', color: green[500] },
-                        { text: 'Fehlendes Hype-Thema', color: green[500] },
-                        { text: 'Verteilung der gewählten Hype-Themen', color: yellow[800] },
-                        { text: 'Anzahl an Coins', color: green[500] }
-                    ].map(item => (
-                        <ListItem key={item.text} sx={{ py: 0 }}>
-                            <ListItemIcon>
-                                <FiberManualRecordIcon sx={{ color: item.color }} />
-                            </ListItemIcon>
-                            <ListItemText primary={item.text} />
-                        </ListItem>
-                    ))}
-                </List>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography component="div">
-                        Sicherheit <span style={{ fontSize: '1.2rem', color: green[500] }}>8.9</span>
-                    </Typography>
-                    <Typography component="div">
-                        Potential <span style={{ fontSize: '1.2rem', color: green[500] }}>23-36x</span>
-                    </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                    <List sx={{ bgcolor: "#00000033", borderRadius: "8px" }} >
+                        {[
+                            { text: 'Abdeckung von Hype-Themen', color: green[500] },
+                            { text: 'Doppelte Abdeckung von Hype-Themen', color: green[500] },
+                            { text: 'Fehlendes Hype-Thema', color: green[500] },
+                            { text: 'Verteilung der gewählten Hype-Themen', color: yellow[800] },
+                            { text: 'Anzahl an Coins', color: green[500] }
+                        ].map(item => (
+                            <ListItem key={item.text} sx={{ py: 0 }}>
+                                <ListItemIcon sx={{minWidth: "30px"}}>
+                                    <FiberManualRecordIcon sx={{ color: item.color }} />
+                                </ListItemIcon>
+                                <ListItemText primary={item.text} sx={{fontSize: '13px'}} />
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography component="div"
+                            sx={{
+                                alignItems: "center", gap: "25px",
+                                backgroundColor: "#00000033", padding: "10px 16px",
+                                borderRadius: "8px", display: "flex", fontSize: "14px"
+                            }}>
+                            <span style={{ whiteSpace: "nowrap", display: "flex", gap: "4px"}}> Sicherheit Ø
+                                <CustomizedTooltips text1="Dieser Wert ergibt sich aus dem Durchschnitt der
+                                Sicherheit aller Assets im Portfolio. Die Angaben basieren auf der
+                                Position im Graphen." text2="Assets die nicht im Graphen eingeordnet
+                                sind werden nicht berücksichtigt." />
+                            </span> <span style={{
+                                color: "white",
+                                backgroundColor: "rgb(65, 180, 49)",
+                                padding: "4px 8px 2px",
+                                textShadow: "1px 1px 5px rgba(0,0,0,.4)",
+                                borderRadius: "6px", fontSize: "14px"
+                            }}>8.9</span>
+                        </Typography>
+                        <Typography component="div" sx={{
+                            alignItems: "center",
+                            gap: "25px", backgroundColor: "#00000033", padding: "10px 16px",
+                            borderRadius: "8px", display: "flex", fontSize: "14px"
+                        }}>
+                            <span style={{ whiteSpace: "nowrap", display: "flex", gap: "4px"}}> Potential Ø
+                                <CustomizedTooltips text1="Dieser Wert ergibt sich aus dem Durchschnitt
+                                des Potentials aller Assets im Portfolio. Die Angaben basieren auf der
+                                Position im Graphen. Bei der Berechnung wird der Einkaufspreis berücksichtigt,
+                                da das Potential auf dem jeweiligen Low der letzten 12 Monate beruht."
+                                    text2="Assets die nicht im Graphen eingeordnet sind werden nicht
+                                                    berücksichtigt." />
+                            </span> <span style={{
+                                color: "white",
+                                backgroundColor: "rgb(142, 206, 16)",
+                                padding: "4px 8px 2px",
+                                textShadow: "1px 1px 5px rgba(0,0,0,.4)",
+                                borderRadius: "6px", fontSize: "14px"
+                            }}>23-36x</span>
+                        </Typography>
+                    </Box>
                 </Box>
             </CardContent>
         </Card>

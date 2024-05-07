@@ -1,29 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { Chart } from "react-google-charts";
-import { Box } from "@mui/material";
-
-const categoriesDisplay = {
-    "ai": 'AI',
-    "web3": 'Web3/ Anonymität',
-    "defi": 'DeFi',
-    "green": 'Grüne Coins',
-    "metaverse": 'Gaming/ Metaverse',
-    "btc": 'BTC- Zusammenhang',
-    "cbdc": 'CBDC- Netzwerke',
-    "ecommerce": 'eCommerce',
-    "nft": 'Tokenisierung/ RWA',
-};
+import { Box, Typography } from "@mui/material";
+import { categoriesDisplay } from "@/lib/data";
 
 const categoryColors = {
     'AI': '#FFD700',
-    'metaverse': '#00BFFF',
-    'DEFI': '#1155bb',
-    'WEB3': '#DC143C',
-    'GREEN': '#00aa66',
-    'BTC': '#FF9900',
-    'CBDC': '#667788',
-    'ECOMMERCE': '#8833bb',
-    'NFT': '#ff5aac',
+    'Gaming/ Metaverse': '#00BFFF',
+    'DeFi': '#1155bb',
+    'Web3/ Anonymität': '#DC143C',
+    'Grüne Coins': '#00aa66',
+    'BTC- Zusammenhang': '#FF9900',
+    'CBDC- Netzwerke': '#667788',
+    'eCommerce': '#8833bb',
+    'Tokenisierung/ RWA': '#ff5aac',
 };
 
 const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
@@ -32,9 +21,9 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
         ...Object.entries(portfolioCalculations.percentages || {}).map(([key, value]) => {
             return [categoriesDisplay[key] || key, parseFloat(value.replace('%', ''))]
         })
-    ] : [["Category", "Percentage"],  ["AI", 100.0],];
+    ] : [["Category", "Percentage"], ["AI", 100.0],];
 
-    const colors = data.slice(1).map(item => categoryColors[item[0].toUpperCase()] || '#CCCCCC');
+    const colors = data.slice(1).map(item => categoryColors[item[0]] || '#CCCCCC');
 
     const options = {
         pieHole: 0.8,
@@ -45,7 +34,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
             textStyle: { color: 'black' }, showColorCode: true
         },
         colors: colors,
-        chartArea: { width: '40%', height: '40%' },
+        chartArea: { width: '80%', height: '80%' },
         backgroundColor: 'none',
         animation: {
             startup: true,
@@ -59,14 +48,32 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
     };
 
     return (
-        <Box sx={{ position: "absolute", left: "135px" }}>
+        <Box sx={{ position: "relative", width: "56%", height: "250px" }}>
             <Chart
                 chartType="PieChart"
-                height="400px"
+                height="300px"
                 width="100%"
                 data={data}
                 options={options}
             />
+            <Box sx={{
+                position: "absolute",
+                top: "60%",  // Center vertically in the donut hole
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                textAlign: "center",  // Center text horizontally
+                zIndex: "tooltip"
+            }}>
+                <Typography variant="caption" style={{ color: '#FFFFFF' }}>
+                    Score  {/* Rating Description */}
+                </Typography>
+                <Typography variant="h4" component="div" style={{ color: '#FFFFFF' }}>
+                    98.5  {/* Score */}
+                </Typography>
+                <Typography variant="caption" style={{ color: '#FFFFFF' }}>
+                    Sehr gut  {/* Rating Description */}
+                </Typography>
+            </Box>
         </Box>
     );
 }

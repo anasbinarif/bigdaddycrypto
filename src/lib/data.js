@@ -1,4 +1,4 @@
-import {Assets, Portfolio, User} from "@/lib/models";
+import {Assets, User} from "@/lib/models";
 import {connectToDb} from "./utils";
 
 export const categoryColors = {
@@ -63,15 +63,31 @@ export const getCoinData = async() => {
     return res.json()
 }
 
+export const getAssets = async () => {
+    const res = await fetch('/api/getAssets', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch data');
+    }
+    const data = await res.json();
+    console.log("yoo bro", data);
+    return await data;
+}
+
 export const storeUserPortfolioCoin = async (userId, coin) => {
-    const coinData = setCoinObject(coin);
+    // const coinData = setCoinObject(coin);
 
     const res = fetch('/api/addToPortfolio', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId, coin: coinData })
+        body: JSON.stringify({ userId, coin: coin })
     });
     return res;
 }
@@ -200,4 +216,16 @@ export const getCategoryColor = (category) => {
         case 'none': return '#00BFFF';
         default: return '#ffffff';
     }
+};
+
+export const categoriesDisplay = {
+    "ai": 'AI',
+    "web3": 'Web3/ Anonymität',
+    "defi": 'DeFi',
+    "green": 'Grüne Coins',
+    "metaverse": 'Gaming/ Metaverse',
+    "btc": 'BTC- Zusammenhang',
+    "cbdc": 'CBDC- Netzwerke',
+    "ecommerce": 'eCommerce',
+    "nft": 'Tokenisierung/ RWA',
 };

@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 import { sessionAtom } from "@/app/stores/sessionStore";
 import { useEffect } from "react";
 
-const Link = () => {
+const NavbarLink = () => {
     const { data: session, status } = useSession();
     const [sessionJotai, setSession] = useAtom(sessionAtom);
     useEffect(() => {
@@ -23,7 +23,7 @@ const Link = () => {
         <Box sx={{display: "flex", alignItems: "center"}}>
             <Typography variant="body1">Portfolio-ID: {session?.user.username}</Typography>
             <IconButton onClick={handleLogoutFun} color="inherit" sx={{ml: 2}}>
-                <Box sx={{display: "flex", bgcolor: "#202530", p: "10px 10px", borderRadius: "5px"}}>
+                <Box sx={{display: "flex", bgcolor: "#202530", p: "10px 10px", borderRadius: "5px", '&:hover': { backgroundColor: '#1188ff' }}}>
                     <LogoutIcon/>
                     <Typography >Logout</Typography>
                 </Box>
@@ -32,4 +32,4 @@ const Link = () => {
     );
 };
 
-export default Link;
+export default NavbarLink;
