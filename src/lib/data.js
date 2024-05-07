@@ -22,7 +22,7 @@ export const getUser = async (id) => {
     }
 }
 
-export const getUsers = async (id) => {
+export const getUsers = async () => {
     try {
         await connectToDb()
         return await User.find()

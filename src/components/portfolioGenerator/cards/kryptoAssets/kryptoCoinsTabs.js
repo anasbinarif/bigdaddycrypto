@@ -65,7 +65,7 @@ const ScrollableKryptoTabs = ({portfolio, loadingPortfolio, userID}) => {
     }, [userID]);
 
     const checkCoinSelected = (coin) => {
-        if (!portfolio) return false;
+        if (!portfolio.assets) return false;
         return portfolio?.assets.some(asset => asset.CoinGeckoID === coin.CoinGeckoID);
     }
 

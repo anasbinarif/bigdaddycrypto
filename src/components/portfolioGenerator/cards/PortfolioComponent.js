@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Box, Typography, Avatar, Card, Grid, Tooltip, IconButton, styled } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteConfirmationDialog from '@/components/AlertDialog/AlertDialog';
-import { getCategoryColor } from '@/lib/data';
+import { getCategoryColor    } from '@/lib/data';
 import AlertBar from '@/components/customAllert/Alert';
 
 const CategoryColorBar = styled(Box)(({ color }) => ({

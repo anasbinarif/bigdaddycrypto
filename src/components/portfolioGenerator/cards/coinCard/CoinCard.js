@@ -14,6 +14,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     margin: theme.spacing(1),
     position: 'relative', // To position the category color bar
     borderRadius: theme.shape.borderRadius,
+    userSelect: "none",
 }));
 
 const CategoryColorBar = styled(Box)(({ color, selected }) => ({
@@ -78,8 +79,14 @@ const CoinCard = ({ coin, selected }) => {
             backgroundColor: `${selected ? "#00aa6633" : "none"}`
         }}>
             <CategoryColorBar color={getCategoryColor(Category)} selected={selected} />
-            <CheckCircleIcon sx={{color: "#00aa66", display: `${selected ? "block" : "none"}`}}/>
             <CardContent>
+                <CheckCircleIcon sx={{
+                    color: "#00aa66",
+                    display: `${selected ? "block" : "none"}`,
+                    position: "absolute",
+                    zIndex: 1,
+                    top: "5px",
+                }}/>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1 }}>
                     <Avatar src={cgImageURL} sx={{ width: 35, height: 35, marginRight: 1 }} />
                     <Typography variant="subtitle2" noWrap>{Ticker}</Typography>
