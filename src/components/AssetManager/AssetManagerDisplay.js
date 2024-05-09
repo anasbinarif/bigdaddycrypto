@@ -8,7 +8,7 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const AssetManagerDisplay = () => {
+const AssetManagerDisplay = ({portfolio, setPortfolio, loadingPortfolio, assetsLeangth}) => {
     return (
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             <Grid item xs={2} sm={4} md={4}>
@@ -22,7 +22,12 @@ const AssetManagerDisplay = () => {
             </Grid>
 
             <Grid item xs={4} sm={4} md={4}>
-                <PortfolioComponent/>
+                <PortfolioComponent
+                    portfolio={portfolio}
+                    setPortfolio={setPortfolio}
+                    loadingPortfolio={loadingPortfolio}
+                    assetsLeangth={assetsLeangth}
+                />
             </Grid>
             <Grid item xs={8} sm={8} md={8}>
                 <Item >fourth</Item>

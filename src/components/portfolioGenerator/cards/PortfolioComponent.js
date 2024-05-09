@@ -88,7 +88,6 @@ const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLe
     //     };
     //     fetchData();
     // }, [sessionJotai?.user.id]);
-
     // useEffect(() => {
     //     if (portfolio.userId && portfolio?.assets.length > 0) {
     //         setLoadingPortfolio(true)

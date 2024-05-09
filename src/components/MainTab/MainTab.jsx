@@ -1,10 +1,14 @@
 "use client"
 import * as React from 'react';
 import { Tabs, Tab, Box, Typography } from '@mui/material';
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import PortfolioDisplay from '@/components/portfolioGenerator/PortfolioDisplay';
 import AssetManagerDisplay from "@/components/AssetManager/AssetManagerDisplay";
 import PortfolioUbersicht from "@/components/portfolioÜbersicht/PortfolioÜbersicht";
+import {useAtom} from "jotai/index";
+import {sessionAtom} from "@/app/stores/sessionStore";
+import {portfolioAtom} from "@/app/stores/portfolioStore";
+import {getUserPortfolio} from "@/lib/data";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -32,6 +36,32 @@ export default function ColorTabs() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const [sessionJotai] = useAtom(sessionAtom);
+    const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+    const [loadingPortfolio, setLoadingPortfolio] = useState(false)
+    const [assetsLeangth, setAssetsLeangth] = useState(0)
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (sessionJotai?.user) {
+                const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+                setPortfolio(userPortfolio.data.data)
+            }
+
+        };
+        fetchData();
+    }, [sessionJotai?.user.id]);
+
+    useEffect(() => {
+        if (portfolio.userId && portfolio?.assets.length > 0) {
+            setLoadingPortfolio(true)
+            const len = portfolio?.assets.length;
+            setAssetsLeangth(len);
+            console.log("length of user assets", len);
+        }
+    }, [portfolio])
 
     return (
         <Box sx={{ width: '100%', bgcolor: '#111826', padding: '2%', marginTop: "65px" }}>
@@ -72,10 +102,16 @@ export default function ColorTabs() {
                 <Tab value="three" label="Portfolio Übersicht" />
             </Tabs>
             <TabPanel value={value} index="one">
-                <PortfolioDisplay/>
+                <PortfolioDisplay portfolio={portfolio}
+                                  setPortfolio={setPortfolio}
+                                  loadingPortfolio={loadingPortfolio}
+                                  assetsLeangth={assetsLeangth}/>
             </TabPanel>
             <TabPanel value={value} index="two">
-                <AssetManagerDisplay/>
+                <AssetManagerDisplay portfolio={portfolio}
+                                     setPortfolio={setPortfolio}
+                                     loadingPortfolio={loadingPortfolio}
+                                     assetsLeangth={assetsLeangth}/>
             </TabPanel>
             <TabPanel value={value} index="three">
                 <PortfolioUbersicht/>
