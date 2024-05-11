@@ -1,10 +1,10 @@
-import { Portfolio } from "@/lib/models";
+import { UserPortfolio } from "@/lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
     const { portfolioId, CoinGeckoID } = await req.json();
     try {
-        const userPortfolio = await Portfolio.findById(portfolioId);
+        const userPortfolio = await UserPortfolio.findById(portfolioId);
         const index = userPortfolio.assets.findIndex(c => c.CoinGeckoID === CoinGeckoID);
         userPortfolio.assets.splice(index, 1);
         await userPortfolio.save();

@@ -1,14 +1,27 @@
-import { Portfolio } from "@/lib/models";
+import { UserPortfolio, Assets } from "@/lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
-    const {userId} = await req.json();
+    const { userId } = await req.json();
 
     try {
-        const portfolio = await Portfolio.findOne({userId: userId})
-        // console.log("portfolioGenerator------", portfolio);
-        return NextResponse.json({ data: portfolio }, { status: 200 });
+        const portfolio = await UserPortfolio.findOne({ userId: userId });
+        if (!portfolio) {
+            console.log("No portfolio found");
+            return NextResponse.json({ message: "No portfolio found" }, { status: 404 });
+        }
+
+        // Fetch each asset's details from the Assets table based on CoinGeckoID
+        const assetDetails = await Promise.all(portfolio.assets.map(async (asset) => {
+            return Assets.findOne({ CoinGeckoID: asset.CoinGeckoID });
+        }));
+
+        // Log and return the full details
+        // console.log("portfolioGenerator------", assetDetails);
+        return NextResponse.json({ data: assetDetails }, { status: 200 });
+
     } catch (error) {
-        return NextResponse.json({ message: `Error getting user portfolio ${e}` }, { status: 500 });
+        console.error("Error getting user portfolio:", error);
+        return NextResponse.json({ message: `Error getting user portfolio ${error.message}` }, { status: 500 });
     }
 }

@@ -47,7 +47,8 @@ export default function ColorTabs() {
         const fetchData = async () => {
             if (sessionJotai?.user) {
                 const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-                setPortfolio(userPortfolio.data.data)
+                console.log("han bhai scene kiya hai", userPortfolio.data)
+                setPortfolio(userPortfolio?.data)
             }
 
         };
@@ -55,7 +56,7 @@ export default function ColorTabs() {
     }, [sessionJotai?.user.id]);
 
     useEffect(() => {
-        if (portfolio.userId && portfolio?.assets.length > 0) {
+        if (portfolio?.assets && portfolio?.assets.length > 0) {
             setLoadingPortfolio(true)
             const len = portfolio?.assets.length;
             setAssetsLeangth(len);

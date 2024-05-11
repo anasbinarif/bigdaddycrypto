@@ -1,10 +1,12 @@
 // src/components/PortfolioComponent.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Box, Typography, Avatar, Card, Grid, Tooltip, IconButton, styled } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteConfirmationDialog from '@/components/AlertDialog/AlertDialog';
-import { getCategoryColor    } from '@/lib/data';
+import {getCategoryColor} from '@/lib/data';
 import AlertBar from '@/components/customAllert/Alert';
+import {useAtom} from "jotai/index";
+import {sessionAtom} from "@/app/stores/sessionStore";
 
 const CategoryColorBar = styled(Box)(({ color }) => ({
     width: 4,
@@ -16,7 +18,7 @@ const CategoryColorBar = styled(Box)(({ color }) => ({
 }));
 
 const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLeangth}) => {
-    // const [sessionJotai] = useAtom(sessionAtom);
+    const [sessionJotai] = useAtom(sessionAtom);
     // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
     const [deleteIconIndex, setDeleteIconIndex] = useState(null);
     const [selectedAsset, setSelectedAsset] = useState(null);
@@ -105,6 +107,26 @@ const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLe
     const handleMouseLeave = () => {
         setDeleteIconIndex(null);
     };
+
+    useEffect(() => {
+        console.log("yooooooooooooooooooooooooooooooooo")
+        const fetchData = async () => {
+            if (sessionJotai?.user) {
+                const userId = sessionJotai?.user.id;
+                const res = await fetch('/api/crypto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId }),
+                });
+                if (!res.ok) {
+                    throw new Error(`Failed to update data${res}`);
+                }
+            }
+        };
+        fetchData();
+    }, [sessionJotai?.user.id, portfolio]);
 
 
     return (<>

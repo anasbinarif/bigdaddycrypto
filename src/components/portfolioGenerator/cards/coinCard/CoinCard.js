@@ -65,7 +65,7 @@ const CoinCard = ({ coin, selected }) => {
 
         if (res.ok) {
             const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-            setPortfolio(userPortfolio.data.data)
+            setPortfolio(userPortfolio.data)
         } else {
             console.error('Error handling the portfolioGenerator update:', res.message);
         }

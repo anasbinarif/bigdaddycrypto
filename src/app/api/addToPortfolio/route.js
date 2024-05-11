@@ -1,4 +1,4 @@
-import { Portfolio } from "@/lib/models";
+import { UserPortfolio } from "@/lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -6,16 +6,20 @@ export async function POST(req) {
     console.log("debug price", coin, userId);
 
     try {
-        const userPortfolio = await Portfolio.findOne({ userId: userId });
+        const userPortfolio = await UserPortfolio.findOne({ userId: userId });
         console.log("debug userPortfolio", userPortfolio);
 
         if (!userPortfolio) {
-            const newPortfolio = new Portfolio({
-                userId: userId,
-                assets: [coin]
-            });
-            await newPortfolio.save();
-            return NextResponse.json({ message: "Portfolio created and coin added." }, { status: 201 });
+            try {
+                const newPortfolio = new UserPortfolio({
+                    userId: userId,
+                    assets: [coin]
+                });
+                await newPortfolio.save();
+                return NextResponse.json({ message: "Portfolio created and coin added." }, { status: 201 });
+            }catch (e) {
+                console.log(e)
+            }
         } else {
             // Check if the coin already exists
             const index = userPortfolio.assets.findIndex(c => c.CoinGeckoID === coin.CoinGeckoID);
