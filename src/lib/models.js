@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        pastUser: {
+            type: String,
+            default: ""
+        }
     },
     { timestamps: true }
 );
@@ -111,7 +115,6 @@ const assetsSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-
 const portfolioSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -122,7 +125,53 @@ const portfolioSchema = new mongoose.Schema({
         CoinGeckoID: {
             type: String,
             required: true
-        }
+        },
+        Holdings: {
+            type: Number,
+            default: 0.0
+        },
+        DCA: {
+            type: Number,
+            default: 0.0
+        },
+        Gewichtung: {
+            type: Number,
+            default: 0.0
+        },
+        Relevanz: {
+            type: Number,
+            default: 0.0
+        },
+        totalInvest: {
+            type: Number,
+            default: 0.0
+        },
+        totalSold: {
+            type: Number,
+            default: 0.0
+        },
+        buyAndSell: [{
+            Type: {
+                type: String,
+                required: true
+            },
+            Date: {
+                type: Date,
+                required: true
+            },
+            PricePerCoin: {
+                type: Number,
+                required: true
+            },
+            Betrag: {
+                type: Number,
+                required: true
+            },
+            Coins: {
+                type: Number,
+                required: true
+            }
+        }]
     }]
 }, { timestamps: true });
 
