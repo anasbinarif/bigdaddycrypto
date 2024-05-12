@@ -1,5 +1,6 @@
 "use client"
 import * as React from 'react';
+// import {Link, useHistory, useLocation} from 'react-router-dom'
 import { Tabs, Tab, Box, Typography } from '@mui/material';
 import {useEffect, useState} from "react";
 import PortfolioDisplay from '@/components/portfolioGenerator/PortfolioDisplay';
@@ -32,9 +33,13 @@ function TabPanel(props) {
 
 export default function ColorTabs() {
     const [value, setValue] = useState('one');
+    const [selectedCoin, setSelectedCoin] = useState(0);
+    // const { setActiveTab } = useTabContext();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        // setActiveTab(newValue)
+        setTabSelector(newValue);
     };
 
     const [sessionJotai] = useAtom(sessionAtom);
@@ -106,13 +111,16 @@ export default function ColorTabs() {
                 <PortfolioDisplay portfolio={portfolio}
                                   setPortfolio={setPortfolio}
                                   loadingPortfolio={loadingPortfolio}
-                                  assetsLeangth={assetsLeangth}/>
+                                  assetsLeangth={assetsLeangth}
+                                  setSelectedCoin={setSelectedCoin}/>
             </TabPanel>
             <TabPanel value={value} index="two">
                 <AssetManagerDisplay portfolio={portfolio}
                                      setPortfolio={setPortfolio}
                                      loadingPortfolio={loadingPortfolio}
-                                     assetsLeangth={assetsLeangth}/>
+                                     assetsLeangth={assetsLeangth}
+                                     selectedCoin={selectedCoin}
+                                     setSelectedCoin={setSelectedCoin}/>
             </TabPanel>
             <TabPanel value={value} index="three">
                 <PortfolioUbersicht/>

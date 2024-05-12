@@ -5,7 +5,7 @@ import KryptoAssets from "./cards/kryptoAssets/KryptoAssets";
 import PortfolioComponent from "./cards/PortfolioComponent";
 import { DonutCard } from "./cards/donutCard/DonutCard";
 
-const PortfolioDisplay = ({portfolio, setPortfolio, loadingPortfolio, assetsLeangth}) => {
+const PortfolioDisplay = ({portfolio, setPortfolio, loadingPortfolio, assetsLeangth, setSelectedCoin}) => {
     // const [sessionJotai] = useAtom(sessionAtom);
     // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
     // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
@@ -32,7 +32,12 @@ const PortfolioDisplay = ({portfolio, setPortfolio, loadingPortfolio, assetsLean
     //     }
     // }, [portfolio])
     return (
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+        <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}
+            sx={{ position: "relative" }}
+        >
             <Grid item xs={2} sm={4} md={4}>
                 <BitpandaCard />
             </Grid>
@@ -43,19 +48,24 @@ const PortfolioDisplay = ({portfolio, setPortfolio, loadingPortfolio, assetsLean
                 <DonutCard />
             </Grid>
             <Grid item xs={8} sm={8} md={8}>
-                <KryptoAssets portfolio={portfolio} loadingPortfolio={loadingPortfolio} userID={portfolio.userId} />
+                <KryptoAssets
+                    portfolio={portfolio}
+                    loadingPortfolio={loadingPortfolio}
+                    userID={portfolio.userId}
+                />
             </Grid>
-            <Grid item xs={4} sm={4} md={4}>
+            <Grid item xs={4} sm={4} md={4} sx={{ position: "relative" }}>
                 <PortfolioComponent
                     portfolio={portfolio}
                     setPortfolio={setPortfolio}
                     loadingPortfolio={loadingPortfolio}
                     assetsLeangth={assetsLeangth}
+                    setSelectedCoin={setSelectedCoin}
                 />
             </Grid>
         </Grid>
 
-    )
-}
+    );
+};
 
 export default PortfolioDisplay;

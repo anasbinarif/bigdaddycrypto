@@ -1,15 +1,26 @@
-import {Box, Divider} from "@mui/material"
-import KryptoFilter from "./kryptoFilter"
+import { Box, Divider } from "@mui/material";
+import KryptoFilter from "./kryptoFilter";
 import ScrollableKryptoTabs from "@/components/portfolioGenerator/cards/kryptoAssets/kryptoCoinsTabs";
 
-const KryptoAssets = ({portfolio, loadingPortfolio}) => {
+const KryptoAssets = ({ portfolio, loadingPortfolio }) => {
   return (
-    <Box sx={{ backgroundColor: "#202530", color: 'white', height: "100%", borderRadius: "2px" }}>
-        <KryptoFilter/>
-        <Divider />
-        <ScrollableKryptoTabs portfolio={portfolio} loadingPortfolio={loadingPortfolio} userID={portfolio.userId}/>
+    <Box
+      sx={{
+        backgroundColor: "#202530",
+        color: "white",
+        height: "100%",
+        borderRadius: "2px",
+      }}
+    >
+      <KryptoFilter portfolio={portfolio} userID={portfolio.userID} />
+      <Divider />
+      <ScrollableKryptoTabs
+        portfolio={portfolio}
+        loadingPortfolio={loadingPortfolio}
+        userID={portfolio.userId}
+      />
     </Box>
-  )
-}
+  );
+};
 
-export default KryptoAssets
+export default KryptoAssets;

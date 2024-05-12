@@ -1,10 +1,19 @@
 // src/components/PortfolioComponent.js
-import React, {useEffect, useState} from 'react';
-import { Box, Typography, Avatar, Card, Grid, Tooltip, IconButton, styled } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DeleteConfirmationDialog from '@/components/AlertDialog/AlertDialog';
-import {getCategoryColor} from '@/lib/data';
-import AlertBar from '@/components/customAllert/Alert';
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Avatar,
+  Card,
+  Grid,
+  Tooltip,
+  IconButton,
+  styled,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteConfirmationDialog from "@/components/AlertDialog/AlertDialog";
+import { getCategoryColor } from "@/lib/data";
+import AlertBar from "@/components/customAllert/Alert";
 import {useAtom} from "jotai/index";
 import {sessionAtom} from "@/app/stores/sessionStore";
 
@@ -17,23 +26,35 @@ const CategoryColorBar = styled(Box)(({ color }) => ({
     top: 0,
 }));
 
-const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLeangth}) => {
+const PortfolioComponent = ({
+  portfolio,
+  setPortfolio,
+  loadingPortfolio,
+  assetsLeangth,
+  setSelectedCoin,}) => {
     const [sessionJotai] = useAtom(sessionAtom);
-    // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
-    const [deleteIconIndex, setDeleteIconIndex] = useState(null);
-    const [selectedAsset, setSelectedAsset] = useState(null);
-    // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
-    // const [assetsLeangth, setAssetsLeangth] = useState(0)
+  // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+  const [deleteIconIndex, setDeleteIconIndex] = useState(null);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
+  // const [assetsLeangth, setAssetsLeangth] = useState(0)
 
-    const [alert, setAlert] = useState({
-        open: false,
-        message: '',
-        severity: 'error'
-    });
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
-    const handleDeleteClick = (asset) => {
-        setSelectedAsset(asset);
-    };
+  const handleDeleteClick = (asset) => {
+    setSelectedAsset(asset);
+  };
+
+  const setCoin = (index) => {
+      if (setSelectedCoin !== undefined) {
+          // console.log(index);
+          setSelectedCoin(index);
+      }
+  };
 
     const handleDeleteConfirm = async () => {
         const portfolioId = portfolio._id;
@@ -90,6 +111,7 @@ const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLe
     //     };
     //     fetchData();
     // }, [sessionJotai?.user.id]);
+
     // useEffect(() => {
     //     if (portfolio.userId && portfolio?.assets.length > 0) {
     //         setLoadingPortfolio(true)
@@ -107,6 +129,7 @@ const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLe
     const handleMouseLeave = () => {
         setDeleteIconIndex(null);
     };
+
 
     useEffect(() => {
         console.log("yooooooooooooooooooooooooooooooooo")
@@ -128,15 +151,14 @@ const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLe
         fetchData();
     }, [sessionJotai?.user.id, portfolio]);
 
-
-    return (<>
+    return (<Box sx={{ position: "sticky", top: "100px" }}>
         <AlertBar
             open={alert.open}
             message={alert.message}
             severity={alert.severity}
             onClose={() => setAlert({ ...alert, open: false })}
         />
-        <Box sx={{ width: '100%', backgroundColor: '#202530', p: 2, display: "flex", borderRadius: "2px", position: "sticky", top: "92px" }}>
+        <Box sx={{ width: '100%', backgroundColor: '#202530', p: 2, display: "flex", borderRadius: "2px" }}>
             <Box sx={{ p: 3 }}>
                 <Typography variant="h4" gutterBottom>
                     Portfolio ({assetsLeangth})
@@ -145,14 +167,16 @@ const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLe
                     Passe die Gewichtung der Assets an, um ihren tatsächlichen Anteil im Portfolio besser wiederzuspiegeln.
                 </Typography>
                 {loadingPortfolio ? <Grid sx={{
-                    borderRadius: "4px", overflow: 'auto',
+                    borderRadius: "4px",
+                    overflow: 'auto',
                     scrollbarColor: '#555559 #333339',
                     maxHeight: '500px',
                 }}>
                     {loadingPortfolio && portfolio.assets.map((asset, index) => (
                         <Grid item key={index} xs={12} sm={6} md={15}>
                             <Card onMouseEnter={() => handleMouseEnter(index)}
-                                onMouseLeave={() => handleMouseLeave()}
+                                  onMouseLeave={() => handleMouseLeave()}
+                                  onClick={() => setCoin(index)}
                                 sx={{
                                     display: 'flex',
                                     justifyContent: "space-between",
@@ -202,7 +226,7 @@ const PortfolioComponent = ({portfolio, setPortfolio, loadingPortfolio, assetsLe
                 asset={selectedAsset}
             />
         </Box>
-    </>
+    </Box>
     );
 };
 
