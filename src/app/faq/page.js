@@ -10,6 +10,7 @@ import {
   ListItemAvatar,
   Avatar,
   Typography,
+  Box,
 } from "@mui/material";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
@@ -219,78 +220,90 @@ function VideoPlayer() {
   return (
     <>
       <Navbar />
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
-          <List
-            style={{
-              maxHeight: "65vh",
-              overflow: "auto",
-              backgroundColor: "#333236",
-            }}
-          >
-            {videos.map((video, index) => (
-              <ListItem
-                key={index}
-                onClick={(event) =>
-                  handleListItemClick(event, index, video.url)
-                }
-                sx={{
-                  cursor: "pointer",
-                  padding: "10px",
-                  borderBottom: "1px solid #555",
-                  backgroundColor:
-                    selectedIndex === index ? "black" : "transparent",
-                  "&:hover": {
+      <Box sx={{ marginTop: "10rem" }}>
+        <Typography
+          sx={{
+            color: "#24ffa7",
+            marginLeft: "6rem",
+            fontSize: "6rem",
+            fontWeight: "bold",
+          }}
+        >
+          Häufige Fragen
+        </Typography>
+        <Grid container spacing={2} sx={{ margin: "0 15rem 10rem 5rem" }}>
+          <Grid item xs={12} md={4}>
+            <List
+              style={{
+                maxHeight: "65vh",
+                overflow: "auto",
+                backgroundColor: "#333236",
+              }}
+            >
+              {videos.map((video, index) => (
+                <ListItem
+                  key={index}
+                  onClick={(event) =>
+                    handleListItemClick(event, index, video.url)
+                  }
+                  sx={{
+                    cursor: "pointer",
+                    padding: "10px",
+                    borderBottom: "1px solid #555",
                     backgroundColor:
-                      selectedIndex === index ? "black" : "#28282A",
-                  },
-                }}
-              >
-                <ListItemAvatar>
-                  <Avatar
-                    variant="square"
-                    src={video.thumbnail}
-                    sx={{ width: 56, height: 32, marginRight: "10px" }}
+                      selectedIndex === index ? "black" : "transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedIndex === index ? "black" : "#28282A",
+                    },
+                  }}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      variant="square"
+                      src={video.thumbnail}
+                      sx={{ width: 56, height: 32, marginRight: "10px" }}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="body2"
+                        style={{
+                          color: "white",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {video.title}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2" style={{ color: "#999" }}>
+                        2:16
+                      </Typography>
+                    }
+                    primaryTypographyProps={{ noWrap: false }}
                   />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Typography
-                      variant="body2"
-                      style={{
-                        color: "white",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {video.title}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="body2" style={{ color: "#999" }}>
-                      2:16
-                    </Typography>
-                  }
-                  primaryTypographyProps={{ noWrap: false }}
-                />
-              </ListItem>
-            ))}
-          </List>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Card>
+              <CardMedia
+                component="iframe"
+                height="520"
+                src={selectedVideo}
+                allow="autoplay; encrypted-media"
+                loading="lazy"
+                title="Video Player"
+              />
+            </Card>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardMedia
-              component="iframe"
-              height="520"
-              src={selectedVideo}
-              allow="autoplay; encrypted-media"
-              loading="lazy"
-              title="Video Player"
-            />
-          </Card>
-        </Grid>
-      </Grid>
+      </Box>
 
       <Footer />
     </>

@@ -50,7 +50,7 @@ const PortfolioComponent = ({
 
   const setCoin = (index) => {
     if (setSelectedCoin !== undefined) {
-      console.log(index);
+      // console.log(index);
       setSelectedCoin(index);
     }
   };
@@ -134,7 +134,7 @@ const PortfolioComponent = ({
   };
 
   return (
-    <>
+    <Box sx={{ position: "sticky", top: "100px" }}>
       <AlertBar
         open={alert.open}
         message={alert.message}
@@ -148,8 +148,8 @@ const PortfolioComponent = ({
           p: 2,
           display: "flex",
           borderRadius: "2px",
-          position: "sticky",
-          top: "92px",
+          // position: "sticky",
+          // top: "92px",
         }}
       >
         <Box sx={{ p: 3 }}>
@@ -280,7 +280,7 @@ const PortfolioComponent = ({
           asset={selectedAsset}
         />
       </Box>
-    </>
+    </Box>
   );
 };
 

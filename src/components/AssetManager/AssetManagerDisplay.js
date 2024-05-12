@@ -16,12 +16,11 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const AssetManagerDisplay = () => {
+const AssetManagerDisplay = ({ selectedCoin, setSelectedCoin }) => {
   const [sessionJotai] = useAtom(sessionAtom);
   const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [loadingPortfolio, setLoadingPortfolio] = useState(false);
   const [assetsLeangth, setAssetsLeangth] = useState(0);
-  const [selectedCoin, setSelectedCoin] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {

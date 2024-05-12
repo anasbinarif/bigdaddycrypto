@@ -32,6 +32,7 @@ export default function ColorTabs({tabSelector, setTabSelector}) {
 //     const location = useLocation();
 //   const history = useHistory();
     const [value, setValue] = useState('one');
+    const [selectedCoin, setSelectedCoin] = useState(0);
     // const { setActiveTab } = useTabContext();
 
     const handleChange = (event, newValue) => {
@@ -79,10 +80,10 @@ export default function ColorTabs({tabSelector, setTabSelector}) {
                 <Tab value="three" label="Portfolio Übersicht" />
             </Tabs>
             <TabPanel value={value} index="one">
-                <PortfolioDisplay/>
+                <PortfolioDisplay setSelectedCoin={setSelectedCoin}/>
             </TabPanel>
             <TabPanel value={value} index="two">
-                <AssetManagerDisplay/>
+                <AssetManagerDisplay selectedCoin={selectedCoin} setSelectedCoin={setSelectedCoin}/>
             </TabPanel>
             <TabPanel value={value} index="three">
                 <PortfolioUbersicht/>

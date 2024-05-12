@@ -10,7 +10,7 @@ import { useAtom } from "jotai/index";
 import { sessionAtom } from "@/app/stores/sessionStore";
 import { portfolioAtom } from "@/app/stores/portfolioStore";
 
-const PortfolioDisplay = () => {
+const PortfolioDisplay = ({ setSelectedCoin }) => {
   const [sessionJotai] = useAtom(sessionAtom);
   const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [loadingPortfolio, setLoadingPortfolio] = useState(false);
@@ -40,6 +40,7 @@ const PortfolioDisplay = () => {
       container
       spacing={{ xs: 2, md: 3 }}
       columns={{ xs: 4, sm: 8, md: 12 }}
+      sx={{ position: "relative" }}
     >
       <Grid item xs={2} sm={4} md={4}>
         <BitpandaCard />
@@ -57,12 +58,13 @@ const PortfolioDisplay = () => {
           userID={portfolio.userId}
         />
       </Grid>
-      <Grid item xs={4} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={4} sx={{ position: "relative" }}>
         <PortfolioComponent
           portfolio={portfolio}
           setPortfolio={setPortfolio}
           loadingPortfolio={loadingPortfolio}
           assetsLeangth={assetsLeangth}
+          setSelectedCoin={setSelectedCoin}
         />
       </Grid>
     </Grid>

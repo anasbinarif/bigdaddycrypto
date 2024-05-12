@@ -1,20 +1,26 @@
-"use client"
+"use client";
 import Link from "next/link";
-import {useEffect, useState} from "react";
-import { Box, TextField, Button, Typography, FormControlLabel } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  FormControlLabel,
+} from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AlertBar from "@/components/customAllert/Alert";
-import {useAtom} from "jotai/index";
-import {sessionAtom} from "@/app/stores/sessionStore";
+import { useAtom } from "jotai/index";
+import { sessionAtom } from "@/app/stores/sessionStore";
 
 const LoginPage = () => {
   const [sessionJotai] = useAtom(sessionAtom);
   const router = useRouter();
   const [alert, setAlert] = useState({
     open: false,
-    message: '',
-    severity: 'error'
+    message: "",
+    severity: "error",
   });
 
   const [pending, setPending] = useState(false);
@@ -22,7 +28,7 @@ const LoginPage = () => {
   const [user, setUser] = useState({
     userEmail: "",
     pin: "",
-  })
+  });
 
   const [errors, setErrors] = useState({
     userEmail: false,
@@ -38,7 +44,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (sessionJotai?.user) {
-      router.push("/")
+      router.push("/");
     }
   }, []);
 
@@ -47,7 +53,11 @@ const LoginPage = () => {
 
     // Email Validation
     if (user.userEmail.trim() === "") {
-      setErrors((prev) => ({ ...prev, userEmail: true, userEmailMessage: "Email is required." }));
+      setErrors((prev) => ({
+        ...prev,
+        userEmail: true,
+        userEmailMessage: "Email is required.",
+      }));
       hasErrors = true;
     } else if (!isValidEmail(user.userEmail)) {
       setErrors((prev) => ({
@@ -57,7 +67,11 @@ const LoginPage = () => {
       }));
       hasErrors = true;
     } else {
-      setErrors((prev) => ({ ...prev, userEmail: false, userEmailMessage: "" }));
+      setErrors((prev) => ({
+        ...prev,
+        userEmail: false,
+        userEmailMessage: "",
+      }));
     }
 
     // PIN Validation
@@ -79,28 +93,31 @@ const LoginPage = () => {
         const res = await signIn("credentials", {
           email: user.userEmail,
           password: user.pin,
-          redirect: false
-        })
-        console.log("res = ", res)
+          redirect: false,
+        });
+        console.log("res = ", res);
         if (res.error) {
-          console.log(res.error)
+          console.log(res.error);
           setPending(false);
-          setAlert({ open: true, message: "Login Failed", severity: 'error' });
-        }
-        else {
+          setAlert({ open: true, message: "Login Failed", severity: "error" });
+        } else {
           setUser({
             userEmail: "",
             pin: "",
-          })
+          });
           console.log("hellloooooooo", res);
           setPending(false);
-          setAlert({ open: true, message: "Login Successful", severity: 'success' });
+          setAlert({
+            open: true,
+            message: "Login Successful",
+            severity: "success",
+          });
           router.push("/");
         }
       } catch (error) {
         console.log(error);
         setPending(false);
-        setAlert({ open: true, message: "Login Failed", severity: 'error' });
+        setAlert({ open: true, message: "Login Failed", severity: "error" });
       }
     }
   }
@@ -116,7 +133,6 @@ const LoginPage = () => {
       [name]: false, // Reset the error state when a field is changed
     }));
   };
-
 
   return (
     <>
@@ -161,8 +177,33 @@ const LoginPage = () => {
             value={user.userEmail}
             onChange={handleUserChange}
             fullWidth
-            sx={{ mb: 2 }}
-            helperText={errors.userEmail ? errors.userEmailMessage : "Your email address."}
+            sx={{
+              mb: 2,
+              "& .MuiFormHelperText-root": {
+                color: "#ffffff", // Helper text color
+              },
+              "& .MuiFormLabel-root": {
+                color: "#ffffff",
+              },
+              "& .MuiFilledInput-root": {
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&.Mui-focused": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+              },
+            }}
+            helperText={
+              errors.userEmail ? errors.userEmailMessage : "Your email address."
+            }
             required
             error={errors.userEmail}
           />
@@ -176,7 +217,30 @@ const LoginPage = () => {
             value={user.pin}
             onChange={handleUserChange}
             fullWidth
-            sx={{ mb: 2 }}
+            sx={{
+              mb: 2,
+              "& .MuiFormHelperText-root": {
+                color: "#ffffff", // Helper text color
+              },
+              "& .MuiFormLabel-root": {
+                color: "#ffffff",
+              },
+              "& .MuiFilledInput-root": {
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&.Mui-focused": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+              },
+            }}
             required
             helperText={errors.pin ? errors.pinMessage : ""}
             error={errors.pin}
@@ -192,13 +256,13 @@ const LoginPage = () => {
             {pending ? "Logging in..." : "Login"}
           </Button>
 
-          <Typography variant="caption" sx={{ mt: 2, maxWidth: "400px", }}>
+          <Typography variant="caption" sx={{ mt: 2, maxWidth: "400px" }}>
             Noch keinen Account? <Link href="/register">Registrieren</Link>
           </Typography>
         </Box>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

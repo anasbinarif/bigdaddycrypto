@@ -34,7 +34,7 @@ const CategoryColorBar = styled(Box)(({ color, selected }) => ({
   display: `${selected ? "none" : "block"}`,
 }));
 
-const CoinCard = ({ coin, selected }) => {
+const CoinCard = ({ coin, selected, search = false }) => {
   const { Name, cgImageURL, Ticker, Potential, Sicherheit, Category } = coin;
   // console.log(coin);
 
@@ -91,71 +91,144 @@ const CoinCard = ({ coin, selected }) => {
   };
 
   return (
-    <StyledCard
-      onDoubleClick={handleDoubleClick}
-      sx={{
-        cursor: "pointer",
-        border: `${selected ? "1px solid #00aa66aa" : "none"}`,
-        backgroundColor: `${selected ? "#00aa6633" : "none"}`,
-      }}
-    >
-      <CategoryColorBar
-        color={getCategoryColor(Category)}
-        selected={selected}
-      />
-      <CardContent>
-        <CheckCircleIcon
+    <>
+      {search ? (
+        <StyledCard
+          onDoubleClick={handleDoubleClick}
           sx={{
-            color: "#00aa66",
-            display: `${selected ? "block" : "none"}`,
-            position: "absolute",
-            zIndex: 1,
-            top: "5px",
+            cursor: "pointer",
+            border: `${selected ? "1px solid #00aa66aa" : "none"}`,
+            backgroundColor: `${selected ? "#00aa6633" : "none"}`,
+            width: "400px",
           }}
-        />
-        <Box sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1 }}>
-          <Avatar
-            src={cgImageURL}
-            sx={{ width: 35, height: 35, marginRight: 1 }}
+        >
+          <CategoryColorBar
+            color={getCategoryColor(Category)}
+            selected={selected}
           />
-          <Typography variant="subtitle2" noWrap>
-            {Ticker}
-          </Typography>
-        </Box>
-        <Box sx={{ paddingLeft: 1 }}>
-          <Typography component="div" variant="body2" noWrap>
-            {Name}
-          </Typography>
-        </Box>
-        {checkCalculation(Potential, Sicherheit) && (
-          <Box
-            sx={{
-              position: "absolute",
-              right: "0",
-              bottom: "0",
-              bgcolor: "red",
-              borderBottomRightRadius: "4px",
-              borderTopLeftRadius: "4px",
-              padding: "1px 6px 0",
-            }}
-          >
-            <Typography
-              component="div"
-              variant="body2"
+          <CardContent>
+            <CheckCircleIcon
               sx={{
-                fontSize: 13,
-                display: "flex",
-                gap: "2px",
+                color: "#00aa66",
+                display: `${selected ? "block" : "none"}`,
+                position: "absolute",
+                zIndex: 1,
+                top: "5px",
               }}
-            >
-              <span>{Potential}</span>
-              <span>|</span> {/* Corrected typo from `<snan>` to `<span>` */}
-              <span>{Sicherheit}</span>
-            </Typography>
-          </Box>
-        )}
-      </CardContent>
-    </StyledCard>
+            />
+            <Box sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1 }}>
+              <Avatar
+                src={cgImageURL}
+                sx={{ width: 35, height: 35, marginRight: 1 }}
+              />
+              <Typography variant="subtitle2" noWrap>
+                {Ticker}
+              </Typography>
+            </Box>
+            <Box sx={{ paddingLeft: 1 }}>
+              <Typography component="div" variant="body2" noWrap>
+                {Name}
+              </Typography>
+            </Box>
+            {checkCalculation(Potential, Sicherheit) && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  right: "0",
+                  bottom: "0",
+                  bgcolor: "red",
+                  borderBottomRightRadius: "4px",
+                  borderTopLeftRadius: "4px",
+                  padding: "1px 6px 0",
+                }}
+              >
+                <Typography
+                  component="div"
+                  variant="body2"
+                  sx={{
+                    fontSize: 13,
+                    display: "flex",
+                    gap: "2px",
+                  }}
+                >
+                  <span>{Potential}</span>
+                  <span>|</span>{" "}
+                  {/* Corrected typo from `<snan>` to `<span>` */}
+                  <span>{Sicherheit}</span>
+                </Typography>
+              </Box>
+            )}
+          </CardContent>
+        </StyledCard>
+      ) : (
+        <StyledCard
+          onDoubleClick={handleDoubleClick}
+          sx={{
+            cursor: "pointer",
+            border: `${selected ? "1px solid #00aa66aa" : "none"}`,
+            backgroundColor: `${selected ? "#00aa6633" : "none"}`,
+          }}
+        >
+          <CategoryColorBar
+            color={getCategoryColor(Category)}
+            selected={selected}
+          />
+          <CardContent>
+            <CheckCircleIcon
+              sx={{
+                color: "#00aa66",
+                display: `${selected ? "block" : "none"}`,
+                position: "absolute",
+                zIndex: 1,
+                top: "5px",
+              }}
+            />
+            <Box sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1 }}>
+              <Avatar
+                src={cgImageURL}
+                sx={{ width: 35, height: 35, marginRight: 1 }}
+              />
+              <Typography variant="subtitle2" noWrap>
+                {Ticker}
+              </Typography>
+            </Box>
+            <Box sx={{ paddingLeft: 1 }}>
+              <Typography component="div" variant="body2" noWrap>
+                {Name}
+              </Typography>
+            </Box>
+            {checkCalculation(Potential, Sicherheit) && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  right: "0",
+                  bottom: "0",
+                  bgcolor: "red",
+                  borderBottomRightRadius: "4px",
+                  borderTopLeftRadius: "4px",
+                  padding: "1px 6px 0",
+                }}
+              >
+                <Typography
+                  component="div"
+                  variant="body2"
+                  sx={{
+                    fontSize: 13,
+                    display: "flex",
+                    gap: "2px",
+                  }}
+                >
+                  <span>{Potential}</span>
+                  <span>|</span>{" "}
+                  {/* Corrected typo from `<snan>` to `<span>` */}
+                  <span>{Sicherheit}</span>
+                </Typography>
+              </Box>
+            )}
+          </CardContent>
+        </StyledCard>
+      )}
+    </>
   );
 };
 

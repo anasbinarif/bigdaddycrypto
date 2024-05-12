@@ -5,14 +5,17 @@ import { getAssets } from "@/lib/data";
 import Autocomplete from "@mui/material/Autocomplete";
 import CoinCard from "../coinCard/CoinCard";
 import CoinCardSkeleton from "../coinCard/CoinCardSkeleton";
+import "./stylesPopper.css";
 
 const KryptoFilter = (userID, portfolio) => {
   const [priceIndicator, setPriceIndicator] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [searchVal, setSearchVal] = useState("");
+  const searchData = data.length > 0 ? data.slice(0, 5) : [];
 
   useEffect(() => {
-    console.log("hello bro whats up");
+    // console.log("hello bro whats up");
     setLoading(true);
     getAssets()
       .then((data) => {
@@ -30,6 +33,12 @@ const KryptoFilter = (userID, portfolio) => {
     setPriceIndicator(event.target.value);
   };
 
+  const searchCoin = (event, newValue) => {
+    event.preventDefault();
+    console.log(newValue);
+    setSearchVal(newValue);
+  };
+
   const checkCoinSelected = (coin) => {
     if (!portfolio.assets) return false;
     return portfolio?.assets.some(
@@ -37,7 +46,7 @@ const KryptoFilter = (userID, portfolio) => {
     );
   };
 
-  console.log(data);
+  // console.log(data);
   return (
     <Box
       sx={{
@@ -52,7 +61,16 @@ const KryptoFilter = (userID, portfolio) => {
         <Typography variant="h6" component="div">
           Wähle deine Krypto-Assets
         </Typography>
-        <Typography variant="body2" gutterBottom>
+        <Typography
+          variant="body2"
+          gutterBottom
+          sx={{
+            fontSize: "0.9rem",
+            color: "#ffffff80",
+            maxWidth: "70%",
+            padding: "1rem 0",
+          }}
+        >
           Wähle deine gewünschten Krypto-Assets aus und füge sie durch
           Doppelklick in dein Portfolio ein.
         </Typography>
@@ -70,10 +88,24 @@ const KryptoFilter = (userID, portfolio) => {
           sx={{
             marginRight: "2rem",
 
+            "& .MuiOutlinedInput-root": {
+              border: "1px solid #ffffff",
+            },
+            "& .MuiOutlinedInput-input": {
+              padding: "0.5rem 1rem",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+            "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+
             "& .MuiNativeSelect-select": {
               fontSize: "0.8rem",
               color: "white",
-              border: "1px solid #ffffff",
+              padding: "0.5rem 1rem",
+              display: "flex",
             },
 
             "& .MuiNativeSelect-icon": {
@@ -91,10 +123,16 @@ const KryptoFilter = (userID, portfolio) => {
         </TextField>
         <Autocomplete
           id="free-solo-demo"
-          freeSolo
-          options={data}
-          getOptionLabel={(option) => option.Name}
-          renderInput={(params) => <TextField {...params} label="freeSolo" />}
+          options={searchData}
+          // value={searchVal}
+          // onChange={searchCoin}
+          getOptionLabel={(option) => {
+            if (option === undefined || option === null) {
+              return "";
+            }
+            return option.Name;
+          }}
+          renderInput={(params) => <TextField {...params} label="" />}
           renderOption={(props, option) => {
             // console.log("Option object:", option);
             return (
@@ -102,25 +140,44 @@ const KryptoFilter = (userID, portfolio) => {
                 key={option.ID}
                 coin={option}
                 selected={checkCoinSelected(option)}
+                search={true}
               />
             );
           }}
           sx={{
             minWidth: "180px",
-            display: "flex",
-            alignItems: "center",
-            "& .MuiInputBase-root": {
+            alignSelf: "flex-start",
+            "& .MuiFormControl-root": {
               wordWrap: "nowrap",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             },
-            // "& .MuiOutlinedInput-root": {
-            //   border: "1px solid #ffffff",
-            //   borderRadius: "4px",
-            // },
+            "& .MuiOutlinedInput-root.MuiInputBase-root": {
+              border: "none",
+              borderRadius: "4px",
+              padding: "0",
+            },
+            "& .MuiOutlinedInput-root": {
+              border: "1px solid #ffffff",
+              padding: "0",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "1px solid #ffffff",
+              padding: "0",
+            },
+            "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+              border: "1px solid #ffffff",
+            },
+            "& .MuiOutlinedInput-root:selected .MuiOutlinedInput-notchedOutline":
+              {
+                border: "1px solid #ffffff",
+              },
             "& .MuiFormLabel-root": {
               color: "#ffffff",
               fontSize: "0.8rem",
+              padding: "0",
             },
-            // "& ."
           }}
         />
       </Box>

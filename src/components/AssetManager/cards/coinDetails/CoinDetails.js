@@ -17,7 +17,9 @@ import {
   Button,
   Select,
   MenuItem,
+  TextField,
 } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
 // import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 // import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -27,6 +29,7 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import styles from "./coinDetails.module.css";
@@ -36,8 +39,8 @@ const CoinDetails = (props) => {
   const { coin, index } = props;
   const [value, setValue] = useState(0);
   const [rowVals, setRowVals] = useState([
-    { col1: "Kauf", col3: 0, col4: 0, col5: 0 },
-    { col1: "Kauf", col3: 0, col4: 0, col5: 0 },
+    // { col1: "Kauf", col2: "01/01/01", col3: 0, col4: 0, col5: 0 },
+    // { col1: "Kauf", col2: "01/01/01", col3: 0, col4: 0, col5: 0 },
   ]);
 
   // console.log(coin);
@@ -47,9 +50,20 @@ const CoinDetails = (props) => {
   };
 
   const addRow = () => {
-    setRowVals([...rowVals, { col1: "Kauf", col3: 0, col4: 0, col5: 0 }]);
+    setRowVals([
+      ...rowVals,
+      { col1: "Kauf", col2: "01/01/01", col3: 0, col4: 0, col5: 0 },
+    ]);
   };
 
+  const handleRowData = (newVal, index, col) => {
+    // console.log(newVal, index, col);
+    const tempRows = [...rowVals];
+    tempRows[index] = { ...tempRows[index], [col]: newVal };
+    setRowVals(tempRows);
+  };
+
+  console.log(rowVals);
   return (
     <Box
       sx={{
@@ -240,12 +254,12 @@ const CoinDetails = (props) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Column 1</TableCell>
-                    <TableCell>Column 2</TableCell>
-                    <TableCell>Column 3</TableCell>
-                    <TableCell>Column 4</TableCell>
-                    <TableCell>Column 5</TableCell>
-                    <TableCell>Column 6</TableCell>
+                    <TableCell>Aktion</TableCell>
+                    <TableCell>Datum</TableCell>
+                    <TableCell>Preis pro Coin</TableCell>
+                    <TableCell>Betrag in EUR</TableCell>
+                    <TableCell>Coins</TableCell>
+                    <TableCell>Haltedauer</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -259,35 +273,156 @@ const CoinDetails = (props) => {
                           id="demo-simple-select"
                           value={row.col1}
                           label="Age"
+                          onChange={(e) =>
+                            handleRowData(e.target.value, index, "col1")
+                          }
                           // variant="filled"
                           sx={{
                             color: "white",
                             fontSize: "0.8rem",
                             border: "none",
+
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              border: "1px solid #ffffff20",
+                            },
+
                             "& .MuiInputBase-root": {
                               border: "none",
                             },
                             "& .MuiSelect-select": {
                               border: "none",
-                              padding: "2px 5px",
-                              "&:hover": {
-                                border: "1px solid #ffffff",
-                              },
+                              padding: "5px",
                             },
                             "& .MuiSvgIcon-root": { color: "#ffffff" },
                           }}
-
-                          // onChange={handleChange}
                         >
                           <MenuItem value="Kauf">Kauf</MenuItem>
                           <MenuItem value="Verkauf">VerKauf</MenuItem>
                         </Select>
                       </TableCell>
-                      <TableCell></TableCell>
-                      <TableCell>More data {row.col3}</TableCell>
-                      <TableCell>More data {row.col4}</TableCell>
-                      <TableCell>More data {row.col5}</TableCell>
-                      <TableCell>More data {index}</TableCell>
+                      <TableCell>
+                        <div>
+                          {/* <label htmlFor="datePicker">Select a date:</label> */}
+                          <input
+                            type="date"
+                            id="datePicker"
+                            value={row.col2}
+                            onChange={(e) =>
+                              handleRowData(e.target.value, index, "col2")
+                            }
+                            style={{
+                              backgroundColor: "transparent",
+                              border: "1px solid #ffffff20",
+                              borderRadius: "4px",
+                              padding: "5px",
+                              marginRight: "auto",
+                            }}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            border: "1px solid #ffffff20",
+                            padding: "3px 5px",
+                            borderRadius: "4px",
+                            maxWidth: "100px",
+                          }}
+                        >
+                          <input
+                            type="text"
+                            id="numberInput"
+                            value={row.col3}
+                            onChange={(e) =>
+                              handleRowData(
+                                parseFloat(e.target.value) || 0,
+                                index,
+                                "col3"
+                              )
+                            }
+                            style={{
+                              marginRight: "5px",
+                              width: "100px",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                          />
+                          <div>&euro;</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            border: "1px solid #ffffff20",
+                            padding: "3px 5px",
+                            borderRadius: "4px",
+                            maxWidth: "100px",
+                          }}
+                        >
+                          <input
+                            type="text"
+                            id="numberInput"
+                            value={row.col4}
+                            onChange={(e) =>
+                              handleRowData(
+                                parseFloat(e.target.value) || 0,
+                                index,
+                                "col4"
+                              )
+                            }
+                            style={{
+                              marginRight: "5px",
+                              width: "100px",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                          />
+                          <div>&euro;</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            border: "1px solid #ffffff20",
+                            padding: "3px 5px",
+                            borderRadius: "4px",
+                            maxWidth: "100px",
+                          }}
+                        >
+                          <input
+                            type="text"
+                            id="numberInput"
+                            value={row.col5}
+                            onChange={(e) =>
+                              handleRowData(
+                                parseFloat(e.target.value) || 0,
+                                index,
+                                "col5"
+                              )
+                            }
+                            style={{
+                              marginRight: "5px",
+                              width: "100px",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Button>
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            style={{ color: "#ffffff80" }}
+                          />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
