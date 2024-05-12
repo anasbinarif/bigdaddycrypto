@@ -31,7 +31,7 @@ function TabPanel(props) {
     );
 }
 
-export default function ColorTabs() {
+export default function ColorTabs({tabSelector, setTabSelector}) {
     const [value, setValue] = useState('one');
     const [selectedCoin, setSelectedCoin] = useState(0);
     // const { setActiveTab } = useTabContext();

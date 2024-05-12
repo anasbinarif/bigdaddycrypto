@@ -87,7 +87,7 @@ const CoinDetails = (props) => {
               {coin.Ticker}
             </Typography>
           </Box>
-          <Box sx={{ alignSelf: "flex-end" }}>
+          <Box sx={{ alignSelf: "center" }}>
             <Typography>{coin.CoinGeckoID}</Typography>
             <Typography>{coin.Price.toFixed(2)} €</Typography>
           </Box>

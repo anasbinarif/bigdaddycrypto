@@ -1,21 +1,21 @@
 // src/components/PortfolioComponent.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Box,
-  Typography,
-  Avatar,
-  Card,
-  Grid,
-  Tooltip,
-  IconButton,
-  styled,
+    Box,
+    Typography,
+    Avatar,
+    Card,
+    Grid,
+    Tooltip,
+    IconButton,
+    styled,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteConfirmationDialog from "@/components/AlertDialog/AlertDialog";
 import { getCategoryColor } from "@/lib/data";
 import AlertBar from "@/components/customAllert/Alert";
-import {useAtom} from "jotai/index";
-import {sessionAtom} from "@/app/stores/sessionStore";
+import { useAtom } from "jotai/index";
+import { sessionAtom } from "@/app/stores/sessionStore";
 
 const CategoryColorBar = styled(Box)(({ color }) => ({
     width: 4,
@@ -27,39 +27,39 @@ const CategoryColorBar = styled(Box)(({ color }) => ({
 }));
 
 const PortfolioComponent = ({
-  portfolio,
-  setPortfolio,
-  loadingPortfolio,
-  assetsLeangth,
-  setSelectedCoin,}) => {
+    portfolio,
+    setPortfolio,
+    loadingPortfolio,
+    assetsLeangth,
+    setSelectedCoin, }) => {
     const [sessionJotai] = useAtom(sessionAtom);
-  // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
-  const [deleteIconIndex, setDeleteIconIndex] = useState(null);
-  const [selectedAsset, setSelectedAsset] = useState(null);
-  // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
-  // const [assetsLeangth, setAssetsLeangth] = useState(0)
+    // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+    const [deleteIconIndex, setDeleteIconIndex] = useState(null);
+    const [selectedAsset, setSelectedAsset] = useState(null);
+    // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
+    // const [assetsLeangth, setAssetsLeangth] = useState(0)
 
-  const [alert, setAlert] = useState({
-    open: false,
-    message: "",
-    severity: "error",
-  });
+    const [alert, setAlert] = useState({
+        open: false,
+        message: "",
+        severity: "error",
+    });
 
-  const handleDeleteClick = (asset) => {
-    setSelectedAsset(asset);
-  };
+    const handleDeleteClick = (asset) => {
+        setSelectedAsset(asset);
+    };
 
-  const setCoin = (index) => {
-      if (setSelectedCoin !== undefined) {
-          // console.log(index);
-          setSelectedCoin(index);
-      }
-  };
+    const setCoin = (index) => {
+        if (setSelectedCoin !== undefined) {
+            // console.log(index);
+            setSelectedCoin(index);
+        }
+    };
 
     const handleDeleteConfirm = async () => {
         const portfolioId = portfolio._id;
         const CoinGeckoID = selectedAsset.CoinGeckoID;
-        console.log(CoinGeckoID, portfolioId);
+        console.log("testing delete", CoinGeckoID, portfolioId, portfolio);
 
         try {
             // Call the API to delete the coin from the portfolioGenerator
@@ -175,8 +175,8 @@ const PortfolioComponent = ({
                     {loadingPortfolio && portfolio.assets.map((asset, index) => (
                         <Grid item key={index} xs={12} sm={6} md={15}>
                             <Card onMouseEnter={() => handleMouseEnter(index)}
-                                  onMouseLeave={() => handleMouseLeave()}
-                                  onClick={() => setCoin(index)}
+                                onMouseLeave={() => handleMouseLeave()}
+                                onClick={() => setCoin(index)}
                                 sx={{
                                     display: 'flex',
                                     justifyContent: "space-between",
@@ -187,6 +187,7 @@ const PortfolioComponent = ({
                                     backgroundColor: "#23252b",
                                     '&:hover': { backgroundColor: '#00000099' },
                                     position: 'relative',
+                                    userSelect: "none"
                                 }}>
                                 {deleteIconIndex === index && (
                                     <CategoryColorBar color={getCategoryColor(asset.Category)} />)}

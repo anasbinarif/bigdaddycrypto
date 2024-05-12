@@ -220,7 +220,7 @@ function VideoPlayer() {
   return (
     <>
       <Navbar />
-      <Box sx={{ marginTop: "10rem" }}>
+      <Box sx={{ marginTop: "9rem", backgroundColor: "#111826" }}>
         <Typography
           sx={{
             color: "#24ffa7",

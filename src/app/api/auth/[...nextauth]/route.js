@@ -8,7 +8,7 @@ const login = async (credentials) => {
     try {
         connectToDb()
         const user = await User.findOne({ email: credentials.email });
-        console.log("userrrrrr", user, credentials);
+        // console.log("userrrrrr", user, credentials);
 
         if (!user) throw new Error("Wrong email!");
 
