@@ -1,12 +1,18 @@
 "use client"
-import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
+import { AppBar, Toolbar, Typography, IconButton, Tabs } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import NavbarLink from "@/components/navbar/Link";
 import Link from "next/link";
 import Image from "next/image";
 import HomeIcon from "../../../public/assets/svg/bdc.svg"
+import { useContext, useEffect } from "react";
+import { TabContext } from "@mui/lab";
 
-const Navbar = () => {
+const Navbar = ({tabSelector, setTabSelector}) => {
+
+
+    
+    
 
     return (
         <AppBar
@@ -27,6 +33,14 @@ const Navbar = () => {
                         Portfolio Generator 2.1
                     </Typography>
                 </Link>
+
+                {(tabSelector === 'three' || tabSelector === undefined) && (
+                    <div style={{marginLeft: 'auto', marginRight: '15px'}}>
+                    <Link style={{marginRight: '15px'}} href={"/"}>Home</Link>
+                    <Link style={{marginRight: '15px'}} href={"/faq"}>FAQ</Link>
+                    <Link style={{marginRight: '15px'}} href={"/media"}>Mediatek</Link>
+                    </div>
+                )}
                 <SessionProvider>
                     <NavbarLink />
                 </SessionProvider>

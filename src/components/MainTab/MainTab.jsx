@@ -1,10 +1,12 @@
 "use client"
 import * as React from 'react';
+// import {Link, useHistory, useLocation} from 'react-router-dom'
 import { Tabs, Tab, Box, Typography } from '@mui/material';
 import { useState } from "react";
 import PortfolioDisplay from '@/components/portfolioGenerator/PortfolioDisplay';
 import AssetManagerDisplay from "@/components/AssetManager/AssetManagerDisplay";
 import PortfolioUbersicht from "@/components/portfolioÜbersicht/PortfolioÜbersicht";
+// import { useTabContext } from '../../TabContext';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -26,11 +28,16 @@ function TabPanel(props) {
     );
 }
 
-export default function ColorTabs() {
+export default function ColorTabs({tabSelector, setTabSelector}) {
+//     const location = useLocation();
+//   const history = useHistory();
     const [value, setValue] = useState('one');
+    // const { setActiveTab } = useTabContext();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        // setActiveTab(newValue)
+        setTabSelector(newValue);
     };
 
     return (
