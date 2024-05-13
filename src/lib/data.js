@@ -42,12 +42,51 @@ export const importCryptoData = async (cryptoData) => {
     }
 };
 
+// const BATCH_SIZE = 5000; // Adjust batch size based on performance and timeout constraints
+//
+// export const importPortfolio = async () => {
+//     try {
+//         console.log("starting.............");
+//         const dataBuffer = await fs.readFile('C:/Users/anasb/OneDrive/Desktop/upwork/bigdaddycrypto/src/v1_sql/Portfolio_Assets.json');
+//         const dataString = dataBuffer.toString();
+//         const jsonData = JSON.parse(dataString);
+//         console.log("jsonData length:", jsonData[2].data.length);
+//
+//         let index = 0;
+//         while (index < jsonData[2].data.length) {
+//             const batchData = jsonData[2].data.slice(index, index + BATCH_SIZE).map(item => ({
+//                 PortfolioID: item.PortfolioID,
+//                 AssetID: parseInt(item.AssetID, 10),
+//                 Holdings: parseFloat(item.Holdings),
+//                 avgPrice: parseFloat(item.avgPrice),
+//                 totalInvest: item.totalInvest ? parseFloat(item.totalInvest) : 0.0,
+//                 totalSold: item.totalSold ? parseFloat(item.totalSold) : 0.0,
+//                 Relevanz: item.Relevanz || "",
+//                 RelevanzComment: item.RelevanzComment || "",
+//                 DCA: item.DCA || "",
+//                 DCAComment: item.DCAComment || "",
+//                 Gewichtung: item.Gewichtung || "",
+//                 GewichtungComment: item.GewichtungComment || ""
+//             }));
+//
+//             const results = await PastPortfolio.insertMany(batchData);
+//             console.log(`Batch ${index / BATCH_SIZE + 1} imported successfully`);
+//             index += BATCH_SIZE;
+//         }
+//
+//         console.log('Data import complete.');
+//     } catch (e) {
+//         console.log("Error importing data:", e);
+//         throw e;
+//     }
+// };
+
+
 export const getAllTickers = async () => {
     try {
         // Assuming 'Category' is the field name where categories are stored in your database
         const assets = await Assets.find({}, 'CoinGeckoID Category cgImageURL Name Ticker Potential Sicherheit -_id');
-        const tickers = assets.map(asset => [asset.Category, asset.CoinGeckoID, asset.cgImageURL, asset.Name, asset.Ticker, asset.Potential, asset.Sicherheit]);
-        return tickers;
+        return assets.map(asset => [asset.Category, asset.CoinGeckoID, asset.cgImageURL, asset.Name, asset.Ticker, asset.Potential, asset.Sicherheit]);
     } catch (error) {
         console.error("Failed to fetch CoinGeckoIDs and Categories:", error);
         throw error;
@@ -75,21 +114,23 @@ export const getAssets = async () => {
         throw new Error('Failed to fetch data');
     }
     const data = await res.json();
-    console.log("yoo bro", data);
+    // console.log("yoo bro", data);
     return await data;
 }
 
 export const storeUserPortfolioCoin = async (userId, coin) => {
     // const coinData = setCoinObject(coin);
-
-    const res = fetch('/api/addToPortfolio', {
+    const newCoin = {
+        CoinGeckoID: coin.CoinGeckoID
+    }
+    console.log("ya raha coin", newCoin)
+    return fetch('/api/addToPortfolio', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId, coin: coin })
+        body: JSON.stringify({userId, coin: newCoin})
     });
-    return res;
 }
 
 export const getUserPortfolio = async (userId) => {
@@ -117,9 +158,14 @@ export const getUserPortfolio = async (userId) => {
         nft: 0,
         none: 0
     };
-    const data = await res.json();
+    const data1 = await res.json();
+    const data = {
+        assets: data1.data.assetDetails,
+        assetsCalculations: data1.data.portfolio
+    }
+    console.log("data_testing_new_login", data1);
     let count = 0;
-    await data.data.assets.forEach(asset => {
+    await data.assets.forEach(asset => {
         const category = asset.Category.toLowerCase();
         count++;
         if (categories.hasOwnProperty(category)) {
@@ -128,10 +174,10 @@ export const getUserPortfolio = async (userId) => {
             console.log("category not found");
         }
     });
-    console.log("countttttt", count);
+    // console.log("countttttt", count);
 
     // Calculate the total count of assets
-    const totalCount = data.data.assets.length;
+    const totalCount = data.assets.length;
 
     // Calculate percentages
     const percentages = {};

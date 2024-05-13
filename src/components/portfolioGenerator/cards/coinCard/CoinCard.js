@@ -79,16 +79,15 @@ const CoinCard = ({ coin, selected, search = false }) => {
     const res = await storeUserPortfolioCoin(userId, coin);
     console.log("Server response:", res);
 
-    if (res.ok) {
-      const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-      setPortfolio(userPortfolio.data.data);
-    } else {
-      console.error(
-        "Error handling the portfolioGenerator update:",
-        res.message
-      );
-    }
-  };
+
+        if (res.ok) {
+            const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+            setPortfolio(userPortfolio.data)
+        } else {
+            console.error('Error handling the portfolioGenerator update:', res.message);
+        }
+    };
+
 
   return (
     <>

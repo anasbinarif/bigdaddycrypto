@@ -6,13 +6,15 @@ import {
   TextField,
   Button,
   Typography,
-  FormControlLabel,
+  FormControlLabel, IconButton,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AlertBar from "@/components/customAllert/Alert";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "@/app/stores/sessionStore";
+import Image from "next/image";
+import HomeIcon from "../../../../public/assets/svg/bdc.svg";
 
 const LoginPage = () => {
   const [sessionJotai] = useAtom(sessionAtom);
@@ -135,7 +137,7 @@ const LoginPage = () => {
   };
 
   return (
-    <>
+    <Box>
       <AlertBar
         open={alert.open}
         message={alert.message}
@@ -160,13 +162,27 @@ const LoginPage = () => {
             borderRadius: "8px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
             textAlign: "center",
+            position: "relative"
           }}
         >
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h4">LOGO</Typography>
+          <Box sx={{ mb: 2, bottom: "85%", left: "42%", position: "absolute" }}>
+            <Box color="inherit" sx={{}}>
+              <Image
+                  src={HomeIcon}
+                  alt="Home Icon"
+                  style={{
+                    width: "auto",
+                    height: "60px",
+                    cursor: "pointer",
+                    backgroundColor: "white",
+                    borderRadius: "50%",
+                    padding: "2px",
+                  }}
+              />
+            </Box>
           </Box>
 
-          <Typography variant="h5" sx={{ mb: 2 }}>
+          <Typography variant="h5" sx={{ mb: 2, mt: 2 }}>
             Login
           </Typography>
 
@@ -261,7 +277,7 @@ const LoginPage = () => {
           </Typography>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 

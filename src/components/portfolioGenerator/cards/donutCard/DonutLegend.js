@@ -27,7 +27,7 @@ const DonutLegend = ({portfolioCalculations}) => {
             count: portfolioCalculations.counts[key.toLowerCase()] || 0,
         }));
     useEffect(() => {
-        console.log("wtfdata", categories, portfolioCalculations)
+        // console.log("whatdata", categories, portfolioCalculations)
     }, [categories]);
 
     return (

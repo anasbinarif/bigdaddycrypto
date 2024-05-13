@@ -2,11 +2,14 @@
 import * as React from 'react';
 // import {Link, useHistory, useLocation} from 'react-router-dom'
 import { Tabs, Tab, Box, Typography } from '@mui/material';
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import PortfolioDisplay from '@/components/portfolioGenerator/PortfolioDisplay';
 import AssetManagerDisplay from "@/components/AssetManager/AssetManagerDisplay";
 import PortfolioUbersicht from "@/components/portfolioÜbersicht/PortfolioÜbersicht";
-// import { useTabContext } from '../../TabContext';
+import {useAtom} from "jotai/index";
+import {sessionAtom} from "@/app/stores/sessionStore";
+import {portfolioAtom} from "@/app/stores/portfolioStore";
+import {getUserPortfolio} from "@/lib/data";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -29,8 +32,6 @@ function TabPanel(props) {
 }
 
 export default function ColorTabs({tabSelector, setTabSelector}) {
-//     const location = useLocation();
-//   const history = useHistory();
     const [value, setValue] = useState('one');
     const [selectedCoin, setSelectedCoin] = useState(0);
     // const { setActiveTab } = useTabContext();
@@ -40,6 +41,32 @@ export default function ColorTabs({tabSelector, setTabSelector}) {
         // setActiveTab(newValue)
         setTabSelector(newValue);
     };
+
+    const [sessionJotai] = useAtom(sessionAtom);
+    const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+    const [loadingPortfolio, setLoadingPortfolio] = useState(false)
+    const [assetsLeangth, setAssetsLeangth] = useState(0)
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (sessionJotai?.user) {
+                const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+                console.log("han bhai scene kiya hai", userPortfolio.data)
+                setPortfolio(userPortfolio?.data)
+            }
+        };
+        fetchData();
+    }, [sessionJotai?.user.id]);
+
+    useEffect(() => {
+        if (portfolio?.assets && portfolio?.assets.length > 0) {
+            setLoadingPortfolio(true)
+            const len = portfolio?.assets.length;
+            setAssetsLeangth(len);
+            // console.log("length of user assets", len);
+        }
+    }, [portfolio])
 
     return (
         <Box sx={{ width: '100%', bgcolor: '#111826', padding: '2%', marginTop: "65px" }}>
@@ -80,10 +107,19 @@ export default function ColorTabs({tabSelector, setTabSelector}) {
                 <Tab value="three" label="Portfolio Übersicht" />
             </Tabs>
             <TabPanel value={value} index="one">
-                <PortfolioDisplay setSelectedCoin={setSelectedCoin}/>
+                <PortfolioDisplay portfolio={portfolio}
+                                  setPortfolio={setPortfolio}
+                                  loadingPortfolio={loadingPortfolio}
+                                  assetsLeangth={assetsLeangth}
+                                  setSelectedCoin={setSelectedCoin}/>
             </TabPanel>
             <TabPanel value={value} index="two">
-                <AssetManagerDisplay selectedCoin={selectedCoin} setSelectedCoin={setSelectedCoin}/>
+                <AssetManagerDisplay portfolio={portfolio}
+                                     setPortfolio={setPortfolio}
+                                     loadingPortfolio={loadingPortfolio}
+                                     assetsLeangth={assetsLeangth}
+                                     selectedCoin={selectedCoin}
+                                     setSelectedCoin={setSelectedCoin}/>
             </TabPanel>
             <TabPanel value={value} index="three">
                 <PortfolioUbersicht/>

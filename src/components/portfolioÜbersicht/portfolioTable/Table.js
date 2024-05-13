@@ -14,7 +14,7 @@ const CryptoTable = () => {
         setLoading(true);
         getCoinData().then(data => {
             // setData(data.data);
-            console.log("tetsingwtfman", data.data)
+            // console.log("tetsingwhatman", data.data)
             setLoading(false);
         }).catch(error => {
             console.error("Error fetching data:", error);

@@ -31,6 +31,8 @@ const Second = ({ portfolio, loadingPortfolio }) => {
           backgroundColor: "#00000033",
           padding: "2rem 0",
           marginTop: "1rem",
+          fontSize: "14px",
+          color: "#ffffff88",
         }}
       >
         Keine Ziele definiert

@@ -1,7 +1,9 @@
 "use client"
-import { Box, TextField, Checkbox, Button, Typography, FormControlLabel } from "@mui/material";
+import {Box, TextField, Checkbox, Button, Typography, FormControlLabel, IconButton} from "@mui/material";
 import { useState } from "react";
 import {useRouter} from "next/navigation";
+import Image from "next/image";
+import HomeIcon from "../../../../public/assets/svg/bdc.svg";
 
 const RegisterPage = () => {
 
@@ -147,13 +149,27 @@ const RegisterPage = () => {
           borderRadius: "8px",
           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
           textAlign: "center",
+          position: "relative"
         }}
       >
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="h4">LOGO</Typography>
+        <Box sx={{ mb: 2, bottom: "90%", left: "42%", position: "absolute" }}>
+          <Box color="inherit" sx={{}}>
+            <Image
+                src={HomeIcon}
+                alt="Home Icon"
+                style={{
+                  width: "auto",
+                  height: "60px",
+                  cursor: "pointer",
+                  backgroundColor: "white",
+                  borderRadius: "50%",
+                  padding: "2px",
+                }}
+            />
+          </Box>
         </Box>
 
-        <Typography variant="h5" sx={{ mb: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2, mt: 2 }}>
           Create an account
         </Typography>
 
