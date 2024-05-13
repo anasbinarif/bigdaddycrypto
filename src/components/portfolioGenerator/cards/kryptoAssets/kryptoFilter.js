@@ -13,12 +13,8 @@ const KryptoFilter = ({ userID, portfolio }) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [searchVal, setSearchVal] = useState("");
-<<<<<<< HEAD
   const [searchData, setSearchData] = useState([]);
   // console.log(portfolio);
-=======
-  const searchData = data.length > 0 ? data.slice(0, 100) : [];
->>>>>>> origin/master
 
   useEffect(() => {
     // console.log("hello bro whats up");
