@@ -52,7 +52,7 @@ export default function ColorTabs({tabSelector, setTabSelector}) {
         const fetchData = async () => {
             if (sessionJotai?.user) {
                 const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-                console.log("han bhai scene kiya hai", userPortfolio.data)
+                // console.log("han bhai scene kiya hai", userPortfolio.data)
                 setPortfolio(userPortfolio?.data)
             }
 
@@ -65,7 +65,7 @@ export default function ColorTabs({tabSelector, setTabSelector}) {
             setLoadingPortfolio(true)
             const len = portfolio?.assets.length;
             setAssetsLeangth(len);
-            console.log("length of user assets", len);
+            // console.log("length of user assets", len);
         }
     }, [portfolio])
 

@@ -114,7 +114,7 @@ export const getAssets = async () => {
         throw new Error('Failed to fetch data');
     }
     const data = await res.json();
-    console.log("yoo bro", data);
+    // console.log("yoo bro", data);
     return await data;
 }
 
@@ -162,7 +162,7 @@ export const getUserPortfolio = async (userId) => {
     const data = {
         assets: data1.data
     }
-    console.log("data_testing_new_login", data);
+    console.log("data_testing_new_login", data1);
     let count = 0;
     await data.assets.forEach(asset => {
         const category = asset.Category.toLowerCase();
@@ -173,7 +173,7 @@ export const getUserPortfolio = async (userId) => {
             console.log("category not found");
         }
     });
-    console.log("countttttt", count);
+    // console.log("countttttt", count);
 
     // Calculate the total count of assets
     const totalCount = data.assets.length;

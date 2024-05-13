@@ -57,9 +57,10 @@ const PortfolioComponent = ({
     };
 
     const handleDeleteConfirm = async () => {
-        const portfolioId = portfolio._id;
+        // const portfolioId = portfolio._id;
+        const userId = sessionJotai?.user.id;
         const CoinGeckoID = selectedAsset.CoinGeckoID;
-        console.log("testing delete", CoinGeckoID, portfolioId, portfolio);
+        console.log("testing delete", CoinGeckoID, userId);
 
         try {
             // Call the API to delete the coin from the portfolioGenerator
@@ -68,7 +69,7 @@ const PortfolioComponent = ({
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ portfolioId, CoinGeckoID })
+                body: JSON.stringify({ userId, CoinGeckoID })
             });
 
             const data = await response.json();
@@ -132,7 +133,7 @@ const PortfolioComponent = ({
 
 
     useEffect(() => {
-        console.log("yooooooooooooooooooooooooooooooooo")
+        // console.log("yooooooooooooooooooooooooooooooooo")
         const fetchData = async () => {
             if (sessionJotai?.user) {
                 const userId = sessionJotai?.user.id;

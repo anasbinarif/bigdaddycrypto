@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Tab, SvgIcon, Box, Typography } from "@mui/material";
+import { Tab, SvgIcon, Box, Typography } from "@mui/material";
 import { categoryColors, getAssets, getCoinData } from "@/lib/data";
+import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import CoinCard from "../coinCard/CoinCard";
 import CoinCardSkeleton from "@/components/portfolioGenerator/cards/coinCard/CoinCardSkeleton";
 
@@ -59,8 +60,12 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     "Kein Hype-Thema": "none",
   };
 
+  const firstHalfCount = 6; // Specify 6 tabs for the first line
+  const firstHalfLabels = tabLabels.slice(0, firstHalfCount);
+  const secondHalfLabels = tabLabels.slice(firstHalfCount);
+
   useEffect(() => {
-    console.log("hello bro whats up");
+    // console.log("hello bro whats up");
     setLoading(true);
     getAssets()
       .then((data) => {
@@ -81,7 +86,10 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     );
   };
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (event, newValue, line) => {
+    if (line === 2) {
+      newValue += 6; // Now adjusting by the first half count
+    }
     setValue(newValue);
   };
 
@@ -93,26 +101,54 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
 
   return (
     <>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        variant="scrollable"
-        scrollButtons
-        allowScrollButtonsMobile
-        aria-label="scrollable auto tabs example"
-      >
-        {tabLabels.map((label) => (
-          <Tab
-            key={label}
-            icon={<ColorCircle color={categoryColors[label]} />}
-            iconPosition="start"
-            label={label}
-            sx={{
-              color: "white",
-            }}
-          />
-        ))}
-      </Tabs>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs
+          value={value}
+          onChange={(e, newValue) => handleChange(e, newValue, 1)}
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+          aria-label="scrollable auto tabs example 1"
+          sx={{
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { opacity: 0.3 },
+            },
+          }}
+        >
+          {firstHalfLabels.map((label) => (
+            <Tab
+              key={label}
+              icon={<ColorCircle color={categoryColors[label]} />}
+              iconPosition="start"
+              label={label}
+              sx={{ color: 'white', whiteSpace: "nowrap" }}
+            />
+          ))}
+        </Tabs>
+        <Tabs
+          value={value - firstHalfCount}
+          onChange={(e, newValue) => handleChange(e, newValue, 2)}
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+          aria-label="scrollable auto tabs example 2"
+          sx={{
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { opacity: 0.3 },
+            },
+          }}
+        >
+          {secondHalfLabels.map((label) => (
+            <Tab
+              key={label}
+              icon={<ColorCircle color={categoryColors[label]} />}
+              iconPosition="start"
+              label={label}
+              sx={{ color: 'white', whiteSpace: "nowrap" }}
+            />
+          ))}
+        </Tabs>
+      </Box>
       {tabLabels.map((label, index) => (
         <TabPanel key={index} value={value} index={index}>
           <Box
@@ -120,15 +156,15 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
           >
             {loading
               ? Array.from(new Array(15)).map((_, idx) => (
-                  <CoinCardSkeleton key={idx} />
-                ))
+                <CoinCardSkeleton key={idx} />
+              ))
               : categorizedData[label].map((coin, index) => (
-                  <CoinCard
-                    key={`${coin.CoinGeckoID}-${index}`}
-                    coin={coin}
-                    selected={checkCoinSelected(coin)}
-                  />
-                ))}
+                <CoinCard
+                  key={`${coin.CoinGeckoID}-${index}`}
+                  coin={coin}
+                  selected={checkCoinSelected(coin)}
+                />
+              ))}
           </Box>
         </TabPanel>
       ))}
