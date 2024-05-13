@@ -36,6 +36,11 @@ const PortfolioComponent = ({
     // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
     const [deleteIconIndex, setDeleteIconIndex] = useState(null);
     const [selectedAsset, setSelectedAsset] = useState(null);
+    const [financialSummary, setFinancialSummary] = useState({
+        totalCoins: 0,
+        totalHoldingsValue: 0,
+        totalInvested: 0
+    });
     // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
     // const [assetsLeangth, setAssetsLeangth] = useState(0)
 
@@ -102,26 +107,6 @@ const PortfolioComponent = ({
         setSelectedAsset(null);
     };
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         if (sessionJotai?.user) {
-    //             const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-    //             setPortfolio(userPortfolio.data.data)
-    //         }
-    //
-    //     };
-    //     fetchData();
-    // }, [sessionJotai?.user.id]);
-
-    // useEffect(() => {
-    //     if (portfolio.userId && portfolio?.assets.length > 0) {
-    //         setLoadingPortfolio(true)
-    //         const len = portfolio?.assets.length;
-    //         setAssetsLeangth(len);
-    //         console.log("length of user assets", len);
-    //     }
-    // }, [portfolio])
-
 
     const handleMouseEnter = (index) => {
         setDeleteIconIndex(index);
@@ -133,7 +118,6 @@ const PortfolioComponent = ({
 
 
     useEffect(() => {
-        // console.log("yooooooooooooooooooooooooooooooooo")
         const fetchData = async () => {
             if (sessionJotai?.user) {
                 const userId = sessionJotai?.user.id;
@@ -151,6 +135,21 @@ const PortfolioComponent = ({
         };
         fetchData();
     }, [sessionJotai?.user.id, portfolio]);
+
+    const setFinancialSummaryAPI = (CoinGeckoID) => {
+        const asset = portfolio.assetsCalculations.assets.find(a => a.CoinGeckoID === CoinGeckoID);
+        const price = portfolio.assets.find(a => a.CoinGeckoID === CoinGeckoID).Price;
+        const totalCoins = asset.buyAndSell.reduce((acc, row) => {
+            const coinsValue = parseFloat(row.Coins);
+            return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
+        }, 0);
+        const totalHoldingsValue = (totalCoins * parseFloat(price)).toFixed(2);
+        const totalInvested = asset.buyAndSell.reduce((acc, row) => acc + parseFloat(row.Betrag), 0).toFixed(2);
+        if (CoinGeckoID == "hedera-hashgraph") {
+            console.log("check the asset", totalCoins, totalHoldingsValue, totalInvested);
+        }
+        return [totalCoins, totalHoldingsValue, totalInvested]
+    }
 
     return (<Box sx={{ position: "sticky", top: "100px" }}>
         <AlertBar
@@ -177,7 +176,7 @@ const PortfolioComponent = ({
                         <Grid item key={index} xs={12} sm={6} md={15}>
                             <Card onMouseEnter={() => handleMouseEnter(index)}
                                 onMouseLeave={() => handleMouseLeave()}
-                                onClick={() => setCoin(index)}
+                                onDoubleClick={() => setCoin(index)}
                                 sx={{
                                     display: 'flex',
                                     justifyContent: "space-between",
@@ -202,8 +201,11 @@ const PortfolioComponent = ({
                                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: "row" }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: "column" }}>
                                         <Typography variant="body2" color="text.secondary" sx={{ color: "#fff" }}>
-                                            {asset.UserHolding ? asset.UserHolding : 0} €                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary" sx={{ color: "gray" }}>0 {asset.Ticker}</Typography>
+                                        {setFinancialSummaryAPI(asset.CoinGeckoID)[1]} €
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary" sx={{ color: "gray" }}>
+                                            {setFinancialSummaryAPI(asset.CoinGeckoID)[0]} {asset.Ticker}
+                                        </Typography>
                                     </Box>
                                     {deleteIconIndex === index && (
                                         <Tooltip title="Delete" onClick={() => handleDeleteClick(asset)}>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Divider,
@@ -17,33 +17,68 @@ import {
   Button,
   Select,
   MenuItem,
-  TextField,
+  TextField, IconButton, Tooltip,
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-// import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { addDays } from "date-fns";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { faCrown } from "@fortawesome/free-solid-svg-icons";
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import styles from "./coinDetails.module.css";
 import BitpandaIcon from "@/components/portfolioGenerator/icons/BitpandaIcon";
+import { useAtom } from "jotai/index";
+import { sessionAtom } from "@/app/stores/sessionStore";
+import { portfolioAtom } from "@/app/stores/portfolioStore";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AlertBar from "@/components/customAllert/Alert";
+import { getUserPortfolio } from "@/lib/data";
 
 const CoinDetails = (props) => {
   const { coin, index } = props;
   const [value, setValue] = useState(0);
-  const [rowVals, setRowVals] = useState([
-    // { col1: "Kauf", col2: "01/01/01", col3: 0, col4: 0, col5: 0 },
-    // { col1: "Kauf", col2: "01/01/01", col3: 0, col4: 0, col5: 0 },
-  ]);
+  const [rowVals, setRowVals] = useState([]);
+  const [validationError, setValidationError] = useState('');
+  const [sessionJotai] = useAtom(sessionAtom);
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+  const [financialSummary, setFinancialSummary] = useState({
+    totalCoins: 0,
+    totalHoldingsValue: 0,
+    totalInvested: 0
+  });
+  const [changeTableValue, setChangeTableValue] = useState(0)
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertInfo, setAlertInfo] = useState({ message: '', severity: 'info' });
 
-  // console.log(coin);
+  useEffect(() => {
+    const asset = portfolio.assetsCalculations.assets.find(a => a.CoinGeckoID === coin.CoinGeckoID);
+    console.log("date asset", asset);
+    if (asset && asset.buyAndSell) {
+      setRowVals(asset.buyAndSell.map(row => ({
+        ...row,
+        Date: formatDateForInput(row.Date),  // Format the date for input
+        Betrag: (row.PricePerCoin * row.Coins).toFixed(2)
+      })));
+    }
+  }, [coin.CoinGeckoID, portfolio.assetsCalculations.assets]);
+
+  useEffect(() => {
+    setChangeTableValue(1)
+    const totalCoins = rowVals.reduce((acc, row) => {
+      const coinsValue = parseFloat(row.Coins);
+      return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
+    }, 0);
+    const totalHoldingsValue = (totalCoins * parseFloat(coin.Price)).toFixed(2);
+    const totalInvested = rowVals.reduce((acc, row) => acc + parseFloat(row.Betrag), 0).toFixed(2);
+
+    setFinancialSummary({
+      totalCoins,
+      totalHoldingsValue,
+      totalInvested
+    });
+  }, [rowVals, coin.Price]);
+
+
+  console.log("selected coin bro", coin);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -52,18 +87,100 @@ const CoinDetails = (props) => {
   const addRow = () => {
     setRowVals([
       ...rowVals,
-      { col1: "Kauf", col2: "01/01/01", col3: 0, col4: 0, col5: 0 },
+      { Type: "Kauf", Date: "00/00/00", PricePerCoin: 0, Betrag: 0, Coins: 0 },
     ]);
   };
 
   const handleRowData = (newVal, index, col) => {
-    // console.log(newVal, index, col);
-    const tempRows = [...rowVals];
-    tempRows[index] = { ...tempRows[index], [col]: newVal };
-    setRowVals(tempRows);
+    const updatedRows = [...rowVals];
+    const row = updatedRows[index];
+    row[col] = newVal;
+    if (col === 'PricePerCoin' || col === 'Coins') {
+      row['Betrag'] = (parseFloat(row['PricePerCoin']) * parseFloat(row['Coins'])).toFixed(2);
+    }
+    setRowVals(updatedRows);
   };
 
-  console.log(rowVals);
+  console.log("testing adding rows to table", rowVals);
+
+  const handleBuyAndSell = async () => {
+    let error = '';
+    for (const row of rowVals) {
+      if (row.Date === "" || row.Date === "00/00/00") {
+        error = 'Please enter a valid date.';
+        break;
+      }
+      if (row.PricePerCoin <= 0) {
+        error = 'Price per coin must be greater than zero.';
+        break;
+      }
+      if (row.Betrag <= 0) {
+        error = 'Amount must be greater than zero.';
+        break;
+      }
+      if (row.Coins <= 0) {
+        error = 'Number of coins must be greater than zero.';
+        break;
+      }
+    }
+    setValidationError(error);
+    if (!error) {
+      // Perform the save operation here
+      const userID = sessionJotai?.user.id
+      const CoinGeckoID = coin.CoinGeckoID
+      console.log("Saving data", rowVals, CoinGeckoID, userID);
+      try {
+        const response = await fetch('/api/addBuyAndSell', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userID, CoinGeckoID, rowVals })
+        });
+        if (response.ok) {
+          setAlertInfo({ message: 'Transaktion erfolgreich gespeichert!', severity: 'success' });
+          const userPortfolio = await getUserPortfolio(userID);
+          setPortfolio(userPortfolio?.data)
+        } else {
+          throw new Error('Failed to save data');
+        }
+      } catch (error) {
+        setAlertInfo({ message: error.message, severity: 'error' });
+      }
+      setShowAlert(true);
+    }
+  };
+
+  const closeAlert = () => {
+    setShowAlert(false);
+  };
+
+  const handleDeleteRow = (index) => {
+    const updatedRows = rowVals.filter((_, idx) => idx !== index);
+    setRowVals(updatedRows);
+  };
+
+  const computeDaysPast = (dateStr) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  const formatDateForInput = (isoDateString) => {
+    return isoDateString.split('T')[0];  // Splits the ISO string at 'T' and returns the date part
+  }
+
+  const getTodayString = () => {
+    const today = new Date();
+    const day = (`0${today.getDate()}`).slice(-2); // Ensuring two digits
+    const month = (`0${today.getMonth() + 1}`).slice(-2); // Ensuring two digits, adding 1 because getMonth() is zero-indexed
+    const year = today.getFullYear();
+    return `${day} / ${month} / ${year}`; // Formats date as "YYYY-MM-DD"
+  };
+
+
   return (
     <Box
       sx={{
@@ -96,14 +213,14 @@ const CoinDetails = (props) => {
           <Box className={styles.grid__item}>
             <Typography sx={{ fontSize: "0.9rem" }}>Bestand</Typography>
             <Typography sx={{ fontSize: "1.8rem", fontWeight: "bold" }}>
-              0,00 €
+              {financialSummary.totalHoldingsValue},00 €
             </Typography>
-            <Typography sx={{ color: "#ffffff88" }}>0 BTC</Typography>
+            <Typography sx={{ color: "#ffffff88" }}>{financialSummary.totalCoins} {coin.Ticker}</Typography>
           </Box>
           <Box className={styles.grid__item}>
             <Typography sx={{ fontSize: "0.9rem" }}>Investiert</Typography>
             <Typography sx={{ fontSize: "1.8rem", fontWeight: "bold" }}>
-              0,00 €
+              {financialSummary.totalInvested},00 €
             </Typography>
             <Typography sx={{ color: "#ffffff88" }}>Geplant: 0,00 €</Typography>
           </Box>
@@ -197,7 +314,7 @@ const CoinDetails = (props) => {
           }}
         >
           <Tab
-            label="Tab 1"
+            label="Transaktionen"
             sx={{
               backgroundColor: value === 0 ? "#ffffff08" : "#00000033",
               marginRight: "15px",
@@ -205,26 +322,29 @@ const CoinDetails = (props) => {
               borderTopRightRadius: "8px",
               fontWeight: value === 0 ? "bold" : "normal",
               color: value === 0 ? "#ffffff" : "#ffffff80",
+              fontSize: "12px"
             }}
           />
           <Tab
-            label="Tab 2"
+            label="Kaufzonen"
             sx={{
               backgroundColor: value === 1 ? "#ffffff08" : "#00000033",
               marginRight: "15px",
               borderTopLeftRadius: "8px",
               borderTopRightRadius: "8px",
               fontWeight: value === 1 ? "bold" : "normal",
+              fontSize: "12px"
             }}
           />
           <Tab
-            label="Tab 3"
+            label="Verkaufszonen"
             sx={{
               backgroundColor: value === 2 ? "#ffffff08" : "#00000033",
               marginRight: "15px",
               borderTopLeftRadius: "8px",
               borderTopRightRadius: "8px",
               fontWeight: value === 2 ? "bold" : "normal",
+              fontSize: "12px"
             }}
           />
         </Tabs>
@@ -271,10 +391,10 @@ const CoinDetails = (props) => {
                           inputProps={{ "aria-label": "Without label" }}
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          value={row.col1}
+                          value={row.Type}
                           label="Age"
                           onChange={(e) =>
-                            handleRowData(e.target.value, index, "col1")
+                            handleRowData(e.target.value, index, "Type")
                           }
                           // variant="filled"
                           sx={{
@@ -306,10 +426,11 @@ const CoinDetails = (props) => {
                           <input
                             type="date"
                             id="datePicker"
-                            value={row.col2}
+                            value={row.Date}
                             onChange={(e) =>
-                              handleRowData(e.target.value, index, "col2")
+                              handleRowData(e.target.value, index, "Date")
                             }
+                            max={getTodayString()}
                             style={{
                               backgroundColor: "transparent",
                               border: "1px solid #ffffff20",
@@ -334,12 +455,12 @@ const CoinDetails = (props) => {
                           <input
                             type="text"
                             id="numberInput"
-                            value={row.col3}
+                            value={row.PricePerCoin}
                             onChange={(e) =>
                               handleRowData(
                                 parseFloat(e.target.value) || 0,
                                 index,
-                                "col3"
+                                "PricePerCoin"
                               )
                             }
                             style={{
@@ -363,26 +484,9 @@ const CoinDetails = (props) => {
                             maxWidth: "100px",
                           }}
                         >
-                          <input
-                            type="text"
-                            id="numberInput"
-                            value={row.col4}
-                            onChange={(e) =>
-                              handleRowData(
-                                parseFloat(e.target.value) || 0,
-                                index,
-                                "col4"
-                              )
-                            }
-                            style={{
-                              marginRight: "5px",
-                              width: "100px",
-                              backgroundColor: "transparent",
-                              border: "none",
-                            }}
-                          />
-                          <div>&euro;</div>
+                          {row.Betrag} €
                         </div>
+
                       </TableCell>
                       <TableCell>
                         <div
@@ -398,12 +502,12 @@ const CoinDetails = (props) => {
                           <input
                             type="text"
                             id="numberInput"
-                            value={row.col5}
+                            value={row.Coins}
                             onChange={(e) =>
                               handleRowData(
                                 parseFloat(e.target.value) || 0,
                                 index,
-                                "col5"
+                                "Coins"
                               )
                             }
                             style={{
@@ -416,35 +520,70 @@ const CoinDetails = (props) => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Button>
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            style={{ color: "#ffffff80" }}
-                          />
-                        </Button>
+                        <Box sx={{ display: "flex", flexDirection: "row" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "3px 5px",
+                              maxWidth: "100px",
+                            }}
+                          >
+                            {row.Date == "00/00/00" ? "" : `${computeDaysPast(row.Date)} Tage`}
+                          </div>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Tooltip title="Delete" onClick={() => handleDeleteRow(index)}>
+                          <IconButton sx={{ color: 'gray', '&:hover': { color: 'red' } }}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
+              {validationError && (
+                <Typography color="error" sx={{ mt: 2 }}>{validationError}</Typography>
+              )}
             </TableContainer>
           )}
           {value === 1 && <div>Content for Tab 2</div>}
           {value === 2 && <div>Content for Tab 3</div>}
         </Box>
-        <Button
-          sx={{
-            marginTop: "20px",
-            backgroundColor: "#00000033",
-            color: "white",
-            fontSize: "0.8rem",
-          }}
-          onClick={addRow}
-        >
-          <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />
-          Neue Transaktion hinzufügen
-        </Button>
+        <Box sx={{
+          display: "flex",
+          justifyContent: "space-between"
+        }}>
+          <Button
+            sx={{
+              marginTop: "20px",
+              backgroundColor: "#00000033",
+              color: "white",
+              fontSize: "0.8rem",
+            }}
+            onClick={addRow}
+          >
+            <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />
+            Neue Transaktion hinzufügen
+          </Button>
+          <Button
+            sx={{
+              marginTop: "20px",
+              backgroundColor: "#1188ff",
+              color: "white",
+              fontSize: "0.8rem",
+              '&:hover': { backgroundColor: '#0a549f' }
+            }}
+            onClick={handleBuyAndSell}
+            disabled={rowVals.length <= 0}
+          >
+            Save
+          </Button>
+        </Box>
       </Box>
+      <AlertBar open={showAlert} message={alertInfo.message} severity={alertInfo.severity} onClose={closeAlert} />
     </Box>
   );
 };

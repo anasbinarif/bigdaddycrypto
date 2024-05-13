@@ -17,8 +17,10 @@ export async function POST(req) {
         }));
 
         // Log and return the full details
-        // console.log("portfolioGenerator------", assetDetails);
-        return NextResponse.json({ data: assetDetails }, { status: 200 });
+        console.log("assetGenerator------", assetDetails);
+        console.log("portfolioGenerator------", portfolio);
+        const data = { portfolio, assetDetails };
+        return NextResponse.json({ data: data }, { status: 200 });
 
     } catch (error) {
         console.error("Error getting user portfolio:", error);

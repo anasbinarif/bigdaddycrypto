@@ -160,7 +160,8 @@ export const getUserPortfolio = async (userId) => {
     };
     const data1 = await res.json();
     const data = {
-        assets: data1.data
+        assets: data1.data.assetDetails,
+        assetsCalculations: data1.data.portfolio
     }
     console.log("data_testing_new_login", data1);
     let count = 0;

@@ -84,7 +84,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography sx={{ fontSize: "0.9rem", opacity: "0.5" }}>
-            Gesamt Invest
+            Aktueller Profit
           </Typography>
           <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
             17.000,00 €
@@ -92,7 +92,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography sx={{ fontSize: "0.9rem", opacity: "0.5" }}>
-            Gesamt Invest
+            Bisher realisiert
           </Typography>
           <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
             17.000,00 €
@@ -100,7 +100,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography sx={{ fontSize: "0.9rem", opacity: "0.5" }}>
-            Gesamt Invest
+            Gesamtpotenzial
             <FontAwesomeIcon
               icon={faQuestionCircle}
               style={{ opacity: "0.5", marginLeft: "0.5rem" }}
