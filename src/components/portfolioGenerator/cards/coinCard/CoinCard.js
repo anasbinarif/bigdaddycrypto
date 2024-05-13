@@ -17,7 +17,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: "#333", // Dark background
   color: "#fff", // White text
-  width: 160,
+  // width: 160,
   margin: theme.spacing(1),
   position: "relative", // To position the category color bar
   borderRadius: theme.shape.borderRadius,
@@ -98,8 +98,10 @@ const CoinCard = ({ coin, selected, search = false }) => {
           sx={{
             cursor: "pointer",
             border: `${selected ? "1px solid #00aa66aa" : "none"}`,
-            backgroundColor: `${selected ? "#00aa6633" : "none"}`,
-            width: "400px",
+            backgroundColor: `${selected ? "#00aa6633" : "#333"}`,
+            width: "95%",
+
+            "& .MuiPaper-root": {},
           }}
         >
           <CategoryColorBar
@@ -125,11 +127,11 @@ const CoinCard = ({ coin, selected, search = false }) => {
                 {Ticker}
               </Typography>
             </Box>
-            <Box sx={{ paddingLeft: 1 }}>
+            {/* <Box sx={{ paddingLeft: 1 }}>
               <Typography component="div" variant="body2" noWrap>
                 {Name}
               </Typography>
-            </Box>
+            </Box> */}
             {checkCalculation(Potential, Sicherheit) && (
               <Box
                 sx={{

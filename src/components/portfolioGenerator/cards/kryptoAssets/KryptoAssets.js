@@ -3,6 +3,7 @@ import KryptoFilter from "./kryptoFilter";
 import ScrollableKryptoTabs from "@/components/portfolioGenerator/cards/kryptoAssets/kryptoCoinsTabs";
 
 const KryptoAssets = ({ portfolio, loadingPortfolio }) => {
+  console.log(portfolio);
   return (
     <Box
       sx={{
