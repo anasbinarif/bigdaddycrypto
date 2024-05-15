@@ -2,14 +2,18 @@ import {NextResponse} from "next/server";
 import {UserPortfolio} from "@/lib/models";
 
 export async function POST(req) {
-    const { userID, CoinGeckoID, rowVals } = await req.json();
-    console.log("debug add buy and sell", CoinGeckoID, userID, rowVals);
+    const { userID, CoinGeckoID, rowVals, Portfolio_Assets } = await req.json();
+    console.log("debug add buy and sell", Portfolio_Assets);
     try {
         const result = await UserPortfolio.findOneAndUpdate(
             { userId: userID, 'assets.CoinGeckoID': CoinGeckoID },
             {
                 $set: {
-                    'assets.$.buyAndSell': rowVals
+                    'assets.$.buyAndSell': rowVals,
+                    'assets.$.totalInvest': Portfolio_Assets.totalInvest,
+                    'assets.$.totalSold': Portfolio_Assets.totalSold,
+                    'assets.$.totalCoins': Portfolio_Assets.totalCoins,
+                    'assets.$.Holdings': Portfolio_Assets.Holdings,
                 }
             },
             { new: true }  // Returns the updated document

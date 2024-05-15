@@ -36,13 +36,6 @@ const PortfolioComponent = ({
     // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
     const [deleteIconIndex, setDeleteIconIndex] = useState(null);
     const [selectedAsset, setSelectedAsset] = useState(null);
-    const [financialSummary, setFinancialSummary] = useState({
-        totalCoins: 0,
-        totalHoldingsValue: 0,
-        totalInvested: 0
-    });
-    // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
-    // const [assetsLeangth, setAssetsLeangth] = useState(0)
 
     const [alert, setAlert] = useState({
         open: false,
@@ -145,7 +138,7 @@ const PortfolioComponent = ({
         }, 0);
         const totalHoldingsValue = (totalCoins * parseFloat(price)).toFixed(2);
         const totalInvested = asset.buyAndSell.reduce((acc, row) => acc + parseFloat(row.Betrag), 0).toFixed(2);
-        if (CoinGeckoID == "hedera-hashgraph") {
+        if (CoinGeckoID === "hedera-hashgraph") {
             console.log("check the asset", totalCoins, totalHoldingsValue, totalInvested);
         }
         return [totalCoins, totalHoldingsValue, totalInvested]
@@ -158,7 +151,7 @@ const PortfolioComponent = ({
             severity={alert.severity}
             onClose={() => setAlert({ ...alert, open: false })}
         />
-        <Box sx={{ width: '100%', backgroundColor: '#202530', p: 2, display: "flex", borderRadius: "2px" }}>
+        <Box sx={{ width: '100%', backgroundColor: '#202530', p: 2, display: "flex", borderRadius: "8px" }}>
             <Box sx={{ p: 3 }}>
                 <Typography variant="h4" gutterBottom>
                     Portfolio ({assetsLeangth})

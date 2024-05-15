@@ -10,7 +10,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
         backgroundColor: "#202530",
         color: "white",
         height: "100%",
-        borderRadius: "2px",
+        borderRadius: "8px",
         padding: "25px",
       }}
     >

@@ -1,34 +1,34 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-        username: {
-            type: String,
-            required: true,
-            unique: true,
-            min: 3,
-            max: 20,
-        },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            max: 50,
-        },
-        password: {
-            type: String,
-        },
-        img: {
-            type: String,
-        },
-        isAdmin: {
-            type: Boolean,
-            default: false,
-        },
-        pastUser: {
-            type: String,
-            default: ""
-        }
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        min: 3,
+        max: 20,
     },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        max: 50,
+    },
+    password: {
+        type: String,
+    },
+    img: {
+        type: String,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
+    pastUser: {
+        type: String,
+        default: ""
+    }
+},
     { timestamps: true }
 );
 
@@ -146,6 +146,10 @@ const portfolioSchema = new mongoose.Schema({
             default: 0.0
         },
         totalSold: {
+            type: Number,
+            default: 0.0
+        },
+        totalCoins: {
             type: Number,
             default: 0.0
         },

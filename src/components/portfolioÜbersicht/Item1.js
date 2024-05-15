@@ -1,15 +1,7 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import { DonutCard } from "@/components/portfolioGenerator/cards/donutCard/DonutCard";
-import BewertungCard from "@/components/portfolioGenerator/cards/Bewertung";
-import GridExample from "@/components/portfolioÜbersicht/portfolioTable/Table";
-import Card from "@mui/material/Card";
 import { Typography } from "@mui/material";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Item1() {
@@ -20,7 +12,7 @@ export default function Item1() {
         backgroundColor: "#202530",
         color: "white",
         height: "100%",
-        borderRadius: "2px",
+        borderRadius: "8px",
         padding: "25px",
       }}
     >
@@ -30,7 +22,7 @@ export default function Item1() {
           color: "white",
           height: "100%",
           width: "50%",
-          borderRadius: "2px",
+          borderRadius: "8px",
           //   padding: "25px",
         }}
       >
