@@ -5,6 +5,7 @@ import NavbarLink from "@/components/navbar/Link";
 import Link from "next/link";
 import Image from "next/image";
 import HomeIcon from "../../../public/assets/svg/bdc.svg";
+import FormDialog from "../importPreviousDataDialog/FormDialog";
 // import { useContext, useEffect } from "react";
 // import { TabContext } from "@mui/lab";
 
@@ -39,7 +40,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
             Portfolio Generator 2.1
           </Typography>
         </Link>
-
+        <FormDialog/>
         <Box
           style={{
             marginLeft: "auto",
@@ -47,6 +48,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
             fontFamily: "sans-serif",
           }}
         >
+          
           <Link
             style={{ marginRight: "15px", fontFamily: "inherit" }}
             href={"/"}

@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { getCategoryColor } from '@/lib/data';
 
 
-const CategoryColorBar = styled(Box)(({color }) => ({
+const CategoryColorBar = styled(Box)(({ color }) => ({
     width: '5px',
     height: '100%',
     backgroundColor: color,
@@ -71,21 +71,24 @@ const EnhancedTable = () => {
                 const calc = portfolio.assetsCalculations.assets.find(ac => ac.CoinGeckoID === asset.CoinGeckoID) || {};
                 // Calculate percentage of the total investment
                 const percentage = totalInvestment ? ((calc.totalInvest / totalInvestment) * 100).toFixed(2) : 0;
+                const xValue = (calc.Holdings / calc.totalInvest).toFixed(2) || 0
+                const pricePersentage = (((asset.Price - calc.DCA) / calc.DCA) * 100).toFixed(2)
                 return {
                     asset: asset.Name,
                     ticker: asset.Ticker,
                     imageUrl: asset.cgImageURL,
                     bestand: calc.Holdings || 0,
                     totalCoins: calc.totalCoins || 0,
-                    X: 'n/a',
                     preisChange: `${asset.Price.toFixed(2)}`,
                     dcaPrice: calc.DCA || 'n/a',
                     investition: calc.totalInvest || 0,
                     relevanz: calc.Relevanz || 'n/a',
-                    dca: calc.DCA || 'n/a',
+                    dca: 'n/a',
                     gewichtung: calc.Gewichtung || 'n/a',
                     category: asset.Category,
-                    percentage: percentage + '%'
+                    percentage: percentage + '%',
+                    X: xValue || 0,
+                    pricePersentage: pricePersentage || 0
                 };
             });
             setSortedData(mergedData);
@@ -110,8 +113,8 @@ const EnhancedTable = () => {
             }}
         >
             <Typography variant="h4" gutterBottom>
-                    Portfolio ({assetsLeangth})
-                </Typography>
+                Portfolio ({assetsLeangth})
+            </Typography>
             <ThemeProvider theme={darkTheme}>
                 <TableContainer component={Paper} sx={{ overflowX: "" }}>
                     <Table stickyHeader aria-label="sticky table">
@@ -180,10 +183,33 @@ const EnhancedTable = () => {
                                             </Box>
                                         </TableCell>
                                         <TableCell sx={{ padding: "5px" }}>
-                                            <StyledTypography>{row.X}</StyledTypography>
+                                            <StyledTypography>{row.X ? row.X : "0,00"}x</StyledTypography>
                                         </TableCell>
                                         <TableCell sx={{ padding: "5px" }}>
-                                            <StyledTypography>{row.preisChange} €</StyledTypography>
+                                            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "end" }}>
+                                                <StyledTypography>{row.preisChange} €</StyledTypography>
+                                                {row.pricePersentage != "Infinity" && <Typography className={row.pricePersentage < 0 ? "down" : "up"}
+                                                    sx={{
+                                                        "&.down": {
+                                                            color: "red",
+                                                        },
+                                                        "&.up": {
+                                                            color: "green",
+                                                        },
+                                                        "&.down:before": {
+                                                            content: '"▼ "',
+                                                            fontSize: "80%",
+                                                            marginRight: "3px",
+                                                        },
+                                                        "&.up:before": {
+                                                            content: '"▲ "',
+                                                            fontSize: "80%",
+                                                            marginRight: "3px",
+                                                        },
+                                                    }}>
+                                                    {row.pricePersentage}
+                                                </Typography>}
+                                            </Box>
                                         </TableCell>
                                         <TableCell sx={{ padding: "5px" }}>
                                             <StyledTypography>{row.dcaPrice}</StyledTypography>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -18,15 +18,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./coinDetails.module.css";
-import {useAtom} from "jotai/index";
-import {sessionAtom} from "@/app/stores/sessionStore";
-import {portfolioAtom} from "@/app/stores/portfolioStore";
+import { useAtom } from "jotai/index";
+import { sessionAtom } from "@/app/stores/sessionStore";
+import { portfolioAtom } from "@/app/stores/portfolioStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AlertBar from "@/components/customAllert/Alert";
-import {getUserPortfolio} from "@/lib/data";
+import { getUserPortfolio } from "@/lib/data";
 
 const CoinDetails = (props) => {
   const { coin, index } = props;
@@ -45,7 +45,8 @@ const CoinDetails = (props) => {
     avgSellingPrice: 0,
     avgSellingPricePercentage: 0,
     totalWinLoss: 0,
-    totalWinLossPercentage: 0
+    totalWinLossPercentage: 0,
+    X: 0
   });
   const [changeTableValue, setChangeTableValue] = useState(0)
   const [showAlert, setShowAlert] = useState(false);
@@ -105,6 +106,7 @@ const CoinDetails = (props) => {
     const avgSellingPricePercentage = (100 - ((avgSellingPrice / (avgPurchasePrice)) * 100)).toFixed(2)
     const totalWinLoss = (totalHoldingsValue - (parseFloat(totalInvested) - parseFloat(realizedProfit))).toFixed(2)
     const totalWinLossPercentage = ((totalWinLoss / totalInvested) * 100).toFixed(2)
+    const X = totalHoldingsValue / totalInvested
 
     console.log("totalWinLoss=", totalWinLoss, totalInvested, totalWinLossPercentage);
 
@@ -118,7 +120,8 @@ const CoinDetails = (props) => {
       avgSellingPrice,
       avgSellingPricePercentage,
       totalWinLoss,
-      totalWinLossPercentage
+      totalWinLossPercentage,
+      X
     });
   }, [rowVals, coin.Price]);
 
@@ -183,7 +186,8 @@ const CoinDetails = (props) => {
         totalInvest: financialSummary.totalInvested,
         totalSold: financialSummary.realizedProfit,
         totalCoins: financialSummary.totalCoins,
-        Holdings: financialSummary.totalHoldingsValue
+        Holdings: financialSummary.totalHoldingsValue,
+        DCA: financialSummary.avgPurchasePrice
       }
       try {
         const response = await fetch('/api/addBuyAndSell', {

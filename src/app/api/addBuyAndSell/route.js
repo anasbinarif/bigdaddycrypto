@@ -14,6 +14,7 @@ export async function POST(req) {
                     'assets.$.totalSold': Portfolio_Assets.totalSold,
                     'assets.$.totalCoins': Portfolio_Assets.totalCoins,
                     'assets.$.Holdings': Portfolio_Assets.Holdings,
+                    'assets.$.DCA': Portfolio_Assets.DCA,
                 }
             },
             { new: true }  // Returns the updated document
