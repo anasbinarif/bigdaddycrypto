@@ -11,7 +11,8 @@ export const categoryColors = {
     "BTC-Zusammenhang": '#FF9900', // Orange
     "CBDC-Netzwerke": '#667788', // Dark Gray
     "ECommerce": '#8833bb', // Dark Magenta
-    "Tokenisierung/RWA": '#ff5aac' // Pink
+    "Tokenisierung/RWA": '#ff5aac', // Pink
+    "Favourite": '#2E8B57' // Sea Green
 };
 
 export const getUser = async (id) => {
@@ -146,7 +147,8 @@ export const getUserPortfolio = async (userId) => {
     });
 
     if (!res.ok) {
-        throw new Error('Failed to fetch data');
+        // throw new Error('Failed to fetch data');
+        console.log('Failed to fetch data')
     }
     const categories = {
         ai: 0,

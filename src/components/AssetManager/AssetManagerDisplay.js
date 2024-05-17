@@ -44,7 +44,7 @@ const AssetManagerDisplay = ({selectedCoin, setSelectedCoin, portfolio, setPortf
             </Grid>
             <Grid item xs={8} sm={8} md={8}>
                 <CoinDetails
-                    coin={portfolio.assets[selectedCoin]}
+                    coin={portfolio?.assets[selectedCoin]}
                     index={selectedCoin}
                 />
             </Grid>

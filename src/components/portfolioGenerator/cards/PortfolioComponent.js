@@ -11,8 +11,9 @@ import {
     styled,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteConfirmationDialog from "@/components/AlertDialog/AlertDialog";
-import { getCategoryColor } from "@/lib/data";
+import {getCategoryColor, getUserPortfolio} from "@/lib/data";
 import AlertBar from "@/components/customAllert/Alert";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "@/app/stores/sessionStore";
@@ -25,6 +26,11 @@ const CategoryColorBar = styled(Box)(({ color }) => ({
     left: 0,
     top: 0,
 }));
+
+const isFavorite = (CoinGeckoID, assetsCalculations) => {
+    return assetsCalculations?.assets.some(asset => asset.CoinGeckoID === CoinGeckoID && asset.Favourite);
+};
+
 
 const PortfolioComponent = ({
     portfolio,
@@ -144,6 +150,23 @@ const PortfolioComponent = ({
         return [totalCoins, totalHoldingsValue, totalInvested]
     }
 
+    async function handleFavouriteClick(asset) {
+        console.log("FavouriteClick", asset)
+        const userId = sessionJotai?.user.id;
+        const CoinGeckoID = asset?.CoinGeckoID;
+        const response = await fetch('/api/addCoinToFavorites', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({userId, CoinGeckoID})
+        });
+        if (response.ok){
+            const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+            setPortfolio(userPortfolio.data)
+        }
+    }
+
     return (<Box sx={{ position: "sticky", top: "100px" }}>
         <AlertBar
             open={alert.open}
@@ -194,18 +217,25 @@ const PortfolioComponent = ({
                                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: "row" }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: "column" }}>
                                         <Typography variant="body2" color="text.secondary" sx={{ color: "#fff" }}>
-                                        {setFinancialSummaryAPI(asset.CoinGeckoID)[1]} €
+                                            {setFinancialSummaryAPI(asset.CoinGeckoID)[1]} €
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary" sx={{ color: "gray" }}>
-                                            {setFinancialSummaryAPI(asset.CoinGeckoID)[0]} {asset.Ticker}
+                                            {(setFinancialSummaryAPI(asset.CoinGeckoID)[0]).toFixed(2)} {asset.Ticker}
                                         </Typography>
                                     </Box>
                                     {deleteIconIndex === index && (
+                                    <>
                                         <Tooltip title="Delete" onClick={() => handleDeleteClick(asset)}>
                                             <IconButton sx={{ color: 'gray', '&:hover': { color: 'red' } }}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </Tooltip>
+                                        <Tooltip title="Favourite" onClick={() => handleFavouriteClick(asset)}>
+                                            <IconButton sx={{ color: isFavorite(asset.CoinGeckoID, portfolio.assetsCalculations) ? 'red' : 'gray' }}>
+                                                <FavoriteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </>
                                     )}
                                 </Box>
                             </Card>

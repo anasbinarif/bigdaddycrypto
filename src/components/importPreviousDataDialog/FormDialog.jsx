@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -7,27 +7,81 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {useAtom} from "jotai/index";
-import {sessionAtom} from "@/app/stores/sessionStore";
+import { useAtom } from "jotai/index";
+import { sessionAtom } from "@/app/stores/sessionStore";
+import {getUserPortfolio} from "@/lib/data";
+import {portfolioAtom} from "@/app/stores/portfolioStore";
 
 const FormDialog = () => {
     const [open, setOpen] = useState(false);
-    const [sessionJotai] = useAtom(sessionAtom);
+    const [confirmClose, setConfirmClose] = useState(false);
+    const [sessionJotai, ] = useAtom(sessionAtom);
+    const [, setPortfolio] = useAtom(portfolioAtom);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
+        setConfirmClose(true);
         setOpen(false);
     };
+
+    const handleConfirmClose = async () => {
+        setOpen(false);
+        setConfirmClose(false);
+        const userID = sessionJotai?.user.id;
+        await fetch('/api/importPastUserDataCancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userID })
+        });
+    };
+
+    useEffect(() => {
+        console.log("sessionJotai-=-", sessionJotai);
+    }, [sessionJotai])
+
+
+    const handleCancelClose = () => {
+        setConfirmClose(false);
+        setOpen(true);
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (sessionJotai) {
+                const userID = sessionJotai?.user.id;
+                const response = await fetch('/api/checkUserImportCancelState', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userID }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("hhhhhhhhhhhhhhhh", data);
+                    if (!data.pastUserCheck) {
+                        handleClickOpen();
+                    }
+                }
+            }
+        };
+
+        fetchData();
+    }, [sessionJotai]);
+
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formJson = Object.fromEntries(formData.entries());
         const { Name, EditPIN } = formJson;
-        const userID = sessionJotai?.user.id
+        const userID = sessionJotai?.user.id;
 
         try {
             const response = await fetch('/api/importPastUserData', {
@@ -41,28 +95,25 @@ const FormDialog = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Data imported successfully', data.userPortfolios);
-                handleClose(); // Close dialog only on successful operation
+                handleConfirmClose();
+                const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+                setPortfolio(userPortfolio.data)
             } else {
+                handleConfirmClose();
                 throw new Error('Failed to import data');
             }
         } catch (error) {
+            handleConfirmClose();
             console.error('Error importing data:', error);
         }
     };
 
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                Import Your Previous Data
-            </Button>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: handleFormSubmit,
-                }}
-            >
+            <Dialog open={open} onClose={() => setConfirmClose(true)} PaperProps={{
+                component: 'form',
+                onSubmit: handleFormSubmit,
+            }}>
                 <DialogTitle>Import User Data</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -93,6 +144,21 @@ const FormDialog = () => {
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button type="submit">Import</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={confirmClose}
+                onClose={handleCancelClose}
+            >
+                <DialogTitle>Confirm Action</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you do not want to import your previous data? You wont be asked again later.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleConfirmClose}>Yes</Button>
+                    <Button onClick={handleCancelClose}>No</Button>
                 </DialogActions>
             </Dialog>
         </div>

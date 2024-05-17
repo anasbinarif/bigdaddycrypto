@@ -32,8 +32,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-},
-    { timestamps: true }
+}, { timestamps: true }
 );
 
 const assetsSchema = new mongoose.Schema({
@@ -156,6 +155,10 @@ const portfolioSchema = new mongoose.Schema({
         totalCoins: {
             type: Number,
             default: 0.0
+        },
+        Favourite: {
+            type: Boolean,
+            default: false
         },
         buyAndSell: [{
             Type: {
