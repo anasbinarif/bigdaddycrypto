@@ -37,6 +37,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const tabLabels = [
+    "Favourite",
     "AI",
     "Web3/Anonymität",
     "DeFi",
@@ -47,7 +48,6 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     "ECommerce",
     "Tokenisierung/RWA",
     "Kein Hype-Thema",
-    "Favourite", // Added new category label here
   ];
   const categoryMapping = {
     AI: "ai",
@@ -140,7 +140,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
           {firstHalfLabels.map((label) => (
             <Tab
               key={label}
-              icon={label === "Favourite" ? <FavoriteIcon color="red" /> : <ColorCircle color={categoryColors[label]} />}
+              icon={label === "Favourite" ? <IconButton sx={{ color: 'red' }}><FavoriteIcon color="red" /></IconButton> : <ColorCircle color={categoryColors[label]} />}
               iconPosition="start"
               label={label}
               sx={{ color: 'white', whiteSpace: "nowrap" }}
@@ -174,7 +174,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
       {tabLabels.map((label, index) => (
         <TabPanel key={index} value={value} index={index}>
           <Box
-            sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+            sx={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}
           >
             {loading
               ? Array.from(new Array(15)).map((_, idx) => (

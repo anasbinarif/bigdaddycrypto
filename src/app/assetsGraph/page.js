@@ -287,7 +287,7 @@ const BubbleChart = () => {
                     }}>Symbol-Größe:</Typography>
                     <Slider
                         defaultValue={15}
-                        min={10}
+                        min={5}
                         max={37}
                         aria-label="Default"
                         valueLabelDisplay="auto"

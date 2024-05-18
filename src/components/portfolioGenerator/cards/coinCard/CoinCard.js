@@ -174,7 +174,7 @@ const CoinCard = ({ coin, selected, search = false }) => {
             cursor: "pointer",
             border: `${selected ? "1px solid #00aa66aa" : "none"}`,
             backgroundColor: `${selected ? "#00aa6633" : "none"}`,
-            width: "270px",
+            width: "205px",
           }}
         >
           <CategoryColorBar
