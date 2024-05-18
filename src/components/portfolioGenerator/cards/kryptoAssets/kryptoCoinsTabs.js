@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Tab, SvgIcon, Box, Typography } from "@mui/material";
+import {Tab, SvgIcon, Box, Typography, IconButton} from "@mui/material";
 import { categoryColors, getAssets, getCoinData } from "@/lib/data";
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import CoinCard from "../coinCard/CoinCard";
 import CoinCardSkeleton from "@/components/portfolioGenerator/cards/coinCard/CoinCardSkeleton";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const ColorCircle = ({ color }) => (
   <SvgIcon>
@@ -46,6 +47,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     "ECommerce",
     "Tokenisierung/RWA",
     "Kein Hype-Thema",
+    "Favourite", // Added new category label here
   ];
   const categoryMapping = {
     AI: "ai",
@@ -58,9 +60,13 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     ECommerce: "ecommerce",
     "Tokenisierung/RWA": "nft",
     "Kein Hype-Thema": "none",
+    Favourite: "favourite" // This will be used for conditional rendering
   };
 
-  const firstHalfCount = 6; // Specify 6 tabs for the first line
+  // const firstHalfCount = 6; // Specify 6 tabs for the first line
+  // const firstHalfLabels = tabLabels.slice(0, firstHalfCount);
+  // const secondHalfLabels = tabLabels.slice(firstHalfCount);
+  const firstHalfCount = 6; // No change, first 6 tabs in the first line
   const firstHalfLabels = tabLabels.slice(0, firstHalfCount);
   const secondHalfLabels = tabLabels.slice(firstHalfCount);
 
@@ -93,11 +99,27 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     setValue(newValue);
   };
 
+  // const categorizedData = tabLabels.reduce((acc, label) => {
+  //   const categoryName = categoryMapping[label]; // Direct mapping to category
+  //   acc[label] = data.filter((item) => item && item.Category === categoryName);
+  //   return acc;
+  // }, {});
   const categorizedData = tabLabels.reduce((acc, label) => {
-    const categoryName = categoryMapping[label]; // Direct mapping to category
-    acc[label] = data.filter((item) => item && item.Category === categoryName);
+    if (label === "Favourite") {
+      const favouriteAssetsIds = portfolio.assetsCalculations?.assets
+          .filter(asset => asset.Favourite)
+          .map(asset => asset.CoinGeckoID);
+      acc[label] = portfolio.assets && portfolio?.assets.filter(asset => favouriteAssetsIds.includes(asset.CoinGeckoID));
+    } else {
+      const categoryName = categoryMapping[label];
+      acc[label] = data.filter((item) => item && item.Category === categoryName);
+    }
     return acc;
   }, {});
+
+  useEffect(() => {
+    console.log("portfolio======", portfolio)
+  }, [portfolio]);
 
   return (
     <>
@@ -118,7 +140,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
           {firstHalfLabels.map((label) => (
             <Tab
               key={label}
-              icon={<ColorCircle color={categoryColors[label]} />}
+              icon={label === "Favourite" ? <FavoriteIcon color="red" /> : <ColorCircle color={categoryColors[label]} />}
               iconPosition="start"
               label={label}
               sx={{ color: 'white', whiteSpace: "nowrap" }}
@@ -141,7 +163,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
           {secondHalfLabels.map((label) => (
             <Tab
               key={label}
-              icon={<ColorCircle color={categoryColors[label]} />}
+              icon={label === "Favourite" ? <IconButton sx={{ color: 'red' }}><FavoriteIcon color="red" /></IconButton> : <ColorCircle color={categoryColors[label]} />}
               iconPosition="start"
               label={label}
               sx={{ color: 'white', whiteSpace: "nowrap" }}
@@ -158,7 +180,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
               ? Array.from(new Array(15)).map((_, idx) => (
                 <CoinCardSkeleton key={idx} />
               ))
-              : categorizedData[label].map((coin, index) => (
+              : categorizedData[label]?.map((coin, index) => (
                 <CoinCard
                   key={`${coin.CoinGeckoID}-${index}`}
                   coin={coin}

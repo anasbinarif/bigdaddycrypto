@@ -1,5 +1,6 @@
-import {Assets, User} from "@/lib/models";
-import {connectToDb} from "./utils";
+import { Assets, PastBuyAndSell, PastPortfolio, User } from "@/lib/models";
+import { connectToDb } from "./utils";
+// const fs = require('fs').promises;
 
 export const categoryColors = {
     "AI": '#FFD700', // Gold
@@ -10,14 +11,15 @@ export const categoryColors = {
     "BTC-Zusammenhang": '#FF9900', // Orange
     "CBDC-Netzwerke": '#667788', // Dark Gray
     "ECommerce": '#8833bb', // Dark Magenta
-    "Tokenisierung/RWA": '#ff5aac' // Pink
-  };
+    "Tokenisierung/RWA": '#ff5aac', // Pink
+    "Favourite": '#2E8B57' // Sea Green
+};
 
 export const getUser = async (id) => {
     try {
         await connectToDb()
         return await User.findById(id)
-    }catch (e) {
+    } catch (e) {
         console.log(e)
     }
 }
@@ -26,7 +28,7 @@ export const getUsers = async () => {
     try {
         await connectToDb()
         return await User.find()
-    }catch (e) {
+    } catch (e) {
         console.log(e)
     }
 }
@@ -42,44 +44,45 @@ export const importCryptoData = async (cryptoData) => {
     }
 };
 
-// const BATCH_SIZE = 5000; // Adjust batch size based on performance and timeout constraints
-//
-// export const importPortfolio = async () => {
-//     try {
-//         console.log("starting.............");
-//         const dataBuffer = await fs.readFile('C:/Users/anasb/OneDrive/Desktop/upwork/bigdaddycrypto/src/v1_sql/Portfolio_Assets.json');
-//         const dataString = dataBuffer.toString();
-//         const jsonData = JSON.parse(dataString);
-//         console.log("jsonData length:", jsonData[2].data.length);
-//
-//         let index = 0;
-//         while (index < jsonData[2].data.length) {
-//             const batchData = jsonData[2].data.slice(index, index + BATCH_SIZE).map(item => ({
-//                 PortfolioID: item.PortfolioID,
-//                 AssetID: parseInt(item.AssetID, 10),
-//                 Holdings: parseFloat(item.Holdings),
-//                 avgPrice: parseFloat(item.avgPrice),
-//                 totalInvest: item.totalInvest ? parseFloat(item.totalInvest) : 0.0,
-//                 totalSold: item.totalSold ? parseFloat(item.totalSold) : 0.0,
-//                 Relevanz: item.Relevanz || "",
-//                 RelevanzComment: item.RelevanzComment || "",
-//                 DCA: item.DCA || "",
-//                 DCAComment: item.DCAComment || "",
-//                 Gewichtung: item.Gewichtung || "",
-//                 GewichtungComment: item.GewichtungComment || ""
-//             }));
-//
-//             const results = await PastPortfolio.insertMany(batchData);
-//             console.log(`Batch ${index / BATCH_SIZE + 1} imported successfully`);
-//             index += BATCH_SIZE;
-//         }
-//
-//         console.log('Data import complete.');
-//     } catch (e) {
-//         console.log("Error importing data:", e);
-//         throw e;
-//     }
-// };
+const isValidDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return !isNaN(date.getTime());
+};
+
+
+const BATCH_SIZE = 5000; // Adjust batch size based on performance and timeout constraints
+
+export const importPortfolio = async () => {
+    try {
+        console.log("starting.............");
+        const dataBuffer = await fs.readFile('C:/Users/anasb/OneDrive/Desktop/upwork/bigdaddycrypto/src/v1_sql/Portfolio_Assets_Transfer.json');
+        const dataString = dataBuffer.toString();
+        const jsonData = JSON.parse(dataString);
+        console.log("jsonData length:", jsonData[2].data.length);
+
+        let index = 0;
+        while (index < jsonData[2].data.length) {
+            const batchData = jsonData[2].data.slice(index, index + BATCH_SIZE).map(item => ({
+                ID: parseInt(item.ID, 10),
+                PortfolioAssetID: parseFloat(item.PortfolioAssetID),
+                Type: item.Type,
+                Date: isValidDate(item.Date) ? new Date(item.Date) : new Date(),
+                PricePerCoin: parseFloat(item.PricePerCoin),
+                Betrag: parseFloat(item.Betrag),
+                Coins: parseFloat(item.Coins),
+            }));
+
+            const results = await PastBuyAndSell.insertMany(batchData);
+            console.log(`Batch ${index / BATCH_SIZE + 1} imported successfully`);
+            index += BATCH_SIZE;
+        }
+
+        console.log('Data import complete.');
+    } catch (e) {
+        console.log("Error importing data:", e);
+        throw e;
+    }
+};
 
 
 export const getAllTickers = async () => {
@@ -93,8 +96,8 @@ export const getAllTickers = async () => {
     }
 };
 
-export const getCoinData = async() => {
-    const res = await fetch('/api/crypto',{ next: { revalidate: 3600 } }, { cache: 'force-cache' })
+export const getCoinData = async () => {
+    const res = await fetch('/api/crypto', { next: { revalidate: 3600 } }, { cache: 'force-cache' })
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -129,7 +132,7 @@ export const storeUserPortfolioCoin = async (userId, coin) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({userId, coin: newCoin})
+        body: JSON.stringify({ userId, coin: newCoin })
     });
 }
 
@@ -144,7 +147,8 @@ export const getUserPortfolio = async (userId) => {
     });
 
     if (!res.ok) {
-        throw new Error('Failed to fetch data');
+        // throw new Error('Failed to fetch data');
+        console.log('Failed to fetch data')
     }
     const categories = {
         ai: 0,
@@ -187,7 +191,7 @@ export const getUserPortfolio = async (userId) => {
 
 
     return {
-        data, 
+        data,
         calculation: {
             counts: categories,
             percentages: percentages

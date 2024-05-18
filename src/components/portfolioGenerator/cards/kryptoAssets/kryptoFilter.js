@@ -1,11 +1,9 @@
 "use client";
-import ReactDOMServer from "react-dom/server";
 import { Box, TextField, Typography, Popper } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { getAssets } from "@/lib/data";
 import Autocomplete from "@mui/material/Autocomplete";
 import CoinCard from "../coinCard/CoinCard";
-import CoinCardSkeleton from "../coinCard/CoinCardSkeleton";
 import "./stylesPopper.css";
 
 const KryptoFilter = ({ userID, portfolio }) => {
@@ -83,9 +81,10 @@ const KryptoFilter = ({ userID, portfolio }) => {
       sx={{
         width: "100%",
         bgcolor: "#202530",
-        p: 2,
+        padding: "35px 30px",
         display: "flex",
         justifyContent: "space-between",
+        borderRadius: "8px"
       }}
     >
       <Box sx={{ width: "70%" }}>

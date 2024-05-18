@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from "react";
 import {
-  Box,
-  Divider,
-  Typography,
   Avatar,
-  Item,
+  Box,
+  Button,
+  IconButton,
+  MenuItem,
   Paper,
-  Tabs,
+  Select,
   Tab,
   Table,
-  TableHead,
   TableBody,
-  TableContainer,
-  TableRow,
   TableCell,
-  Button,
-  Select,
-  MenuItem,
-  TextField,
-  IconButton,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tabs,
   Tooltip,
+  Typography,
 } from "@mui/material";
-import InputAdornment from "@mui/material/InputAdornment";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import styles from "./coinDetails.module.css";
-import BitpandaIcon from "@/components/portfolioGenerator/icons/BitpandaIcon";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "@/app/stores/sessionStore";
 import { portfolioAtom } from "@/app/stores/portfolioStore";
@@ -46,6 +39,14 @@ const CoinDetails = (props) => {
     totalCoins: 0,
     totalHoldingsValue: 0,
     totalInvested: 0,
+    realizedProfit: 0,
+    avgPurchasePrice: 0,
+    avgPurchasePricePercentage: 0,
+    avgSellingPrice: 0,
+    avgSellingPricePercentage: 0,
+    totalWinLoss: 0,
+    totalWinLossPercentage: 0,
+    X: 0,
   });
   const [changeTableValue, setChangeTableValue] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -75,13 +76,84 @@ const CoinDetails = (props) => {
     }, 0);
     const totalHoldingsValue = (totalCoins * parseFloat(coin.Price)).toFixed(2);
     const totalInvested = rowVals
-      .reduce((acc, row) => acc + parseFloat(row.Betrag), 0)
+      .reduce((acc, row) => {
+        if (row.Type === "Kauf") {
+          return acc + parseFloat(row.Betrag);
+        }
+        return acc;
+      }, 0)
       .toFixed(2);
+    const realizedProfit = rowVals
+      .reduce((acc, row) => {
+        if (row.Type === "Verkauf") {
+          return acc + parseFloat(row.Betrag);
+        }
+        return acc;
+      }, 0)
+      .toFixed(2);
+    const avgPurchasePrice = (
+      totalInvested /
+      rowVals.reduce((acc, row) => {
+        if (row.Type === "Kauf") {
+          return acc + parseFloat(row.Coins);
+        }
+        return acc;
+      }, 0)
+    ).toFixed(2);
+    const kaufTotalCoin = rowVals
+      .reduce((acc, row) => {
+        if (row.Type === "Kauf") {
+          return acc + parseFloat(row.Coins);
+        }
+        return acc;
+      }, 0)
+      .toFixed(2);
+    const verkaufTotalCoin = rowVals
+      .reduce((acc, row) => {
+        if (row.Type === "Verkauf") {
+          return acc + parseFloat(row.Coins);
+        }
+        return acc;
+      }, 0)
+      .toFixed(2);
+    const avgPurchasePricePercentage = (
+      100 -
+      (totalInvested / (kaufTotalCoin * coin.Price)) * 100
+    ).toFixed(2);
+    const avgSellingPrice = (realizedProfit / verkaufTotalCoin).toFixed(2);
+    const avgSellingPricePercentage = (
+      100 -
+      (avgSellingPrice / avgPurchasePrice) * 100
+    ).toFixed(2);
+    const totalWinLoss = (
+      totalHoldingsValue -
+      (parseFloat(totalInvested) - parseFloat(realizedProfit))
+    ).toFixed(2);
+    const totalWinLossPercentage = (
+      (totalWinLoss / totalInvested) *
+      100
+    ).toFixed(2);
+    const X = totalHoldingsValue / totalInvested;
+
+    console.log(
+      "totalWinLoss=",
+      totalWinLoss,
+      totalInvested,
+      totalWinLossPercentage
+    );
 
     setFinancialSummary({
       totalCoins,
       totalHoldingsValue,
       totalInvested,
+      realizedProfit,
+      avgPurchasePrice,
+      avgPurchasePricePercentage,
+      avgSellingPrice,
+      avgSellingPricePercentage,
+      totalWinLoss,
+      totalWinLossPercentage,
+      X,
     });
   }, [rowVals, coin.Price]);
 
@@ -102,11 +174,14 @@ const CoinDetails = (props) => {
     const updatedRows = [...rowVals];
     const row = updatedRows[index];
     row[col] = newVal;
-    if (col === "PricePerCoin" || col === "Coins") {
-      row["Betrag"] = (
-        parseFloat(row["PricePerCoin"]) * parseFloat(row["Coins"])
-      ).toFixed(2);
+
+    // When 'Betrag' or 'Coins' is updated, recalculate 'PricePerCoin'
+    if (col === "Betrag" || col === "Coins") {
+      const coins = parseFloat(row["Coins"]);
+      const betrag = parseFloat(row["Betrag"]);
+      row["PricePerCoin"] = coins ? (betrag / coins).toFixed(2) : 0;
     }
+
     setRowVals(updatedRows);
   };
 
@@ -138,13 +213,25 @@ const CoinDetails = (props) => {
       const userID = sessionJotai?.user.id;
       const CoinGeckoID = coin.CoinGeckoID;
       console.log("Saving data", rowVals, CoinGeckoID, userID);
+      const Portfolio_Assets = {
+        totalInvest: financialSummary.totalInvested,
+        totalSold: financialSummary.realizedProfit,
+        totalCoins: financialSummary.totalCoins,
+        Holdings: financialSummary.totalHoldingsValue,
+        DCA: financialSummary.avgPurchasePrice,
+      };
       try {
         const response = await fetch("/api/addBuyAndSell", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userID, CoinGeckoID, rowVals }),
+          body: JSON.stringify({
+            userID,
+            CoinGeckoID,
+            rowVals,
+            Portfolio_Assets,
+          }),
         });
         if (response.ok) {
           setAlertInfo({
@@ -176,8 +263,7 @@ const CoinDetails = (props) => {
     const date = new Date(dateStr);
     const now = new Date();
     const diffTime = Math.abs(now - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
   const formatDateForInput = (isoDateString) => {
@@ -198,7 +284,7 @@ const CoinDetails = (props) => {
         backgroundColor: "#202530",
         color: "white",
         height: "100%",
-        borderRadius: "2px",
+        borderRadius: "8px",
         padding: "35px 30px",
       }}
     >
@@ -223,7 +309,13 @@ const CoinDetails = (props) => {
         <Box className={styles.grid}>
           <Box className={styles.grid__item}>
             <Typography sx={{ fontSize: "0.9rem" }}>Bestand</Typography>
-            <Typography sx={{ fontSize: "1.8rem", fontWeight: "bold" }}>
+            <Typography
+              sx={{
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                whiteSpace: "nowrap",
+              }}
+            >
               {financialSummary.totalHoldingsValue},00 €
             </Typography>
             <Typography sx={{ color: "#ffffff88" }}>
@@ -232,7 +324,13 @@ const CoinDetails = (props) => {
           </Box>
           <Box className={styles.grid__item}>
             <Typography sx={{ fontSize: "0.9rem" }}>Investiert</Typography>
-            <Typography sx={{ fontSize: "1.8rem", fontWeight: "bold" }}>
+            <Typography
+              sx={{
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                whiteSpace: "nowrap",
+              }}
+            >
               {financialSummary.totalInvested},00 €
             </Typography>
             <Typography sx={{ color: "#ffffff88" }}>Geplant: 0,00 €</Typography>
@@ -241,11 +339,19 @@ const CoinDetails = (props) => {
             <Typography sx={{ fontSize: "0.9rem" }}>
               Gesamtgewinn/-Verlust
             </Typography>
-            <Typography sx={{ fontSize: "1.8rem", fontWeight: "bold" }}>
-              0,00 €
+            <Typography
+              sx={{
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {financialSummary.totalWinLoss},00 €
             </Typography>
             <Typography
-              className="down"
+              className={
+                financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
+              }
               sx={{
                 "&.down": {
                   color: "red",
@@ -268,7 +374,7 @@ const CoinDetails = (props) => {
                 },
               }}
             >
-              -100.0%
+              {financialSummary.totalWinLossPercentage} %
             </Typography>
           </Box>
           <Box className={styles.grid__item}>
@@ -279,10 +385,43 @@ const CoinDetails = (props) => {
               sx={{
                 fontSize: "1.8rem",
                 fontWeight: "bold",
-                color: "rgb(68, 68, 68)",
+                color: `${
+                  financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
+                }`,
+                whiteSpace: "nowrap",
               }}
             >
-              --,-- €
+              {financialSummary.avgPurchasePrice > 0
+                ? `${financialSummary.avgPurchasePrice} €`
+                : "--,-- €"}
+            </Typography>
+            <Typography
+              className={
+                financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
+              }
+              sx={{
+                "&.down": {
+                  color: "red",
+                },
+
+                "&.up": {
+                  color: "green",
+                },
+
+                "&.down:before": {
+                  content: '"▼ "',
+                  fontSize: "80%",
+                  marginRight: "3px",
+                },
+
+                "&.up:before": {
+                  content: '"▲ "',
+                  fontSize: "80%",
+                  marginRight: "3px",
+                },
+              }}
+            >
+              {financialSummary.avgPurchasePricePercentage} %
             </Typography>
           </Box>
           <Box className={styles.grid__item}>
@@ -293,18 +432,59 @@ const CoinDetails = (props) => {
               sx={{
                 fontSize: "1.8rem",
                 fontWeight: "bold",
-                color: "rgb(68, 68, 68)",
+                color: `${
+                  financialSummary.avgSellingPrice > 0 ? "" : "rgb(68, 68, 68)"
+                }`,
+                whiteSpace: "nowrap",
               }}
             >
-              --,-- €
+              {financialSummary.avgSellingPrice > 0
+                ? `${financialSummary.avgSellingPrice} €`
+                : "--,-- €"}
             </Typography>
+            {financialSummary.avgSellingPricePercentage > 0 && (
+              <Typography
+                className={
+                  financialSummary.avgSellingPricePercentage < 0 ? "up" : "down"
+                }
+                sx={{
+                  "&.down": {
+                    color: "red",
+                  },
+
+                  "&.up": {
+                    color: "green",
+                  },
+
+                  "&.down:before": {
+                    content: '"▼ "',
+                    fontSize: "80%",
+                    marginRight: "3px",
+                  },
+
+                  "&.up:before": {
+                    content: '"▲ "',
+                    fontSize: "80%",
+                    marginRight: "3px",
+                  },
+                }}
+              >
+                {financialSummary.avgSellingPricePercentage} %
+              </Typography>
+            )}
           </Box>
           <Box className={styles.grid__item}>
             <Typography sx={{ fontSize: "0.9rem" }}>
               Gewinn realisiert
             </Typography>
-            <Typography sx={{ fontSize: "1.8rem", fontWeight: "bold" }}>
-              0,00 €
+            <Typography
+              sx={{
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {financialSummary.realizedProfit},00 €
             </Typography>
             <Typography sx={{ color: "#ffffff88" }}>% von Invest</Typography>
           </Box>
@@ -411,7 +591,12 @@ const CoinDetails = (props) => {
                           }
                           variant="outlined"
                           sx={{
-                            color: "white",
+                            color:
+                              row.Type === "Kauf"
+                                ? "#4CAF50"
+                                : row.Type === "Verkauf"
+                                ? "#F44336"
+                                : "white",
                             fontSize: "0.8rem",
                             border: "none",
 
@@ -482,20 +667,7 @@ const CoinDetails = (props) => {
                             maxWidth: "100px",
                           }}
                         >
-                          <input
-                            type="text"
-                            id="numberInput"
-                            value={row.PricePerCoin}
-                            onChange={(e) =>
-                              handleRowData(
-                                parseFloat(e.target.value) || 0,
-                                index,
-                                "PricePerCoin"
-                              )
-                            }
-                            className={styles.input}
-                          />
-                          <div>&euro;</div>
+                          {row.PricePerCoin} €
                         </div>
                       </TableCell>
                       <TableCell>
@@ -509,8 +681,25 @@ const CoinDetails = (props) => {
                             maxWidth: "100px",
                           }}
                         >
-                          {row.Betrag}
-                          <div style={{ marginLeft: "auto" }}>&euro;</div>
+                          <input
+                            type="text"
+                            id="betragInput"
+                            value={row.Betrag}
+                            onChange={(e) =>
+                              handleRowData(
+                                parseFloat(e.target.value) || 0,
+                                index,
+                                "Betrag"
+                              )
+                            }
+                            style={{
+                              marginRight: "5px",
+                              width: "100px",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                          />
+                          €
                         </div>
                       </TableCell>
                       <TableCell>
@@ -549,7 +738,7 @@ const CoinDetails = (props) => {
                               maxWidth: "100px",
                             }}
                           >
-                            {row.Date == "00/00/00"
+                            {row.Date === "00/00/00"
                               ? ""
                               : `${computeDaysPast(row.Date)} Tage`}
                           </div>
@@ -610,7 +799,7 @@ const CoinDetails = (props) => {
             onClick={handleBuyAndSell}
             disabled={rowVals.length <= 0}
           >
-            Save
+            Update
           </Button>
         </Box>
       </Box>

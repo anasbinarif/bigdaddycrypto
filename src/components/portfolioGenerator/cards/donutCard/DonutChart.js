@@ -18,57 +18,34 @@ const categoryColors = {
 };
 
 const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
-  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
-  const [financialSummary, setFinancialSummary] = useState([])
-  const [portfolioScore, setPortfolioScore] = useState(0.0)
-
-  const calculateFinancialSummaryForAllAssets = () => {
-    return portfolio.assetsCalculations.assets.map(asset => {
-      const price = portfolio.assets.find(a => a.CoinGeckoID === asset.CoinGeckoID).Price;
-      const Potential = portfolio.assets.find(a => a.CoinGeckoID === asset.CoinGeckoID).Potential;
-      const Sicherheit = portfolio.assets.find(a => a.CoinGeckoID === asset.CoinGeckoID).Sicherheit;
-      const totalCoins = asset.buyAndSell.reduce((acc, row) => {
-        const coinsValue = parseFloat(row.Coins);
-        return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
-      }, 0);
-      const totalHoldingsValue = (totalCoins * parseFloat(price)).toFixed(2);
-      const totalInvested = asset.buyAndSell.reduce((acc, row) => acc + parseFloat(row.Betrag), 0).toFixed(2);
-
-      return {
-        CoinGeckoID: asset.CoinGeckoID,
-        totalCoins,
-        totalHoldingsValue,
-        totalInvested,
-        Potential,
-        Sicherheit
-      };
-    });
-  }
-
-  const calculatePortfolioSecurityScore = (financialSummaries) => {
-    const filteredSummaries = financialSummaries.filter(asset => parseFloat(asset.totalCoins) > 0);
-
-    const totalCoinsInPortfolio = filteredSummaries.reduce((acc, asset) => acc + parseFloat(asset.totalCoins), 0);
-    if (totalCoinsInPortfolio === 0) return 0; 
-
-    const weightedSecurityScore = filteredSummaries.reduce((acc, asset) => {
-      const assetPercentage = parseFloat(asset.totalCoins) / totalCoinsInPortfolio;
-      const assetSecurityScore = asset.Sicherheit || 0;
-      return acc + (assetPercentage * assetSecurityScore);
-    }, 0);
-
-    return weightedSecurityScore.toFixed(1);
-  };
+  const [portfolio] = useAtom(portfolioAtom, { assets: [] });
+  const [securityScore, setSecurityScore] = useState(0);
 
 
   useEffect(() => {
-    if (portfolio && portfolio.assetsCalculations && portfolio.assetsCalculations.assets.length > 0) {
-      const financialSummaries = calculateFinancialSummaryForAllAssets();
-      console.log("financialSummaries--", financialSummaries);
-      setFinancialSummary(financialSummaries)
-      const portfolioScore = calculatePortfolioSecurityScore(financialSummaries);
-      setPortfolioScore(portfolioScore)
-      console.log("Portfolio Score:", portfolioScore);
+    const calculateSecurityScore = () => {
+      let totalInvestment = 0;
+      let weightedScore = 0;
+
+      // Calculate the total investment across all assets
+      portfolio.assetsCalculations.assets.forEach(asset => {
+        totalInvestment += asset.totalInvest;
+      });
+
+      // Calculate the weighted security score
+      portfolio.assetsCalculations.assets.forEach(asset => {
+        const assetDetails = portfolio.assets.find(a => a.CoinGeckoID === asset.CoinGeckoID);
+        if (assetDetails && assetDetails.Sicherheit) {
+          const weight = asset.totalInvest / totalInvestment;
+          weightedScore += weight * assetDetails.Sicherheit;
+        }
+      });
+
+      setSecurityScore(weightedScore.toFixed(2));
+    };
+
+    if (portfolio.assetsCalculations && portfolio.assets) {
+      calculateSecurityScore();
     }
   }, [portfolio]);
 
@@ -140,7 +117,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
           Score
         </Typography>
         <Typography variant="h4" component="div" style={{ color: "#FFFFFF" }}>
-          {portfolioScore}
+          {securityScore}
         </Typography>
         <Typography variant="caption" style={{ color: "#FFFFFF" }}>
           Sehr gut

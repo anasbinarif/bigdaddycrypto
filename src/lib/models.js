@@ -1,35 +1,38 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-        username: {
-            type: String,
-            required: true,
-            unique: true,
-            min: 3,
-            max: 20,
-        },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            max: 50,
-        },
-        password: {
-            type: String,
-        },
-        img: {
-            type: String,
-        },
-        isAdmin: {
-            type: Boolean,
-            default: false,
-        },
-        pastUser: {
-            type: String,
-            default: ""
-        }
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        min: 3,
+        max: 20,
     },
-    { timestamps: true }
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        max: 50,
+    },
+    password: {
+        type: String,
+    },
+    img: {
+        type: String,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
+    pastUser: {
+        type: String,
+        default: ""
+    },
+    pastUserCheck: {
+        type: Boolean,
+        default: false
+    }
+}, { timestamps: true }
 );
 
 const assetsSchema = new mongoose.Schema({
@@ -149,6 +152,14 @@ const portfolioSchema = new mongoose.Schema({
             type: Number,
             default: 0.0
         },
+        totalCoins: {
+            type: Number,
+            default: 0.0
+        },
+        Favourite: {
+            type: Boolean,
+            default: false
+        },
         buyAndSell: [{
             Type: {
                 type: String,
@@ -237,6 +248,10 @@ const pastUserSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const pastPortfolioSchema = new mongoose.Schema({
+    ID: {
+        type: Number,
+        required: true
+    },
     PortfolioID: {
         type: String,
         required: true
@@ -287,8 +302,40 @@ const pastPortfolioSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+const pastBuyAndSellSchema = new mongoose.Schema({
+    ID: {
+        type: Number,
+        required: true
+    },
+    PortfolioAssetID: {
+        type: Number,
+        required: true
+    },
+    Type: {
+        type: String,
+        required: true
+    },
+    Date: {
+        type: Date,
+        required: true
+    },
+    PricePerCoin: {
+        type: Number,
+        required: true
+    },
+    Betrag: {
+        type: Number,
+        required: true
+    },
+    Coins: {
+        type: Number,
+        required: true
+    }
+});
+
 export const PastPortfolio = mongoose.models?.PastPortfolio || mongoose.model("PastPortfolio", pastPortfolioSchema);
 export const PastUsers = mongoose.models?.PastUsers || mongoose.model("PastUsers", pastUserSchema);
+export const PastBuyAndSell = mongoose.models?.PastBuyAndSell || mongoose.model("PastBuyAndSell", pastBuyAndSellSchema);
 export const UserPortfolio = mongoose.models?.UserPortfolio || mongoose.model('UserPortfolio', portfolioSchema);
 export const Assets = mongoose.models?.Assets || mongoose.model("Assets", assetsSchema);
 export const User = mongoose.models?.User || mongoose.model("User", userSchema);

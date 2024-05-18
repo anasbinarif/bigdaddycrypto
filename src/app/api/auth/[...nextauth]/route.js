@@ -50,6 +50,8 @@ export const authOptions = {
                 token.isAdmin = user.isAdmin;
                 token.username = user.username;
                 token.email = user.email;
+                token.pastUserCheck = user.pastUserCheck;
+                console.log("calling again token");
             }
             return token;
         },
@@ -59,6 +61,8 @@ export const authOptions = {
                 session.user.isAdmin = token.isAdmin;
                 session.user.username = token.username;
                 session.user.email = token.email;
+                session.user.pastUserCheck = token.pastUserCheck;
+                console.log("calling again session");
             }
             return session;
         },

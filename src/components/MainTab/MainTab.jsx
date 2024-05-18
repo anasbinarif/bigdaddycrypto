@@ -122,7 +122,7 @@ export default function ColorTabs({tabSelector, setTabSelector}) {
                                      setSelectedCoin={setSelectedCoin}/>
             </TabPanel>
             <TabPanel value={value} index="three">
-                <PortfolioUbersicht/>
+                <PortfolioUbersicht loadingPortfolio={loadingPortfolio}/>
             </TabPanel>
         </Box>
     );
