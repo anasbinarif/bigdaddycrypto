@@ -2,9 +2,22 @@ import { Box, Divider, Typography } from "@mui/material";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {useAtom} from "jotai/index";
+import {portfolioAtom} from "@/app/stores/portfolioStore";
+import {useEffect} from "react";
 
-const Third = ({ portfolio, loadingPortfolio }) => {
-  return (
+const Third = () => {
+    const [portfolio] = useAtom(portfolioAtom, { assets: [] });
+    const totalInvestment = portfolio.assetsCalculations.assets.reduce((acc, curr) => acc + curr.totalInvest, 0).toFixed(2);
+    const totalGesamtwert = portfolio.assetsCalculations.assets.reduce((acc, curr) => acc + curr.Holdings, 0).toFixed(2);
+    const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
+    const gesamtwertPercentage = ((aktuellerProfit / totalInvestment) * 100).toFixed(2);
+
+    useEffect(() => {
+        console.log("portfolioportfolio", portfolio)
+    }, [portfolio]);
+
+    return (
     <Box
       sx={{
         backgroundColor: "#202530",
@@ -35,10 +48,10 @@ const Third = ({ portfolio, loadingPortfolio }) => {
       >
         <Typography sx={{ fontSize: "0.9rem" }}>Gesamtwert</Typography>
         <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-          0,00 €
+            {totalGesamtwert},00 €
         </Typography>
         <Typography
-          className="down"
+            className={gesamtwertPercentage < 0 ? "down" : "up"}
           sx={{
             "&.down": {
               color: "red",
@@ -61,7 +74,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
             },
           }}
         >
-          -100.0%
+            {gesamtwertPercentage}%
         </Typography>
       </Box>
       <Box
@@ -79,7 +92,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
             Gesamt Invest
           </Typography>
           <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
-            17.000,00 €
+              {totalInvestment},00 €
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -87,7 +100,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
             Aktueller Profit
           </Typography>
           <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
-            17.000,00 €
+              {aktuellerProfit},00 €
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -95,7 +108,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
             Bisher realisiert
           </Typography>
           <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
-            17.000,00 €
+            0,00 €
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -107,7 +120,7 @@ const Third = ({ portfolio, loadingPortfolio }) => {
             />
           </Typography>
           <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
-            17.000,00 €
+            0,00 €
           </Typography>
         </Box>
       </Box>

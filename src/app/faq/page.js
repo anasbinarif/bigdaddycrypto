@@ -264,7 +264,7 @@ function VideoPlayer() {
         >
           Häufige Fragen
         </Typography>
-        <Grid container spacing={2} sx={{ margin: "0 0rem 10rem 5rem", height: "543px" }}>
+        <Grid container spacing={0} sx={{ margin: "0 0rem 10rem 5rem", height: "543px" }}>
           <Grid item xs={12} md={4} sx={{height: "100%", width: "33%"}}>
             <List
               style={{
@@ -327,7 +327,7 @@ function VideoPlayer() {
               ))}
             </List>
           </Grid>
-          <Grid item xs={12} md={6} sx={{ margin: "0px" }}>
+          <Grid item xs={12} md={6} sx={{ margin: "0px", height: "100%" }}>
             <Card>
               <CardMedia
                 component="iframe"

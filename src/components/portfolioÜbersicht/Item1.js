@@ -73,6 +73,8 @@ export default function Item1({ loadingPortfolio }) {
     }, [graphPercentage, graphData])
     const assetsLength = portfolio?.assetsCalculations?.assets.length;
     const totalInvestment = portfolio.assetsCalculations.assets.reduce((acc, curr) => acc + curr.totalInvest, 0);
+    const totalGesamtwert = portfolio.assetsCalculations.assets.reduce((acc, curr) => acc + curr.Holdings, 0).toFixed(2);
+    const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
 
     return (
         <Box
@@ -167,7 +169,7 @@ export default function Item1({ loadingPortfolio }) {
                             Aktueller Profit
                         </Typography>
                         <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
-                            17.000,00 €
+                            {aktuellerProfit},00 €
                         </Typography>
                     </Box>
                 </Box>

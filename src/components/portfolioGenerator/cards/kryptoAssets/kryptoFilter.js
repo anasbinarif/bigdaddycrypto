@@ -186,6 +186,7 @@ const KryptoFilter = ({ userID, portfolio }) => {
             <TextField
               {...params}
               // style={{ backgroundColor: "white" }}
+              label="Suche..."
               onFocus={(e) => e.target.select()} // mio onfocus
               inputProps={{
                 ...params.inputProps,
@@ -202,9 +203,6 @@ const KryptoFilter = ({ userID, portfolio }) => {
           sx={{
             minWidth: "180px",
             alignSelf: "flex-start",
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "1px solid #ffffff20",
-            },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
               border: "1px solid #ffffff20",
             },

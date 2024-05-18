@@ -10,7 +10,7 @@ import FormDialog from "../importPreviousDataDialog/FormDialog";
 // import { TabContext } from "@mui/lab";
 
 const Navbar = ({ tabSelector, setTabSelector }) => {
-  
+
 
   return (
     <AppBar
@@ -40,7 +40,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
             Portfolio Generator 2.1
           </Typography>
         </Link>
-        <FormDialog/>
+        <FormDialog />
         <Box
           style={{
             marginLeft: "auto",
@@ -48,7 +48,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
             fontFamily: "sans-serif",
           }}
         >
-          
+
           <Link
             style={{ marginRight: "15px", fontFamily: "inherit" }}
             href={"/"}
@@ -66,6 +66,12 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
             href={"/media"}
           >
             Mediatek
+          </Link>
+          <Link
+            style={{ marginRight: "15px", fontFamily: "inherit" }}
+            href={"/assetsGraph"}
+          >
+            Graph
           </Link>
         </Box>
         <SessionProvider>

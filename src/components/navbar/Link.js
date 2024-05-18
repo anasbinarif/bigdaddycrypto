@@ -23,7 +23,7 @@ const NavbarLink = () => {
     };
     return (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-            {session && !session.user.isAdmin && <Link
+            {session && session.user.isAdmin && <Link
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
                 href={"/admin"}
             > <Typography variant="body1" sx={{ marginRight: "15px" }}>Admin</Typography></Link>}

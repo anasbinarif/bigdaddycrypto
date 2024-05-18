@@ -17,8 +17,8 @@ export async function POST(req) {
         }));
 
         // Log and return the full details
-        console.log("assetGenerator------", assetDetails);
-        console.log("portfolioGenerator------", portfolio);
+        // console.log("assetGenerator------", assetDetails);
+        // console.log("portfolioGenerator------", portfolio);
         const data = { portfolio, assetDetails };
         return NextResponse.json({ data: data }, { status: 200 });
 
