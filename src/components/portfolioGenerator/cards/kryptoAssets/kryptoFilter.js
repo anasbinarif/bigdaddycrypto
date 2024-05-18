@@ -1,13 +1,34 @@
 "use client";
-import { Box, TextField, Typography, Popper } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Typography,
+  Popper,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { getAssets } from "@/lib/data";
 import Autocomplete from "@mui/material/Autocomplete";
 import CoinCard from "../coinCard/CoinCard";
 import "./stylesPopper.css";
+import InputBase from "@mui/material/InputBase";
+import { styled } from "@mui/material/styles";
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      backgroundColor: "#1d1d1d",
+      color: "white",
+      // width: 250,
+    },
+  },
+};
 
 const KryptoFilter = ({ userID, portfolio }) => {
-  const [priceIndicator, setPriceIndicator] = useState("");
+  const [priceIndicator, setPriceIndicator] = useState(
+    "Kein Preis-Indikator anzeigen"
+  );
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [searchVal, setSearchVal] = useState("");
@@ -84,7 +105,7 @@ const KryptoFilter = ({ userID, portfolio }) => {
         padding: "35px 30px",
         display: "flex",
         justifyContent: "space-between",
-        borderRadius: "8px"
+        borderRadius: "8px",
       }}
     >
       <Box sx={{ width: "70%" }}>
@@ -112,7 +133,84 @@ const KryptoFilter = ({ userID, portfolio }) => {
           alignSelf: "flex-start",
         }}
       >
-        <TextField
+        <Select
+          inputProps={{ "aria-label": "Without label" }}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={priceIndicator}
+          label="Age"
+          onChange={handleChange}
+          variant="outlined"
+          sx={{
+            color: "white",
+            fontSize: "0.8rem",
+            border: "none",
+            marginRight: "2rem",
+
+            "& .MuiPaper-rounded": {
+              backgroundColor: "#1d1d1d",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "1px solid #ffffff20",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              border: "1px solid #ffffff20",
+            },
+
+            "& .MuiFormHelperText-root": {
+              color: "#ffffff",
+            },
+            "& .MuiFormLabel-root": {
+              color: "#ffffff",
+              "&.Mui-focused": {
+                color: "#ffffff",
+              },
+            },
+
+            "& .MuiOutlinedInput-root": {
+              "&:selected": {
+                border: "none",
+              },
+            },
+
+            "& .MuiInputBase-root": {
+              // border: "none",
+            },
+            "& .MuiSelect-select": {
+              // border: "1px solid #ffffff20",
+              // border: "none",
+              padding: "5px",
+              "&:focus-visible": {
+                outline: "none",
+              },
+            },
+            "& .MuiSvgIcon-root": { color: "#ffffff" },
+          }}
+          MenuProps={MenuProps}
+        >
+          <MenuItem
+            value="Kein Preis-Indikator anzeigen"
+            sx={{ backgroundColor: "#ididid" }}
+          >
+            Kein Preis-Indikator anzeigen
+          </MenuItem>
+          <MenuItem value="Preis-Indikator: Extrem Pessimistisch">
+            Preis-Indikator: Extrem Pessimistisch
+          </MenuItem>
+          <MenuItem value="Preis-Indikator: Pessimistisch">
+            Preis-Indikator: Pessimistisch
+          </MenuItem>
+          <MenuItem value="Preis-Indikator: Optimistisch">
+            Preis-Indikator: Optimistisch
+          </MenuItem>
+          <MenuItem value="Preis-Indikator: Spätseinsteiger">
+            Preis-Indikator: Spätseinsteiger
+          </MenuItem>
+          <MenuItem value="Preis-Indikator: Spätseinsteiger II">
+            Preis-Indikator: Spätseinsteiger II
+          </MenuItem>
+        </Select>
+        {/* <Select
           width={10}
           select
           value={priceIndicator}
@@ -150,13 +248,25 @@ const KryptoFilter = ({ userID, portfolio }) => {
           }}
           color="info"
         >
-          <option value="">Kein Preis-Indikator anzeigen</option>
-          <option value="pi0">Preis-Indikator: Extrem Pessimistisch</option>
-          <option value="pi1">Preis-Indikator: Pessimistisch</option>
-          <option value="pi2">Preis-Indikator: Optimistisch</option>
-          <option value="pi3">Preis-Indikator: Spätseinsteiger</option>
-          <option value="pi4">Preis-Indikator: Spätseinsteiger II</option>
-        </TextField>
+          <option style={{ backgroundColor: "#1d1d1d" }} value="">
+            Kein Preis-Indikator anzeigen
+          </option>
+          <option style={{ backgroundColor: "#1d1d1d" }} value="pi0">
+            Preis-Indikator: Extrem Pessimistisch
+          </option>
+          <option style={{ backgroundColor: "#1d1d1d" }} value="pi1">
+            Preis-Indikator: Pessimistisch
+          </option>
+          <option style={{ backgroundColor: "#1d1d1d" }} value="pi2">
+            Preis-Indikator: Optimistisch
+          </option>
+          <option style={{ backgroundColor: "#1d1d1d" }} value="pi3">
+            Preis-Indikator: Spätseinsteiger
+          </option>
+          <option style={{ backgroundColor: "#1d1d1d" }} value="pi4">
+            Preis-Indikator: Spätseinsteiger II
+          </option>
+        </Select> */}
         <Autocomplete
           PopperComponent={PopperMy}
           id="country-select-demo"
