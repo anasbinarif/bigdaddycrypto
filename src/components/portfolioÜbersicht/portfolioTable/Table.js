@@ -270,7 +270,7 @@ const EnhancedTable = () => {
                     <TableCell
                       sx={{
                         padding: "5px 0 5px 5px",
-                        backgroundColor: "purple",
+                        // backgroundColor: "purple",
                       }}
                     >
                       <StyledTypography>
@@ -322,10 +322,10 @@ const EnhancedTable = () => {
                     <TableCell sx={{ padding: "5px" }}>
                       <StyledTypography>{row.relevanz}</StyledTypography>
                     </TableCell>
-                    <TableCell sx={{ padding: "5px", backgroundColor: "red" }}>
+                    <TableCell sx={{ padding: "5px" }}>
                       <StyledTypography>{row.dca}</StyledTypography>
                     </TableCell>
-                    <TableCell sx={{ padding: "5px", backgroundColor: "blue" }}>
+                    <TableCell sx={{ padding: "5px" }}>
                       <StyledTypography sx={{ alignItems: "center" }}>
                         {row.gewichtung}
                       </StyledTypography>
