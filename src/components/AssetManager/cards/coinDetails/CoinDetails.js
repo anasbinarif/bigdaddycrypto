@@ -289,20 +289,32 @@ const CoinDetails = (props) => {
       }}
     >
       <Box sx={{ display: "flex" }}>
-        <Box sx={{ display: "flex", flexDirection: "column", width: "25%" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignSelf: "flex-start",
+            width: "25%",
+            marginRight: "1.5rem",
+          }}
+        >
           <Box
             sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1, mr: 2 }}
           >
             <Avatar
               src={coin.cgImageURL}
-              sx={{ width: 50, height: 50, marginRight: 1 }}
+              sx={{
+                width: 50,
+                height: 50,
+                marginRight: 1,
+                alignSelf: "flex-start",
+              }}
             />
+          </Box>
+          <Box sx={{ alignSelf: "center" }}>
             <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
               {coin.Ticker}
             </Typography>
-          </Box>
-          <Box sx={{ alignSelf: "center" }}>
-            <Typography>{coin.CoinGeckoID}</Typography>
+            <Typography noWrap>{coin.CoinGeckoID}</Typography>
             <Typography>{coin.Price.toFixed(2)} €</Typography>
           </Box>
         </Box>
