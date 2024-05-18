@@ -18,7 +18,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function PortfolioUbersicht({loadingPortfolio}) {
+export default function PortfolioUbersicht({ loadingPortfolio }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
@@ -51,7 +51,7 @@ export default function PortfolioUbersicht({loadingPortfolio}) {
           </Card>
           <Grid container spacing={2} sx={{ marginTop: "10px" }}>
             <Grid item xs={6} md={12}>
-              <Item1 loadingPortfolio={loadingPortfolio}/>
+              <Item1 loadingPortfolio={loadingPortfolio} />
             </Grid>
             <Grid item xs={6} md={12}>
               <DonutCard />
