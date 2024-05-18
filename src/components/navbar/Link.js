@@ -14,8 +14,11 @@ const NavbarLink = () => {
         if (session) {
             setSession(session)
         }
-        console.log("session for admin", session);
-    }, [status])
+        if (status === "unauthenticated") {
+            handleLogoutFun();
+        }
+        console.log("session for admin", session, status);
+    }, [status, session, setSession])
 
     const handleLogoutFun = async () => {
         await signOut({ redirect: true, callbackUrl: '/login' });

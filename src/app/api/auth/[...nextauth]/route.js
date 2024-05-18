@@ -43,6 +43,14 @@ export const authOptions = {
             },
         }),
     ],
+    session: {
+        strategy: 'jwt',
+        maxAge: 2 * 60 * 60, // 2 hours in seconds
+    },
+    jwt: {
+        secret: "jnjcndajcndicncsdjn8ncdncdc=",
+        maxAge: 2 * 60 * 60, // 2 hours in seconds
+    },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
@@ -68,6 +76,7 @@ export const authOptions = {
         },
         authorized({ auth, request }) {
             const user = auth?.user;
+            console.log("hello 123 from next", user)
             const isOnAdminPanel = request.nextUrl?.pathname.startsWith("/admin");
             const isOnHomePage = request.nextUrl?.pathname.startsWith("/");
             const isOnLoginPage = request.nextUrl?.pathname.startsWith("/login");
