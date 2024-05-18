@@ -79,15 +79,16 @@ const CoinCard = ({ coin, selected, search = false }) => {
     const res = await storeUserPortfolioCoin(userId, coin);
     console.log("Server response:", res);
 
-
-        if (res.ok) {
-            const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-            setPortfolio(userPortfolio.data)
-        } else {
-            console.error('Error handling the portfolioGenerator update:', res.message);
-        }
-    };
-
+    if (res.ok) {
+      const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+      setPortfolio(userPortfolio.data);
+    } else {
+      console.error(
+        "Error handling the portfolioGenerator update:",
+        res.message
+      );
+    }
+  };
 
   return (
     <>
@@ -125,11 +126,16 @@ const CoinCard = ({ coin, selected, search = false }) => {
               <Typography variant="subtitle2" noWrap>
                 {Ticker}
               </Typography>
-            </Box>
-            {/* <Box sx={{ paddingLeft: 1 }}>
-              <Typography component="div" variant="body2" noWrap>
+              <Typography
+                component="div"
+                variant="body2"
+                noWrap
+                sx={{ marginLeft: "10px" }}
+              >
                 {Name}
               </Typography>
+            </Box>
+            {/* <Box sx={{ paddingLeft: 1 }}>
             </Box> */}
             {checkCalculation(Potential, Sicherheit) && (
               <Box
@@ -168,13 +174,14 @@ const CoinCard = ({ coin, selected, search = false }) => {
             cursor: "pointer",
             border: `${selected ? "1px solid #00aa66aa" : "none"}`,
             backgroundColor: `${selected ? "#00aa6633" : "none"}`,
+            width: "270px",
           }}
         >
           <CategoryColorBar
             color={getCategoryColor(Category)}
             selected={selected}
           />
-          <CardContent>
+          <CardContent sx={{ display: "flex", alignItems: "flex-start" }}>
             <CheckCircleIcon
               sx={{
                 color: "#00aa66",
@@ -189,11 +196,15 @@ const CoinCard = ({ coin, selected, search = false }) => {
                 src={cgImageURL}
                 sx={{ width: 35, height: 35, marginRight: 1 }}
               />
-              <Typography variant="subtitle2" noWrap>
-                {Ticker}
-              </Typography>
             </Box>
             <Box sx={{ paddingLeft: 1 }}>
+              <Typography
+                variant="subtitle2"
+                noWrap
+                sx={{ marginBottom: "5px" }}
+              >
+                {Ticker}
+              </Typography>
               <Typography component="div" variant="body2" noWrap>
                 {Name}
               </Typography>

@@ -17,7 +17,9 @@ import {
   Button,
   Select,
   MenuItem,
-  TextField, IconButton, Tooltip,
+  TextField,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -37,46 +39,51 @@ const CoinDetails = (props) => {
   const { coin, index } = props;
   const [value, setValue] = useState(0);
   const [rowVals, setRowVals] = useState([]);
-  const [validationError, setValidationError] = useState('');
+  const [validationError, setValidationError] = useState("");
   const [sessionJotai] = useAtom(sessionAtom);
   const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [financialSummary, setFinancialSummary] = useState({
     totalCoins: 0,
     totalHoldingsValue: 0,
-    totalInvested: 0
+    totalInvested: 0,
   });
-  const [changeTableValue, setChangeTableValue] = useState(0)
+  const [changeTableValue, setChangeTableValue] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertInfo, setAlertInfo] = useState({ message: '', severity: 'info' });
+  const [alertInfo, setAlertInfo] = useState({ message: "", severity: "info" });
 
   useEffect(() => {
-    const asset = portfolio.assetsCalculations.assets.find(a => a.CoinGeckoID === coin.CoinGeckoID);
+    const asset = portfolio.assetsCalculations.assets.find(
+      (a) => a.CoinGeckoID === coin.CoinGeckoID
+    );
     console.log("date asset", asset);
     if (asset && asset.buyAndSell) {
-      setRowVals(asset.buyAndSell.map(row => ({
-        ...row,
-        Date: formatDateForInput(row.Date),  // Format the date for input
-        Betrag: (row.PricePerCoin * row.Coins).toFixed(2)
-      })));
+      setRowVals(
+        asset.buyAndSell.map((row) => ({
+          ...row,
+          Date: formatDateForInput(row.Date), // Format the date for input
+          Betrag: (row.PricePerCoin * row.Coins).toFixed(2),
+        }))
+      );
     }
   }, [coin.CoinGeckoID, portfolio.assetsCalculations.assets]);
 
   useEffect(() => {
-    setChangeTableValue(1)
+    setChangeTableValue(1);
     const totalCoins = rowVals.reduce((acc, row) => {
       const coinsValue = parseFloat(row.Coins);
       return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
     }, 0);
     const totalHoldingsValue = (totalCoins * parseFloat(coin.Price)).toFixed(2);
-    const totalInvested = rowVals.reduce((acc, row) => acc + parseFloat(row.Betrag), 0).toFixed(2);
+    const totalInvested = rowVals
+      .reduce((acc, row) => acc + parseFloat(row.Betrag), 0)
+      .toFixed(2);
 
     setFinancialSummary({
       totalCoins,
       totalHoldingsValue,
-      totalInvested
+      totalInvested,
     });
   }, [rowVals, coin.Price]);
-
 
   console.log("selected coin bro", coin);
 
@@ -95,8 +102,10 @@ const CoinDetails = (props) => {
     const updatedRows = [...rowVals];
     const row = updatedRows[index];
     row[col] = newVal;
-    if (col === 'PricePerCoin' || col === 'Coins') {
-      row['Betrag'] = (parseFloat(row['PricePerCoin']) * parseFloat(row['Coins'])).toFixed(2);
+    if (col === "PricePerCoin" || col === "Coins") {
+      row["Betrag"] = (
+        parseFloat(row["PricePerCoin"]) * parseFloat(row["Coins"])
+      ).toFixed(2);
     }
     setRowVals(updatedRows);
   };
@@ -104,48 +113,51 @@ const CoinDetails = (props) => {
   console.log("testing adding rows to table", rowVals);
 
   const handleBuyAndSell = async () => {
-    let error = '';
+    let error = "";
     for (const row of rowVals) {
       if (row.Date === "" || row.Date === "00/00/00") {
-        error = 'Please enter a valid date.';
+        error = "Please enter a valid date.";
         break;
       }
       if (row.PricePerCoin <= 0) {
-        error = 'Price per coin must be greater than zero.';
+        error = "Price per coin must be greater than zero.";
         break;
       }
       if (row.Betrag <= 0) {
-        error = 'Amount must be greater than zero.';
+        error = "Amount must be greater than zero.";
         break;
       }
       if (row.Coins <= 0) {
-        error = 'Number of coins must be greater than zero.';
+        error = "Number of coins must be greater than zero.";
         break;
       }
     }
     setValidationError(error);
     if (!error) {
       // Perform the save operation here
-      const userID = sessionJotai?.user.id
-      const CoinGeckoID = coin.CoinGeckoID
+      const userID = sessionJotai?.user.id;
+      const CoinGeckoID = coin.CoinGeckoID;
       console.log("Saving data", rowVals, CoinGeckoID, userID);
       try {
-        const response = await fetch('/api/addBuyAndSell', {
-          method: 'POST',
+        const response = await fetch("/api/addBuyAndSell", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userID, CoinGeckoID, rowVals })
+          body: JSON.stringify({ userID, CoinGeckoID, rowVals }),
         });
         if (response.ok) {
-          setAlertInfo({ message: 'Transaktion erfolgreich gespeichert!', severity: 'success' });
+          setAlertInfo({
+            message: "Transaktion erfolgreich gespeichert!",
+            severity: "success",
+          });
           const userPortfolio = await getUserPortfolio(userID);
-          setPortfolio(userPortfolio?.data)
+          setPortfolio(userPortfolio?.data);
         } else {
-          throw new Error('Failed to save data');
+          throw new Error("Failed to save data");
         }
       } catch (error) {
-        setAlertInfo({ message: error.message, severity: 'error' });
+        setAlertInfo({ message: error.message, severity: "error" });
       }
       setShowAlert(true);
     }
@@ -169,17 +181,16 @@ const CoinDetails = (props) => {
   };
 
   const formatDateForInput = (isoDateString) => {
-    return isoDateString.split('T')[0];  // Splits the ISO string at 'T' and returns the date part
-  }
+    return isoDateString.split("T")[0]; // Splits the ISO string at 'T' and returns the date part
+  };
 
   const getTodayString = () => {
     const today = new Date();
-    const day = (`0${today.getDate()}`).slice(-2); // Ensuring two digits
-    const month = (`0${today.getMonth() + 1}`).slice(-2); // Ensuring two digits, adding 1 because getMonth() is zero-indexed
+    const day = `0${today.getDate()}`.slice(-2); // Ensuring two digits
+    const month = `0${today.getMonth() + 1}`.slice(-2); // Ensuring two digits, adding 1 because getMonth() is zero-indexed
     const year = today.getFullYear();
     return `${day} / ${month} / ${year}`; // Formats date as "YYYY-MM-DD"
   };
-
 
   return (
     <Box
@@ -215,7 +226,9 @@ const CoinDetails = (props) => {
             <Typography sx={{ fontSize: "1.8rem", fontWeight: "bold" }}>
               {financialSummary.totalHoldingsValue},00 €
             </Typography>
-            <Typography sx={{ color: "#ffffff88" }}>{financialSummary.totalCoins} {coin.Ticker}</Typography>
+            <Typography sx={{ color: "#ffffff88" }}>
+              {financialSummary.totalCoins} {coin.Ticker}
+            </Typography>
           </Box>
           <Box className={styles.grid__item}>
             <Typography sx={{ fontSize: "0.9rem" }}>Investiert</Typography>
@@ -322,7 +335,7 @@ const CoinDetails = (props) => {
               borderTopRightRadius: "8px",
               fontWeight: value === 0 ? "bold" : "normal",
               color: value === 0 ? "#ffffff" : "#ffffff80",
-              fontSize: "12px"
+              fontSize: "12px",
             }}
           />
           <Tab
@@ -333,7 +346,7 @@ const CoinDetails = (props) => {
               borderTopLeftRadius: "8px",
               borderTopRightRadius: "8px",
               fontWeight: value === 1 ? "bold" : "normal",
-              fontSize: "12px"
+              fontSize: "12px",
             }}
           />
           <Tab
@@ -344,7 +357,7 @@ const CoinDetails = (props) => {
               borderTopLeftRadius: "8px",
               borderTopRightRadius: "8px",
               fontWeight: value === 2 ? "bold" : "normal",
-              fontSize: "12px"
+              fontSize: "12px",
             }}
           />
         </Tabs>
@@ -396,7 +409,7 @@ const CoinDetails = (props) => {
                           onChange={(e) =>
                             handleRowData(e.target.value, index, "Type")
                           }
-                          // variant="filled"
+                          variant="outlined"
                           sx={{
                             color: "white",
                             fontSize: "0.8rem",
@@ -405,13 +418,36 @@ const CoinDetails = (props) => {
                             "& .MuiOutlinedInput-notchedOutline": {
                               border: "1px solid #ffffff20",
                             },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              border: "1px solid #ffffff20",
+                            },
+
+                            "& .MuiFormHelperText-root": {
+                              color: "#ffffff",
+                            },
+                            "& .MuiFormLabel-root": {
+                              color: "#ffffff",
+                              "&.Mui-focused": {
+                                color: "#ffffff",
+                              },
+                            },
+
+                            "& .MuiOutlinedInput-root": {
+                              "&:selected": {
+                                border: "none",
+                              },
+                            },
 
                             "& .MuiInputBase-root": {
-                              border: "none",
+                              // border: "none",
                             },
                             "& .MuiSelect-select": {
-                              border: "none",
+                              // border: "1px solid #ffffff20",
+                              // border: "none",
                               padding: "5px",
+                              "&:focus-visible": {
+                                outline: "none",
+                              },
                             },
                             "& .MuiSvgIcon-root": { color: "#ffffff" },
                           }}
@@ -431,13 +467,7 @@ const CoinDetails = (props) => {
                               handleRowData(e.target.value, index, "Date")
                             }
                             max={getTodayString()}
-                            style={{
-                              backgroundColor: "transparent",
-                              border: "1px solid #ffffff20",
-                              borderRadius: "4px",
-                              padding: "5px",
-                              marginRight: "auto",
-                            }}
+                            className={styles["input--date"]}
                           />
                         </div>
                       </TableCell>
@@ -463,12 +493,7 @@ const CoinDetails = (props) => {
                                 "PricePerCoin"
                               )
                             }
-                            style={{
-                              marginRight: "5px",
-                              width: "100px",
-                              backgroundColor: "transparent",
-                              border: "none",
-                            }}
+                            className={styles.input}
                           />
                           <div>&euro;</div>
                         </div>
@@ -484,9 +509,9 @@ const CoinDetails = (props) => {
                             maxWidth: "100px",
                           }}
                         >
-                          {row.Betrag} €
+                          {row.Betrag}
+                          <div style={{ marginLeft: "auto" }}>&euro;</div>
                         </div>
-
                       </TableCell>
                       <TableCell>
                         <div
@@ -510,12 +535,7 @@ const CoinDetails = (props) => {
                                 "Coins"
                               )
                             }
-                            style={{
-                              marginRight: "5px",
-                              width: "100px",
-                              backgroundColor: "transparent",
-                              border: "none",
-                            }}
+                            className={styles.input}
                           />
                         </div>
                       </TableCell>
@@ -529,13 +549,20 @@ const CoinDetails = (props) => {
                               maxWidth: "100px",
                             }}
                           >
-                            {row.Date == "00/00/00" ? "" : `${computeDaysPast(row.Date)} Tage`}
+                            {row.Date == "00/00/00"
+                              ? ""
+                              : `${computeDaysPast(row.Date)} Tage`}
                           </div>
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Tooltip title="Delete" onClick={() => handleDeleteRow(index)}>
-                          <IconButton sx={{ color: 'gray', '&:hover': { color: 'red' } }}>
+                        <Tooltip
+                          title="Delete"
+                          onClick={() => handleDeleteRow(index)}
+                        >
+                          <IconButton
+                            sx={{ color: "gray", "&:hover": { color: "red" } }}
+                          >
                             <DeleteIcon />
                           </IconButton>
                         </Tooltip>
@@ -545,17 +572,21 @@ const CoinDetails = (props) => {
                 </TableBody>
               </Table>
               {validationError && (
-                <Typography color="error" sx={{ mt: 2 }}>{validationError}</Typography>
+                <Typography color="error" sx={{ mt: 2 }}>
+                  {validationError}
+                </Typography>
               )}
             </TableContainer>
           )}
           {value === 1 && <div>Content for Tab 2</div>}
           {value === 2 && <div>Content for Tab 3</div>}
         </Box>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "space-between"
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <Button
             sx={{
               marginTop: "20px",
@@ -574,7 +605,7 @@ const CoinDetails = (props) => {
               backgroundColor: "#1188ff",
               color: "white",
               fontSize: "0.8rem",
-              '&:hover': { backgroundColor: '#0a549f' }
+              "&:hover": { backgroundColor: "#0a549f" },
             }}
             onClick={handleBuyAndSell}
             disabled={rowVals.length <= 0}
@@ -583,7 +614,12 @@ const CoinDetails = (props) => {
           </Button>
         </Box>
       </Box>
-      <AlertBar open={showAlert} message={alertInfo.message} severity={alertInfo.severity} onClose={closeAlert} />
+      <AlertBar
+        open={showAlert}
+        message={alertInfo.message}
+        severity={alertInfo.severity}
+        onClose={closeAlert}
+      />
     </Box>
   );
 };

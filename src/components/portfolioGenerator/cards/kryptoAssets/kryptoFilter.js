@@ -203,6 +203,12 @@ const KryptoFilter = ({ userID, portfolio }) => {
           sx={{
             minWidth: "180px",
             alignSelf: "flex-start",
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "1px solid #ffffff20",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              border: "1px solid #ffffff20",
+            },
             "& .MuiFormControl-root": {
               wordWrap: "nowrap",
               display: "flex",
@@ -218,6 +224,10 @@ const KryptoFilter = ({ userID, portfolio }) => {
               border: "1px solid #ffffff",
               padding: "0",
               color: "white",
+
+              "&:selected": {
+                border: "none",
+              },
             },
             "& .MuiOutlinedInput-notchedOutline": {
               border: "1px solid #ffffff",
@@ -232,8 +242,13 @@ const KryptoFilter = ({ userID, portfolio }) => {
               },
             "& .MuiFormLabel-root": {
               color: "#ffffff",
-              fontSize: "0.8rem",
-              padding: "0",
+              "&.Mui-focused": {
+                border: "1px solid #ffffff",
+                color: "#ffffff",
+              },
+            },
+            "& .MuiSvgIcon-root": {
+              color: "#ffffff",
             },
           }}
         />
