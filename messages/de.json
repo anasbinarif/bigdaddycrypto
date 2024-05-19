@@ -37,5 +37,80 @@
     "coinRemovedSuccess": "Coin erfolgreich entfernt",
     "delete": "Löschen",
     "favourite": "Favorit"
+  },
+  "coinCard": {
+    "potential": "Potential",
+    "sicherheit": "Sicherheit"
+  },
+  "donutChart": {
+    "score": "Score",
+    "veryGood": "Sehr gut"
+  },
+  "kryptoFilter": {
+    "chooseAssets": "Wähle deine Krypto-Assets",
+    "chooseAssetsDescription": "Wähle deine gewünschten Krypto-Assets aus und füge sie durch Doppelklick in dein Portfolio ein.",
+    "noPriceIndicator": "Kein Preis-Indikator anzeigen",
+    "extremelyPessimistic": "Preis-Indikator: Extrem Pessimistisch",
+    "pessimistic": "Preis-Indikator: Pessimistisch",
+    "optimistic": "Preis-Indikator: Optimistisch",
+    "latecomer": "Preis-Indikator: Spätseinsteiger",
+    "latecomerII": "Preis-Indikator: Spätseinsteiger II",
+    "search": "Suche..."
+  },
+  "third": {
+    "portfolioOverview": "Portfolio-Überblick",
+    "totalValue": "Gesamtwert",
+    "totalInvestment": "Gesamt Invest",
+    "currentProfit": "Aktueller Profit",
+    "realizedSoFar": "Bisher realisiert",
+    "totalPotential": "Gesamtpotenzial"
+  },
+  "second": {
+    "nextGoals": "Nächste Ziele",
+    "noGoalsDefined": "Keine Ziele definiert"
+  },
+  "item1": {
+    "portfolioOverview": "Portfolio-Überblick",
+    "totalValue": "Gesamtwert",
+    "totalInvestment": "Gesamt Invest",
+    "currentProfit": "Aktueller Profit",
+    "assets": "Assets"
+  },
+  "formDialog": {
+    "importUserData": "Benutzerdaten importieren",
+    "importInstructions": "Um Ihre Daten aus unserer vorherigen Anwendung zu importieren, geben Sie bitte Ihren Benutzernamen und Ihr Passwort ein.",
+    "name": "Name",
+    "pin": "Pin",
+    "cancel": "Abbrechen",
+    "import": "Importieren",
+    "confirmAction": "Aktion bestätigen",
+    "confirmCloseMessage": "Sind Sie sicher, dass Sie Ihre vorherigen Daten nicht importieren möchten? Sie werden später nicht mehr gefragt.",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "footer": {
+    "footerText": "Copyright © 2024, Alle Rechte vorbehalten. · Impressum · Datenschutz · Die bereitgestellten Informationen stellen keine finanzielle Beratung dar. Jegliche Handlungen erfolgen auf eigenes Risiko."
+  },
+  "item4": {
+    "notes": "Notizen",
+    "placeholder": "Geben Sie hier Ihren Text ein"
+  },
+  "colorTabs": {
+    "portfolioGenerator": "Portfolio Generator",
+    "assetManager": "Asset Manager",
+    "portfolioOverview": "Portfolio Übersicht"
+  },
+  "scrollableKryptoTabs": {
+    "favourite": "Favoriten",
+    "ai": "AI",
+    "web3Anonymity": "Web3/Anonymität",
+    "defi": "DeFi",
+    "greenCoins": "Grüne Coins",
+    "gamingMetaverse": "Gaming/Metaverse",
+    "btcConnection": "BTC-Zusammenhang",
+    "cbdcNetworks": "CBDC-Netzwerke",
+    "eCommerce": "E-Commerce",
+    "tokenizationRWA": "Tokenisierung/RWA",
+    "noHypeTopic": "Kein Hype-Thema"
   }
 }
