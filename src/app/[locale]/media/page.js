@@ -14,10 +14,7 @@ import {
 } from "@mui/material";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
-import {getDictionary} from "@/app/lang/dictionaries";
-import {localeAtom} from "@/app/stores/localeAtom";
-import {useAtom} from "jotai/index";
-// import {useTranslations} from "next-intl";
+import {useTranslations} from "next-intl";
 
 const videos = [
     {
@@ -207,21 +204,12 @@ const MediaVideoPlayer = () => {
     const [selectedVideo, setSelectedVideo] = useState(videos[0].url);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [dict, setDict] = useState({});
+    const t = useTranslations("media_page");
 
     const handleListItemClick = (event, index, videoUrl) => {
         setSelectedIndex(index);
         setSelectedVideo(videoUrl);
     };
-    const [locale] = useAtom(localeAtom);
-
-    useEffect(() => {
-        const fetchDictionary = async () => {
-            const dictionary = await getDictionary(locale);
-            setDict(dictionary);
-        };
-
-        fetchDictionary();
-    }, [locale]);
     return (
         <>
             <Navbar/>
@@ -237,7 +225,7 @@ const MediaVideoPlayer = () => {
                         letterSpacing: '0.01em'
                     }}
                 >
-                    {dict?.media_page?.heading1}
+                    {t("heading1")}
                 </Typography>
                 <Typography
                     sx={{
@@ -249,7 +237,7 @@ const MediaVideoPlayer = () => {
                         letterSpacing: "0.01em",
                     }}
                 >
-                    {dict?.media_page?.heading2}
+                    {t("heading2")}
                 </Typography>
                 <Grid container spacing={0} sx={{margin: "0 0rem 10rem 5rem", height: "543px"}}>
                     <Grid item xs={12} md={4} sx={{height: "100%", width: "33%"}}>
