@@ -45,6 +45,7 @@ const PortfolioComponent = ({
   // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [deleteIconIndex, setDeleteIconIndex] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const t = useTranslations("portfolioComponent");
 
   const [alert, setAlert] = useState({
     open: false,
@@ -136,6 +137,10 @@ const PortfolioComponent = ({
         });
         if (!res.ok) {
           throw new Error(`Failed to update data${res}`);
+        }
+        if (res.ok) {
+          const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+          setPortfolio(userPortfolio.data);
         }
       }
     };
