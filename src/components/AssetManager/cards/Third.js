@@ -4,9 +4,10 @@ import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai/index";
-import { portfolioAtom } from "../../../app/stores/portfolioStore";
+// import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { portfolioAtom } from "../../../../src/app/stores/portfolioStore";
 
 const Third = () => {
   const t = useTranslations("third");

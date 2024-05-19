@@ -210,7 +210,7 @@ const KryptoFilter = ({ userID, portfolio }) => {
           renderInput={(params) => (
             <TextField
               {...params}
-              label={t("search")}
+              // label={t("search")}
               onFocus={(e) => e.target.select()}
               inputProps={{
                 ...params.inputProps,

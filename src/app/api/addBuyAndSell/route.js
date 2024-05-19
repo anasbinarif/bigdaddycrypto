@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {UserPortfolio} from "@/lib/models";
+import {UserPortfolio} from "../../../lib/models";
 
 export async function POST(req) {
     const { userID, CoinGeckoID, rowVals, Portfolio_Assets } = await req.json();
