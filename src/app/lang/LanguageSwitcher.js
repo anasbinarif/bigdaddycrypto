@@ -45,7 +45,7 @@ const LanguageSwitcher = () => {
                     <a style={{ textDecoration: 'none', color: 'inherit' }}>In English</a>
                 </MenuItem>
                 <MenuItem onClick={() => changeLanguage('de')}>
-                    <a style={{ textDecoration: 'none', color: 'inherit' }}>In Finnish</a>
+                    <a style={{ textDecoration: 'none', color: 'inherit' }}>In Deutsch</a>
                 </MenuItem>
             </Menu>
         </Box>
