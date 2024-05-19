@@ -1,10 +1,8 @@
 import { Box, CircularProgress } from "@mui/material";
-import LoadingCircle from "@/components/loading/Loading";
+import LoadingCircle from "../../components/loading/Loading";
 
 const Loading = () => {
-    return (
-        <LoadingCircle/>
-    )
-}
+  return <LoadingCircle />;
+};
 
 export default Loading;

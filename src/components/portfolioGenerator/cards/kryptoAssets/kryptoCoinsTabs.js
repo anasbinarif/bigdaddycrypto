@@ -1,35 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { Tab, SvgIcon, Box, Typography, IconButton } from "@mui/material";
-import { categoryColors, getAssets } from "@/lib/data";
-import Tabs, { tabsClasses } from '@mui/material/Tabs';
+import { categoryColors, getAssets } from "../../../../lib/data";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
-import CoinCardSkeleton from "@/components/portfolioGenerator/cards/coinCard/CoinCardSkeleton";
+import CoinCardSkeleton from "../coinCard/CoinCardSkeleton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useTranslations } from "next-intl";
 
 const ColorCircle = ({ color }) => (
-    <SvgIcon>
-      <circle cx="12" cy="12" r="6" fill={color} />
-    </SvgIcon>
+  <SvgIcon>
+    <circle cx="12" cy="12" r="6" fill={color} />
+  </SvgIcon>
 );
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-      <div
-          role="tabpanel"
-          hidden={value !== index}
-          id={`scrollable-auto-tabpanel-${index}`}
-          aria-labelledby={`scrollable-auto-tab-${index}`}
-          {...other}
-      >
-        {value === index && (
-            <Box sx={{ p: 3 }}>
-              <Typography component="div">{children}</Typography>
-            </Box>
-        )}
-      </div>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography component="div">{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
@@ -49,7 +49,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     t("cbdcNetworks"),
     t("eCommerce"),
     t("tokenizationRWA"),
-    t("noHypeTopic")
+    t("noHypeTopic"),
   ];
   const categoryMapping = {
     [t("ai")]: "ai",
@@ -62,7 +62,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     [t("eCommerce")]: "ecommerce",
     [t("tokenizationRWA")]: "nft",
     [t("noHypeTopic")]: "none",
-    [t("favourite")]: "favourite"
+    [t("favourite")]: "favourite",
   };
 
   const firstHalfCount = 6; // No change, first 6 tabs in the first line
@@ -72,20 +72,20 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   useEffect(() => {
     setLoading(true);
     getAssets()
-        .then((data) => {
-          setData(data.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          setLoading(false);
-        });
+      .then((data) => {
+        setData(data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
   }, [userID]);
 
   const checkCoinSelected = (coin) => {
     if (!portfolio.assets) return false;
     return portfolio?.assets.some(
-        (asset) => asset.CoinGeckoID === coin.CoinGeckoID
+      (asset) => asset.CoinGeckoID === coin.CoinGeckoID
     );
   };
 
@@ -99,12 +99,18 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   const categorizedData = tabLabels.reduce((acc, label) => {
     if (label === t("favourite")) {
       const favouriteAssetsIds = portfolio.assetsCalculations?.assets
-          .filter((asset) => asset.Favourite)
-          .map((asset) => asset.CoinGeckoID);
-      acc[label] = portfolio.assets && portfolio?.assets.filter((asset) => favouriteAssetsIds.includes(asset.CoinGeckoID));
+        .filter((asset) => asset.Favourite)
+        .map((asset) => asset.CoinGeckoID);
+      acc[label] =
+        portfolio.assets &&
+        portfolio?.assets.filter((asset) =>
+          favouriteAssetsIds.includes(asset.CoinGeckoID)
+        );
     } else {
       const categoryName = categoryMapping[label];
-      acc[label] = data.filter((item) => item && item.Category === categoryName);
+      acc[label] = data.filter(
+        (item) => item && item.Category === categoryName
+      );
     }
     return acc;
   }, {});
@@ -114,75 +120,95 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   }, [portfolio]);
 
   return (
-      <>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-              value={value}
-              onChange={(e, newValue) => handleChange(e, newValue, 1)}
-              variant="scrollable"
-              scrollButtons
-              allowScrollButtonsMobile
-              aria-label="scrollable auto tabs example 1"
-              sx={{
-                [`& .${tabsClasses.scrollButtons}`]: {
-                  '&.Mui-disabled': { opacity: 0.3 },
-                },
-              }}
+    <>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={value}
+          onChange={(e, newValue) => handleChange(e, newValue, 1)}
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+          aria-label="scrollable auto tabs example 1"
+          sx={{
+            [`& .${tabsClasses.scrollButtons}`]: {
+              "&.Mui-disabled": { opacity: 0.3 },
+            },
+          }}
+        >
+          {firstHalfLabels.map((label) => (
+            <Tab
+              key={label}
+              icon={
+                label === t("favourite") ? (
+                  <IconButton sx={{ color: "red" }}>
+                    <FavoriteIcon />
+                  </IconButton>
+                ) : (
+                  <ColorCircle color={categoryColors[label]} />
+                )
+              }
+              iconPosition="start"
+              label={label}
+              sx={{ color: "white", whiteSpace: "nowrap" }}
+            />
+          ))}
+        </Tabs>
+        <Tabs
+          value={value - firstHalfCount}
+          onChange={(e, newValue) => handleChange(e, newValue, 2)}
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+          aria-label="scrollable auto tabs example 2"
+          sx={{
+            [`& .${tabsClasses.scrollButtons}`]: {
+              "&.Mui-disabled": { opacity: 0.3 },
+            },
+          }}
+        >
+          {secondHalfLabels.map((label) => (
+            <Tab
+              key={label}
+              icon={
+                label === t("favourite") ? (
+                  <IconButton sx={{ color: "red" }}>
+                    <FavoriteIcon />
+                  </IconButton>
+                ) : (
+                  <ColorCircle color={categoryColors[label]} />
+                )
+              }
+              iconPosition="start"
+              label={label}
+              sx={{ color: "white", whiteSpace: "nowrap" }}
+            />
+          ))}
+        </Tabs>
+      </Box>
+      {tabLabels.map((label, index) => (
+        <TabPanel key={index} value={value} index={index}>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "flex-start",
+            }}
           >
-            {firstHalfLabels.map((label) => (
-                <Tab
-                    key={label}
-                    icon={label === t("favourite") ? <IconButton sx={{ color: 'red' }}><FavoriteIcon /></IconButton> : <ColorCircle color={categoryColors[label]} />}
-                    iconPosition="start"
-                    label={label}
-                    sx={{ color: 'white', whiteSpace: "nowrap" }}
-                />
-            ))}
-          </Tabs>
-          <Tabs
-              value={value - firstHalfCount}
-              onChange={(e, newValue) => handleChange(e, newValue, 2)}
-              variant="scrollable"
-              scrollButtons
-              allowScrollButtonsMobile
-              aria-label="scrollable auto tabs example 2"
-              sx={{
-                [`& .${tabsClasses.scrollButtons}`]: {
-                  '&.Mui-disabled': { opacity: 0.3 },
-                },
-              }}
-          >
-            {secondHalfLabels.map((label) => (
-                <Tab
-                    key={label}
-                    icon={label === t("favourite") ? <IconButton sx={{ color: 'red' }}><FavoriteIcon /></IconButton> : <ColorCircle color={categoryColors[label]} />}
-                    iconPosition="start"
-                    label={label}
-                    sx={{ color: 'white', whiteSpace: "nowrap" }}
-                />
-            ))}
-          </Tabs>
-        </Box>
-        {tabLabels.map((label, index) => (
-            <TabPanel key={index} value={value} index={index}>
-              <Box
-                  sx={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}
-              >
-                {loading
-                    ? Array.from(new Array(15)).map((_, idx) => (
-                        <CoinCardSkeleton key={idx} />
-                    ))
-                    : categorizedData[label]?.map((coin, index) => (
-                        <CoinCard
-                            key={`${coin.CoinGeckoID}-${index}`}
-                            coin={coin}
-                            selected={checkCoinSelected(coin)}
-                        />
-                    ))}
-              </Box>
-            </TabPanel>
-        ))}
-      </>
+            {loading
+              ? Array.from(new Array(15)).map((_, idx) => (
+                  <CoinCardSkeleton key={idx} />
+                ))
+              : categorizedData[label]?.map((coin, index) => (
+                  <CoinCard
+                    key={`${coin.CoinGeckoID}-${index}`}
+                    coin={coin}
+                    selected={checkCoinSelected(coin)}
+                  />
+                ))}
+          </Box>
+        </TabPanel>
+      ))}
+    </>
   );
 };
 

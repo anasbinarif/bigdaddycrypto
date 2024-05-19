@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
+import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ import {
   ThemeProvider,
   styled,
 } from "@mui/material";
-import { getCategoryColor } from "@/lib/data";
+import { getCategoryColor } from "../../../lib/data";
 
 const CategoryColorBar = styled(Box)(({ color }) => ({
   width: "5px",
