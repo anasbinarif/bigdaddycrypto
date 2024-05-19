@@ -7,10 +7,10 @@ import {
   Avatar,
   styled,
 } from "@mui/material";
-import { getUserPortfolio, storeUserPortfolioCoin } from "@/lib/data";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
+import { getUserPortfolio, storeUserPortfolioCoin } from "../../../../../src/lib/data";
+import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useAtom } from "jotai";
-import { sessionAtom } from "@/app/stores/sessionStore";
+import { sessionAtom } from "../../../../app/stores/sessionStore";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // Styled components to align with your design

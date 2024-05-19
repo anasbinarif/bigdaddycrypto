@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import {categoriesDisplay} from "@/lib/data";
+import {categoriesDisplay} from "../../../../../src/lib/data";
 
 const categoryColors = {
     'AI': '#FFD700',

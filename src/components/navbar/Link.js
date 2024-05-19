@@ -3,10 +3,10 @@ import { Box, IconButton, Typography } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { signOut, useSession } from "next-auth/react";
 import { useAtom } from "jotai";
-import { sessionAtom } from "@/app/stores/sessionStore";
+import { sessionAtom } from "../../app/stores/sessionStore";
 import { useEffect } from "react";
 import Link from "next/link";
-import LanguageSwitcher from "@/app/lang/LanguageSwitcher";
+import LanguageSwitcher from "../../app/lang/LanguageSwitcher";
 import { useTranslations } from "next-intl";
 
 const NavbarLink = () => {

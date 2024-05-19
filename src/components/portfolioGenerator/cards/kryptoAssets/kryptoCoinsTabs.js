@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Tab, SvgIcon, Box, Typography, IconButton } from "@mui/material";
-import { categoryColors, getAssets } from "@/lib/data";
+import { categoryColors, getAssets } from "../../../../../src/lib/data";
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import CoinCard from "../coinCard/CoinCard";
-import CoinCardSkeleton from "@/components/portfolioGenerator/cards/coinCard/CoinCardSkeleton";
+import CoinCardSkeleton from "../../../../components/portfolioGenerator/cards/coinCard/CoinCardSkeleton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useTranslations } from "next-intl";
 

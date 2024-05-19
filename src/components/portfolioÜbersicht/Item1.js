@@ -5,7 +5,7 @@ import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai/index";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
+import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { Chart } from "react-google-charts";
 import {useTranslations} from "next-intl";
 

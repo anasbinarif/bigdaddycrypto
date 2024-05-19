@@ -8,7 +8,7 @@ import {
     MenuItem,
 } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
-import { getAssets } from "@/lib/data";
+import { getAssets } from "../../../../../src/lib/data";
 import Autocomplete from "@mui/material/Autocomplete";
 import CoinCard from "../coinCard/CoinCard";
 import "./stylesPopper.css";
@@ -129,7 +129,6 @@ const KryptoFilter = ({ userID, portfolio }) => {
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={priceIndicator}
-                    label="Age"
                     onChange={handleChange}
                     variant="outlined"
                     sx={{
@@ -263,8 +262,8 @@ const KryptoFilter = ({ userID, portfolio }) => {
                         "& .MuiFormLabel-root": {
                             color: "#ffffff",
                             "&.Mui-focused": {
-                                border: "1px solid #ffffff",
-                                color: "#ffffff",
+                                // border: "1px solid #ffffff",
+                                // color: "#ffffff",
                             },
                         },
                         "& .MuiSvgIcon-root": {

@@ -11,11 +11,11 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import DeleteConfirmationDialog from "@/components/AlertDialog/AlertDialog";
-import { getCategoryColor, getUserPortfolio } from "@/lib/data";
-import AlertBar from "@/components/customAllert/Alert";
+import DeleteConfirmationDialog from "../../../components/AlertDialog/AlertDialog";
+import { getCategoryColor, getUserPortfolio } from "../../../../src/lib/data";
+import AlertBar from "../../../components/customAllert/Alert";
 import { useAtom } from "jotai/index";
-import { sessionAtom } from "@/app/stores/sessionStore";
+import { sessionAtom } from "../../../app/stores/sessionStore";
 import { useTranslations } from "next-intl";
 
 const CategoryColorBar = styled(Box)(({ color }) => ({

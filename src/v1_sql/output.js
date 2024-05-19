@@ -1,4 +1,4 @@
-import {importCryptoData} from "@/lib/data";
+import {importCryptoData} from "../lib/data";
 
 const cryptoData = [
     {

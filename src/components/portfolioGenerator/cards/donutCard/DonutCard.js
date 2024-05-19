@@ -2,11 +2,11 @@ import { Box } from "@mui/material"
 import DonutLegend from "./DonutLegend"
 import DonutChart from "./DonutChart"
 import {useEffect, useState} from "react";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
+import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useAtom } from "jotai";
-import {getUserPortfolio} from "@/lib/data";
-import {sessionAtom} from "@/app/stores/sessionStore";
-import DonutLegendSkeleton from "@/components/portfolioGenerator/cards/donutCard/DonutLegendSkeleton";
+import {getUserPortfolio} from "../../../../../src/lib/data";
+import {sessionAtom} from "../../../../app/stores/sessionStore";
+import DonutLegendSkeleton from "../../../../components/portfolioGenerator/cards/donutCard/DonutLegendSkeleton";
 
 
 export const DonutCard = () => {

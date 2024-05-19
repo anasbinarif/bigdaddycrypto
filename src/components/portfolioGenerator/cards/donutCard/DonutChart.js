@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 import { Box, Typography } from "@mui/material";
-import { categoriesDisplay } from "@/lib/data";
+import { categoriesDisplay } from "../../../../../src/lib/data";
 import { useAtom } from "jotai/index";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
+import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
 
 const categoryColors = {

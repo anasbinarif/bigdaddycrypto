@@ -1,7 +1,7 @@
 "use client";
 import { AppBar, Toolbar, Typography, IconButton, Box } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
-import NavbarLink from "@/components/navbar/Link";
+import NavbarLink from "../../components/navbar/Link";
 import Link from "next/link";
 import Image from "next/image";
 import HomeIcon from "../../../public/assets/svg/bdc.svg";

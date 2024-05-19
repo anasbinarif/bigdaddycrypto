@@ -16,8 +16,8 @@ import {
   TableCell,
   TableContainer,
 } from "@mui/material";
-import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/footer/Footer";
+import Navbar from "../../../components/navbar/Navbar";
+import Footer from "../../../components/footer/Footer";
 
 const StyledTextField = (props) => {
   return (

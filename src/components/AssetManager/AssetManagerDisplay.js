@@ -1,14 +1,9 @@
 import { Grid, Paper, styled } from "@mui/material";
-import BitpandaCard from "@/components/portfolioGenerator/cards/Bitpanda";
-import PortfolioComponent from "@/components/portfolioGenerator/cards/PortfolioComponent";
+import BitpandaCard from "../../components/portfolioGenerator/cards/Bitpanda";
+import PortfolioComponent from "../../components/portfolioGenerator/cards/PortfolioComponent";
 import Second from "./cards/Second";
 import Third from "./cards/Third";
 import CoinDetails from "./cards/coinDetails/CoinDetails";
-import { useState, useEffect } from "react";
-import { getUserPortfolio } from "@/lib/data";
-import { useAtom } from "jotai/index";
-import { sessionAtom } from "@/app/stores/sessionStore";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),

@@ -2,13 +2,13 @@
 import * as React from "react";
 import { Tabs, Tab, Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import PortfolioDisplay from "@/components/portfolioGenerator/PortfolioDisplay";
-import AssetManagerDisplay from "@/components/AssetManager/AssetManagerDisplay";
-import PortfolioUbersicht from "@/components/portfolioÜbersicht/PortfolioÜbersicht";
+import PortfolioDisplay from "../../components/portfolioGenerator/PortfolioDisplay";
+import AssetManagerDisplay from "../../components/AssetManager/AssetManagerDisplay";
+import PortfolioUbersicht from "../../components/portfolioÜbersicht/PortfolioÜbersicht";
 import { useAtom } from "jotai/index";
-import { sessionAtom } from "@/app/stores/sessionStore";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
-import { getUserPortfolio } from "@/lib/data";
+import { sessionAtom } from "../../app/stores/sessionStore";
+import { portfolioAtom } from "../../app/stores/portfolioStore";
+import { getUserPortfolio } from "../../../src/lib/data";
 import { useTranslations } from "next-intl";
 
 function TabPanel(props) {

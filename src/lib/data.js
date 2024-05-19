@@ -1,4 +1,4 @@
-import { Assets, PastBuyAndSell, PastPortfolio, User } from "@/lib/models";
+import { Assets, PastBuyAndSell, PastPortfolio, User } from "../lib/models";
 import { connectToDb } from "./utils";
 // const fs = require('fs').promises;
 

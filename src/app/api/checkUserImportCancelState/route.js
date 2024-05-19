@@ -1,5 +1,4 @@
-import { connectToDb } from "@/lib/utils";
-import {PastUsers, PastPortfolio, Assets, PastBuyAndSell, User, UserPortfolio} from "@/lib/models";
+import {PastUsers, PastPortfolio, Assets, PastBuyAndSell, User, UserPortfolio} from "../../../lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {

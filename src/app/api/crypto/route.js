@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import {Assets, UserPortfolio} from "@/lib/models";
+import {Assets, UserPortfolio} from "../../../lib/models";
 
 async function updateCoinDetails(coinGeckoID) {
     const apiKey = 'CG-XAPzMYbZ8Q8KoqGdwscqrr6f';

@@ -1,5 +1,5 @@
-import { connectToDb } from "@/lib/utils";
-import { UserPortfolio } from "@/lib/models";
+import { connectToDb } from "../../../lib/utils";
+import { UserPortfolio } from "../../../lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {

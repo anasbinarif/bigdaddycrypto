@@ -8,9 +8,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useAtom } from "jotai/index";
-import { sessionAtom } from "@/app/stores/sessionStore";
-import { getUserPortfolio } from "@/lib/data";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
+import { sessionAtom } from "../../app/stores/sessionStore";
+import { getUserPortfolio } from "../../../src/lib/data";
+import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
 
 const FormDialog = () => {

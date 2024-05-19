@@ -6,6 +6,9 @@
     "heading1": "Mediathek",
     "heading2": "Coin-Vorstellungen"
   },
+  "faq": {
+    "heading1": "Häufige Fragen"
+  },
   "navbar": {
     "companyName": "Portfolio Generator 2.1",
     "home": "Startseite",
@@ -112,5 +115,16 @@
     "eCommerce": "E-Commerce",
     "tokenizationRWA": "Tokenisierung/RWA",
     "noHypeTopic": "Kein Hype-Thema"
+  },
+  "bubbleChart": {
+    "symbolSize": "Symbol-Größe",
+    "search": "Suche...",
+    "allCategories": "Alle Hypethemen",
+    "name": "Name",
+    "potential": "Potential",
+    "safety": "Sicherheit",
+    "marketCap": "Market Cap",
+    "price": "Preis",
+    "all": "Alle Kategorien"
   }
 }

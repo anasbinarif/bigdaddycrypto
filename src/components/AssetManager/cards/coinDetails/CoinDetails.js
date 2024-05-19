@@ -22,11 +22,11 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./coinDetails.module.css";
 import { useAtom } from "jotai/index";
-import { sessionAtom } from "@/app/stores/sessionStore";
-import { portfolioAtom } from "@/app/stores/portfolioStore";
+import { sessionAtom } from "../../../../app/stores/sessionStore";
+import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AlertBar from "@/components/customAllert/Alert";
-import { getUserPortfolio } from "@/lib/data";
+import AlertBar from "../../../../components/customAllert/Alert";
+import { getUserPortfolio } from "../../../../../src/lib/data";
 
 const CoinDetails = (props) => {
   const { coin, index } = props;

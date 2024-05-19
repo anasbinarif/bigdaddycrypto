@@ -8,9 +8,9 @@ import ListItemText from '@mui/material/ListItemText';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { green, yellow } from '@mui/material/colors';
 import { Box } from '@mui/material';
-import CustomizedTooltips from "@/components/toolTip/CustomizedTooltip";
+import CustomizedTooltips from "../../../components/toolTip/CustomizedTooltip";
 import { useAtom } from 'jotai';
-import { portfolioAtom } from '@/app/stores/portfolioStore';
+import { portfolioAtom } from '../../../app/stores/portfolioStore';
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 

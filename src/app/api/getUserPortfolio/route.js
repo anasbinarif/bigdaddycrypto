@@ -1,4 +1,4 @@
-import { UserPortfolio, Assets } from "@/lib/models";
+import { UserPortfolio, Assets } from "../../../lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {

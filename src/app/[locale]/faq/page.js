@@ -12,8 +12,9 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/footer/Footer";
+import Navbar from "../../../components/navbar/Navbar";
+import Footer from "../../../components/footer/Footer";
+import {useTranslations} from "next-intl";
 
 const videos = [
   {
@@ -242,6 +243,7 @@ const videos = [
 function VideoPlayer() {
   const [selectedVideo, setSelectedVideo] = useState(videos[0].url);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const t = useTranslations("faq");
 
   const handleListItemClick = (event, index, videoUrl) => {
     setSelectedIndex(index);
@@ -262,7 +264,7 @@ function VideoPlayer() {
             letterSpacing: "0.01em",
           }}
         >
-          Häufige Fragen
+          {t("heading1")}
         </Typography>
         <Grid container spacing={0} sx={{ margin: "0 0rem 10rem 5rem", height: "543px" }}>
           <Grid item xs={12} md={4} sx={{height: "100%", width: "33%"}}>

@@ -10,11 +10,11 @@ import {
 } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import AlertBar from "@/components/customAllert/Alert";
 import { useAtom } from "jotai/index";
-import { sessionAtom } from "@/app/stores/sessionStore";
 import Image from "next/image";
 import HomeIcon from "../../../../public/assets/svg/bdc.svg";
+import AlertBar from "../../../components/customAllert/Alert";
+import {sessionAtom} from "../../../app/stores/sessionStore";
 
 const LoginPage = () => {
   const [sessionJotai] = useAtom(sessionAtom);

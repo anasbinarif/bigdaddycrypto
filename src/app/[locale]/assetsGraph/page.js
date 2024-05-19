@@ -1,11 +1,13 @@
-"use client"
+"use client";
 import React, { useEffect, useMemo, useState } from 'react';
 import { Chart as ChartJS, LinearScale, PointElement, Tooltip, Legend } from 'chart.js';
 import { Bubble } from 'react-chartjs-2';
 import { Box, FormControl, InputLabel, MenuItem, Select, Slider, TextField, Typography } from '@mui/material';
-import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/footer/Footer";
-import { getAssets, getCategoryColor } from "@/lib/data";
+import Navbar from "../../../components/navbar/Navbar";
+import Footer from "../../../components/footer/Footer";
+import { getAssets, getCategoryColor } from "../../../lib/data";
+import { useTranslations } from "next-intl";
+import './BubbleChart.css';
 
 const backgroundAreaPlugin = {
     id: 'backgroundAreaPlugin',
@@ -89,8 +91,6 @@ const backgroundAreaPlugin = {
     }
 };
 
-
-
 const backgroundColorPlugin = {
     id: 'backgroundColorPlugin',
     beforeDraw: (chart) => {
@@ -147,8 +147,8 @@ const imagePlugin = {
     }
 };
 
-
 const BubbleChart = () => {
+    const t = useTranslations("bubbleChart");
     const [radius, setRadius] = useState(15);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedItem, setSelectedItem] = useState('');
@@ -201,7 +201,7 @@ const BubbleChart = () => {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Sicherheit',
+                    text: t("safety"),
                     color: '#ccc', // Set the color of the axis label to red
                     font: {
                         size: 40, // Set font size for axis title
@@ -222,7 +222,7 @@ const BubbleChart = () => {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Potential',
+                    text: t("potential"),
                     color: '#ccc', // Set the color of the axis label to red
                     font: {
                         size: 40, // Set font size for axis title
@@ -243,15 +243,16 @@ const BubbleChart = () => {
         plugins: {
             tooltip: {
                 enabled: true,
+                z: 1000,
                 callbacks: {
                     label: function (context) {
                         const item = context.raw;
                         return [
-                            `Name: ${item.Name}`,
-                            `Potential: ${item.x}`,
-                            `Sicherheit: ${item.y}`,
-                            `Market Cap: ${item.MarketCap ? item.MarketCap.toLocaleString() : 'N/A'}`,
-                            `Price: ${item.Price ? item.Price.toFixed(2) : 'N/A'}`
+                            `${t("name")}: ${item.Name}`,
+                            `${t("potential")}: ${item.x}`,
+                            `${t("safety")}: ${item.y}`,
+                            `${t("marketCap")}: ${item.MarketCap ? item.MarketCap.toLocaleString() : 'N/A'}`,
+                            `${t("price")}: ${item.Price ? item.Price.toFixed(2) : 'N/A'}`
                         ];
                     }
                 }
@@ -260,7 +261,7 @@ const BubbleChart = () => {
         chartArea: {
             backgroundColor: '#111826'
         }
-    }), []);
+    }), [t]);
 
 
     return <>
@@ -284,7 +285,7 @@ const BubbleChart = () => {
                         fontSize: "13px",
                         color: "#aaa",
                         whiteSpace: "nowrap"
-                    }}>Symbol-Größe:</Typography>
+                    }}>{t("symbolSize")}:</Typography>
                     <Slider
                         defaultValue={15}
                         min={5}
@@ -298,23 +299,77 @@ const BubbleChart = () => {
                     width: "20%",
                 }}>
                     <TextField
-                        label="Suche..."
+                        label={t("search")}
                         variant="outlined"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        sx={{ backgroundColor: "#202530", borderRadius: "5px", border: "none" }}
+                        sx={{
+                            backgroundColor: "#202530",
+                            borderRadius: "5px",
+                            border: "none",
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderColor: '#ffffff', // Set border color to white
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: '#ffffff', // Set border color to white on hover
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: '#ffffff', // Set border color to white when focused
+                                },
+                            },
+                            '& .MuiInputLabel-root': {
+                                color: '#ffffff', // Set label color to white
+                            },
+                            '& .MuiInputLabel-root.Mui-focused': {
+                                color: '#ffffff', // Set label color to white when focused
+                            },
+                            '& .MuiInputBase-input': {
+                                color: '#ffffff', // Set text color to white
+                            },
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#ffffff',
+                            }
+                        }}
                     />
                 </Box>
-                <FormControl sx={{ m: 1, backgroundColor: "#202530", width: "20%" }}>
-                    <InputLabel id="demo-simple-select-label">Alle Hypethemen</InputLabel>
+                <FormControl sx={{
+                    m: 1,
+                    backgroundColor: "#202530",
+                    width: "20%",
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            borderColor: '#ffffff', // Set border color to white
+                        },
+                        '&:hover fieldset': {
+                            borderColor: '#ffffff', // Set border color to white on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                            borderColor: '#ffffff', // Set border color to white when focused
+                        },
+                    },
+                    '& .MuiInputLabel-root': {
+                        color: '#ffffff', // Set label color to white
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                        color: '#ffffff', // Set label color to white when focused
+                    },
+                    '& .MuiSelect-icon': {
+                        color: '#ffffff', // Set dropdown icon color to white
+                    },
+                    '& .MuiSelect-select': {
+                        color: '#ffffff', // Set text color to white
+                    },
+                }}>
+                    <InputLabel id="demo-simple-select-label">{t("allCategories")}</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={selectedItem}
-                        label="Alle Hypethemen"
+                        label={t("allCategories")}
                         onChange={(e) => setSelectedItem(e.target.value)}
                     >
-                        <MenuItem value="">All Categories</MenuItem>
+                        <MenuItem value="">{t("all")}</MenuItem>
                         {categories.map((category) => (
                             <MenuItem key={category} value={category}>{reverseMapping[category]}</MenuItem>
                         ))}

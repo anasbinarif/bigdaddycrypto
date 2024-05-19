@@ -12,8 +12,8 @@ import {
     Typography,
     Box,
 } from "@mui/material";
-import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/footer/Footer";
+import Navbar from "../../../components/navbar/Navbar";
+import Footer from "../../../components/footer/Footer";
 import {useTranslations} from "next-intl";
 
 const videos = [
