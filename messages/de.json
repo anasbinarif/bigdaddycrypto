@@ -1,0 +1,41 @@
+{
+  "Index": {
+    "selectLanguage": "Deutsch"
+  },
+  "media_page": {
+    "heading1": "Mediathek",
+    "heading2": "Coin-Vorstellungen"
+  },
+  "navbar": {
+    "companyName": "Portfolio Generator 2.1",
+    "home": "Startseite",
+    "faq": "FAQ",
+    "media": "Medien",
+    "graph": "Graph",
+    "admin": "Admin",
+    "portfolioId": "Portfolio-ID",
+    "logout": "Abmelden"
+  },
+  "bewertungCard": {
+    "title": "Bewertung",
+    "hypeCoverage": "Abdeckung von Hype-Themen",
+    "doubleHypeCoverage": "Doppelte Abdeckung von Hype-Themen",
+    "missingHypeTheme": "Fehlendes Hype-Thema",
+    "hypeDistribution": "Verteilung der gewählten Hype-Themen",
+    "numberOfCoins": "Anzahl an Coins",
+    "sicherheit": "Sicherheit Ø",
+    "potential": "Potential Ø",
+    "sicherheitTooltipText1": "Dieser Wert ergibt sich aus dem Durchschnitt der Sicherheit aller Assets im Portfolio. Die Angaben basieren auf der Position im Graphen.",
+    "sicherheitTooltipText2": "Assets die nicht im Graphen eingeordnet sind werden nicht berücksichtigt.",
+    "potentialTooltipText1": "Dieser Wert ergibt sich aus dem Durchschnitt des Potentials aller Assets im Portfolio. Die Angaben basieren auf der Position im Graphen. Bei der Berechnung wird der Einkaufspreis berücksichtigt, da das Potential auf dem jeweiligen Low der letzten 12 Monate beruht.",
+    "potentialTooltipText2": "Assets die nicht im Graphen eingeordnet sind werden nicht berücksichtigt."
+  },
+  "portfolioComponent": {
+    "title": "Portfolio",
+    "subtitle": "Passe die Gewichtung der Assets an, um ihren tatsächlichen Anteil im Portfolio besser wiederzuspiegeln.",
+    "loading": "Keine Einträge",
+    "coinRemovedSuccess": "Coin erfolgreich entfernt",
+    "delete": "Löschen",
+    "favourite": "Favorit"
+  }
+}

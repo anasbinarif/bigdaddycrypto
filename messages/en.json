@@ -1,0 +1,41 @@
+{
+  "Index": {
+    "selectLanguage": "English"
+  },
+  "media_page": {
+    "heading1": "Media library",
+    "heading2": "Coin ideas"
+  },
+  "navbar": {
+    "companyName": "Portfolio Generator 2.1",
+    "home": "Home",
+    "faq": "FAQ",
+    "media": "Media",
+    "graph": "Graph",
+    "admin": "Admin",
+    "portfolioId": "Portfolio-ID",
+    "logout": "Logout"
+  },
+  "bewertungCard": {
+    "title": "Evaluation",
+    "hypeCoverage": "Coverage of Hype Topics",
+    "doubleHypeCoverage": "Double Coverage of Hype Topics",
+    "missingHypeTheme": "Missing Hype Topic",
+    "hypeDistribution": "Distribution of Chosen Hype Topics",
+    "numberOfCoins": "Number of Coins",
+    "sicherheit": "Safety Ø",
+    "potential": "Potential Ø",
+    "sicherheitTooltipText1": "This value is derived from the average safety of all assets in the portfolio. The information is based on the position in the graph.",
+    "sicherheitTooltipText2": "Assets that are not included in the graph are not considered.",
+    "potentialTooltipText1": "This value is derived from the average potential of all assets in the portfolio. The information is based on the position in the graph. The purchase price is taken into account in the calculation, as the potential is based on the respective low of the last 12 months.",
+    "potentialTooltipText2": "Assets that are not included in the graph are not considered."
+  },
+  "portfolioComponent": {
+    "title": "Portfolio",
+    "subtitle": "Adjust the weighting of the assets to better reflect their actual share in the portfolio.",
+    "loading": "No entries",
+    "coinRemovedSuccess": "Coin removed successfully",
+    "delete": "Delete",
+    "favourite": "Favourite"
+  }
+}

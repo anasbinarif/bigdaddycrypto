@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {
     Grid,
     List,
@@ -14,6 +14,10 @@ import {
 } from "@mui/material";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import {getDictionary} from "@/app/lang/dictionaries";
+import {localeAtom} from "@/app/stores/localeAtom";
+import {useAtom} from "jotai/index";
+// import {useTranslations} from "next-intl";
 
 const videos = [
     {
@@ -202,15 +206,26 @@ const videos = [
 const MediaVideoPlayer = () => {
     const [selectedVideo, setSelectedVideo] = useState(videos[0].url);
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [dict, setDict] = useState({});
 
     const handleListItemClick = (event, index, videoUrl) => {
         setSelectedIndex(index);
         setSelectedVideo(videoUrl);
     };
+    const [locale] = useAtom(localeAtom);
+
+    useEffect(() => {
+        const fetchDictionary = async () => {
+            const dictionary = await getDictionary(locale);
+            setDict(dictionary);
+        };
+
+        fetchDictionary();
+    }, [locale]);
     return (
         <>
-            <Navbar />
-            <Box sx={{ marginTop: "9rem", backgroundColor: "#111826" }}>
+            <Navbar/>
+            <Box sx={{marginTop: "9rem", backgroundColor: "#111826"}}>
                 <Typography
                     sx={{
                         marginLeft: "6rem",
@@ -222,7 +237,7 @@ const MediaVideoPlayer = () => {
                         letterSpacing: '0.01em'
                     }}
                 >
-                    Mediathek
+                    {dict?.media_page?.heading1}
                 </Typography>
                 <Typography
                     sx={{
@@ -234,9 +249,9 @@ const MediaVideoPlayer = () => {
                         letterSpacing: "0.01em",
                     }}
                 >
-                    Coin-Vorstellungen
+                    {dict?.media_page?.heading2}
                 </Typography>
-                <Grid container spacing={0} sx={{ margin: "0 0rem 10rem 5rem", height: "543px" }}>
+                <Grid container spacing={0} sx={{margin: "0 0rem 10rem 5rem", height: "543px"}}>
                     <Grid item xs={12} md={4} sx={{height: "100%", width: "33%"}}>
                         <List
                             style={{
@@ -246,11 +261,26 @@ const MediaVideoPlayer = () => {
                                 height: "100%"
                             }}
                         >
-                            <Box sx={{ display: "flex", justifyContent: "space-between", backgroundColor: "#2A2A2A", borderBottom: "1px solid #d5d8dc" }}>
-                                <Typography variant="h2" sx={{ color: "#B1B1B1", fontSize: "16px", padding: "10px 10px 15px 10px", fontWeight: "700" }}>
+                            <Box sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                backgroundColor: "#2A2A2A",
+                                borderBottom: "1px solid #d5d8dc"
+                            }}>
+                                <Typography variant="h2" sx={{
+                                    color: "#B1B1B1",
+                                    fontSize: "16px",
+                                    padding: "10px 10px 15px 10px",
+                                    fontWeight: "700"
+                                }}>
                                     Playlist
                                 </Typography>
-                                <Typography variant="h2" sx={{ color: "#B1B1B1", fontSize: "16px", padding: "10px 10px 15px 10px", fontWeight: "700" }}>
+                                <Typography variant="h2" sx={{
+                                    color: "#B1B1B1",
+                                    fontSize: "16px",
+                                    padding: "10px 10px 15px 10px",
+                                    fontWeight: "700"
+                                }}>
                                     {videos.length} Videos
                                 </Typography>
                             </Box>
@@ -272,7 +302,7 @@ const MediaVideoPlayer = () => {
                                         <Avatar
                                             variant="square"
                                             src={video.thumbnail}
-                                            sx={{ width: 56, height: 32, marginRight: "10px" }}
+                                            sx={{width: 56, height: 32, marginRight: "10px"}}
                                         />
                                     </ListItemAvatar>
                                     <ListItemText
@@ -290,7 +320,7 @@ const MediaVideoPlayer = () => {
                                             </Typography>
                                         }
                                         secondary={
-                                            <Typography variant="body2" style={{ color: "#999" }}>
+                                            <Typography variant="body2" style={{color: "#999"}}>
                                                 {video.duration}
                                             </Typography>
                                         }
@@ -299,7 +329,7 @@ const MediaVideoPlayer = () => {
                             ))}
                         </List>
                     </Grid>
-                    <Grid item xs={12} md={6} sx={{ margin: "0px" }}>
+                    <Grid item xs={12} md={6} sx={{margin: "0px"}}>
                         <Card>
                             <CardMedia
                                 component="iframe"
@@ -313,7 +343,7 @@ const MediaVideoPlayer = () => {
                     </Grid>
                 </Grid>
             </Box>
-            <Footer />
+            <Footer/>
         </>
     )
 }

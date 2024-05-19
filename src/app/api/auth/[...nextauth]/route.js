@@ -48,7 +48,7 @@ export const authOptions = {
         maxAge: 2 * 60 * 60, // 2 hours in seconds
     },
     jwt: {
-        secret: "jnjcndajcndicncsdjn8ncdncdc=",
+        secret: "jnjcndajcndicncsdjn8ncdncdc=", // Ensure you have a JWT_SECRET in your environment variables!
         maxAge: 2 * 60 * 60, // 2 hours in seconds
     },
     callbacks: {
@@ -73,30 +73,6 @@ export const authOptions = {
                 console.log("calling again session");
             }
             return session;
-        },
-        authorized({ auth, request }) {
-            const user = auth?.user;
-            console.log("hello 123 from next", user)
-            const isOnAdminPanel = request.nextUrl?.pathname.startsWith("/admin");
-            const isOnHomePage = request.nextUrl?.pathname.startsWith("/");
-            const isOnLoginPage = request.nextUrl?.pathname.startsWith("/login");
-
-
-            if (isOnAdminPanel && !user?.isAdmin) {
-                return false;
-            }
-
-
-            if (isOnHomePage && !user) {
-                return false;
-            }
-
-
-            if (isOnLoginPage && user) {
-                return Response.redirect(new URL("/", request.nextUrl));
-            }
-
-            return true
         },
     }
 }
