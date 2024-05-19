@@ -4,6 +4,7 @@ import BewertungCard from "./cards/Bewertung";
 import KryptoAssets from "./cards/kryptoAssets/KryptoAssets";
 import PortfolioComponent from "./cards/PortfolioComponent";
 import { DonutCard } from "./cards/donutCard/DonutCard";
+import { Sticky } from "@mui/lab";
 
 const PortfolioDisplay = ({
   portfolio,
@@ -43,7 +44,8 @@ const PortfolioDisplay = ({
       container
       spacing={{ xs: 2, md: 3 }}
       columns={{ xs: 4, sm: 8, md: 12 }}
-      sx={{ position: "relative" }}
+      style={{ position: "relative" }}
+      // sx={{ position: "relative" }}
     >
       <Grid item xs={2} sm={4} md={4}>
         <BitpandaCard />
@@ -61,7 +63,7 @@ const PortfolioDisplay = ({
           userID={portfolio.userId}
         />
       </Grid>
-      <Grid item xs={4} sm={4} md={4} sx={{ position: "relative" }}>
+      <Grid item xs={4} sm={4} md={4} style={{ position: "relative" }}>
         <PortfolioComponent
           portfolio={portfolio}
           setPortfolio={setPortfolio}

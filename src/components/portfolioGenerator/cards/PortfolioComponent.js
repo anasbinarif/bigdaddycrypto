@@ -40,6 +40,7 @@ const PortfolioComponent = ({
   assetsLeangth,
   setSelectedCoin,
   setTabSelector,
+  ...props
 }) => {
   const [sessionJotai] = useAtom(sessionAtom);
   // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
@@ -186,7 +187,7 @@ const PortfolioComponent = ({
   }
 
   return (
-    <Box sx={{ position: "sticky", top: "100px" }}>
+    <Box {...props} style={{ position: "sticky", top: "0" }}>
       <AlertBar
         open={alert.open}
         message={alert.message}
