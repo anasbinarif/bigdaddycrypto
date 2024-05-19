@@ -10,49 +10,57 @@ import LanguageSwitcher from "../../app/lang/LanguageSwitcher";
 import { useTranslations } from "next-intl";
 
 const NavbarLink = () => {
-    const { data: session, status } = useSession();
-    const [sessionJotai, setSession] = useAtom(sessionAtom);
-    const t = useTranslations("navbar");
+  const { data: session, status } = useSession();
+  const [sessionJotai, setSession] = useAtom(sessionAtom);
+  const t = useTranslations("navbar");
 
-    useEffect(() => {
-        if (session) {
-            setSession(session)
-        }
-        if (status === "unauthenticated") {
-            handleLogoutFun();
-        }
-        console.log("session for admin", session, status);
-    }, [status, session]);
+  useEffect(() => {
+    if (session) {
+      setSession(session);
+    }
+    if (status === "unauthenticated") {
+      handleLogoutFun();
+    }
+    console.log("session for admin", session, status);
+  }, [status, session]);
 
-    const handleLogoutFun = async () => {
-        await signOut({ redirect: true, callbackUrl: '/login' });
-        console.log("Logged out successfully");
-    };
+  const handleLogoutFun = async () => {
+    await signOut({ redirect: true, callbackUrl: "/login" });
+    console.log("Logged out successfully");
+  };
 
-    return (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-            {session && session.user.isAdmin && (
-                <Link
-                    style={{ marginRight: "15px", fontFamily: "inherit" }}
-                    href={"/admin"}
-                >
-                    <Typography variant="body1" sx={{ marginRight: "15px" }}>
-                        {t("admin")}
-                    </Typography>
-                </Link>
-            )}
-            <Typography variant="body1">
-                {t("portfolioId")}: {session?.user.username}
-            </Typography>
-            <LanguageSwitcher />
-            <IconButton onClick={handleLogoutFun} color="inherit" sx={{ ml: 2 }}>
-                <Box sx={{ display: "flex", bgcolor: "#202530", p: "10px 10px", borderRadius: "5px", '&:hover': { backgroundColor: '#1188ff' } }}>
-                    <LogoutIcon />
-                    <Typography>{t("logout")}</Typography>
-                </Box>
-            </IconButton>
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      {session && session.user.isAdmin && (
+        <Link
+          style={{ marginRight: "15px", fontFamily: "inherit" }}
+          href={"/admin"}
+        >
+          <Typography variant="body1" sx={{ marginRight: "15px" }}>
+            {t("admin")}
+          </Typography>
+        </Link>
+      )}
+      <Typography variant="body1">
+        {t("portfolioId")}: {session?.user.username}
+      </Typography>
+      <LanguageSwitcher />
+      <IconButton onClick={handleLogoutFun} color="inherit" sx={{ ml: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            bgcolor: "#202530",
+            p: "10px 10px",
+            borderRadius: "5px",
+            "&:hover": { backgroundColor: "#1188ff" },
+          }}
+        >
+          <LogoutIcon />
+          <Typography>{t("logout")}</Typography>
         </Box>
-    );
+      </IconButton>
+    </Box>
+  );
 };
 
 export default NavbarLink;

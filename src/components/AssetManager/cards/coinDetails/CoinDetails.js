@@ -25,8 +25,8 @@ import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AlertBar from "../../../../components/customAllert/Alert";
-import { getUserPortfolio } from "../../../../../src/lib/data";
+import AlertBar from "../../../customAllert/Alert";
+import { getUserPortfolio } from "../../../../lib/data";
 
 const CoinDetails = (props) => {
   const { coin, index } = props;

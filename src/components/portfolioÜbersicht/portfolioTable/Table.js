@@ -17,7 +17,7 @@ import {
   ThemeProvider,
   styled,
 } from "@mui/material";
-import { getCategoryColor } from "../../../../src/lib/data";
+import { getCategoryColor } from "../../../lib/data";
 
 const CategoryColorBar = styled(Box)(({ color }) => ({
   width: "5px",

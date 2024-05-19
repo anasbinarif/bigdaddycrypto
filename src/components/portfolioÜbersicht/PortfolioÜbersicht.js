@@ -3,11 +3,11 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { DonutCard } from "../../components/portfolioGenerator/cards/donutCard/DonutCard";
+import { DonutCard } from "../portfolioGenerator/cards/donutCard/DonutCard";
 import Item1 from "./Item1";
 import Item4 from "./Item4";
-import BewertungCard from "../../components/portfolioGenerator/cards/Bewertung";
-import GridExample from "../../components/portfolioÜbersicht/portfolioTable/Table";
+import BewertungCard from "../portfolioGenerator/cards/Bewertung";
+import GridExample from "./portfolioTable/Table";
 import Card from "@mui/material/Card";
 import { Typography } from "@mui/material";
 

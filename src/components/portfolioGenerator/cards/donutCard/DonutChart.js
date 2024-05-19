@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 import { Box, Typography } from "@mui/material";
-import { categoriesDisplay } from "../../../../../src/lib/data";
+import { categoriesDisplay } from "../../../../lib/data";
 import { useAtom } from "jotai/index";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
@@ -29,13 +29,15 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
       let weightedScore = 0;
 
       // Calculate the total investment across all assets
-      portfolio.assetsCalculations.assets.forEach(asset => {
+      portfolio.assetsCalculations.assets.forEach((asset) => {
         totalInvestment += asset.totalInvest;
       });
 
       // Calculate the weighted security score
-      portfolio.assetsCalculations.assets.forEach(asset => {
-        const assetDetails = portfolio.assets.find(a => a.CoinGeckoID === asset.CoinGeckoID);
+      portfolio.assetsCalculations.assets.forEach((asset) => {
+        const assetDetails = portfolio.assets.find(
+          (a) => a.CoinGeckoID === asset.CoinGeckoID
+        );
         if (assetDetails && assetDetails.Sicherheit) {
           const weight = asset.totalInvest / totalInvestment;
           weightedScore += weight * assetDetails.Sicherheit;
@@ -51,25 +53,25 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   }, [portfolio]);
 
   const data = loadingPortfolio
-      ? [
+    ? [
         ["Category", "Percentage"],
         ...Object.entries(portfolioCalculations.percentages || {}).map(
-            ([key, value]) => {
-              return [
-                categoriesDisplay[key] || key,
-                parseFloat(value.replace("%", "")),
-              ];
-            }
+          ([key, value]) => {
+            return [
+              categoriesDisplay[key] || key,
+              parseFloat(value.replace("%", "")),
+            ];
+          }
         ),
       ]
-      : [
+    : [
         ["Category", "Percentage"],
         ["AI", 100.0],
       ];
 
   const colors = data
-      .slice(1)
-      .map((item) => categoryColors[item[0]] || "#CCCCCC");
+    .slice(1)
+    .map((item) => categoryColors[item[0]] || "#CCCCCC");
 
   const options = {
     pieHole: 0.8,
@@ -95,35 +97,35 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   };
 
   return (
-      <Box sx={{ position: "relative", width: "56%", height: "250px" }}>
-        <Chart
-            chartType="PieChart"
-            height="300px"
-            width="100%"
-            data={data}
-            options={options}
-        />
-        <Box
-            sx={{
-              position: "absolute",
-              top: "60%", // Center vertically in the donut hole
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              textAlign: "center", // Center text horizontally
-              zIndex: "100",
-            }}
-        >
-          <Typography variant="caption" style={{ color: "#FFFFFF" }}>
-            {t("score")}
-          </Typography>
-          <Typography variant="h4" component="div" style={{ color: "#FFFFFF" }}>
-            {securityScore}
-          </Typography>
-          <Typography variant="caption" style={{ color: "#FFFFFF" }}>
-            {t("veryGood")}
-          </Typography>
-        </Box>
+    <Box sx={{ position: "relative", width: "56%", height: "250px" }}>
+      <Chart
+        chartType="PieChart"
+        height="300px"
+        width="100%"
+        data={data}
+        options={options}
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          top: "60%", // Center vertically in the donut hole
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          textAlign: "center", // Center text horizontally
+          zIndex: "100",
+        }}
+      >
+        <Typography variant="caption" style={{ color: "#FFFFFF" }}>
+          {t("score")}
+        </Typography>
+        <Typography variant="h4" component="div" style={{ color: "#FFFFFF" }}>
+          {securityScore}
+        </Typography>
+        <Typography variant="caption" style={{ color: "#FFFFFF" }}>
+          {t("veryGood")}
+        </Typography>
       </Box>
+    </Box>
   );
 };
 
