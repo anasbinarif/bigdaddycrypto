@@ -31,7 +31,11 @@ const userSchema = new mongoose.Schema({
     pastUserCheck: {
         type: Boolean,
         default: false
-    }
+    },
+    subscribed: {
+        type: Boolean,
+        default: false
+    },
 }, { timestamps: true }
 );
 

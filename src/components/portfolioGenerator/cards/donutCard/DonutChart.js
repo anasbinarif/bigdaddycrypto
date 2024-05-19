@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { categoriesDisplay } from "@/lib/data";
 import { useAtom } from "jotai/index";
 import { portfolioAtom } from "@/app/stores/portfolioStore";
+import { useTranslations } from "next-intl";
 
 const categoryColors = {
   AI: "#FFD700",
@@ -20,7 +21,7 @@ const categoryColors = {
 const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   const [portfolio] = useAtom(portfolioAtom, { assets: [] });
   const [securityScore, setSecurityScore] = useState(0);
-
+  const t = useTranslations("donutChart");
 
   useEffect(() => {
     const calculateSecurityScore = () => {
@@ -49,27 +50,26 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
     }
   }, [portfolio]);
 
-
   const data = loadingPortfolio
-    ? [
-      ["Category", "Percentage"],
-      ...Object.entries(portfolioCalculations.percentages || {}).map(
-        ([key, value]) => {
-          return [
-            categoriesDisplay[key] || key,
-            parseFloat(value.replace("%", "")),
-          ];
-        }
-      ),
-    ]
-    : [
-      ["Category", "Percentage"],
-      ["AI", 100.0],
-    ];
+      ? [
+        ["Category", "Percentage"],
+        ...Object.entries(portfolioCalculations.percentages || {}).map(
+            ([key, value]) => {
+              return [
+                categoriesDisplay[key] || key,
+                parseFloat(value.replace("%", "")),
+              ];
+            }
+        ),
+      ]
+      : [
+        ["Category", "Percentage"],
+        ["AI", 100.0],
+      ];
 
   const colors = data
-    .slice(1)
-    .map((item) => categoryColors[item[0]] || "#CCCCCC");
+      .slice(1)
+      .map((item) => categoryColors[item[0]] || "#CCCCCC");
 
   const options = {
     pieHole: 0.8,
@@ -95,35 +95,35 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   };
 
   return (
-    <Box sx={{ position: "relative", width: "56%", height: "250px" }}>
-      <Chart
-        chartType="PieChart"
-        height="300px"
-        width="100%"
-        data={data}
-        options={options}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          top: "60%", // Center vertically in the donut hole
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          textAlign: "center", // Center text horizontally
-          zIndex: "100",
-        }}
-      >
-        <Typography variant="caption" style={{ color: "#FFFFFF" }}>
-          Score
-        </Typography>
-        <Typography variant="h4" component="div" style={{ color: "#FFFFFF" }}>
-          {securityScore}
-        </Typography>
-        <Typography variant="caption" style={{ color: "#FFFFFF" }}>
-          Sehr gut
-        </Typography>
+      <Box sx={{ position: "relative", width: "56%", height: "250px" }}>
+        <Chart
+            chartType="PieChart"
+            height="300px"
+            width="100%"
+            data={data}
+            options={options}
+        />
+        <Box
+            sx={{
+              position: "absolute",
+              top: "60%", // Center vertically in the donut hole
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              textAlign: "center", // Center text horizontally
+              zIndex: "100",
+            }}
+        >
+          <Typography variant="caption" style={{ color: "#FFFFFF" }}>
+            {t("score")}
+          </Typography>
+          <Typography variant="h4" component="div" style={{ color: "#FFFFFF" }}>
+            {securityScore}
+          </Typography>
+          <Typography variant="caption" style={{ color: "#FFFFFF" }}>
+            {t("veryGood")}
+          </Typography>
+        </Box>
       </Box>
-    </Box>
   );
 };
 

@@ -11,16 +11,17 @@ import { Box } from '@mui/material';
 import CustomizedTooltips from "@/components/toolTip/CustomizedTooltip";
 import { useAtom } from 'jotai';
 import { portfolioAtom } from '@/app/stores/portfolioStore';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function BewertungCard() {
     const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
     const [sicherheitAverage, setSicherheitAverage] = useState(0);
+    const t = useTranslations("bewertungCard");
 
     useEffect(() => {
         if (portfolio && portfolio.assetsCalculations && portfolio.assetsCalculations.assets.length > 0) {
             const financialSummaries = calculateFinancialSummaryForAllAssets();
-            // console.log("financialSummaries--", financialSummaries);
             const sicherheitValues = financialSummaries.map(asset => asset.Sicherheit || 0);
             const avgSicherheit = sicherheitValues.reduce((acc, val) => acc + val, 0) / sicherheitValues.length;
             setSicherheitAverage(avgSicherheit.toFixed(1));
@@ -48,23 +49,22 @@ function BewertungCard() {
                 Sicherheit
             };
         });
-    }
-
+    };
 
     return (
-        <Card sx={{ bgcolor: "#202530", color: 'white', height: "100%", borderRadius: 2, }}>
+        <Card sx={{ bgcolor: "#202530", color: 'white', height: "100%", borderRadius: 2 }}>
             <CardContent>
                 <Typography sx={{ fontSize: 14, fontWeight: 'bold' }} gutterBottom>
-                    Bewertung
+                    {t("title")}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                    <List sx={{ bgcolor: "#00000033", borderRadius: "8px" }} >
+                    <List sx={{ bgcolor: "#00000033", borderRadius: "8px" }}>
                         {[
-                            { text: 'Abdeckung von Hype-Themen', color: green[500] },
-                            { text: 'Doppelte Abdeckung von Hype-Themen', color: green[500] },
-                            { text: 'Fehlendes Hype-Thema', color: green[500] },
-                            { text: 'Verteilung der gewählten Hype-Themen', color: yellow[800] },
-                            { text: 'Anzahl an Coins', color: green[500] }
+                            { text: t('hypeCoverage'), color: green[500] },
+                            { text: t('doubleHypeCoverage'), color: green[500] },
+                            { text: t('missingHypeTheme'), color: green[500] },
+                            { text: t('hypeDistribution'), color: yellow[800] },
+                            { text: t('numberOfCoins'), color: green[500] }
                         ].map(item => (
                             <ListItem key={item.text} sx={{ py: 0 }}>
                                 <ListItemIcon sx={{ minWidth: "30px" }}>
@@ -76,43 +76,41 @@ function BewertungCard() {
                     </List>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography component="div"
-                            sx={{
-                                alignItems: "center", gap: "25px",
-                                backgroundColor: "#00000033", padding: "10px 16px",
-                                borderRadius: "8px", display: "flex", fontSize: "14px"
-                            }}>
-                            <span style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}> Sicherheit Ø
-                                <CustomizedTooltips text1="Dieser Wert ergibt sich aus dem Durchschnitt der
-                                Sicherheit aller Assets im Portfolio. Die Angaben basieren auf der
-                                Position im Graphen." text2="Assets die nicht im Graphen eingeordnet
-                                sind werden nicht berücksichtigt." />
+                                    sx={{
+                                        alignItems: "center", gap: "25px",
+                                        backgroundColor: "#00000033", padding: "10px 16px",
+                                        borderRadius: "8px", display: "flex", fontSize: "14px"
+                                    }}>
+                            <span style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}>{t("sicherheit")}
+                                <CustomizedTooltips
+                                    text1={t("sicherheitTooltipText1")}
+                                    text2={t("sicherheitTooltipText2")}
+                                />
                             </span> <span style={{
-                                color: "white",
-                                backgroundColor: "rgb(65, 180, 49)",
-                                padding: "4px 8px 2px",
-                                textShadow: "1px 1px 5px rgba(0,0,0,.4)",
-                                borderRadius: "6px", fontSize: "14px"
-                            }}>{sicherheitAverage}</span>
+                            color: "white",
+                            backgroundColor: "rgb(65, 180, 49)",
+                            padding: "4px 8px 2px",
+                            textShadow: "1px 1px 5px rgba(0,0,0,.4)",
+                            borderRadius: "6px", fontSize: "14px"
+                        }}>{sicherheitAverage}</span>
                         </Typography>
                         <Typography component="div" sx={{
                             alignItems: "center",
                             gap: "25px", backgroundColor: "#00000033", padding: "10px 16px",
                             borderRadius: "8px", display: "flex", fontSize: "14px"
                         }}>
-                            <span style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}> Potential Ø
-                                <CustomizedTooltips text1="Dieser Wert ergibt sich aus dem Durchschnitt
-                                des Potentials aller Assets im Portfolio. Die Angaben basieren auf der
-                                Position im Graphen. Bei der Berechnung wird der Einkaufspreis berücksichtigt,
-                                da das Potential auf dem jeweiligen Low der letzten 12 Monate beruht."
-                                    text2="Assets die nicht im Graphen eingeordnet sind werden nicht
-                                                    berücksichtigt." />
+                            <span style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}>{t("potential")}
+                                <CustomizedTooltips
+                                    text1={t("potentialTooltipText1")}
+                                    text2={t("potentialTooltipText2")}
+                                />
                             </span> <span style={{
-                                color: "white",
-                                backgroundColor: "rgb(142, 206, 16)",
-                                padding: "4px 8px 2px",
-                                textShadow: "1px 1px 5px rgba(0,0,0,.4)",
-                                borderRadius: "6px", fontSize: "14px"
-                            }}>23-36x</span>
+                            color: "white",
+                            backgroundColor: "rgb(142, 206, 16)",
+                            padding: "4px 8px 2px",
+                            textShadow: "1px 1px 5px rgba(0,0,0,.4)",
+                            borderRadius: "6px", fontSize: "14px"
+                        }}>23-36x</span>
                         </Typography>
                     </Box>
                 </Box>

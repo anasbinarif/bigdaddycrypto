@@ -2,27 +2,30 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { TextareaAutosize } from "@mui/base";
 import { Typography } from "@mui/material";
+import { useTranslations } from "next-intl";
 
 export default function Item4() {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "#202530",
-        color: "white",
-        height: "100%",
-        borderRadius: "8px",
-        padding: "25px",
-      }}
-    >
-      <Typography sx={{ fontSize: "1rem", fontWeight: "bold" }}>
-        Notizen
-      </Typography>
-      <TextareaAutosize
-        aria-label="empty textarea"
-        placeholder="Enter your text here"
-        defaultValue={`Hallo Big Daddy
+    const t = useTranslations("item4");
+
+    return (
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "#202530",
+                color: "white",
+                height: "100%",
+                borderRadius: "8px",
+                padding: "25px",
+            }}
+        >
+            <Typography sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+                {t("notes")}
+            </Typography>
+            <TextareaAutosize
+                aria-label="empty textarea"
+                placeholder={t("placeholder")}
+                defaultValue={`Hallo Big Daddy
 
 Könntest du dir das mal bitte ansehen.
 verfolge dich schon länger auf deinen Youtube Kanal .
@@ -33,30 +36,30 @@ wäre cool wenn du mir da hälfen könntest
 dank dir.
 Beste Grüße Jens  
         `}
-        maxRows={7}
-        style={{
-          width: "100%",
-          resize: "none",
-          marginTop: "15px",
-          backgroundColor: "#00000033",
-          borderRadius: "8px",
-        }}
-      />
-      <TextareaAutosize
-        aria-label="empty textarea"
-        placeholder="Enter your text here"
-        defaultValue={`Pullix (PLX) : 18312 coin gekauft um 1000€
+                maxRows={7}
+                style={{
+                    width: "100%",
+                    resize: "none",
+                    marginTop: "15px",
+                    backgroundColor: "#00000033",
+                    borderRadius: "8px",
+                }}
+            />
+            <TextareaAutosize
+                aria-label="empty textarea"
+                placeholder={t("placeholder")}
+                defaultValue={`Pullix (PLX) : 18312 coin gekauft um 1000€
         Loop: 66984 coin  
         `}
-        minRows={7}
-        style={{
-          width: "100%",
-          resize: "none",
-          marginTop: "15px",
-          backgroundColor: "#00000033",
-          borderRadius: "8px",
-        }}
-      />
-    </Box>
-  );
+                minRows={7}
+                style={{
+                    width: "100%",
+                    resize: "none",
+                    marginTop: "15px",
+                    backgroundColor: "#00000033",
+                    borderRadius: "8px",
+                }}
+            />
+        </Box>
+    );
 }

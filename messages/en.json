@@ -1,0 +1,116 @@
+{
+  "Index": {
+    "selectLanguage": "English"
+  },
+  "media_page": {
+    "heading1": "Media library",
+    "heading2": "Coin ideas"
+  },
+  "navbar": {
+    "companyName": "Portfolio Generator 2.1",
+    "home": "Home",
+    "faq": "FAQ",
+    "media": "Media",
+    "graph": "Graph",
+    "admin": "Admin",
+    "portfolioId": "Portfolio-ID",
+    "logout": "Logout"
+  },
+  "bewertungCard": {
+    "title": "Evaluation",
+    "hypeCoverage": "Coverage of Hype Topics",
+    "doubleHypeCoverage": "Double Coverage of Hype Topics",
+    "missingHypeTheme": "Missing Hype Topic",
+    "hypeDistribution": "Distribution of Chosen Hype Topics",
+    "numberOfCoins": "Number of Coins",
+    "sicherheit": "Safety Ø",
+    "potential": "Potential Ø",
+    "sicherheitTooltipText1": "This value is derived from the average safety of all assets in the portfolio. The information is based on the position in the graph.",
+    "sicherheitTooltipText2": "Assets that are not included in the graph are not considered.",
+    "potentialTooltipText1": "This value is derived from the average potential of all assets in the portfolio. The information is based on the position in the graph. The purchase price is taken into account in the calculation, as the potential is based on the respective low of the last 12 months.",
+    "potentialTooltipText2": "Assets that are not included in the graph are not considered."
+  },
+  "portfolioComponent": {
+    "title": "Portfolio",
+    "subtitle": "Adjust the weighting of the assets to better reflect their actual share in the portfolio.",
+    "loading": "No entries",
+    "coinRemovedSuccess": "Coin removed successfully",
+    "delete": "Delete",
+    "favourite": "Favourite"
+  },
+  "coinCard": {
+    "potential": "Potential",
+    "sicherheit": "Safety"
+  },
+  "donutChart": {
+    "score": "Score",
+    "veryGood": "Very good"
+  },
+  "kryptoFilter": {
+    "chooseAssets": "Choose your Crypto Assets",
+    "chooseAssetsDescription": "Select your desired crypto assets and add them to your portfolio by double-clicking.",
+    "noPriceIndicator": "Do not show price indicator",
+    "extremelyPessimistic": "Price Indicator: Extremely Pessimistic",
+    "pessimistic": "Price Indicator: Pessimistic",
+    "optimistic": "Price Indicator: Optimistic",
+    "latecomer": "Price Indicator: Latecomer",
+    "latecomerII": "Price Indicator: Latecomer II",
+    "search": "Search..."
+  },
+  "third": {
+    "portfolioOverview": "Portfolio Overview",
+    "totalValue": "Total Value",
+    "totalInvestment": "Total Investment",
+    "currentProfit": "Current Profit",
+    "realizedSoFar": "Realized So Far",
+    "totalPotential": "Total Potential"
+  },
+  "second": {
+    "nextGoals": "Next Goals",
+    "noGoalsDefined": "No goals defined"
+  },
+  "item1": {
+    "portfolioOverview": "Portfolio Overview",
+    "totalValue": "Total Value",
+    "totalInvestment": "Total Investment",
+    "currentProfit": "Current Profit",
+    "assets": "Assets"
+  },
+  "formDialog": {
+    "importUserData": "Import User Data",
+    "importInstructions": "To import your data from our previous application, please enter your username and password.",
+    "name": "Name",
+    "pin": "Pin",
+    "cancel": "Cancel",
+    "import": "Import",
+    "confirmAction": "Confirm Action",
+    "confirmCloseMessage": "Are you sure you do not want to import your previous data? You won't be asked again later.",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "footer": {
+    "footerText": "Copyright © 2024, All rights reserved. · Impressum · Privacy Policy · The information provided does not constitute financial advice. Any actions are taken at your own risk."
+  },
+  "item4": {
+    "notes": "Notes",
+    "placeholder": "Enter your text here"
+  },
+  "colorTabs": {
+    "portfolioGenerator": "Portfolio Generator",
+    "assetManager": "Asset Manager",
+    "portfolioOverview": "Portfolio Overview"
+  },
+  "scrollableKryptoTabs": {
+    "favourite": "Favourite",
+    "ai": "AI",
+    "web3Anonymity": "Web3/Anonymity",
+    "defi": "DeFi",
+    "greenCoins": "Green Coins",
+    "gamingMetaverse": "Gaming/Metaverse",
+    "btcConnection": "BTC Connection",
+    "cbdcNetworks": "CBDC Networks",
+    "eCommerce": "E-Commerce",
+    "tokenizationRWA": "Tokenization/RWA",
+    "noHypeTopic": "No Hype Topic"
+  }
+}

@@ -22,7 +22,7 @@ const Error = ({ statusCode }) => {
                 <Typography variant="body1">
                     We are sorry for the inconvenience. Please try again later.
                 </Typography>
-                <Link href="/" passHref>
+                <Link href="/public" passHref>
                     <Button variant="contained" color="primary" sx={{ mt: 2 }}>
                         Go back home
                     </Button>

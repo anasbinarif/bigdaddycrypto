@@ -1,4 +1,3 @@
-// src/components/PortfolioComponent.js
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -17,6 +16,7 @@ import { getCategoryColor, getUserPortfolio } from "@/lib/data";
 import AlertBar from "@/components/customAllert/Alert";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "@/app/stores/sessionStore";
+import { useTranslations } from "next-intl";
 
 const CategoryColorBar = styled(Box)(({ color }) => ({
   width: 4,
@@ -43,15 +43,14 @@ const PortfolioComponent = ({
   ...props
 }) => {
   const [sessionJotai] = useAtom(sessionAtom);
-  // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [deleteIconIndex, setDeleteIconIndex] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
-
   const [alert, setAlert] = useState({
     open: false,
     message: "",
     severity: "error",
   });
+  const t = useTranslations("portfolioComponent");
 
   const handleDeleteClick = (asset) => {
     setSelectedAsset(asset);
@@ -59,20 +58,16 @@ const PortfolioComponent = ({
 
   const setCoin = (index) => {
     if (setSelectedCoin !== undefined) {
-      // console.log(index);
       setSelectedCoin(index);
       setTabSelector("two");
     }
   };
 
   const handleDeleteConfirm = async () => {
-    // const portfolioId = portfolio._id;
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = selectedAsset.CoinGeckoID;
-    console.log("testing delete", CoinGeckoID, userId);
 
     try {
-      // Call the API to delete the coin from the portfolioGenerator
       const response = await fetch("/api/deleteCoinPortfolio", {
         method: "POST",
         headers: {
@@ -83,21 +78,17 @@ const PortfolioComponent = ({
 
       const data = await response.json();
 
-      // Handle response
       if (response.ok) {
-        console.log("Success:", data.message);
         setSelectedAsset(null);
-        // Remove the asset from the local state to update the UI
         setPortfolio((prevState) => ({
           ...prevState,
           assets: prevState.assets.filter(
             (asset) => asset.CoinGeckoID !== CoinGeckoID
           ),
         }));
-        // alert('Coin removed successfully');
         setAlert({
           open: true,
-          message: "Coin removed successfully",
+          message: t("coinRemovedSuccess"),
           severity: "success",
         });
       } else {
@@ -105,10 +96,13 @@ const PortfolioComponent = ({
       }
     } catch (error) {
       console.error("Error:", error.message);
-      alert("Error removing coin: " + error.message);
+      setAlert({
+        open: true,
+        message: `Error removing coin: ${error.message}`,
+        severity: "error",
+      });
     }
 
-    // Close the dialog regardless of success or failure
     handleCloseDialog();
   };
 
@@ -170,7 +164,6 @@ const PortfolioComponent = ({
   };
 
   async function handleFavouriteClick(asset) {
-    console.log("FavouriteClick", asset);
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = asset?.CoinGeckoID;
     const response = await fetch("/api/addCoinToFavorites", {
@@ -353,6 +346,165 @@ const PortfolioComponent = ({
           handleDeleteConfirm={handleDeleteConfirm}
           asset={selectedAsset}
         />
+        <Box
+          sx={{
+            width: "100%",
+            backgroundColor: "#202530",
+            p: 2,
+            display: "flex",
+            borderRadius: "8px",
+          }}
+        >
+          <Box sx={{ p: 3 }}>
+            <Typography variant="h4" gutterBottom>
+              {t("title")} ({assetsLeangth})
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom>
+              {t("subtitle")}
+            </Typography>
+            {loadingPortfolio ? (
+              <Grid
+                sx={{
+                  borderRadius: "4px",
+                  overflow: "auto",
+                  scrollbarColor: "#555559 #333339",
+                  maxHeight: "500px",
+                }}
+              >
+                {loadingPortfolio &&
+                  portfolio.assets.map((asset, index) => (
+                    <Grid item key={index} xs={12} sm={6} md={15}>
+                      <Card
+                        onMouseEnter={() => handleMouseEnter(index)}
+                        onMouseLeave={() => handleMouseLeave()}
+                        onDoubleClick={() => setCoin(index)}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          p: 2,
+                          cursor: "pointer",
+                          borderRadius: 0,
+                          backgroundColor: "#23252b",
+                          "&:hover": { backgroundColor: "#00000099" },
+                          position: "relative",
+                          userSelect: "none",
+                        }}
+                      >
+                        {deleteIconIndex === index && (
+                          <CategoryColorBar
+                            color={getCategoryColor(asset.Category)}
+                          />
+                        )}
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Avatar
+                            src={asset.cgImageURL}
+                            sx={{ width: 28, height: 28, mr: 1 }}
+                          />
+                          <Box sx={{ flexGrow: 1 }}>
+                            <Typography
+                              variant="h6"
+                              sx={{ color: "#fff", fontSize: "14px" }}
+                            >
+                              {asset.Ticker}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Typography variant="body2" sx={{ color: "#fff" }}>
+                          {asset?.Price ? asset?.Price.toFixed(6) : 0} €
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            flexDirection: "row",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ color: "#fff" }}
+                            >
+                              {setFinancialSummaryAPI(asset.CoinGeckoID)[1]} €
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ color: "gray" }}
+                            >
+                              {setFinancialSummaryAPI(
+                                asset.CoinGeckoID
+                              )[0].toFixed(2)}{" "}
+                              {asset.Ticker}
+                            </Typography>
+                          </Box>
+                          {deleteIconIndex === index && (
+                            <>
+                              <Tooltip
+                                title={t("delete")}
+                                onClick={() => handleDeleteClick(asset)}
+                              >
+                                <IconButton
+                                  sx={{
+                                    color: "gray",
+                                    "&:hover": { color: "red" },
+                                  }}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip
+                                title={t("favourite")}
+                                onClick={() => handleFavouriteClick(asset)}
+                              >
+                                <IconButton
+                                  sx={{
+                                    color: isFavorite(
+                                      asset.CoinGeckoID,
+                                      portfolio.assetsCalculations
+                                    )
+                                      ? "red"
+                                      : "gray",
+                                  }}
+                                >
+                                  <FavoriteIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                        </Box>
+                      </Card>
+                    </Grid>
+                  ))}
+              </Grid>
+            ) : (
+              <Card
+                sx={{
+                  height: "300px",
+                  backgroundColor: "#23252b",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography sx={{ color: "gray" }}>{t("loading")}</Typography>
+              </Card>
+            )}
+          </Box>
+          <DeleteConfirmationDialog
+            open={Boolean(selectedAsset)}
+            handleClose={handleCloseDialog}
+            handleDeleteConfirm={handleDeleteConfirm}
+            asset={selectedAsset}
+          />
+        </Box>
       </Box>
     </Box>
   );

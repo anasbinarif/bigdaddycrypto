@@ -14,31 +14,6 @@ const PortfolioDisplay = ({
   setSelectedCoin,
   setTabSelector,
 }) => {
-  // const [sessionJotai] = useAtom(sessionAtom);
-  // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
-  // const [loadingPortfolio, setLoadingPortfolio] = useState(false)
-  // const [assetsLeangth, setAssetsLeangth] = useState(0)
-  //
-  //
-  // useEffect(() => {
-  //     const fetchData = async () => {
-  //         if (sessionJotai?.user) {
-  //             const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-  //             setPortfolio(userPortfolio.data.data)
-  //         }
-  //
-  //     };
-  //     fetchData();
-  // }, [sessionJotai?.user.id]);
-  //
-  // useEffect(() => {
-  //     if (portfolio.userId && portfolio?.assets.length > 0) {
-  //         setLoadingPortfolio(true)
-  //         const len = portfolio?.assets.length;
-  //         setAssetsLeangth(len);
-  //         console.log("length of user assets", len);
-  //     }
-  // }, [portfolio])
   return (
     <Grid
       container

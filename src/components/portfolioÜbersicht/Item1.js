@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useAtom } from "jotai/index";
 import { portfolioAtom } from "@/app/stores/portfolioStore";
 import { Chart } from "react-google-charts";
+import {useTranslations} from "next-intl";
 
 
 const options = {
@@ -31,18 +32,11 @@ const options = {
     },
 };
 
-export const data = [
-    ["Task", "Hours per Day"],
-    ["Work", 11],
-    ["Eat", 2],
-    ["Commute", 2],
-    ["Watch TV", 2],
-    ["Sleep", 7], // CSS-style declaration
-];
 export default function Item1({ loadingPortfolio }) {
     const [portfolio] = useAtom(portfolioAtom);
     const [graphPercentage, setGraphPercentage] = useState([])
     const [graphData, setGraphData] = useState([]);
+    const t = useTranslations("item1");
 
     useEffect(() => {
         if (portfolio.assetsCalculations && portfolio.assets) {
@@ -73,6 +67,10 @@ export default function Item1({ loadingPortfolio }) {
     }, [graphPercentage, graphData])
     const assetsLength = portfolio?.assetsCalculations?.assets.length;
     const totalInvestment = portfolio.assetsCalculations.assets.reduce((acc, curr) => acc + curr.totalInvest, 0);
+    const totalGesamtwert = portfolio.assetsCalculations.assets.reduce((acc, curr) => acc + curr.Holdings, 0).toFixed(2);
+    const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
+    const gesamtwertPercentage = ((aktuellerProfit / totalInvestment) * 100).toFixed(2);
+
 
     return (
         <Box
@@ -96,7 +94,7 @@ export default function Item1({ loadingPortfolio }) {
                 }}
             >
                 <Box sx={{ fontSize: "120%", fontWeight: "bold" }}>
-                    Portfolio-Überblick
+                    {t("portfolioOverview")}
                     <FontAwesomeIcon
                         icon={faCrown}
                         style={{ paddingLeft: "10px", opacity: "0.25", fontSize: "0.9rem" }}
@@ -113,27 +111,24 @@ export default function Item1({ loadingPortfolio }) {
                         marginTop: "1rem",
                     }}
                 >
-                    <Typography sx={{ fontSize: "0.9rem" }}>Gesamtwert</Typography>
-                    <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-                        0,00 €
+                    <Typography sx={{ fontSize: "0.9rem" }}>{t("totalValue")}</Typography>
+                    <Typography sx={{ fontSize: "2rem", fontWeight: "bold", whiteSpace: "nowrap" }}>
+                        {totalGesamtwert} €
                     </Typography>
                     <Typography
-                        className="down"
+                        className={gesamtwertPercentage < 0 ? "down" : "up"}
                         sx={{
                             "&.down": {
                                 color: "red",
                             },
-
                             "&.up": {
                                 color: "green",
                             },
-
                             "&.down:before": {
                                 content: '"▼ "',
                                 fontSize: "80%",
                                 marginRight: "3px",
                             },
-
                             "&.up:before": {
                                 content: '"▲ "',
                                 fontSize: "80%",
@@ -141,7 +136,7 @@ export default function Item1({ loadingPortfolio }) {
                             },
                         }}
                     >
-                        -100.0%
+                        {gesamtwertPercentage}%
                     </Typography>
                 </Box>
                 <Box
@@ -156,7 +151,7 @@ export default function Item1({ loadingPortfolio }) {
                 >
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                         <Typography sx={{ fontSize: "0.8rem", opacity: "0.5" }}>
-                            Gesamt Invest
+                            {t("totalInvestment")}
                         </Typography>
                         <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
                             {totalInvestment} €
@@ -164,10 +159,10 @@ export default function Item1({ loadingPortfolio }) {
                     </Box>
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                         <Typography sx={{ fontSize: "0.8rem", opacity: "0.5" }}>
-                            Aktueller Profit
+                            {t("currentProfit")}
                         </Typography>
                         <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
-                            17.000,00 €
+                            {aktuellerProfit},00 €
                         </Typography>
                     </Box>
                 </Box>
@@ -192,15 +187,15 @@ export default function Item1({ loadingPortfolio }) {
                 <Box
                     sx={{
                         position: "absolute",
-                        top: "50%", // Center vertically in the donut hole
+                        top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
-                        textAlign: "center", // Center text horizontally
+                        textAlign: "center",
                         zIndex: "100",
                     }}
                 >
                     <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>{assetsLength}</Typography>
-                    <Typography sx={{ fontSize: "1rem" }}>assets</Typography>
+                    <Typography sx={{ fontSize: "1rem" }}>{t("assets")}</Typography>
                 </Box>
             </Box>
         </Box>
