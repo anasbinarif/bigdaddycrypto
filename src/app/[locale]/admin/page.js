@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import Navbar from "../../../components/navbar/Navbar";
 import Footer from "../../../components/footer/Footer";
-import text from "./coins.txt";
+import getCoins from "./coins.js";
 
 const StyledTextField = (props) => {
   return (
@@ -176,20 +176,19 @@ const AdminPage = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    // const fetchAllData = async () => {
-    //   try {
-    //     const response = await fetch(text);
-    //     const data = await response.text();
-    //     console.log(data);
-    //     const parsedData = JSON.parse(data);
-    //     setData(parsedData);
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // };
+    const fetchAllData = async () => {
+      try {
+        const coins = getCoins();
+        // console.log(coins);
+        setData(coins);
+        setSearchData(coins.slice(0, 5));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-    // fetchAllData();
-    setSearchData(data.slice(0, 5));
+    fetchAllData();
+    // setSearchData(data.slice(0, 5));
   }, []);
   // console.log(searchData);
 
