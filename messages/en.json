@@ -126,5 +126,33 @@
     "marketCap": "Market Cap",
     "price": "Price",
     "all": "All Categories"
+  },
+  "adminPage": {
+    "searchNameOrTicker": "1. Search Name or Ticker:",
+    "search": "Search",
+    "selectAsset": "2. Select the Asset:",
+    "addAsset": "Add Asset",
+    "name": "Name",
+    "ticker": "Ticker",
+    "bottom": "Bottom",
+    "bottomRanking": "Bottom Ranking",
+    "coinGeckoID": "CoinGecko ID",
+    "cgPrice": "cgPrice",
+    "potential": "Potential",
+    "sicherheit": "Sicherheit",
+    "risk": "Risk",
+    "addCategory": "Add Category",
+    "ai": "AI",
+    "web3": "Web3/Anonymität",
+    "defi": "DeFi",
+    "green": "Grüne Coins",
+    "metaverse": "Gaming/Metaverse",
+    "btc": "BTC-Zusammenhang",
+    "cbdc": "CBDC-Netzwerke",
+    "ecommerce": "eCommerce",
+    "nft": "Tokenisierung/RWA",
+    "assetAdded": "Asset added successfully!",
+    "assetAddFailed": "Failed to add asset.",
+    "fillAllFields": "Please fill in all required fields."
   }
 }

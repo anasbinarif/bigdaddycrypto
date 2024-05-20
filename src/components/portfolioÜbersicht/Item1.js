@@ -39,13 +39,13 @@ export default function Item1({ loadingPortfolio }) {
 
   useEffect(() => {
     if (portfolio.assetsCalculations && portfolio.assets) {
-      const totalInvestment = portfolio.assetsCalculations.assets.reduce(
+      const totalInvestment = portfolio?.assetsCalculations.assets.reduce(
         (acc, curr) => acc + curr.totalInvest,
         0
       );
       const mergedData = portfolio.assets.map((asset) => {
         const calc =
-          portfolio.assetsCalculations.assets.find(
+          portfolio?.assetsCalculations.assets.find(
             (ac) => ac.CoinGeckoID === asset.CoinGeckoID
           ) || {};
         const percentage = totalInvestment

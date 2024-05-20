@@ -17,16 +17,22 @@ import {
   ThemeProvider,
   styled,
 } from "@mui/material";
-import { getCategoryColor } from "../../../lib/data";
+import { categoryColors, categoryColorsNew } from "../../../lib/data"; // Import categoryColors directly
 
-const CategoryColorBar = styled(Box)(({ color }) => ({
-  width: "5px",
-  height: "100%",
-  backgroundColor: color,
-  position: "absolute",
-  left: 0,
-  top: 0,
-}));
+const CategoryColorBar = styled(Box)(({ colors }) => {
+  const gradient = colors.length > 1
+    ? `linear-gradient(${colors.join(", ")})`
+    : colors[0];
+  return {
+    width: "5px",
+    height: "100%",
+    backgroundColor: gradient,
+    position: "absolute",
+    left: 0,
+    top: 0,
+    background: gradient,
+  };
+});
 
 const StyledTypography = styled(Typography)({
   whiteSpace: "nowrap",
@@ -63,7 +69,7 @@ function getComparator(order, orderBy) {
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
+    const order = comparator(a[0], a[1]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
@@ -78,7 +84,6 @@ const EnhancedTable = () => {
 
   useEffect(() => {
     if (portfolio.assetsCalculations && portfolio.assets) {
-      // Calculate total investment
       const totalInvestment = portfolio.assetsCalculations.assets.reduce(
         (acc, curr) => acc + curr.totalInvest,
         0
@@ -89,7 +94,6 @@ const EnhancedTable = () => {
           portfolio.assetsCalculations.assets.find(
             (ac) => ac.CoinGeckoID === asset.CoinGeckoID
           ) || {};
-        // Calculate percentage of the total investment
         const percentage = totalInvestment
           ? ((calc.totalInvest / totalInvestment) * 100).toFixed(2)
           : 0;
@@ -126,6 +130,21 @@ const EnhancedTable = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  const getCategoryColors = (categories) => {
+    const test = categories.map((category) => categoryColors[category] || "#ffffff")
+    console.log("getCategoryColors", categories, test)
+    return categories.map((category) => categoryColorsNew[category] || "#ffffff");
+  };
+  const getRandomColor = (index) => {
+    let color = '#';
+    const letters = '0123456789ABCDEF';
+    for (let i = 0; i < 6; i++) {
+      // Use the index and bitwise operations to determine the color
+      color += letters[(index * (i + 1) * 7) % 16];
+    }
+    return color;
+};
 
   return (
     <Box
@@ -182,7 +201,6 @@ const EnhancedTable = () => {
                       sx={{
                         fontSize: "12px",
                         whiteSpace: "nowrap",
-                        // backgroundColor: "yellow",
                       }}
                     >
                       {headCell}
@@ -205,7 +223,7 @@ const EnhancedTable = () => {
                     <TableCell
                       component="th"
                       scope="row"
-                      sx={{ padding: "0px" }}
+                      sx={{ padding: "0px", width: "24%" }}
                     >
                       <Box
                         sx={{
@@ -218,23 +236,24 @@ const EnhancedTable = () => {
                         }}
                       >
                         <CategoryColorBar
-                          color={getCategoryColor(row.category)}
+                          colors={getCategoryColors(row.category)}
                         />
                         <Box display="flex" alignItems="center">
-                          <Avatar
-                            alt={row.asset}
-                            src={row.imageUrl}
-                            sx={{ width: 20, height: 20, marginRight: 1 }}
-                          />
-                          <Typography sx={{ fontSize: "14px" }}>
-                            {row.asset} ({row.ticker})
-                          </Typography>
+                          <Box display="flex" alignItems="center">
+                            <Avatar
+                              alt={row.asset}
+                              src={row.imageUrl}
+                              sx={{ width: 20, height: 20, marginRight: 1 }}
+                            />
+                            <Typography sx={{ fontSize: "14px" }}>
+                              {row.asset} ({row.ticker})
+                            </Typography>
+                          </Box>
                           <Box
                             component={Typography}
-                            variant="body2"
                             sx={{
-                              ml: 0,
-                              bgcolor: "red",
+                              ml: 1,
+                              bgcolor: `${getRandomColor(index)}`,
                               padding: "1px 4px 0",
                               borderRadius: "12px",
                               fontSize: "12px",
@@ -270,7 +289,6 @@ const EnhancedTable = () => {
                     <TableCell
                       sx={{
                         padding: "5px 0 5px 5px",
-                        // backgroundColor: "purple",
                       }}
                     >
                       <StyledTypography>
@@ -286,7 +304,7 @@ const EnhancedTable = () => {
                         }}
                       >
                         <StyledTypography>{row.preisChange} €</StyledTypography>
-                        {row.pricePersentage != "Infinity" && (
+                        {row.pricePersentage !== "Infinity" && (
                           <Typography
                             className={row.pricePersentage < 0 ? "down" : "up"}
                             sx={{

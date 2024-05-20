@@ -19,7 +19,32 @@
 // }
 
 import {NextResponse} from "next/server";
+import {assetCategoryData} from "../../../v1_sql/Asset_Category";
+import {Assets} from "../../../lib/models";
 
-// export async function GET(req) {
-//
-// }
+export async function GET(req) {
+    try {
+        // Run the migration script to convert Category fields to arrays
+
+        // Iterate through the asset category data and update corresponding assets
+        for (const item of assetCategoryData) {
+            const { AssetID, Category } = item;
+
+            // Find the asset by AssetID and update the Category array
+            await Assets.updateOne(
+                { ID: AssetID },
+                { $addToSet: { Category: Category } }
+            );
+        }
+
+        // Fetch all updated assets to verify the changes
+        const updatedAssets = await Assets.find();
+
+        return NextResponse.json({ data: updatedAssets }, { status: 200 });
+    } catch (e) {
+        return NextResponse.json(
+            { message: `Error updating Assets in DB: ${e}` },
+            { status: 500 }
+        );
+    }
+}

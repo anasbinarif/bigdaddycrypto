@@ -15,6 +15,20 @@ export const categoryColors = {
   Favourite: "#2E8B57", // Sea Green
 };
 
+export const categoryColorsNew = {
+  "ai": "#FFD700", // Gold
+  "web3": "#DC143C", // Crimson
+  "defi": "#1155bb", // Dark Blue
+  "green": "#00aa66", // Green
+  "metaverse": "#00BFFF", // Deep Sky Blue
+  "btc": "#FF9900", // Orange
+  "cbdc": "#667788", // Dark Gray
+  "ecommerce": "#8833bb", // Dark Magenta
+  "nft": "#ff5aac", // Pink
+  Favourite: "#2E8B57", // Sea Green
+  "none": "#00BFFF"
+};
+
 export const getUser = async (id) => {
   try {
     await connectToDb();
@@ -187,7 +201,7 @@ export const getUserPortfolio = async (userId) => {
   console.log("data_testing_new_login", data1);
   let count = 0;
   await data.assets.forEach((asset) => {
-    const category = asset.Category.toLowerCase();
+    const category = asset.Category[0].toLowerCase();
     count++;
     if (categories.hasOwnProperty(category)) {
       categories[category]++;
@@ -269,6 +283,7 @@ export const setCoinObject = (coin) => {
 // }
 
 export const getCategoryColor = (category) => {
+  console.log("ho kiya raha hai", category)
   switch (category.toLowerCase()) {
     case "ai":
       return "#FFD700";
@@ -293,6 +308,18 @@ export const getCategoryColor = (category) => {
     default:
       return "#ffffff";
   }
+};
+
+export const categoriesDisplay1 = {
+  ai: "AI",
+  web3: "Web3/Anonymität",
+  defi: "DeFi",
+  green: "Grüne Coins",
+  metaverse: "Gaming/Metaverse",
+  btc: "BTC-Zusammenhang",
+  cbdc: "CBDC-Netzwerke",
+  ecommerce: "eCommerce",
+  nft: "Tokenisierung/RWA",
 };
 
 export const categoriesDisplay = {
