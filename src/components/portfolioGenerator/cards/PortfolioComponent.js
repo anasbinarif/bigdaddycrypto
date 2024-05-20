@@ -138,10 +138,10 @@ const PortfolioComponent = ({
         if (!res.ok) {
           throw new Error(`Failed to update data${res}`);
         }
-        if (res.ok) {
-          const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-          setPortfolio(userPortfolio.data);
-        }
+        // if (res.ok) {
+        //   const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+        //   setPortfolio(userPortfolio.data);
+        // }
       }
     };
     fetchData();
