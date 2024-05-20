@@ -1,7 +1,4 @@
 // import {NextResponse} from "next/server";
-// import {connectToDb} from "@/lib/utils";
-// import {importPortfolio} from "@/lib/data";
-// import cryptoData from "@/v1_sql/output";
 //
 // export async function GET(req) {
 //     // const data = await req.json();
@@ -19,4 +16,10 @@
 //         console.error("Error importing crypto data:", e);
 //         return NextResponse.json({ error: "Error occurred while importing crypto data", details: e.message }, { status: 500 });
 //     }
+// }
+
+import {NextResponse} from "next/server";
+
+// export async function GET(req) {
+//
 // }
