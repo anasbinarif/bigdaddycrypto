@@ -46,7 +46,7 @@ const assetsSchema = new mongoose.Schema({
         required: true
     },
     Category: {
-        type: String,
+        type: Array,
         required: true
     },
     Name: {
