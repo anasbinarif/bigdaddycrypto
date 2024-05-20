@@ -5,7 +5,7 @@ import { Bubble } from 'react-chartjs-2';
 import { Box, FormControl, InputLabel, MenuItem, Select, Slider, TextField, Typography } from '@mui/material';
 import Navbar from "../../../components/navbar/Navbar";
 import Footer from "../../../components/footer/Footer";
-import { getAssets, getCategoryColor } from "../../../lib/data";
+import {categoryColors, getAssets, getCategoryColor} from "../../../lib/data";
 import { useTranslations } from "next-intl";
 import './BubbleChart.css';
 
@@ -156,43 +156,57 @@ const BubbleChart = () => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        getAssets()
-            .then(data => {
-                const data1 = data.data;
-                const categorySet = new Set(data1.map(item => item.Category));
+        const fetchAllAssets = async () => {
+            try {
+                const categoriesToFetch = Object.keys(reverseMapping);
+                const allData = [];
+                const categorySet = new Set();
+
+                for (const category of categoriesToFetch) {
+                    const data = await getAssets(category);
+                    data.data.forEach((item) => {
+                        allData.push(item);
+                        item.Category.forEach((cat) => categorySet.add(cat));
+                    });
+                }
+
                 setCategories([...categorySet]);
 
-                const filteredData = data1.filter(item => {
+                const filteredData = allData.filter(item => {
                     return item.Name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                        (selectedItem ? item.Category === selectedItem : true);
+                        (selectedItem ? item.Category.includes(selectedItem) : true);
                 });
 
                 const groupedData = filteredData.reduce((acc, item) => {
-                    const category = item.Category || 'none';
-                    acc[category] = acc[category] || [];
-                    acc[category].push({
-                        x: item.Potential,
-                        y: item.Sicherheit,
-                        r: radius,
-                        Name: item.Name,
-                        MarketCap: item.MarketCap,
-                        Price: item.Price,
-                        cgImageURL: item.cgImageURL
+                    item.Category.forEach((category) => {
+                        const mappedCategory = reverseMapping[category] || 'none';
+                        acc[mappedCategory] = acc[mappedCategory] || [];
+                        acc[mappedCategory].push({
+                            x: item.Potential,
+                            y: item.Sicherheit,
+                            r: radius,
+                            Name: item.Name,
+                            MarketCap: item.MarketCap,
+                            Price: item.Price,
+                            cgImageURL: item.cgImageURL
+                        });
                     });
                     return acc;
                 }, {});
 
                 const datasets = Object.keys(groupedData).map((category) => ({
-                    label: reverseMapping[category] || category,
+                    label: category,
                     data: groupedData[category],
-                    backgroundColor: getCategoryColor(category)
+                    backgroundColor: categoryColors[category]
                 }));
 
                 setChartData({ datasets });
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error("Error fetching data:", error);
-            });
+            }
+        };
+
+        fetchAllAssets();
     }, [radius, searchTerm, selectedItem]);
 
     const options = useMemo(() => ({
@@ -262,7 +276,6 @@ const BubbleChart = () => {
             backgroundColor: '#111826'
         }
     }), [t]);
-
 
     return <>
         <Navbar />

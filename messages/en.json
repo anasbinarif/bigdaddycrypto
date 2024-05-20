@@ -104,17 +104,17 @@
     "portfolioOverview": "Portfolio Overview"
   },
   "scrollableKryptoTabs": {
-    "favourite": "Favourite",
+    "favourite": "Favoriten",
     "ai": "AI",
-    "web3Anonymity": "Web3/Anonymity",
+    "web3Anonymity": "Web3/Anonymität",
     "defi": "DeFi",
-    "greenCoins": "Green Coins",
+    "greenCoins": "Grüne Coins",
     "gamingMetaverse": "Gaming/Metaverse",
-    "btcConnection": "BTC Connection",
-    "cbdcNetworks": "CBDC Networks",
+    "btcConnection": "BTC-Zusammenhang",
+    "cbdcNetworks": "CBDC-Netzwerke",
     "eCommerce": "E-Commerce",
-    "tokenizationRWA": "Tokenization/RWA",
-    "noHypeTopic": "No Hype Topic"
+    "tokenizationRWA": "Tokenisierung/RWA",
+    "noHypeTopic": "Kein Hype-Thema"
   },
   "bubbleChart": {
     "symbolSize": "Symbol Size",

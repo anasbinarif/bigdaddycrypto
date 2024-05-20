@@ -136,8 +136,8 @@ export const getCoinData = async () => {
   return res.json();
 };
 
-export const getAssets = async () => {
-  const res = await fetch("/api/getAssets", {
+export const getAssets = async (category) => {
+  const res = await fetch(`/api/getAssets?category=${category}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -148,7 +148,6 @@ export const getAssets = async () => {
     throw new Error("Failed to fetch data");
   }
   const data = await res.json();
-  // console.log("yoo bro", data);
   return await data;
 };
 

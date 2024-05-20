@@ -36,8 +36,9 @@ function TabPanel(props) {
 const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   const t = useTranslations("scrollableKryptoTabs");
   const [value, setValue] = useState(0);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [currentCategory, setCurrentCategory] = useState("Favoriten");
   const tabLabels = [
     t("favourite"),
     t("ai"),
@@ -70,30 +71,27 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   const secondHalfLabels = tabLabels.slice(firstHalfCount);
 
   useEffect(() => {
-    setLoading(true);
-    getAssets()
-        .then((data) => {
-          setData(data.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          setLoading(false);
-        });
-  }, [userID]);
-
-  const checkCoinSelected = (coin) => {
-    if (!portfolio.assets) return false;
-    return portfolio?.assets.some(
-        (asset) => asset.CoinGeckoID === coin.CoinGeckoID
-    );
-  };
+    if (currentCategory) {
+      setLoading(true);
+      getAssets(currentCategory)
+          .then((data) => {
+            setData((prevData) => ({ ...prevData, [currentCategory]: data.data }));
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            setLoading(false);
+          });
+    }
+  }, [currentCategory]);
 
   const handleChange = (event, newValue, line) => {
     if (line === 2) {
       newValue += 6;
     }
     setValue(newValue);
+    const selectedCategory = categoryMapping[tabLabels[newValue]];
+    setCurrentCategory(selectedCategory);
   };
 
   const categorizedData = tabLabels.reduce((acc, label) => {
@@ -101,19 +99,25 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
       const favouriteAssetsIds = portfolio.assetsCalculations?.assets
           .filter((asset) => asset.Favourite)
           .map((asset) => asset.CoinGeckoID);
-      acc[label] =
-          portfolio.assets &&
-          portfolio?.assets.filter((asset) =>
-              favouriteAssetsIds.includes(asset.CoinGeckoID)
-          );
+      acc[label] = portfolio.assets && portfolio?.assets.filter((asset) =>
+          favouriteAssetsIds.includes(asset.CoinGeckoID)
+      );
     } else {
       const categoryName = categoryMapping[label];
-      acc[label] = data.filter(
-          (item) => item && item.Category.includes(categoryName)
-      );
+      acc[label] = data[categoryName] || [];
     }
     return acc;
   }, {});
+  const checkCoinSelected = (coin) => {
+    if (!portfolio.assets) return false;
+    return portfolio?.assets.some(
+        (asset) => asset.CoinGeckoID === coin.CoinGeckoID
+    );
+  };
+
+  useEffect(() => {
+    console.log("tabLabelstabLabels", tabLabels)
+  }, [tabLabels]);
 
   return (
       <>
