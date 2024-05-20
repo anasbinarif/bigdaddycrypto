@@ -97,7 +97,7 @@ const PortfolioComponent = ({
         // alert('Coin removed successfully');
         setAlert({
           open: true,
-          message: "Coin removed successfully",
+          message: `${t("coinRemovedSuccess")}`,
           severity: "success",
         });
       } else {
@@ -209,11 +209,10 @@ const PortfolioComponent = ({
       >
         <Box sx={{ p: 3 }}>
           <Typography variant="h4" gutterBottom>
-            Portfolio ({assetsLeangth})
+            {t("title")} ({assetsLeangth})
           </Typography>
           <Typography variant="subtitle1" gutterBottom>
-            Passe die Gewichtung der Assets an, um ihren tatsächlichen Anteil im
-            Portfolio besser wiederzuspiegeln.
+            {t("subtitle")}
           </Typography>
           {loadingPortfolio ? (
             <Grid
