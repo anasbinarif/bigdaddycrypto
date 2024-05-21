@@ -457,6 +457,16 @@ const AdminPage = () => {
                       type="number"
                   />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                      margin="normal"
+                      fullWidth
+                      label="Image url"
+                      name="cgImageURL"
+                      value={formData.cgImageURL}
+                      onChange={handleChange}
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel
                       control={

@@ -1,5 +1,5 @@
-import { Assets, PastBuyAndSell, PastPortfolio, User } from "../lib/models";
-import { connectToDb } from "./utils";
+import {Assets, PastBuyAndSell, User} from "../lib/models";
+import {connectToDb} from "./utils";
 // const fs = require('fs').promises;
 
 export const categoryColors = {
@@ -136,12 +136,39 @@ export const getCoinData = async () => {
   return res.json();
 };
 
+export const getAssetTest = async () => {
+
+  try {
+    const res = await fetch('/api/assets', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'force-cache',
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch data');
+    }
+
+    const data = await res.json();
+    // Filter assets with Sicherheit and Potential not null
+    return data.filter(
+        (asset) => asset.Sicherheit !== null && asset.Potential !== null
+    );
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const getAssets = async (category) => {
   const res = await fetch(`/api/getAssets?category=${category}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
+    cache: 'force-cache'
   });
 
   if (!res.ok) {

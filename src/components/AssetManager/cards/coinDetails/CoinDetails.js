@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
-  Button,
+  Button, Dialog, DialogActions, DialogContent, DialogTitle,
   IconButton,
   MenuItem,
   Paper,
@@ -27,6 +27,8 @@ import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AlertBar from "../../../customAllert/Alert";
 import { getUserPortfolio } from "../../../../lib/data";
+import Papa from 'papaparse';
+import { parse } from 'date-fns';
 
 const CoinDetails = (props) => {
   const { coin, index } = props;
@@ -51,6 +53,9 @@ const CoinDetails = (props) => {
   const [changeTableValue, setChangeTableValue] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [alertInfo, setAlertInfo] = useState({ message: "", severity: "info" });
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const asset = portfolio.assetsCalculations.assets.find(
@@ -278,6 +283,116 @@ const CoinDetails = (props) => {
     return `${day} / ${month} / ${year}`; // Formats date as "YYYY-MM-DD"
   };
 
+  const handleExportCSV = () => {
+    const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
+
+    const rows = rowVals.map(row => {
+      return {
+        Date: new Date(row.Date).toLocaleDateString("en-US"), // Format date to MM/DD/YYYY
+        Name: coin.Name, // Assuming all are Bitcoin, adjust if necessary
+        Symbol: coin.Ticker, // Assuming all are BTC, adjust if necessary
+        Action: row.Type === "Kauf" ? "Buy" : "Sell",
+        Coins: row.Coins,
+        Amount: row.Betrag
+      };
+    });
+    console.log("coinnnnn-rows", rows)
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => Object.values(row).join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "exported_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
+  const handleOpenDialog = () => setOpenDialog(true);
+  const handleCloseDialog = () => {
+    setFile(null);
+    setOpenDialog(false);
+  };
+
+  const handleFileChange = (e) => setFile(e.target.files[0]);
+
+  const handleFileDrop = (e) => {
+    e.preventDefault();
+    setFile(e.dataTransfer.files[0]);
+  };
+
+  const handleFileUpload = () => {
+    if (file) {
+      Papa.parse(file, {
+        header: true,
+        complete: (results) => {
+          console.log("Parsed CSV Data:", results.data);
+
+          // Check if all symbols in the imported data match the current coin's ticker
+          const allSymbolsMatch = results.data.every(row => row.Symbol === coin.Ticker);
+
+          if (!allSymbolsMatch) {
+            console.error("Symbols in the imported data do not match the current coin's ticker.");
+            setAlertInfo({ message: "Symbols in the imported data do not match the current coin's ticker.", severity: "error" });
+            setShowAlert(true);
+            return;
+          }
+
+          const importedData = results.data.map(row => {
+            // console.log("Raw Date String:", row.Date);
+
+            let parsedDate;
+            if (row.Date) {
+              try {
+                parsedDate = parse(row.Date, 'dd-MM-yyyy', new Date());
+                if (isNaN(parsedDate)) {
+                  throw new Error("Invalid Date");
+                }
+              } catch (error) {
+                console.error("Invalid Date format:", row.Date);
+                parsedDate = null;
+              }
+            }
+
+            return {
+              Type: row.Action === "Buy" ? "Kauf" : "Verkauf",
+              Date: parsedDate ? parsedDate.toISOString().split("T")[0] : "",
+              PricePerCoin: row.Amount / row.Coins,
+              Betrag: row.Amount,
+              Coins: row.Coins,
+              Name: row.Name,
+              Symbol: row.Symbol,
+            };
+          });
+
+          // Check and add the new data to the current rowVals
+          const updatedRowVals = [...rowVals];
+          importedData.forEach(newRow => {
+            // Find existing row by Name and Symbol (if unique per coin)
+            const existingRow = updatedRowVals.find(row => row.Name === newRow.Name && row.Symbol === newRow.Symbol);
+            if (!existingRow) {
+              updatedRowVals.push(newRow);
+            }
+          });
+
+          console.log("Updated Row Values:", updatedRowVals);
+          setRowVals(updatedRowVals);
+          handleCloseDialog();
+        },
+        error: (error) => {
+          console.error("Error parsing CSV: ", error);
+        }
+      });
+    }
+  };
+
+
   return (
     <Box
       sx={{
@@ -397,9 +512,8 @@ const CoinDetails = (props) => {
               sx={{
                 fontSize: "1.8rem",
                 fontWeight: "bold",
-                color: `${
-                  financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
-                }`,
+                color: `${financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
+                  }`,
                 whiteSpace: "nowrap",
               }}
             >
@@ -444,9 +558,8 @@ const CoinDetails = (props) => {
               sx={{
                 fontSize: "1.8rem",
                 fontWeight: "bold",
-                color: `${
-                  financialSummary.avgSellingPrice > 0 ? "" : "rgb(68, 68, 68)"
-                }`,
+                color: `${financialSummary.avgSellingPrice > 0 ? "" : "rgb(68, 68, 68)"
+                  }`,
                 whiteSpace: "nowrap",
               }}
             >
@@ -607,8 +720,8 @@ const CoinDetails = (props) => {
                               row.Type === "Kauf"
                                 ? "#4CAF50"
                                 : row.Type === "Verkauf"
-                                ? "#F44336"
-                                : "white",
+                                  ? "#F44336"
+                                  : "white",
                             fontSize: "0.8rem",
                             border: "none",
 
@@ -803,6 +916,31 @@ const CoinDetails = (props) => {
           <Button
             sx={{
               marginTop: "20px",
+              backgroundColor: "#4CAF50", // Green for import
+              color: "white",
+              fontSize: "0.8rem",
+              "&:hover": { backgroundColor: "#45a049" }, // Darker green on hover
+            }}
+            onClick={handleOpenDialog}
+          >
+            Import CSV
+          </Button>
+          <Button
+            sx={{
+              marginTop: "20px",
+              backgroundColor: "#2196F3", // Blue for export
+              color: "white",
+              fontSize: "0.8rem",
+              marginLeft: "10px", // Add some space between buttons
+              "&:hover": { backgroundColor: "#0b7dda" }, // Darker blue on hover
+            }}
+            onClick={handleExportCSV}
+          >
+            Export CSV
+          </Button>
+          <Button
+            sx={{
+              marginTop: "20px",
               backgroundColor: "#1188ff",
               color: "white",
               fontSize: "0.8rem",
@@ -821,6 +959,44 @@ const CoinDetails = (props) => {
         severity={alertInfo.severity}
         onClose={closeAlert}
       />
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>Import CSV</DialogTitle>
+        <DialogContent sx={{ maxWidth: "600px", width: "100%" }}>
+          <Box
+            sx={{
+              border: "2px dashed #ccc",
+              padding: "20px",
+              borderRadius: "8px",
+              textAlign: "center",
+              cursor: "pointer",
+            }}
+            onDrop={handleFileDrop}
+            onDragOver={(e) => e.preventDefault()}
+            onClick={() => document.getElementById("fileInput").click()}
+          >
+            {file ? (
+              <Typography>{file.name}</Typography>
+            ) : (
+              <Typography>Drag and drop a file or click to select</Typography>
+            )}
+            <input
+                type="file"
+                accept=".csv"
+                onChange={handleFileChange}
+                style={{display: "none"}}
+                id="fileInput"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleFileUpload} color="primary">
+            Upload
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
