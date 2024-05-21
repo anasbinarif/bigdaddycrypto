@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tab, SvgIcon, Box, Typography, IconButton } from "@mui/material";
+import { Tab, SvgIcon, Box, Typography } from "@mui/material";
 import { categoryColors, getAssets } from "../../../../lib/data";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
@@ -38,7 +38,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   const [value, setValue] = useState(0);
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
-  const [currentCategory, setCurrentCategory] = useState("Favoriten");
+  const [currentCategory, setCurrentCategory] = useState("favourite");
   const tabLabels = [
     t("favourite"),
     t("ai"),
@@ -87,7 +87,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
 
   const handleChange = (event, newValue, line) => {
     if (line === 2) {
-      newValue += 6;
+      newValue += firstHalfCount;
     }
     setValue(newValue);
     const selectedCategory = categoryMapping[tabLabels[newValue]];
@@ -108,6 +108,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     }
     return acc;
   }, {});
+
   const checkCoinSelected = (coin) => {
     if (!portfolio.assets) return false;
     return portfolio?.assets.some(
@@ -116,19 +117,18 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   };
 
   const checkCoinRisk = (coin) => {
-    console.log("coin.risk", coin.Risk, !!coin.Risk, coin.Ticker)
     return !!coin.Risk;
   };
 
   useEffect(() => {
-    console.log("tabLabelstabLabels", tabLabels)
+    console.log("tabLabels", tabLabels);
   }, [tabLabels]);
 
   return (
       <>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
-              value={value}
+              value={value < firstHalfCount ? value : false}
               onChange={(e, newValue) => handleChange(e, newValue, 1)}
               variant="scrollable"
               scrollButtons
@@ -140,14 +140,12 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
                 },
               }}
           >
-            {firstHalfLabels.map((label) => (
+            {firstHalfLabels.map((label, index) => (
                 <Tab
-                    key={label}
+                    key={index}
                     icon={
                       label === t("favourite") ? (
-                          <IconButton sx={{ color: "red" }}>
-                            <FavoriteIcon />
-                          </IconButton>
+                          <FavoriteIcon sx={{ color: "red" }} />
                       ) : (
                           <ColorCircle color={categoryColors[label]} />
                       )
@@ -159,7 +157,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
             ))}
           </Tabs>
           <Tabs
-              value={value - firstHalfCount}
+              value={value >= firstHalfCount ? value - firstHalfCount : false}
               onChange={(e, newValue) => handleChange(e, newValue, 2)}
               variant="scrollable"
               scrollButtons
@@ -171,14 +169,12 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
                 },
               }}
           >
-            {secondHalfLabels.map((label) => (
+            {secondHalfLabels.map((label, index) => (
                 <Tab
-                    key={label}
+                    key={index + firstHalfCount}
                     icon={
                       label === t("favourite") ? (
-                          <IconButton sx={{ color: "red" }}>
-                            <FavoriteIcon />
-                          </IconButton>
+                          <FavoriteIcon sx={{ color: "red" }} />
                       ) : (
                           <ColorCircle color={categoryColors[label]} />
                       )
