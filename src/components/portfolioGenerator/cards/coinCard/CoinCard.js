@@ -38,7 +38,7 @@ const CategoryColorBar = styled(Box)(({ colors, selected }) => {
   };
 });
 
-const CoinCard = ({ coin, selected, search = false }) => {
+const CoinCard = ({ coin, selected, search = false, risk }) => {
   const { Name, cgImageURL, Ticker, Potential, Sicherheit, Category } = coin;
   const [sessionJotai] = useAtom(sessionAtom);
   const [, setPortfolio] = useAtom(portfolioAtom);
@@ -69,7 +69,7 @@ const CoinCard = ({ coin, selected, search = false }) => {
   };
 
   useEffect(() => {
-    console.log("coin logic changed", coin);
+    console.log("coin logic changed", coin.Name, risk);
   }, [coin]);
 
   return (
@@ -79,9 +79,11 @@ const CoinCard = ({ coin, selected, search = false }) => {
                 onDoubleClick={handleDoubleClick}
                 sx={{
                   cursor: "pointer",
-                  border: `${selected ? "1px solid #00aa66aa" : "none"}`,
-                  backgroundColor: `${selected ? "#00aa6633" : "#333"}`,
+                  border: `${selected ? "1px solid #00aa66aa" : risk ? "1px solid red" : "none"}`,
+                  backgroundColor: `${selected ? "#00aa6633" : risk ? "rgba(222,11,11,0.05)" : "#333"}`,
                   width: "95%",
+                  borderStyle: `${risk ? "dashed" : "none"}`,
+                  borderLeft: `${selected ? "" : risk ? "none" : ""}`
                 }}
             >
               <CategoryColorBar colors={getCategoryColors(Category)} selected={selected} />
@@ -146,9 +148,11 @@ const CoinCard = ({ coin, selected, search = false }) => {
                 onDoubleClick={handleDoubleClick}
                 sx={{
                   cursor: "pointer",
-                  border: `${selected ? "1px solid #00aa66aa" : "none"}`,
-                  backgroundColor: `${selected ? "#00aa6633" : "none"}`,
+                  border: `${selected ? "1px solid #00aa66aa" : risk ? "1px solid red" : "none"}`,
+                  backgroundColor: `${selected ? "#00aa6633" : risk ? "rgba(222,11,11,0.05)" : "#333"}`,
                   width: "205px",
+                  borderStyle: `${risk ? "dashed" : "none"}`,
+                  borderLeft: `${selected ? "" : risk ? "none" : ""}`
                 }}
             >
               <CategoryColorBar colors={getCategoryColors(Category)} selected={selected} />

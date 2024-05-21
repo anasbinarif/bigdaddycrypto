@@ -49,6 +49,10 @@ const assetsSchema = new mongoose.Schema({
         type: [String],
         required: true
     },
+    Risk: {
+        type: String,
+        default: ""
+    },
     Name: {
         type: String,
         required: true

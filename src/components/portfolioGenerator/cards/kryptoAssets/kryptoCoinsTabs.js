@@ -115,6 +115,11 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     );
   };
 
+  const checkCoinRisk = (coin) => {
+    console.log("coin.risk", coin.Risk, !!coin.Risk, coin.Ticker)
+    return !!coin.Risk;
+  };
+
   useEffect(() => {
     console.log("tabLabelstabLabels", tabLabels)
   }, [tabLabels]);
@@ -203,6 +208,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
                             key={`${coin.CoinGeckoID}-${index}`}
                             coin={coin}
                             selected={checkCoinSelected(coin)}
+                            risk={checkCoinRisk(coin)}
                         />
                     ))}
               </Box>
