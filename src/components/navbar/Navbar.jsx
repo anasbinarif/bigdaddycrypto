@@ -140,24 +140,28 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
             <Link
               style={{ marginRight: "15px", fontFamily: "inherit" }}
               href="/"
+              className={styles.nav__link}
             >
               {t("home")}
             </Link>
             <Link
               style={{ marginRight: "15px", fontFamily: "inherit" }}
               href="/faq"
+              className={styles.nav__link}
             >
               {t("faq")}
             </Link>
             <Link
               style={{ marginRight: "15px", fontFamily: "inherit" }}
               href="/media"
+              className={styles.nav__link}
             >
               {t("media")}
             </Link>
             <Link
               style={{ marginRight: "15px", fontFamily: "inherit" }}
               href="/assetsGraph"
+              className={styles.nav__link}
             >
               {t("graph")}
             </Link>
