@@ -33,7 +33,7 @@ const NavbarLink = () => {
     <Box sx={{ display: "flex", alignItems: "center" }}>
       {session && session.user.isAdmin && (
         <Link
-          style={{ marginRight: "15px", fontFamily: "inherit" }}
+          // style={{ marginRight: "15px", fontFamily: "inherit" }}
           href={"/admin"}
         >
           <Typography variant="body1" sx={{ marginRight: "15px" }}>
@@ -49,14 +49,30 @@ const NavbarLink = () => {
         <Box
           sx={{
             display: "flex",
-            bgcolor: "#202530",
-            p: "10px 10px",
-            borderRadius: "5px",
-            "&:hover": { backgroundColor: "#1188ff" },
+            // bgcolor: "#202530",
+            border: "1px solid var(--color-secondary)",
+            borderRadius: "50px",
+            p: "16px 30px",
+            // borderRadius: "5px",
+            "&:hover": {
+              backgroundColor: "var(--color-secondary-2)",
+              "& .MuiTypography-root, & .MuiSvgIcon-root": {
+                color: "#000000",
+              },
+            },
           }}
         >
-          <LogoutIcon />
-          <Typography>{t("logout")}</Typography>
+          <LogoutIcon
+            className="logout__icon"
+            sx={{ marginRight: "8px", color: "var(--color-secondary)" }}
+          />
+          <Typography
+            sx={{
+              color: "var(--color-secondary)",
+            }}
+          >
+            {t("logout")}
+          </Typography>
         </Box>
       </IconButton>
     </Box>

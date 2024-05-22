@@ -12,16 +12,20 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteConfirmationDialog from "../../AlertDialog/AlertDialog";
-import {categoryColors, categoryColorsNew, getCategoryColor, getUserPortfolio} from "../../../lib/data";
+import {
+  categoryColors,
+  categoryColorsNew,
+  getCategoryColor,
+  getUserPortfolio,
+} from "../../../lib/data";
 import AlertBar from "../../customAllert/Alert";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../app/stores/sessionStore";
 import { useTranslations } from "next-intl";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
-  const gradient = colors.length > 1
-      ? `linear-gradient(${colors.join(', ')})`
-      : colors[0];
+  const gradient =
+    colors.length > 1 ? `linear-gradient(${colors.join(", ")})` : colors[0];
 
   return {
     width: 4,
@@ -196,7 +200,9 @@ const PortfolioComponent = ({
     }
   }
   const getCategoryColors = (categories) => {
-    return categories.map((category) => categoryColorsNew[category] || "#ffffff");
+    return categories.map(
+      (category) => categoryColorsNew[category] || "#ffffff"
+    );
   };
 
   return (
@@ -211,7 +217,7 @@ const PortfolioComponent = ({
         sx={{
           width: "100%",
           backgroundColor: "#202530",
-          p: 2,
+          // p: "2px",
           display: "flex",
           borderRadius: "8px",
         }}
@@ -253,9 +259,9 @@ const PortfolioComponent = ({
                       }}
                     >
                       {deleteIconIndex === index && (
-                          <CategoryColorBar
-                              colors={getCategoryColors(asset.Category)}
-                          />
+                        <CategoryColorBar
+                          colors={getCategoryColors(asset.Category)}
+                        />
                       )}
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Avatar

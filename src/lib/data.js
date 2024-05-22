@@ -1,5 +1,5 @@
-import {Assets, PastBuyAndSell, User} from "../lib/models";
-import {connectToDb} from "./utils";
+import { Assets, PastBuyAndSell, User } from "../lib/models";
+import { connectToDb } from "./utils";
 // const fs = require('fs').promises;
 
 export const categoryColors = {
@@ -16,17 +16,17 @@ export const categoryColors = {
 };
 
 export const categoryColorsNew = {
-  "ai": "#FFD700", // Gold
-  "web3": "#DC143C", // Crimson
-  "defi": "#1155bb", // Dark Blue
-  "green": "#00aa66", // Green
-  "metaverse": "#00BFFF", // Deep Sky Blue
-  "btc": "#FF9900", // Orange
-  "cbdc": "#667788", // Dark Gray
-  "ecommerce": "#8833bb", // Dark Magenta
-  "nft": "#ff5aac", // Pink
+  ai: "#FFD700", // Gold
+  web3: "#DC143C", // Crimson
+  defi: "#1155bb", // Dark Blue
+  green: "#00aa66", // Green
+  metaverse: "#00BFFF", // Deep Sky Blue
+  btc: "#FF9900", // Orange
+  cbdc: "#667788", // Dark Gray
+  ecommerce: "#8833bb", // Dark Magenta
+  nft: "#ff5aac", // Pink
   Favourite: "#2E8B57", // Sea Green
-  "none": "#00BFFF"
+  none: "#00BFFF",
 };
 
 export const getUser = async (id) => {
@@ -137,29 +137,44 @@ export const getCoinData = async () => {
 };
 
 export const getAssetTest = async () => {
-
   try {
-    const res = await fetch('/api/assets', {
-      method: 'GET',
+    const res = await fetch("/api/assets", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      cache: 'force-cache',
+      cache: "force-cache",
     });
 
     if (!res.ok) {
-      throw new Error('Failed to fetch data');
+      throw new Error("Failed to fetch data");
     }
 
     const data = await res.json();
     // Filter assets with Sicherheit and Potential not null
     return data.filter(
-        (asset) => asset.Sicherheit !== null && asset.Potential !== null
+      (asset) => asset.Sicherheit !== null && asset.Potential !== null
     );
   } catch (error) {
     console.error(error);
     throw error;
   }
+};
+
+export const getAllAssets = async () => {
+  const res = await fetch(`/api/getAssets`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "force-cache",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const data = await res.json();
+  return await data;
 };
 
 export const getAssets = async (category) => {
@@ -168,7 +183,7 @@ export const getAssets = async (category) => {
     headers: {
       "Content-Type": "application/json",
     },
-    cache: 'force-cache'
+    cache: "force-cache",
   });
 
   if (!res.ok) {
@@ -309,7 +324,7 @@ export const setCoinObject = (coin) => {
 // }
 
 export const getCategoryColor = (category) => {
-  console.log("ho kiya raha hai", category)
+  console.log("ho kiya raha hai", category);
   switch (category.toLowerCase()) {
     case "ai":
       return "#FFD700";

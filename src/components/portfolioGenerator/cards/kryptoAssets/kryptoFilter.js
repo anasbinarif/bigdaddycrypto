@@ -8,7 +8,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
-import { getAssets } from "../../../../lib/data";
+import { getAllAssets } from "../../../../lib/data";
 import Autocomplete from "@mui/material/Autocomplete";
 import CoinCard from "../coinCard/CoinCard";
 import "./stylesPopper.css";
@@ -33,8 +33,9 @@ const KryptoFilter = ({ userID, portfolio }) => {
 
   useEffect(() => {
     setLoading(true);
-    getAssets()
+    getAllAssets()
       .then((data) => {
+        // console.log(data);
         setData(data.data);
         setSearchData(data.data.slice(0, 5));
         setLoading(false);
@@ -44,6 +45,7 @@ const KryptoFilter = ({ userID, portfolio }) => {
         setLoading(false);
       });
   }, [userID]);
+  // console.log(searchData);
 
   const PopperMy = useCallback((props) => {
     const anchorEl = document.getElementById("filters");

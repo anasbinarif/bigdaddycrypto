@@ -83,7 +83,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
       showColorCode: true,
     },
     colors: colors,
-    chartArea: { width: "80%", height: "80%" },
+    chartArea: { width: "100%", height: "100%" },
     backgroundColor: "none",
     animation: {
       startup: true,
@@ -97,28 +97,69 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   };
 
   return (
-    <Box sx={{ position: "relative", width: "56%", height: "250px" }}>
-      <Chart
-        chartType="PieChart"
-        height="300px"
-        width="100%"
-        data={data}
-        options={options}
-      />
+    <Box
+      sx={{
+        position: "relative",
+        width: "60%",
+        height: "auto",
+        display: "flex",
+        mr: "-25px",
+        "@media (max-width:1600px)": {
+          width: "40%",
+          mr: 0,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          height: "auto",
+          width: "100%",
+          alignSelf: "flex-end",
+          "@media (max-width:1500px)": {
+            scale: 0.9,
+          },
+        }}
+      >
+        <Chart
+          chartType="PieChart"
+          height="100%"
+          width="100%"
+          data={data}
+          options={options}
+        />
+      </Box>
       <Box
         sx={{
           position: "absolute",
-          top: "60%", // Center vertically in the donut hole
+          top: "50%", // Center vertically in the donut hole
           left: "50%",
           transform: "translate(-50%, -50%)",
           textAlign: "center", // Center text horizontally
           zIndex: "100",
+
+          "@media (max-width:600px)": {
+            backgroundColor: "secondary.main",
+          },
         }}
       >
-        <Typography variant="caption" style={{ color: "#FFFFFF" }}>
+        <Typography
+          variant="caption"
+          style={{
+            color: "#FFFFFF",
+          }}
+        >
           {t("score")}
         </Typography>
-        <Typography variant="h4" component="div" style={{ color: "#FFFFFF" }}>
+        <Typography
+          variant="h4"
+          component="div"
+          style={{ color: "#FFFFFF" }}
+          sx={{
+            "@media (max-width:1500px)": {
+              fontSize: "clamp(1.75rem, 0.25rem + 2vw, 2.125rem)",
+            },
+          }}
+        >
           {securityScore}
         </Typography>
         <Typography variant="caption" style={{ color: "#FFFFFF" }}>

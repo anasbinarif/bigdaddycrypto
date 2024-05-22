@@ -1,26 +1,33 @@
-"use client"
-import {Box, TextField, Checkbox, Button, Typography, FormControlLabel, IconButton} from "@mui/material";
+"use client";
+import {
+  Box,
+  TextField,
+  Checkbox,
+  Button,
+  Typography,
+  FormControlLabel,
+  IconButton,
+} from "@mui/material";
 import { useState } from "react";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import HomeIcon from "../../../../public/assets/svg/bdc.svg";
 
 const RegisterPage = () => {
-
   const [pending, setPending] = useState(false);
 
   const [alert, setAlert] = useState({
     open: false,
-    message: '',
-    severity: 'error' // can be 'error', 'warning', 'info', 'success'
+    message: "",
+    severity: "error", // can be 'error', 'warning', 'info', 'success'
   });
 
-  const router = useRouter()
+  const router = useRouter();
   const [user, setUser] = useState({
     userName: "",
     userEmail: "",
     pin: "",
-  })
+  });
 
   const [errors, setErrors] = useState({
     userEmail: false,
@@ -29,8 +36,8 @@ const RegisterPage = () => {
     pinMessage: "",
     userName: false,
     userNameMessage: "",
-  })
-  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false)
+  });
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
   const isValidEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Standard email regex
@@ -96,28 +103,31 @@ const RegisterPage = () => {
     }
 
     if (!hasErrors) {
-      setPending(true)
-      const res = await fetch('/api/register', {
-        method: 'POST',
+      setPending(true);
+      const res = await fetch("/api/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(user),
       });
-      if (res.ok){
+      if (res.ok) {
         setUser({
           userName: "",
           userEmail: "",
           pin: "",
-        })
-        console.log("user register")
-        setAlert({ open: true, message: "User Register", severity: 'success' });
-        router.push('/login')
-        setPending(false)
-      }
-      else {
-        setPending(false)
-        setAlert({ open: true, message: "Error registering user", severity: 'error' });
+        });
+        console.log("user register");
+        setAlert({ open: true, message: "User Register", severity: "success" });
+        router.push("/login");
+        setPending(false);
+      } else {
+        setPending(false);
+        setAlert({
+          open: true,
+          message: "Error registering user",
+          severity: "error",
+        });
       }
     }
   }
@@ -149,27 +159,63 @@ const RegisterPage = () => {
           borderRadius: "8px",
           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
           textAlign: "center",
-          position: "relative"
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Box sx={{ mb: 2, bottom: "90%", left: "42%", position: "absolute" }}>
-          <Box color="inherit" sx={{}}>
+        <Box
+          sx={{
+            margin: "-58px 0 0 0",
+            // mb: 2,
+            // bottom: "85%",
+            // left: "50%",
+            // position: "absolute",
+            // transform: "translateX(-50%)",
+            width: "70px",
+            height: "70px",
+          }}
+        >
+          <Box
+            color="inherit"
+            sx={{
+              // display: "inline-block",
+              borderRadius: "50%",
+              // overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Image
-                src={HomeIcon}
-                alt="Home Icon"
-                style={{
-                  width: "auto",
-                  height: "60px",
-                  cursor: "pointer",
-                  backgroundColor: "white",
-                  borderRadius: "50%",
-                  padding: "2px",
-                }}
+              src={HomeIcon}
+              alt="Home Icon"
+              style={{
+                padding: "1px 3px 3.5px",
+                width: "100%",
+                height: "auto",
+                cursor: "pointer",
+                backgroundColor: "white",
+                borderRadius: "50%",
+                // margin: "2px",
+                objectFit: "cover",
+              }}
             />
           </Box>
         </Box>
 
-        <Typography variant="h5" sx={{ mb: 2, mt: 2 }}>
+        <Typography
+          variant="h5"
+          sx={{
+            mb: 2,
+            mt: 2,
+            fontFamily: "inherit",
+            fontWeight: "bold",
+            fontSize: "1rem",
+            textAlign: "center",
+          }}
+        >
           Create an account
         </Typography>
 
@@ -180,8 +226,44 @@ const RegisterPage = () => {
           value={user.userName}
           onChange={handleUserChange}
           fullWidth
-          sx={{ mb: 2, color: "red" }}
-          helperText={errors.userName ? errors.userNameMessage : "Your unique username."}
+          sx={{
+            mb: 2,
+            "& .MuiFormHelperText-root": {
+              color: "#ffffff", // Helper text color
+            },
+            "& .MuiFilledInput-input": {
+              color: "#fff",
+              "&::placeholder": {
+                color: "#fff",
+              },
+            },
+            "& .MuiInputBase-input": {
+              height: "1.6em",
+            },
+            "& .MuiFormLabel-root": {
+              color: "#ffffff80",
+            },
+            "& .MuiFilledInput-root": {
+              borderRadius: "8px",
+              backgroundColor: "#202530",
+              border: "1px solid #ffffff80",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+              "&.Mui-focused": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ffffff",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ffffff",
+              },
+            },
+          }}
+          helperText={
+            errors.userName ? errors.userNameMessage : "Your unique username."
+          }
           required
           error={errors.userName}
         />
@@ -193,10 +275,46 @@ const RegisterPage = () => {
           value={user.userEmail}
           onChange={handleUserChange}
           fullWidth
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            "& .MuiFormHelperText-root": {
+              color: "#ffffff", // Helper text color
+            },
+            "& .MuiFilledInput-input": {
+              color: "#fff",
+              "&::placeholder": {
+                color: "#fff",
+              },
+            },
+            "& .MuiInputBase-input": {
+              height: "1.6em",
+            },
+            "& .MuiFormLabel-root": {
+              color: "#ffffff80",
+            },
+            "& .MuiFilledInput-root": {
+              borderRadius: "8px",
+              backgroundColor: "#202530",
+              border: "1px solid #ffffff80",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+              "&.Mui-focused": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ffffff",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ffffff",
+              },
+            },
+          }}
           required
           error={errors.userEmail}
-          helperText={errors.userEmail ? errors.userEmailMessage : "Your email address."}
+          helperText={
+            errors.userEmail ? errors.userEmailMessage : "Your email address."
+          }
         />
 
         <TextField
@@ -208,7 +326,41 @@ const RegisterPage = () => {
           value={user.pin}
           onChange={handleUserChange}
           fullWidth
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            "& .MuiFormHelperText-root": {
+              color: "#ffffff", // Helper text color
+            },
+            "& .MuiFilledInput-input": {
+              color: "#fff",
+              "&::placeholder": {
+                color: "#fff",
+              },
+            },
+            "& .MuiInputBase-input": {
+              height: "1.6em",
+            },
+            "& .MuiFormLabel-root": {
+              color: "#ffffff80",
+            },
+            "& .MuiFilledInput-root": {
+              borderRadius: "8px",
+              backgroundColor: "#202530",
+              border: "1px solid #ffffff80",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+              "&.Mui-focused": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ffffff",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ffffff",
+              },
+            },
+          }}
           required
           error={errors.pin}
           helperText={errors.pin ? errors.pinMessage : ""}
@@ -235,13 +387,30 @@ const RegisterPage = () => {
           fullWidth
           disabled={!disclaimerAccepted || pending}
           onClick={handleRegister}
+          sx={{
+            textTransform: "capitalize",
+            color: "white",
+            backgroundColor: "var(--color-secondary-2)",
+            "&:hover": {
+              backgroundColor: "var(--color-secondary-2)",
+            },
+            "&.Mui-disabled": {
+              color: "white",
+            },
+            // backgroundColor: "red",
+          }}
         >
           {pending ? "Loading..." : "to register"}
         </Button>
       </Box>
-      <Typography variant="caption" sx={{ mt: 2, maxWidth: "400px", fontSize: "12px" }}>
-        Disclaimer:<br /> The information provided is for informational purposes only and does not
-        constitute financial advice. Any actions are taken at your own risk.
+      <Typography
+        variant="caption"
+        sx={{ mt: 2, maxWidth: "400px", fontSize: "12px" }}
+      >
+        Disclaimer:
+        <br /> The information provided is for informational purposes only and
+        does not constitute financial advice. Any actions are taken at your own
+        risk.
       </Typography>
     </Box>
   );

@@ -38,6 +38,8 @@
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
+  --color-secondary: #24ffa7;
+  --color-secondary-2: #24ffa7b3;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -83,6 +85,10 @@ html,
 body {
   /*overflow-x: hidden;*/
   background-color: #111826 !important;
+}
+
+body {
+  font-family: sans-serif;
 }
 
 /*body {*/

@@ -31,9 +31,6 @@ const DonutLegend = ({ portfolioCalculations }) => {
 
   return (
     <Box sx={{ background: "#202530" }}>
-      <Typography sx={{ fontWeight: "bold" }} variant="h6" gutterBottom>
-        Score und Allocation
-      </Typography>
       {categories.map((category, index) => (
         <Box
           key={index}

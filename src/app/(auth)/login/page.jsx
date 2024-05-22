@@ -159,33 +159,70 @@ const LoginPage = () => {
       >
         <Box
           sx={{
-            padding: "20px",
+            padding: "30px",
             maxWidth: "400px",
             backgroundColor: "#202530",
             borderRadius: "8px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
             textAlign: "center",
             position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            minWidth: "400px",
           }}
         >
-          <Box sx={{ mb: 2, bottom: "85%", left: "42%", position: "absolute" }}>
-            <Box color="inherit" sx={{}}>
+          <Box
+            sx={{
+              margin: "-58px 0 0 0",
+              // mb: 2,
+              // bottom: "85%",
+              // left: "50%",
+              // position: "absolute",
+              // transform: "translateX(-50%)",
+              width: "70px",
+              height: "70px",
+            }}
+          >
+            <Box
+              color="inherit"
+              sx={{
+                // display: "inline-block",
+                borderRadius: "50%",
+                // overflow: "hidden",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Image
                 src={HomeIcon}
                 alt="Home Icon"
                 style={{
-                  width: "auto",
-                  height: "60px",
+                  padding: "1px 3px 3.5px",
+                  width: "100%",
+                  height: "auto",
                   cursor: "pointer",
                   backgroundColor: "white",
                   borderRadius: "50%",
-                  padding: "2px",
+                  // margin: "2px",
+                  objectFit: "cover",
                 }}
               />
             </Box>
           </Box>
 
-          <Typography variant="h5" sx={{ mb: 2, mt: 2 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              mb: 2,
+              mt: 2,
+              fontFamily: "inherit",
+              fontWeight: "bold",
+              fontSize: "1rem",
+              textAlign: "center",
+            }}
+          >
             Login
           </Typography>
 
@@ -201,11 +238,22 @@ const LoginPage = () => {
               "& .MuiFormHelperText-root": {
                 color: "#ffffff", // Helper text color
               },
+              "& .MuiFilledInput-input": {
+                color: "#fff",
+                "&::placeholder": {
+                  color: "#fff",
+                },
+              },
+              "& .MuiInputBase-input": {
+                height: "1.6em",
+              },
               "& .MuiFormLabel-root": {
-                color: "#ffffff",
+                color: "#ffffff80",
               },
               "& .MuiFilledInput-root": {
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                borderRadius: "8px",
+                backgroundColor: "#202530",
+                border: "1px solid #ffffff80",
                 "&:hover": {
                   backgroundColor: "rgba(255, 255, 255, 0.2)",
                 },
@@ -220,9 +268,9 @@ const LoginPage = () => {
                 },
               },
             }}
-            helperText={
-              errors.userEmail ? errors.userEmailMessage : "Your email address."
-            }
+            // helperText={
+            //   errors.userEmail ? errors.userEmailMessage : "Your email address."
+            // }
             required
             error={errors.userEmail}
           />
@@ -232,6 +280,7 @@ const LoginPage = () => {
             label="PIN code"
             variant="filled"
             placeholder="4-8 numbers"
+            place
             type="password"
             value={user.pin}
             onChange={handleUserChange}
@@ -241,11 +290,22 @@ const LoginPage = () => {
               "& .MuiFormHelperText-root": {
                 color: "#ffffff", // Helper text color
               },
+              "& .MuiInputBase-input": {
+                height: "1.6em",
+              },
               "& .MuiFormLabel-root": {
-                color: "#ffffff",
+                color: "#ffffff80",
               },
               "& .MuiFilledInput-root": {
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                borderRadius: "8px",
+                backgroundColor: "#202530",
+                border: "1px solid #ffffff80",
+                "& .MuiFilledInput-input": {
+                  color: "#fff",
+                  "&::placeholder": {
+                    color: "#fff",
+                  },
+                },
                 "&:hover": {
                   backgroundColor: "rgba(255, 255, 255, 0.2)",
                 },
@@ -271,12 +331,33 @@ const LoginPage = () => {
             fullWidth
             onClick={handleLogin}
             disabled={pending}
+            sx={{
+              textTransform: "capitalize",
+              color: "white",
+              backgroundColor: "var(--color-secondary-2)",
+              "&:hover": {
+                backgroundColor: "var(--color-secondary-2)",
+              },
+              "&.Mui-disabled": {
+                color: "white",
+              },
+              // backgroundColor: "red",
+            }}
           >
-            {pending ? "Logging in..." : "Login"}
+            {pending ? "Logging in..." : "Anmelden"}
           </Button>
 
-          <Typography variant="caption" sx={{ mt: 2, maxWidth: "400px" }}>
-            Noch keinen Account? <Link href="/register">Registrieren</Link>
+          <Typography
+            variant="caption"
+            sx={{ mt: 4, maxWidth: "400px", color: "#ffffff80" }}
+          >
+            Noch keinen Account?{" "}
+            <Link
+              href="/register"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Registrieren
+            </Link>
           </Typography>
         </Box>
       </Box>

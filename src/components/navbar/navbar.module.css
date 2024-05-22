@@ -1,0 +1,9 @@
+.nav__link {
+  margin-right: 20px;
+  font-family: inherit;
+}
+
+.nav__link:hover,
+.nav__link:focus {
+  color: var(--color-secondary);
+}

@@ -7,9 +7,14 @@ import Image from "next/image";
 import HomeIcon from "../../../public/assets/svg/bdc.svg";
 import FormDialog from "../importPreviousDataDialog/FormDialog";
 import { useTranslations } from "next-intl";
+import styles from "./navbar.module.css";
+import { useRouter } from "next/navigation";
 
 const Navbar = ({ tabSelector, setTabSelector }) => {
   const t = useTranslations("navbar");
+  const router = useRouter();
+  // const path = router;
+  // console.log(path);
 
   return (
     <AppBar
@@ -43,32 +48,20 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
         <Box
           style={{
             marginLeft: "auto",
-            marginRight: "15px",
+            // marginRight: "15px",
             fontFamily: "sans-serif",
           }}
         >
-          <Link
-            style={{ marginRight: "15px", fontFamily: "inherit" }}
-            href={"/"}
-          >
+          <Link className={styles.nav__link} href={"/"}>
             {t("home")}
           </Link>
-          <Link
-            style={{ marginRight: "15px", fontFamily: "inherit" }}
-            href={"/faq"}
-          >
+          <Link className={styles.nav__link} href={"/faq"}>
             {t("faq")}
           </Link>
-          <Link
-            style={{ marginRight: "15px", fontFamily: "inherit" }}
-            href={"/media"}
-          >
+          <Link className={styles.nav__link} href={"/media"}>
             {t("media")}
           </Link>
-          <Link
-            style={{ marginRight: "15px", fontFamily: "inherit" }}
-            href={"/assetsGraph"}
-          >
+          <Link className={styles.nav__link} href={"/assetsGraph"}>
             {t("graph")}
           </Link>
         </Box>

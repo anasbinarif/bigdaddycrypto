@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import DonutLegend from "./DonutLegend";
 import DonutChart from "./DonutChart";
 import { useEffect, useState } from "react";
@@ -28,24 +28,42 @@ export const DonutCard = () => {
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         bgcolor: "#202530",
         color: "white",
         height: "100%",
         borderRadius: 2,
-        alignItems: "center",
+        // alignItems: "center",
         position: "relative",
-        padding: "20px",
+        // padding: "25px",
       }}
     >
-      {loadingPortfolio ? (
-        <DonutLegend portfolioCalculations={portfolioCalculations} />
-      ) : (
-        <DonutLegendSkeleton />
-      )}
-      <DonutChart
-        portfolioCalculations={portfolioCalculations}
-        loadingPortfolio={loadingPortfolio}
-      />
+      <Box sx={{ margin: "25px" }}>
+        <Typography
+          sx={{ fontWeight: "bold", fontSize: "1.2rem", mb: "1.25rem" }}
+          variant="h6"
+          gutterBottom
+        >
+          Score und Allocation
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          {loadingPortfolio ? (
+            <DonutLegend portfolioCalculations={portfolioCalculations} />
+          ) : (
+            <DonutLegendSkeleton />
+          )}
+          <DonutChart
+            portfolioCalculations={portfolioCalculations}
+            loadingPortfolio={loadingPortfolio}
+          />
+        </Box>
+      </Box>
     </Box>
   );
 };
