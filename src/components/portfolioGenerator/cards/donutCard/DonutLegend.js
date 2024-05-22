@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import DoneIcon from '@mui/icons-material/Done';
 import { categoriesDisplay } from "../../../../lib/data";
 
 const categoryColors = {
@@ -77,8 +78,11 @@ const DonutLegend = ({ portfolioCalculations }) => {
               {category.percentage}
             </Typography>
           )}
-          {category.count > 0 && (
+          {category.count > 1 && (
             <DoneAllIcon sx={{ color: "#00e676", fontSize: "medium" }} />
+          )}
+          {category.count === 1 && (
+            <DoneIcon sx={{ color: "#00e676", fontSize: "medium" }} />
           )}
         </Box>
       ))}
