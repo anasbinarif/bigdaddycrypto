@@ -33,6 +33,9 @@ const KryptoFilter = ({ userID, portfolio }) => {
   const [searchVal, setSearchVal] = useState("");
   const [searchData, setSearchData] = useState([]);
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     setLoading(true);
     getAllAssets()

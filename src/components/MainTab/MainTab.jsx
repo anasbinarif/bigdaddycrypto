@@ -1,6 +1,13 @@
 "use client";
 import * as React from "react";
-import { Tabs, Tab, Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import PortfolioDisplay from "../../components/portfolioGenerator/PortfolioDisplay";
 import AssetManagerDisplay from "../../components/AssetManager/AssetManagerDisplay";
@@ -73,7 +80,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-<<<<<<< HEAD
     <>
       <Box
         sx={{
@@ -82,49 +88,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           padding: "1.25% 1%",
           marginTop: "65px",
           // margin: "32px 24px",
-=======
-    <Box
-      sx={{
-        width: "100%",
-        bgcolor: "#111826",
-        padding: "2%",
-        marginTop: "65px",
-      }}
-    >
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        textColor="primary"
-        indicatorColor="primary"
-        aria-label="secondary tabs example"
-        orientation={isSmallScreen ? "vertical" : "horizontal"}
-        sx={{
-          ".MuiTabs-flexContainer": {
-            justifyContent: isSmallScreen ? "flex-start" : "flex-start",
-            flexDirection: isSmallScreen ? "column" : "row",
-            gap: "15px",
-          },
-          ".Mui-selected": {
-            color: "#fff",
-            backgroundColor: "#fff3",
-          },
-          ".MuiTab-root": {
-            backgroundColor: "#202530",
-            color: "#fff",
-            transition: "0.3s",
-            "&:not(.Mui-selected):hover": {
-              backgroundColor: "#1188ff",
-              opacity: 1,
-            },
-            border: 0,
-            borderRadius: "4px",
-            marginRight: isSmallScreen ? "0" : "4px",
-            marginBottom: isSmallScreen ? "4px" : "0",
-          },
-          ".MuiTabs-indicator": {
-            backgroundColor: "#1188ff",
-          },
->>>>>>> origin/master
         }}
       >
         <Tabs

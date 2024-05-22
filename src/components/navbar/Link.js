@@ -70,7 +70,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               bgcolor: "#202530",
               p: "10px 10px",
               borderRadius: "5px",
-              "&:hover": { backgroundColor: "#1188ff" },
+              "&:hover": {
+                backgroundColor: "var(--color-secondary-2)",
+                "& .MuiTypography-root, & .MuiSvgIcon-root": {
+                  color: "#000000",
+                },
+              },
             }}
           >
             <LogoutIcon />

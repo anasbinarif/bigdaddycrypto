@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Box, Typography } from "@mui/material";
-=======
-import { Box, useTheme, useMediaQuery } from "@mui/material";
->>>>>>> origin/master
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import DonutLegend from "./DonutLegend";
 import DonutChart from "./DonutChart";
 import { useEffect, useState } from "react";
@@ -13,10 +9,10 @@ import { sessionAtom } from "../../../../app/stores/sessionStore";
 import DonutLegendSkeleton from "../../../portfolioGenerator/cards/donutCard/DonutLegendSkeleton";
 
 export const DonutCard = () => {
-    const [portfolio] = useAtom(portfolioAtom);
-    const [loadingPortfolio, setLoadingPortfolio] = useState(false);
-    const [portfolioCalculations, setPortfolioCalculations] = useState({});
-    const [sessionJotai] = useAtom(sessionAtom);
+  const [portfolio] = useAtom(portfolioAtom);
+  const [loadingPortfolio, setLoadingPortfolio] = useState(false);
+  const [portfolioCalculations, setPortfolioCalculations] = useState({});
+  const [sessionJotai] = useAtom(sessionAtom);
 
   useEffect(() => {
     const fetchData = async () => {

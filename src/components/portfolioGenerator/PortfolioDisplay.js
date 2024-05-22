@@ -17,16 +17,16 @@ const PortfolioDisplay = ({
     <Grid
       container
       spacing={{ xs: 2, md: 3 }}
-      columns={{ xs: 4, sm: 8, md: 12 }}
+      columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
       style={{ position: "relative" }}
     >
-      <Grid item xs={4} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={2} lg={4}>
         <BitpandaCard />
       </Grid>
-      <Grid item xs={4} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={5} lg={4}>
         <BewertungCard />
       </Grid>
-      <Grid item xs={4} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={5} lg={4}>
         <DonutCard />
       </Grid>
       <Grid item xs={4} sm={8} md={8}>

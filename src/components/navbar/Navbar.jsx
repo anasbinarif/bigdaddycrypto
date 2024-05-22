@@ -20,6 +20,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import styles from "./navbar.module.css";
 
 const Navbar = ({ tabSelector, setTabSelector }) => {
   const t = useTranslations("navbar");
@@ -92,16 +93,24 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               onClose={handleClose}
             >
               <MenuItem onClick={handleClose}>
-                <Link href="/">{t("home")}</Link>
+                <Link href="/" className={styles.nav__link}>
+                  {t("home")}
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>
-                <Link href="/faq">{t("faq")}</Link>
+                <Link href="/faq" className={styles.nav__link}>
+                  {t("faq")}
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>
-                <Link href="/media">{t("media")}</Link>
+                <Link href="/media" className={styles.nav__link}>
+                  {t("media")}
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>
-                <Link href="/assetsGraph">{t("graph")}</Link>
+                <Link href="/assetsGraph" className={styles.nav__link}>
+                  {t("graph")}
+                </Link>
               </MenuItem>
             </Menu>
             <SessionProvider>

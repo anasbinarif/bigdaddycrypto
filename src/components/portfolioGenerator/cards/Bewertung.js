@@ -19,7 +19,6 @@ function BewertungCard() {
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
   const t = useTranslations("bewertungCard");
 
-<<<<<<< HEAD
   useEffect(() => {
     if (
       portfolio &&
@@ -36,27 +35,6 @@ function BewertungCard() {
       setSicherheitAverage(avgSicherheit.toFixed(1));
     }
   }, [portfolio]);
-=======
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-    useEffect(() => {
-        if (
-            portfolio &&
-            portfolio.assetsCalculations &&
-            portfolio.assetsCalculations.assets.length > 0
-        ) {
-            const financialSummaries = calculateFinancialSummaryForAllAssets();
-            const sicherheitValues = financialSummaries.map(
-                (asset) => asset.Sicherheit || 0
-            );
-            const avgSicherheit =
-                sicherheitValues.reduce((acc, val) => acc + val, 0) /
-                sicherheitValues.length;
-            setSicherheitAverage(avgSicherheit.toFixed(1));
-        }
-    }, [portfolio]);
->>>>>>> origin/master
 
   const calculateFinancialSummaryForAllAssets = () => {
     return portfolio.assetsCalculations.assets.map((asset) => {
@@ -100,7 +78,6 @@ function BewertungCard() {
           sx={{ fontSize: "1.2rem", fontWeight: "bold", mb: "1.25rem" }}
           gutterBottom
         >
-<<<<<<< HEAD
           {t("title")}
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -206,112 +183,6 @@ function BewertungCard() {
       </CardContent>
     </Card>
   );
-=======
-            <CardContent>
-                <Typography sx={{ fontSize: 14, fontWeight: "bold" }} gutterBottom>
-                    {t("title")}
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                    <List sx={{ bgcolor: "#00000033", borderRadius: "8px" }}>
-                        {[
-                            { text: t("hypeCoverage"), color: green[500] },
-                            { text: t("doubleHypeCoverage"), color: green[500] },
-                            { text: t("missingHypeTheme"), color: green[500] },
-                            { text: t("hypeDistribution"), color: yellow[800] },
-                            { text: t("numberOfCoins"), color: green[500] },
-                        ].map((item) => (
-                            <ListItem key={item.text} sx={{ py: 0 }}>
-                                <ListItemIcon sx={{ minWidth: "30px" }}>
-                                    <FiberManualRecordIcon sx={{ color: item.color }} />
-                                </ListItemIcon>
-                                <ListItemText primary={item.text} sx={{ fontSize: "13px" }} />
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: isSmallScreen ? "column" : "row",
-                            justifyContent: "space-between",
-                            gap: "10px",
-                        }}
-                    >
-                        <Typography
-                            component="div"
-                            sx={{
-                                alignItems: "center",
-                                gap: "25px",
-                                backgroundColor: "#00000033",
-                                padding: "10px 16px",
-                                borderRadius: "8px",
-                                display: "flex",
-                                fontSize: "14px",
-                                flexDirection: isSmallScreen ? "column" : "row",
-                            }}
-                        >
-                            <span
-                                style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}
-                            >
-                                {t("sicherheit")}
-                                <CustomizedTooltips
-                                    text1={t("sicherheitTooltipText1")}
-                                    text2={t("sicherheitTooltipText2")}
-                                />
-                            </span>{" "}
-                            <span
-                                style={{
-                                    color: "white",
-                                    backgroundColor: "rgb(65, 180, 49)",
-                                    padding: "4px 8px 2px",
-                                    textShadow: "1px 1px 5px rgba(0,0,0,.4)",
-                                    borderRadius: "6px",
-                                    fontSize: "14px",
-                                }}
-                            >
-                                {sicherheitAverage}
-                            </span>
-                        </Typography>
-                        <Typography
-                            component="div"
-                            sx={{
-                                alignItems: "center",
-                                gap: "25px",
-                                backgroundColor: "#00000033",
-                                padding: "10px 16px",
-                                borderRadius: "8px",
-                                display: "flex",
-                                fontSize: "14px",
-                                flexDirection: isSmallScreen ? "column" : "row",
-                            }}
-                        >
-                            <span
-                                style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}
-                            >
-                                {t("potential")}
-                                <CustomizedTooltips
-                                    text1={t("potentialTooltipText1")}
-                                    text2={t("potentialTooltipText2")}
-                                />
-                            </span>{" "}
-                            <span
-                                style={{
-                                    color: "white",
-                                    backgroundColor: "rgb(142, 206, 16)",
-                                    padding: "4px 8px 2px",
-                                    textShadow: "1px 1px 5px rgba(0,0,0,.4)",
-                                    borderRadius: "6px",
-                                    fontSize: "14px",
-                                }}
-                            >
-                                23-36x
-                            </span>
-                        </Typography>
-                    </Box>
-                </Box>
-            </CardContent>
-        </Card>
-    );
->>>>>>> origin/master
 }
 
 export default BewertungCard;
