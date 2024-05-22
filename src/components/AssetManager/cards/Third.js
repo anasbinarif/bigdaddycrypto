@@ -1,10 +1,8 @@
 "use client";
-import { Box, Divider, Typography } from "@mui/material";
-import { faCrown } from "@fortawesome/free-solid-svg-icons";
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import { Box, Divider, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { faCrown, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai/index";
-// import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { portfolioAtom } from "../../../../src/app/stores/portfolioStore";
@@ -12,6 +10,9 @@ import { portfolioAtom } from "../../../../src/app/stores/portfolioStore";
 const Third = () => {
   const t = useTranslations("third");
   const [portfolio] = useAtom(portfolioAtom, { assets: [] });
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const totalInvestment = portfolio.assetsCalculations.assets
     .reduce((acc, curr) => acc + curr.totalInvest, 0)
     .toFixed(2);
@@ -35,29 +36,31 @@ const Third = () => {
         color: "white",
         height: "100%",
         borderRadius: "8px",
-        padding: "25px",
+        padding: isSmallScreen ? "15px" : "25px",
       }}
     >
-      <Box sx={{ fontSize: "120%", fontWeight: "bold" }}>
+      <Box sx={{ fontSize: isSmallScreen ? "100%" : "120%", fontWeight: "bold" }}>
         {t("portfolioOverview")}
         <FontAwesomeIcon
           icon={faCrown}
           style={{ paddingLeft: "10px", opacity: "0.25", fontSize: "0.9rem" }}
         />
       </Box>
-      <Divider />
+      <Divider sx={{ marginY: isSmallScreen ? "10px" : "15px" }} />
       <Box
         sx={{
           width: "100%",
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#00000033",
-          padding: "1rem",
+          padding: isSmallScreen ? "0.5rem" : "1rem",
           marginTop: "1rem",
         }}
       >
-        <Typography sx={{ fontSize: "0.9rem" }}>{t("totalValue")}</Typography>
-        <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>
+        <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem" }}>
+          {t("totalValue")}
+        </Typography>
+        <Typography sx={{ fontSize: isSmallScreen ? "1.5rem" : "2rem", fontWeight: "bold" }}>
           {totalGesamtwert},00 €
         </Typography>
         <Typography
@@ -90,43 +93,43 @@ const Third = () => {
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#00000033",
-          padding: "1rem",
+          padding: isSmallScreen ? "0.5rem" : "1rem",
           marginTop: "1rem",
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography sx={{ fontSize: "0.9rem", opacity: "0.5" }}>
+          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", opacity: "0.5" }}>
             {t("totalInvestment")}
           </Typography>
-          <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
             {totalInvestment},00 €
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography sx={{ fontSize: "0.9rem", opacity: "0.5" }}>
+          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", opacity: "0.5" }}>
             {t("currentProfit")}
           </Typography>
-          <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
             {aktuellerProfit},00 €
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography sx={{ fontSize: "0.9rem", opacity: "0.5" }}>
+          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", opacity: "0.5" }}>
             {t("realizedSoFar")}
           </Typography>
-          <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
             0,00 €
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography sx={{ fontSize: "0.9rem", opacity: "0.5" }}>
+          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", opacity: "0.5" }}>
             {t("totalPotential")}
             <FontAwesomeIcon
               icon={faQuestionCircle}
               style={{ opacity: "0.5", marginLeft: "0.5rem" }}
             />
           </Typography>
-          <Typography sx={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
             0,00 €
           </Typography>
         </Box>

@@ -11,10 +11,12 @@ import {
   Avatar,
   Typography,
   Box,
+  useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Navbar from "../../../components/navbar/Navbar";
 import Footer from "../../../components/footer/Footer";
-import {useTranslations} from "next-intl";
+import { useTranslations } from "next-intl";
 
 const videos = [
   {
@@ -244,6 +246,8 @@ function VideoPlayer() {
   const [selectedVideo, setSelectedVideo] = useState(videos[0].url);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const t = useTranslations("faq");
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleListItemClick = (event, index, videoUrl) => {
     setSelectedIndex(index);
@@ -253,27 +257,48 @@ function VideoPlayer() {
   return (
     <>
       <Navbar />
-      <Box sx={{ marginTop: "9rem", backgroundColor: "#111826" }}>
+      <Box sx={{ marginTop: isSmallScreen ? "5rem" : "9rem", backgroundColor: "#111826" }}>
         <Typography
           sx={{
             color: "#24ffa7",
-            marginLeft: "6rem",
-            fontSize: "80px",
+            marginLeft: isSmallScreen ? "1rem" : "6rem",
+            fontSize: isSmallScreen ? "40px" : "80px",
             fontWeight: "900",
             textTransform: "uppercase",
             letterSpacing: "0.01em",
+            textAlign: isSmallScreen ? "center" : "left",
           }}
         >
           {t("heading1")}
         </Typography>
-        <Grid container spacing={0} sx={{ margin: "0 0rem 10rem 5rem", height: "543px" }}>
-          <Grid item xs={12} md={4} sx={{height: "100%", width: "33%"}}>
+        <Grid
+          container
+          spacing={0}
+          sx={{
+            margin: isSmallScreen ? "1rem" : "0 0rem 10rem 5rem",
+            height: isSmallScreen ? "auto" : "543px",
+            flexDirection: isSmallScreen ? "column-reverse" : "row"
+          }}
+        >
+          <Grid item xs={12} md={6} sx={{ margin: "0px", height: isSmallScreen ? "auto" : "100%" }}>
+            <Card>
+              <CardMedia
+                component="iframe"
+                height={isSmallScreen ? "240" : "520"}
+                src={selectedVideo}
+                allow="autoplay; encrypted-media"
+                loading="lazy"
+                title="Video Player"
+              />
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4} sx={{ height: isSmallScreen ? "auto" : "100%", width: isSmallScreen ? "100%" : "33%" }}>
             <List
               style={{
                 overflow: "auto",
                 backgroundColor: "#2A2A2A",
-                borderRight: "1px solid #333",
-                height: "100%"
+                borderRight: isSmallScreen ? "none" : "1px solid #333",
+                height: isSmallScreen ? "auto" : "100%",
               }}
             >
               <Box sx={{ display: "flex", justifyContent: "space-between", backgroundColor: "#2A2A2A", borderBottom: "1px solid #d5d8dc" }}>
@@ -328,18 +353,6 @@ function VideoPlayer() {
                 </ListItem>
               ))}
             </List>
-          </Grid>
-          <Grid item xs={12} md={6} sx={{ margin: "0px", height: "100%" }}>
-            <Card>
-              <CardMedia
-                component="iframe"
-                height="520"
-                src={selectedVideo}
-                allow="autoplay; encrypted-media"
-                loading="lazy"
-                title="Video Player"
-              />
-            </Card>
           </Grid>
         </Grid>
       </Box>

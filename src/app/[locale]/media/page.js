@@ -1,5 +1,5 @@
 "use client";
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import {
     Grid,
     List,
@@ -11,10 +11,12 @@ import {
     Avatar,
     Typography,
     Box,
+    useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Navbar from "../../../components/navbar/Navbar";
 import Footer from "../../../components/footer/Footer";
-import {useTranslations} from "next-intl";
+import { useTranslations } from "next-intl";
 
 const videos = [
     {
@@ -199,30 +201,32 @@ const videos = [
     }
 ];
 
-
 const MediaVideoPlayer = () => {
     const [selectedVideo, setSelectedVideo] = useState(videos[0].url);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [dict, setDict] = useState({});
     const t = useTranslations("media_page");
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleListItemClick = (event, index, videoUrl) => {
         setSelectedIndex(index);
         setSelectedVideo(videoUrl);
     };
+
     return (
         <>
-            <Navbar/>
-            <Box sx={{marginTop: "9rem", backgroundColor: "#111826"}}>
+            <Navbar />
+            <Box sx={{ marginTop: isSmallScreen ? "5rem" : "9rem", backgroundColor: "#111826" }}>
                 <Typography
                     sx={{
-                        marginLeft: "6rem",
+                        marginLeft: isSmallScreen ? "1rem" : "6rem",
                         color: '#FFFFFF',
                         fontFamily: '"Montserrat", Sans-serif',
                         fontSize: '32px',
                         fontWeight: 600,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.01em'
+                        letterSpacing: '0.01em',
+                        textAlign: isSmallScreen ? "center" : "left",
                     }}
                 >
                     {t("heading1")}
@@ -230,45 +234,51 @@ const MediaVideoPlayer = () => {
                 <Typography
                     sx={{
                         color: "#24ffa7",
-                        marginLeft: "6rem",
-                        fontSize: "80px",
+                        marginLeft: isSmallScreen ? "1rem" : "6rem",
+                        fontSize: isSmallScreen ? "40px" : "80px",
                         fontWeight: "900",
                         textTransform: "uppercase",
                         letterSpacing: "0.01em",
+                        textAlign: isSmallScreen ? "center" : "left",
                     }}
                 >
                     {t("heading2")}
                 </Typography>
-                <Grid container spacing={0} sx={{margin: "0 0rem 10rem 5rem", height: "543px"}}>
-                    <Grid item xs={12} md={4} sx={{height: "100%", width: "33%"}}>
+                <Grid
+                    container
+                    spacing={0}
+                    sx={{
+                        margin: isSmallScreen ? "1rem" : "0 0rem 10rem 5rem",
+                        height: isSmallScreen ? "auto" : "543px",
+                        flexDirection: isSmallScreen ? "column-reverse" : "row"
+                    }}
+                >
+                    <Grid item xs={12} md={6} sx={{ margin: "0px", height: isSmallScreen ? "auto" : "100%" }}>
+                        <Card>
+                            <CardMedia
+                                component="iframe"
+                                height={isSmallScreen ? "240" : "520"}
+                                src={selectedVideo}
+                                allow="autoplay; encrypted-media"
+                                loading="lazy"
+                                title="Video Player"
+                            />
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={4} sx={{ height: isSmallScreen ? "auto" : "100%", width: isSmallScreen ? "100%" : "33%" }}>
                         <List
                             style={{
                                 overflow: "auto",
                                 backgroundColor: "#2A2A2A",
-                                borderRight: "1px solid #333",
-                                height: "100%"
+                                borderRight: isSmallScreen ? "none" : "1px solid #333",
+                                height: isSmallScreen ? "auto" : "100%",
                             }}
                         >
-                            <Box sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                backgroundColor: "#2A2A2A",
-                                borderBottom: "1px solid #d5d8dc"
-                            }}>
-                                <Typography variant="h2" sx={{
-                                    color: "#B1B1B1",
-                                    fontSize: "16px",
-                                    padding: "10px 10px 15px 10px",
-                                    fontWeight: "700"
-                                }}>
+                            <Box sx={{ display: "flex", justifyContent: "space-between", backgroundColor: "#2A2A2A", borderBottom: "1px solid #d5d8dc" }}>
+                                <Typography variant="h2" sx={{ color: "#B1B1B1", fontSize: "16px", padding: "10px 10px 15px 10px", fontWeight: "700" }}>
                                     Playlist
                                 </Typography>
-                                <Typography variant="h2" sx={{
-                                    color: "#B1B1B1",
-                                    fontSize: "16px",
-                                    padding: "10px 10px 15px 10px",
-                                    fontWeight: "700"
-                                }}>
+                                <Typography variant="h2" sx={{ color: "#B1B1B1", fontSize: "16px", padding: "10px 10px 15px 10px", fontWeight: "700" }}>
                                     {videos.length} Videos
                                 </Typography>
                             </Box>
@@ -290,7 +300,7 @@ const MediaVideoPlayer = () => {
                                         <Avatar
                                             variant="square"
                                             src={video.thumbnail}
-                                            sx={{width: 56, height: 32, marginRight: "10px"}}
+                                            sx={{ width: 56, height: 32, marginRight: "10px" }}
                                         />
                                     </ListItemAvatar>
                                     <ListItemText
@@ -308,7 +318,7 @@ const MediaVideoPlayer = () => {
                                             </Typography>
                                         }
                                         secondary={
-                                            <Typography variant="body2" style={{color: "#999"}}>
+                                            <Typography variant="body2" style={{ color: "#999" }}>
                                                 {video.duration}
                                             </Typography>
                                         }
@@ -317,23 +327,11 @@ const MediaVideoPlayer = () => {
                             ))}
                         </List>
                     </Grid>
-                    <Grid item xs={12} md={6} sx={{margin: "0px"}}>
-                        <Card>
-                            <CardMedia
-                                component="iframe"
-                                height="520"
-                                src={selectedVideo}
-                                allow="autoplay; encrypted-media"
-                                loading="lazy"
-                                title="Video Player"
-                            />
-                        </Card>
-                    </Grid>
                 </Grid>
             </Box>
-            <Footer/>
+            <Footer />
         </>
-    )
+    );
 }
 
-export default MediaVideoPlayer
+export default MediaVideoPlayer;

@@ -150,7 +150,7 @@ const CoinCard = ({ coin, selected, search = false, risk }) => {
                   cursor: "pointer",
                   border: `${selected ? "1px solid #00aa66aa" : risk ? "1px solid red" : "none"}`,
                   backgroundColor: `${selected ? "#00aa6633" : risk ? "rgba(222,11,11,0.05)" : "#333"}`,
-                  width: "205px",
+                  width: "195px",
                   borderStyle: `${risk ? "dashed" : "none"}`,
                   borderLeft: `${selected ? "" : risk ? "none" : ""}`
                 }}

@@ -7,7 +7,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { green, yellow } from "@mui/material/colors";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import CustomizedTooltips from "../../toolTip/CustomizedTooltip";
 import { useAtom } from "jotai";
 import { portfolioAtom } from "../../../app/stores/portfolioStore";
@@ -18,6 +18,9 @@ function BewertungCard() {
     const [portfolio] = useAtom(portfolioAtom);
     const [sicherheitAverage, setSicherheitAverage] = useState(0);
     const t = useTranslations("bewertungCard");
+
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
     useEffect(() => {
         if (
@@ -94,7 +97,14 @@ function BewertungCard() {
                             </ListItem>
                         ))}
                     </List>
-                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: isSmallScreen ? "column" : "row",
+                            justifyContent: "space-between",
+                            gap: "10px",
+                        }}
+                    >
                         <Typography
                             component="div"
                             sx={{
@@ -105,17 +115,18 @@ function BewertungCard() {
                                 borderRadius: "8px",
                                 display: "flex",
                                 fontSize: "14px",
+                                flexDirection: isSmallScreen ? "column" : "row",
                             }}
                         >
-              <span
-                  style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}
-              >
-                {t("sicherheit")}
-                  <CustomizedTooltips
-                      text1={t("sicherheitTooltipText1")}
-                      text2={t("sicherheitTooltipText2")}
-                  />
-              </span>{" "}
+                            <span
+                                style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}
+                            >
+                                {t("sicherheit")}
+                                <CustomizedTooltips
+                                    text1={t("sicherheitTooltipText1")}
+                                    text2={t("sicherheitTooltipText2")}
+                                />
+                            </span>{" "}
                             <span
                                 style={{
                                     color: "white",
@@ -126,8 +137,8 @@ function BewertungCard() {
                                     fontSize: "14px",
                                 }}
                             >
-                {sicherheitAverage}
-              </span>
+                                {sicherheitAverage}
+                            </span>
                         </Typography>
                         <Typography
                             component="div"
@@ -139,17 +150,18 @@ function BewertungCard() {
                                 borderRadius: "8px",
                                 display: "flex",
                                 fontSize: "14px",
+                                flexDirection: isSmallScreen ? "column" : "row",
                             }}
                         >
-              <span
-                  style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}
-              >
-                {t("potential")}
-                  <CustomizedTooltips
-                      text1={t("potentialTooltipText1")}
-                      text2={t("potentialTooltipText2")}
-                  />
-              </span>{" "}
+                            <span
+                                style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}
+                            >
+                                {t("potential")}
+                                <CustomizedTooltips
+                                    text1={t("potentialTooltipText1")}
+                                    text2={t("potentialTooltipText2")}
+                                />
+                            </span>{" "}
                             <span
                                 style={{
                                     color: "white",
@@ -160,8 +172,8 @@ function BewertungCard() {
                                     fontSize: "14px",
                                 }}
                             >
-                23-36x
-              </span>
+                                23-36x
+                            </span>
                         </Typography>
                     </Box>
                 </Box>

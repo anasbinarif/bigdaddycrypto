@@ -1,4 +1,4 @@
-import { Grid, Paper, styled } from "@mui/material";
+import { Grid, Paper, styled, useMediaQuery, useTheme } from "@mui/material";
 import BitpandaCard from "../../components/portfolioGenerator/cards/Bitpanda";
 import PortfolioComponent from "../../components/portfolioGenerator/cards/PortfolioComponent";
 import Second from "./cards/Second";
@@ -24,22 +24,24 @@ const AssetManagerDisplay = ({
   loadingPortfolio,
   assetsLeangth,
 }) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Grid
       container
       spacing={{ xs: 2, md: 3 }}
       columns={{ xs: 4, sm: 8, md: 12 }}
     >
-      <Grid item xs={2} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={4}>
         <BitpandaCard />
       </Grid>
-      <Grid item xs={2} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={4}>
         <Second />
       </Grid>
-      <Grid item xs={2} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={4}>
         <Third />
       </Grid>
-
       <Grid item xs={4} sm={4} md={4}>
         <PortfolioComponent
           portfolio={portfolio}
@@ -49,12 +51,21 @@ const AssetManagerDisplay = ({
           setSelectedCoin={setSelectedCoin}
         />
       </Grid>
-      <Grid item xs={8} sm={8} md={8}>
-        <CoinDetails
-          coin={portfolio?.assets[selectedCoin]}
-          index={selectedCoin}
-        />
-      </Grid>
+      {isSmallScreen ? (
+        <Grid item xs={4}>
+          <CoinDetails
+            coin={portfolio?.assets[selectedCoin]}
+            index={selectedCoin}
+          />
+        </Grid>
+      ) : (
+        <Grid item xs={8} sm={8} md={8}>
+          <CoinDetails
+            coin={portfolio?.assets[selectedCoin]}
+            index={selectedCoin}
+          />
+        </Grid>
+      )}
     </Grid>
   );
 };

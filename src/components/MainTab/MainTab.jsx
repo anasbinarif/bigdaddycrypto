@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Tabs, Tab, Box, Typography } from "@mui/material";
+import { Tabs, Tab, Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import PortfolioDisplay from "../../components/portfolioGenerator/PortfolioDisplay";
 import AssetManagerDisplay from "../../components/AssetManager/AssetManagerDisplay";
@@ -64,6 +64,9 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     }
   }, [portfolio]);
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box
       sx={{
@@ -79,9 +82,11 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         textColor="primary"
         indicatorColor="primary"
         aria-label="secondary tabs example"
+        orientation={isSmallScreen ? "vertical" : "horizontal"}
         sx={{
           ".MuiTabs-flexContainer": {
-            justifyContent: "flex-start",
+            justifyContent: isSmallScreen ? "flex-start" : "flex-start",
+            flexDirection: isSmallScreen ? "column" : "row",
             gap: "15px",
           },
           ".Mui-selected": {
@@ -98,7 +103,8 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             },
             border: 0,
             borderRadius: "4px",
-            marginRight: "4px",
+            marginRight: isSmallScreen ? "0" : "4px",
+            marginBottom: isSmallScreen ? "4px" : "0",
           },
           ".MuiTabs-indicator": {
             backgroundColor: "#1188ff",

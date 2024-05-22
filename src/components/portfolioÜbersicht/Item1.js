@@ -1,5 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -59,6 +60,7 @@ export default function Item1({ loadingPortfolio }) {
       setGraphPercentage(mergedData);
     }
   }, [portfolio]);
+
   useEffect(() => {
     const data = [
       ["Ticker", "Percentage"],
@@ -68,12 +70,8 @@ export default function Item1({ loadingPortfolio }) {
       ]),
     ];
     setGraphData(data);
-    console.log("graphData", graphData);
   }, [graphPercentage]);
 
-  useEffect(() => {
-    console.log("graphPercentage", graphPercentage, graphData);
-  }, [graphPercentage, graphData]);
   const assetsLength = portfolio?.assetsCalculations?.assets.length;
   const totalInvestment = portfolio.assetsCalculations.assets.reduce(
     (acc, curr) => acc + curr.totalInvest,
@@ -91,133 +89,141 @@ export default function Item1({ loadingPortfolio }) {
   return (
     <Box
       sx={{
-        display: "flex",
         backgroundColor: "#202530",
         color: "white",
-        height: "70%",
+        height: "100%",
         borderRadius: "8px",
         padding: "25px",
       }}
     >
-      <Box
-        sx={{
-          backgroundColor: "#202530",
-          color: "white",
-          height: "100%",
-          width: "50%",
-          borderRadius: "8px",
-          //   padding: "25px",
-        }}
-      >
-        <Box sx={{ fontSize: "120%", fontWeight: "bold" }}>
-          {t("portfolioOverview")}
-          <FontAwesomeIcon
-            icon={faCrown}
-            style={{ paddingLeft: "10px", opacity: "0.25", fontSize: "0.9rem" }}
-          />
-        </Box>
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            //   alignItems: "center",
-            backgroundColor: "#00000033",
-            padding: "1rem",
-            marginTop: "1rem",
-          }}
-        >
-          <Typography sx={{ fontSize: "0.9rem" }}>{t("totalValue")}</Typography>
-          <Typography
-            sx={{ fontSize: "2rem", fontWeight: "bold", whiteSpace: "nowrap" }}
-          >
-            {totalGesamtwert} €
-          </Typography>
-          <Typography
-            className={gesamtwertPercentage < 0 ? "down" : "up"}
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Box
             sx={{
-              "&.down": {
-                color: "red",
-              },
-              "&.up": {
-                color: "green",
-              },
-              "&.down:before": {
-                content: '"▼ "',
-                fontSize: "80%",
-                marginRight: "3px",
-              },
-              "&.up:before": {
-                content: '"▲ "',
-                fontSize: "80%",
-                marginRight: "3px",
-              },
+              fontSize: "120%",
+              fontWeight: "bold",
             }}
           >
-            {gesamtwertPercentage}%
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            backgroundColor: "#00000033",
-            padding: "1rem",
-            marginTop: "1rem",
-          }}
-        >
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography sx={{ fontSize: "0.8rem", opacity: "0.5" }}>
-              {t("totalInvestment")}
+            {t("portfolioOverview")}
+            <FontAwesomeIcon
+              icon={faCrown}
+              style={{
+                paddingLeft: "10px",
+                opacity: "0.25",
+                fontSize: "0.9rem",
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              backgroundColor: "#00000033",
+              padding: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            <Typography sx={{ fontSize: "0.9rem" }}>
+              {t("totalValue")}
             </Typography>
-            <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
-              {totalInvestment} €
+            <Typography
+              sx={{
+                fontSize: "2rem",
+                fontWeight: "bold",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {totalGesamtwert} €
+            </Typography>
+            <Typography
+              className={gesamtwertPercentage < 0 ? "down" : "up"}
+              sx={{
+                "&.down": {
+                  color: "red",
+                },
+                "&.up": {
+                  color: "green",
+                },
+                "&.down:before": {
+                  content: '"▼ "',
+                  fontSize: "80%",
+                  marginRight: "3px",
+                },
+                "&.up:before": {
+                  content: '"▲ "',
+                  fontSize: "80%",
+                  marginRight: "3px",
+                },
+              }}
+            >
+              {gesamtwertPercentage}%
             </Typography>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography sx={{ fontSize: "0.8rem", opacity: "0.5" }}>
-              {t("currentProfit")}
-            </Typography>
-            <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
-              {aktuellerProfit},00 €
-            </Typography>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              backgroundColor: "#00000033",
+              padding: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography sx={{ fontSize: "0.8rem", opacity: "0.5" }}>
+                {t("totalInvestment")}
+              </Typography>
+              <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
+                {totalInvestment} €
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography sx={{ fontSize: "0.8rem", opacity: "0.5" }}>
+                {t("currentProfit")}
+              </Typography>
+              <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
+                {aktuellerProfit},00 €
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          width: "50%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-        }}
-      >
-        <Chart
-          chartType="PieChart"
-          width="100%"
-          height="400px"
-          data={graphData}
-          options={options}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-            zIndex: "100",
-          }}
-        >
-          <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-            {assetsLength}
-          </Typography>
-          <Typography sx={{ fontSize: "1rem" }}>{t("assets")}</Typography>
-        </Box>
-      </Box>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+              height: "100%",
+            }}
+          >
+            <Chart
+              chartType="PieChart"
+              width="100%"
+              height="300px"
+              data={graphData}
+              options={options}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                textAlign: "center",
+                zIndex: "100",
+              }}
+            >
+              <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>
+                {assetsLength}
+              </Typography>
+              <Typography sx={{ fontSize: "1rem" }}>{t("assets")}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 }
