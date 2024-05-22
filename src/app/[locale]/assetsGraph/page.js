@@ -149,7 +149,7 @@ const imagePlugin = {
 
 const BubbleChart = () => {
     const t = useTranslations("bubbleChart");
-    const [radius, setRadius] = useState(10);
+    const [radius, setRadius] = useState(20);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedItem, setSelectedItem] = useState('');
     const [chartData, setChartData] = useState({ datasets: [] });
