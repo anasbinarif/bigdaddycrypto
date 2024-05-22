@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { Chart as ChartJS, LinearScale, PointElement, Tooltip, Legend } from 'chart.js';
 import { Bubble } from 'react-chartjs-2';
 import { Box, FormControl, InputLabel, MenuItem, Select, Slider, TextField, Typography } from '@mui/material';
 import Navbar from "../../../components/navbar/Navbar";
 import Footer from "../../../components/footer/Footer";
-import {categoryColors, getAssets, getCategoryColor} from "../../../lib/data";
+import { categoryColors, getAssets, getCategoryColor } from "../../../lib/data";
 import { useTranslations } from "next-intl";
 import './BubbleChart.css';
 
@@ -149,11 +149,12 @@ const imagePlugin = {
 
 const BubbleChart = () => {
     const t = useTranslations("bubbleChart");
-    const [radius, setRadius] = useState(15);
+    const [radius, setRadius] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedItem, setSelectedItem] = useState('');
     const [chartData, setChartData] = useState({ datasets: [] });
     const [categories, setCategories] = useState([]);
+    const preloadedImages = useRef({});
 
     useEffect(() => {
         const fetchAllAssets = async () => {
@@ -201,6 +202,16 @@ const BubbleChart = () => {
                 }));
 
                 setChartData({ datasets });
+
+                // Preload images
+                filteredData.forEach((item) => {
+                    if (!preloadedImages.current[item.cgImageURL]) {
+                        const img = new Image();
+                        img.src = item.cgImageURL;
+                        preloadedImages.current[item.cgImageURL] = img;
+                    }
+                });
+
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -216,17 +227,17 @@ const BubbleChart = () => {
                 title: {
                     display: true,
                     text: t("safety"),
-                    color: '#ccc', // Set the color of the axis label to red
+                    color: '#ccc',
                     font: {
-                        size: 40, // Set font size for axis title
-                        weight: 'bold' // Set font weight to bold for axis title
+                        size: 40,
+                        weight: 'bold'
                     }
                 },
                 ticks: {
-                    color: '#969696', // Set the color of ticks to red
+                    color: '#969696',
                     font: {
-                        size: 30, // Set font size
-                        weight: 'bold' // Set font weight to bold
+                        size: 30,
+                        weight: 'bold'
                     },
                     stepSize: 1,
                     max: 10
@@ -237,17 +248,17 @@ const BubbleChart = () => {
                 title: {
                     display: true,
                     text: t("potential"),
-                    color: '#ccc', // Set the color of the axis label to red
+                    color: '#ccc',
                     font: {
-                        size: 40, // Set font size for axis title
-                        weight: 'bold' // Set font weight to bold for axis title
+                        size: 40,
+                        weight: 'bold'
                     }
                 },
                 ticks: {
-                    color: '#969696', // Set the color of ticks to red
+                    color: '#969696',
                     font: {
-                        size: 30, // Set font size
-                        weight: 'bold' // Set font weight to bold
+                        size: 30,
+                        weight: 'bold'
                     },
                     stepSize: 1,
                     max: 10
@@ -300,10 +311,13 @@ const BubbleChart = () => {
                         whiteSpace: "nowrap"
                     }}>{t("symbolSize")}:</Typography>
                     <Slider
-                        defaultValue={15}
-                        min={5}
-                        max={37}
                         aria-label="Default"
+                        defaultValue={20}
+                        shiftStep={6}
+                        step={5}
+                        marks
+                        min={10}
+                        max={40}
                         valueLabelDisplay="auto"
                         onChange={(e, newValue) => setRadius(newValue)}
                     />
@@ -322,23 +336,23 @@ const BubbleChart = () => {
                             border: "none",
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderColor: '#ffffff', // Set border color to white
+                                    borderColor: '#ffffff',
                                 },
                                 '&:hover fieldset': {
-                                    borderColor: '#ffffff', // Set border color to white on hover
+                                    borderColor: '#ffffff',
                                 },
                                 '&.Mui-focused fieldset': {
-                                    borderColor: '#ffffff', // Set border color to white when focused
+                                    borderColor: '#ffffff',
                                 },
                             },
                             '& .MuiInputLabel-root': {
-                                color: '#ffffff', // Set label color to white
+                                color: '#ffffff',
                             },
                             '& .MuiInputLabel-root.Mui-focused': {
-                                color: '#ffffff', // Set label color to white when focused
+                                color: '#ffffff',
                             },
                             '& .MuiInputBase-input': {
-                                color: '#ffffff', // Set text color to white
+                                color: '#ffffff',
                             },
                             '& .MuiOutlinedInput-notchedOutline': {
                                 borderColor: '#ffffff',
@@ -352,26 +366,26 @@ const BubbleChart = () => {
                     width: "20%",
                     '& .MuiOutlinedInput-root': {
                         '& fieldset': {
-                            borderColor: '#ffffff', // Set border color to white
+                            borderColor: '#ffffff',
                         },
                         '&:hover fieldset': {
-                            borderColor: '#ffffff', // Set border color to white on hover
+                            borderColor: '#ffffff',
                         },
                         '&.Mui-focused fieldset': {
-                            borderColor: '#ffffff', // Set border color to white when focused
+                            borderColor: '#ffffff',
                         },
                     },
                     '& .MuiInputLabel-root': {
-                        color: '#ffffff', // Set label color to white
+                        color: '#ffffff',
                     },
                     '& .MuiInputLabel-root.Mui-focused': {
-                        color: '#ffffff', // Set label color to white when focused
+                        color: '#ffffff',
                     },
                     '& .MuiSelect-icon': {
-                        color: '#ffffff', // Set dropdown icon color to white
+                        color: '#ffffff',
                     },
                     '& .MuiSelect-select': {
-                        color: '#ffffff', // Set text color to white
+                        color: '#ffffff',
                     },
                 }}>
                     <InputLabel id="demo-simple-select-label">{t("allCategories")}</InputLabel>
