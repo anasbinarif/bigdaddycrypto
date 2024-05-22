@@ -20,23 +20,21 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function PortfolioUbersicht({ loadingPortfolio }) {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, padding: 2 }}>
       <Grid container spacing={2}>
-        {/* Left column for detailed assets information */}
         <Grid item xs={12} md={8}>
           <GridExample />
-          {/*<Item>Portfolio details here</Item>*/}
         </Grid>
-        {/* Right column for portfolio overview and scoring */}
         <Grid item xs={12} md={4}>
           <Card
             sx={{
               padding: "15px",
               backgroundColor: "#1188ff",
               cursor: "pointer",
-              display: "flex", // Makes the card flex container
-              alignItems: "center", // Centers the content vertically
-              justifyContent: "center", // Centers the content horizontally
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 2,
             }}
           >
             <a
@@ -49,17 +47,17 @@ export default function PortfolioUbersicht({ loadingPortfolio }) {
               </Typography>
             </a>
           </Card>
-          <Grid container spacing={2} sx={{ marginTop: "10px" }}>
-            <Grid item xs={6} md={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
               <Item1 loadingPortfolio={loadingPortfolio} />
             </Grid>
-            <Grid item xs={6} md={12}>
+            <Grid item xs={12}>
               <DonutCard />
             </Grid>
-            <Grid item xs={6} md={12}>
+            <Grid item xs={12}>
               <BewertungCard />
             </Grid>
-            <Grid item xs={6} md={12}>
+            <Grid item xs={12}>
               <Item4 />
             </Grid>
           </Grid>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tab, SvgIcon, Box, Typography } from "@mui/material";
+import { Tab, SvgIcon, Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { categoryColors, getAssets } from "../../../../lib/data";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
@@ -39,6 +39,10 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentCategory, setCurrentCategory] = useState("favourite");
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const tabLabels = [
     t("favourite"),
     t("ai"),
@@ -52,6 +56,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
     t("tokenizationRWA"),
     t("noHypeTopic"),
   ];
+
   const categoryMapping = {
     [t("ai")]: "ai",
     [t("web3Anonymity")]: "web3",
@@ -119,10 +124,6 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
   const checkCoinRisk = (coin) => {
     return !!coin.Risk;
   };
-
-  useEffect(() => {
-    console.log("tabLabels", tabLabels);
-  }, [tabLabels]);
 
   return (
       <>
@@ -192,7 +193,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
                   sx={{
                     display: "flex",
                     flexWrap: "wrap",
-                    justifyContent: "flex-start",
+                    justifyContent: isSmallScreen ? "center" : "flex-start",
                   }}
               >
                 {loading

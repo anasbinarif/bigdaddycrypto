@@ -4,7 +4,6 @@ import BewertungCard from "./cards/Bewertung";
 import KryptoAssets from "./cards/kryptoAssets/KryptoAssets";
 import PortfolioComponent from "./cards/PortfolioComponent";
 import { DonutCard } from "./cards/donutCard/DonutCard";
-import { Sticky } from "@mui/lab";
 
 const PortfolioDisplay = ({
   portfolio,
@@ -21,16 +20,16 @@ const PortfolioDisplay = ({
       columns={{ xs: 4, sm: 8, md: 12 }}
       style={{ position: "relative" }}
     >
-      <Grid item xs={2} sm={4} md={2}>
+      <Grid item xs={4} sm={4} md={4}>
         <BitpandaCard />
       </Grid>
-      <Grid item xs={2} sm={4} md={5}>
+      <Grid item xs={4} sm={4} md={4}>
         <BewertungCard />
       </Grid>
-      <Grid item xs={2} sm={4} md={5}>
+      <Grid item xs={4} sm={4} md={4}>
         <DonutCard />
       </Grid>
-      <Grid item xs={8} sm={8} md={8}>
+      <Grid item xs={4} sm={8} md={8}>
         <KryptoAssets
           portfolio={portfolio}
           loadingPortfolio={loadingPortfolio}

@@ -16,7 +16,7 @@ export default function Item4() {
                 color: "white",
                 height: "100%",
                 borderRadius: "8px",
-                padding: "25px",
+                padding: { xs: "15px", md: "25px" }, // Responsive padding
             }}
         >
             <Typography sx={{ fontSize: "1rem", fontWeight: "bold" }}>
@@ -43,6 +43,9 @@ Beste Grüße Jens
                     marginTop: "15px",
                     backgroundColor: "#00000033",
                     borderRadius: "8px",
+                    padding: "10px", // Added padding for better text appearance
+                    color: "white", // Ensure text color is white
+                    border: "1px solid #ffffff33", // Optional: Adding a border for better visibility
                 }}
             />
             <TextareaAutosize
@@ -58,6 +61,9 @@ Beste Grüße Jens
                     marginTop: "15px",
                     backgroundColor: "#00000033",
                     borderRadius: "8px",
+                    padding: "10px",
+                    color: "white",
+                    border: "1px solid #ffffff33",
                 }}
             />
         </Box>

@@ -1,5 +1,14 @@
 "use client";
-import { AppBar, Toolbar, Typography, IconButton, Box } from "@mui/material";
+import { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Box,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import NavbarLink from "../navbar/Link";
 import Link from "next/link";
@@ -7,14 +16,30 @@ import Image from "next/image";
 import HomeIcon from "../../../public/assets/svg/bdc.svg";
 import FormDialog from "../importPreviousDataDialog/FormDialog";
 import { useTranslations } from "next-intl";
-import styles from "./navbar.module.css";
-import { useRouter } from "next/navigation";
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const Navbar = ({ tabSelector, setTabSelector }) => {
   const t = useTranslations("navbar");
-  const router = useRouter();
-  // const path = router;
-  // console.log(path);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [accountAnchorEl, setAccountAnchorEl] = useState(null);
+
+  const handleMenuClick = (event) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleAccountClick = (event) => {
+    setAccountAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setMenuAnchorEl(null);
+    setAccountAnchorEl(null);
+  };
 
   return (
     <AppBar
@@ -40,34 +65,98 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               }}
             />
           </IconButton>
-          <Typography variant="body1" sx={{ ml: 1 }}>
-            {t("companyName")}
-          </Typography>
+          {!isMobile && (
+            <Typography variant="body1" sx={{ ml: 1 }}>
+              {t("companyName")}
+            </Typography>
+          )}
         </Link>
         <FormDialog />
-        <Box
-          style={{
-            marginLeft: "auto",
-            // marginRight: "15px",
-            fontFamily: "sans-serif",
-          }}
-        >
-          <Link className={styles.nav__link} href={"/"}>
-            {t("home")}
-          </Link>
-          <Link className={styles.nav__link} href={"/faq"}>
-            {t("faq")}
-          </Link>
-          <Link className={styles.nav__link} href={"/media"}>
-            {t("media")}
-          </Link>
-          <Link className={styles.nav__link} href={"/assetsGraph"}>
-            {t("graph")}
-          </Link>
-        </Box>
-        <SessionProvider>
-          <NavbarLink />
-        </SessionProvider>
+        {isMobile ? (
+          <>
+            <IconButton color="inherit" onClick={handleMenuClick}>
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={menuAnchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(menuAnchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>
+                <Link href="/">{t("home")}</Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link href="/faq">{t("faq")}</Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link href="/media">{t("media")}</Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link href="/assetsGraph">{t("graph")}</Link>
+              </MenuItem>
+            </Menu>
+            <SessionProvider>
+              <IconButton color="inherit" onClick={handleAccountClick}>
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                anchorEl={accountAnchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(accountAnchorEl)}
+                onClose={handleClose}
+              >
+                <NavbarLink mobileView={true} handleClose={handleClose} />
+              </Menu>
+            </SessionProvider>
+          </>
+        ) : (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Link
+              style={{ marginRight: "15px", fontFamily: "inherit" }}
+              href="/"
+            >
+              {t("home")}
+            </Link>
+            <Link
+              style={{ marginRight: "15px", fontFamily: "inherit" }}
+              href="/faq"
+            >
+              {t("faq")}
+            </Link>
+            <Link
+              style={{ marginRight: "15px", fontFamily: "inherit" }}
+              href="/media"
+            >
+              {t("media")}
+            </Link>
+            <Link
+              style={{ marginRight: "15px", fontFamily: "inherit" }}
+              href="/assetsGraph"
+            >
+              {t("graph")}
+            </Link>
+            <SessionProvider>
+              <NavbarLink />
+            </SessionProvider>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

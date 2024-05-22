@@ -132,10 +132,9 @@ const EnhancedTable = () => {
   };
 
   const getCategoryColors = (categories) => {
-    const test = categories.map((category) => categoryColors[category] || "#ffffff")
-    console.log("getCategoryColors", categories, test)
     return categories.map((category) => categoryColorsNew[category] || "#ffffff");
   };
+
   const getRandomColor = (index) => {
     let color = '#';
     const letters = '0123456789ABCDEF';
@@ -144,7 +143,7 @@ const EnhancedTable = () => {
       color += letters[(index * (i + 1) * 7) % 16];
     }
     return color;
-};
+  };
 
   return (
     <Box
@@ -154,13 +153,14 @@ const EnhancedTable = () => {
         height: "100%",
         borderRadius: "8px",
         padding: "35px 20px",
+        overflowX: "auto",
       }}
     >
       <Typography variant="h4" gutterBottom>
         Portfolio ({assetsLeangth})
       </Typography>
       <ThemeProvider theme={darkTheme}>
-        <TableContainer component={Paper} sx={{ overflowX: "" }}>
+        <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead
               sx={{

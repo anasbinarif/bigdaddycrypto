@@ -6,9 +6,11 @@ import {
   Popper,
   Select,
   MenuItem,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
-import { getAllAssets } from "../../../../lib/data";
+import { getAllAssets, getAssets } from "../../../../lib/data";
 import Autocomplete from "@mui/material/Autocomplete";
 import CoinCard from "../coinCard/CoinCard";
 import "./stylesPopper.css";
@@ -47,6 +49,21 @@ const KryptoFilter = ({ userID, portfolio }) => {
   }, [userID]);
   // console.log(searchData);
 
+  useEffect(() => {
+    setLoading(true);
+    getAllAssets()
+      .then((data) => {
+        setData(data.data);
+        setSearchData(data.data.slice(0, 5));
+        console.log("getAllAssets", data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  }, [userID]);
+
   const PopperMy = useCallback((props) => {
     const anchorEl = document.getElementById("filters");
 
@@ -75,11 +92,13 @@ const KryptoFilter = ({ userID, portfolio }) => {
   };
 
   const searchCoin = (event, newValue) => {
-    const filteredResults = data
-      .filter((item) =>
-        item.Name.toLowerCase().includes(newValue.toLowerCase())
-      )
-      .slice(0, 5);
+    const filteredResults = data.length
+      ? data
+          .filter((item) =>
+            item?.Name?.toLowerCase().includes(newValue.toLowerCase())
+          )
+          .slice(0, 5)
+      : [];
 
     setSearchData(filteredResults);
   };
@@ -96,13 +115,21 @@ const KryptoFilter = ({ userID, portfolio }) => {
       sx={{
         width: "100%",
         bgcolor: "#202530",
-        padding: "35px 30px",
+        padding: isSmallScreen ? "20px 10px" : "35px 30px",
         display: "flex",
-        justifyContent: "space-between",
+        flexDirection: isSmallScreen ? "column" : "row",
+        justifyContent: isSmallScreen ? "center" : "space-between",
+        alignItems: isSmallScreen ? "center" : "flex-start",
         borderRadius: "8px",
+        gap: isSmallScreen ? "20px" : "0",
       }}
     >
-      <Box sx={{ width: "70%" }}>
+      <Box
+        sx={{
+          width: isSmallScreen ? "100%" : "70%",
+          textAlign: isSmallScreen ? "center" : "left",
+        }}
+      >
         <Typography variant="h6" component="div">
           {t("chooseAssets")}
         </Typography>
@@ -112,7 +139,7 @@ const KryptoFilter = ({ userID, portfolio }) => {
           sx={{
             fontSize: "0.9rem",
             color: "#ffffff80",
-            maxWidth: "70%",
+            maxWidth: isSmallScreen ? "100%" : "70%",
             padding: "1rem 0",
           }}
         >
@@ -123,7 +150,10 @@ const KryptoFilter = ({ userID, portfolio }) => {
         id="filters"
         sx={{
           display: "flex",
-          alignSelf: "flex-start",
+          flexDirection: isSmallScreen ? "column" : "row",
+          alignItems: "center",
+          gap: isSmallScreen ? "10px" : "2rem",
+          width: isSmallScreen ? "100%" : "auto",
         }}
       >
         <Select
@@ -131,14 +161,14 @@ const KryptoFilter = ({ userID, portfolio }) => {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={priceIndicator}
-          label="Age"
+          label="Price Indicator"
           onChange={handleChange}
           variant="outlined"
           sx={{
             color: "white",
             fontSize: "0.8rem",
             border: "none",
-            marginRight: "2rem",
+            marginRight: isSmallScreen ? "0" : "2rem",
             "& .MuiPaper-rounded": {
               backgroundColor: "#1d1d1d",
             },
@@ -175,7 +205,7 @@ const KryptoFilter = ({ userID, portfolio }) => {
         >
           <MenuItem
             value={t("noPriceIndicator")}
-            sx={{ backgroundColor: "#ididid" }}
+            sx={{ backgroundColor: "#1d1d1d" }}
           >
             {t("noPriceIndicator")}
           </MenuItem>
@@ -212,7 +242,6 @@ const KryptoFilter = ({ userID, portfolio }) => {
           renderInput={(params) => (
             <TextField
               {...params}
-              // label={t("search")}
               onFocus={(e) => e.target.select()}
               inputProps={{
                 ...params.inputProps,
@@ -228,7 +257,7 @@ const KryptoFilter = ({ userID, portfolio }) => {
           }}
           sx={{
             minWidth: "180px",
-            alignSelf: "flex-start",
+            alignSelf: isSmallScreen ? "stretch" : "flex-start",
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
               border: "1px solid #ffffff20",
             },

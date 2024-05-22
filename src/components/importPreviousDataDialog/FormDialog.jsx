@@ -1,12 +1,17 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import {
+  Box,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../app/stores/sessionStore";
 import { getUserPortfolio } from "../../lib/data";
@@ -19,6 +24,8 @@ const FormDialog = () => {
   const [confirmClose, setConfirmClose] = useState(false);
   const [sessionJotai] = useAtom(sessionAtom);
   const [, setPortfolio] = useAtom(portfolioAtom);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -113,9 +120,14 @@ const FormDialog = () => {
       <Dialog
         open={open}
         onClose={() => setConfirmClose(true)}
+        fullScreen={fullScreen}
         PaperProps={{
           component: "form",
           onSubmit: handleFormSubmit,
+          sx: {
+            width: { xs: "100%", sm: "90%", md: "70%" },
+            maxWidth: "600px",
+          },
         }}
       >
         <DialogTitle>{t("importUserData")}</DialogTitle>
@@ -148,7 +160,7 @@ const FormDialog = () => {
           <Button type="submit">{t("import")}</Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={confirmClose} onClose={handleCancelClose}>
+      <Dialog open={confirmClose} onClose={handleCancelClose} fullScreen={fullScreen}>
         <DialogTitle>{t("confirmAction")}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t("confirmCloseMessage")}</DialogContentText>
