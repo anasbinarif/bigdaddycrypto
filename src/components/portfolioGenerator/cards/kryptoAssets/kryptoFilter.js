@@ -10,7 +10,7 @@ import {
     useMediaQuery,
 } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
-import { getAssets } from "../../../../lib/data";
+import {getAllAssets, getAssets} from "../../../../lib/data";
 import Autocomplete from "@mui/material/Autocomplete";
 import CoinCard from "../coinCard/CoinCard";
 import "./stylesPopper.css";
@@ -38,10 +38,11 @@ const KryptoFilter = ({ userID, portfolio }) => {
 
     useEffect(() => {
         setLoading(true);
-        getAssets()
+        getAllAssets()
             .then((data) => {
                 setData(data.data);
                 setSearchData(data.data.slice(0, 5));
+                console.log("getAllAssets", data.data)
                 setLoading(false);
             })
             .catch((error) => {
@@ -78,11 +79,11 @@ const KryptoFilter = ({ userID, portfolio }) => {
     };
 
     const searchCoin = (event, newValue) => {
-        const filteredResults = data
+        const filteredResults = data.length ? data
             .filter((item) =>
-                item.Name.toLowerCase().includes(newValue.toLowerCase())
+                item?.Name?.toLowerCase().includes(newValue.toLowerCase())
             )
-            .slice(0, 5);
+            .slice(0, 5) : [];
 
         setSearchData(filteredResults);
     };

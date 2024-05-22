@@ -68,10 +68,6 @@ const CoinCard = ({ coin, selected, search = false, risk }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("coin logic changed", coin.Name, risk);
-  }, [coin]);
-
   return (
       <>
         {search ? (

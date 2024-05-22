@@ -12,7 +12,13 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteConfirmationDialog from "../../AlertDialog/AlertDialog";
-import {categoryColors, categoryColorsNew, getCategoryColor, getUserPortfolio} from "../../../lib/data";
+import {
+  categoryColors,
+  categoryColorsNew,
+  getCategoryColor,
+  getUserPortfolio,
+  UpdateCryptoCoins
+} from "../../../lib/data";
 import AlertBar from "../../customAllert/Alert";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../app/stores/sessionStore";
@@ -134,22 +140,20 @@ const PortfolioComponent = ({
     const fetchData = async () => {
       if (sessionJotai?.user) {
         const userId = sessionJotai?.user.id;
-        const res = await fetch("/api/crypto", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId }),
-        });
-        if (!res.ok) {
-          throw new Error(`Failed to update data${res}`);
+        try {
+          const res = await UpdateCryptoCoins(userId);
+          if (res.ok) {
+            // const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+            // setPortfolio(userPortfolio.data);
+          } else {
+            console.error("Failed to update crypto coins: ", res.statusText);
+          }
+        } catch (error) {
+          console.error("Error fetching data: ", error);
         }
-        // if (res.ok) {
-        //   const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-        //   setPortfolio(userPortfolio.data);
-        // }
       }
     };
+
     fetchData();
   }, [sessionJotai?.user.id, portfolio]);
 
@@ -233,7 +237,7 @@ const PortfolioComponent = ({
               }}
             >
               {loadingPortfolio &&
-                portfolio.assets.map((asset, index) => (
+                  portfolio.assets.slice().reverse().map((asset, index) => (
                   <Grid item key={index} xs={12} sm={6} md={15}>
                     <Card
                       onMouseEnter={() => handleMouseEnter(index)}

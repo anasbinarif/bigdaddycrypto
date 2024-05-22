@@ -178,6 +178,22 @@ export const getAssets = async (category) => {
   return await data;
 };
 
+export const getAllAssets = async () => {
+  const res = await fetch(`/api/getAllAssets`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: 'force-cache'
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const data = await res.json();
+  return await data;
+};
+
 export const storeUserPortfolioCoin = async (userId, coin) => {
   // const coinData = setCoinObject(coin);
   const newCoin = {
@@ -192,6 +208,17 @@ export const storeUserPortfolioCoin = async (userId, coin) => {
     body: JSON.stringify({ userId, coin: newCoin }),
   });
 };
+
+export const UpdateCryptoCoins = async (userId) => {
+  return await fetch("/api/crypto", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({userId}),
+    cache: "no-store",
+  });
+}
 
 export const getUserPortfolio = async (userId) => {
   const res = await fetch("/api/getUserPortfolio", {
