@@ -33,7 +33,7 @@ function TabPanel(props) {
   );
 }
 
-const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
+const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndicator }) => {
   const t = useTranslations("scrollableKryptoTabs");
   const [value, setValue] = useState(0);
   const [data, setData] = useState({});
@@ -206,6 +206,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID }) => {
                             coin={coin}
                             selected={checkCoinSelected(coin)}
                             risk={checkCoinRisk(coin)}
+                            priceIndicator={priceIndicator}
                         />
                     ))}
               </Box>

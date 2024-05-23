@@ -25,9 +25,8 @@ const MenuProps = {
   },
 };
 
-const KryptoFilter = ({ userID, portfolio }) => {
+const KryptoFilter = ({ userID, portfolio, priceIndicator, setPriceIndicator }) => {
   const t = useTranslations("kryptoFilter");
-  const [priceIndicator, setPriceIndicator] = useState(t("noPriceIndicator"));
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [searchVal, setSearchVal] = useState("");
@@ -207,18 +206,18 @@ const KryptoFilter = ({ userID, portfolio }) => {
           MenuProps={MenuProps}
         >
           <MenuItem
-            value={t("noPriceIndicator")}
+            value="pi"
             sx={{ backgroundColor: "#1d1d1d" }}
           >
             {t("noPriceIndicator")}
           </MenuItem>
-          <MenuItem value={t("extremelyPessimistic")}>
+          <MenuItem value="pi0">
             {t("extremelyPessimistic")}
           </MenuItem>
-          <MenuItem value={t("pessimistic")}>{t("pessimistic")}</MenuItem>
-          <MenuItem value={t("optimistic")}>{t("optimistic")}</MenuItem>
-          <MenuItem value={t("latecomer")}>{t("latecomer")}</MenuItem>
-          <MenuItem value={t("latecomerII")}>{t("latecomerII")}</MenuItem>
+          <MenuItem value="pi1">{t("pessimistic")}</MenuItem>
+          <MenuItem value="pi2">{t("optimistic")}</MenuItem>
+          <MenuItem value="pi3">{t("latecomer")}</MenuItem>
+          <MenuItem value="pi4">{t("latecomerII")}</MenuItem>
         </Select>
         <Autocomplete
           PopperComponent={PopperMy}

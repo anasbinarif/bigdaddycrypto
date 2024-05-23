@@ -31,12 +31,10 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
       let totalInvestment = 0;
       let weightedScore = 0;
 
-      // Calculate the total investment across all assets
       portfolio.assetsCalculations.assets.forEach((asset) => {
         totalInvestment += asset.totalInvest;
       });
 
-      // Calculate the weighted security score
       portfolio.assetsCalculations.assets.forEach((asset) => {
         const assetDetails = portfolio.assets.find(
           (a) => a.CoinGeckoID === asset.CoinGeckoID

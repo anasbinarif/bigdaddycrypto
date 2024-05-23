@@ -1,5 +1,5 @@
-import { Assets, PastBuyAndSell, User } from "../lib/models";
-import { connectToDb } from "./utils";
+import {Assets, PastBuyAndSell, User} from "../lib/models";
+import {connectToDb} from "./utils";
 // const fs = require('fs').promises;
 
 export const categoryColors = {
@@ -361,6 +361,256 @@ export const getCategoryColor = (category) => {
       return "#ffffff";
   }
 };
+
+export const bewerteAssetExtremPessimistisch = (rank, xWert) => {
+  const worte = ["Honey", "Gut", "OK", "Naja", "Teuer"];
+
+  const gruppen = [
+    { von: 0, bis: 5, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.11 },
+        { Wort: worte[1], von: 1.11, bis: 1.33 },
+        { Wort: worte[2], von: 1.33, bis: 1.55 },
+        { Wort: worte[3], von: 1.55, bis: 1.77 },
+        { Wort: worte[4], von: 1.77, bis: 9999 }
+      ]
+    },
+    { von: 6, bis: 10, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.12 },
+        { Wort: worte[1], von: 1.12, bis: 1.38 },
+        { Wort: worte[2], von: 1.38, bis: 1.63 },
+        { Wort: worte[3], von: 1.63, bis: 1.90 },
+        { Wort: worte[4], von: 1.90, bis: 9999 }
+      ]
+    },
+    { von: 11, bis: 17, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.15 },
+        { Wort: worte[1], von: 1.15, bis: 1.46 },
+        { Wort: worte[2], von: 1.46, bis: 1.78 },
+        { Wort: worte[3], von: 1.78, bis: 2.13 },
+        { Wort: worte[4], von: 2.13, bis: 9999 }
+      ]
+    },
+    { von: 17, bis: 24, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.16 },
+        { Wort: worte[1], von: 1.16, bis: 1.51 },
+        { Wort: worte[2], von: 1.51, bis: 1.89 },
+        { Wort: worte[3], von: 1.89, bis: 2.3 },
+        { Wort: worte[4], von: 2.3, bis: 9999 }
+      ]
+    },
+    { von: 25, bis: 40, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.18 },
+        { Wort: worte[1], von: 1.18, bis: 1.56 },
+        { Wort: worte[2], von: 1.56, bis: 1.99 },
+        { Wort: worte[3], von: 1.99, bis: 2.45 },
+        { Wort: worte[4], von: 2.45, bis: 9999 }
+      ]
+    },
+    { von: 40, bis: 65, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.19 },
+        { Wort: worte[1], von: 1.19, bis: 1.61 },
+        { Wort: worte[2], von: 1.61, bis: 2.07 },
+        { Wort: worte[3], von: 2.07, bis: 2.6 },
+        { Wort: worte[4], von: 2.6, bis: 9999 }
+      ]
+    },
+    { von: 66, bis: 85, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.20 },
+        { Wort: worte[1], von: 1.20, bis: 1.67 },
+        { Wort: worte[2], von: 1.67, bis: 2.18 },
+        { Wort: worte[3], von: 2.18, bis: 2.78 },
+        { Wort: worte[4], von: 2.78, bis: 9999 }
+      ]
+    },
+    { von: 86, bis: 119, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.22 },
+        { Wort: worte[1], von: 1.22, bis: 1.72 },
+        { Wort: worte[2], von: 1.72, bis: 2.29 },
+        { Wort: worte[3], von: 2.29, bis: 2.95 },
+        { Wort: worte[4], von: 2.95, bis: 9999 }
+      ]
+    },
+    { von: 120, bis: 179, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.25 },
+        { Wort: worte[1], von: 1.25, bis: 1.84 },
+        { Wort: worte[2], von: 1.84, bis: 2.54 },
+        { Wort: worte[3], von: 2.54, bis: 3.38 },
+        { Wort: worte[4], von: 3.38, bis: 9999 }
+      ]
+    },
+    { von: 180, bis: 249, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.29 },
+        { Wort: worte[1], von: 1.29, bis: 2.03 },
+        { Wort: worte[2], von: 2.03, bis: 2.95 },
+        { Wort: worte[3], von: 2.95, bis: 4.11 },
+        { Wort: worte[4], von: 4.11, bis: 9999 }
+      ]
+    },
+    { von: 250, bis: 349, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.40 },
+        { Wort: worte[1], von: 1.40, bis: 2.53 },
+        { Wort: worte[2], von: 2.53, bis: 4.16 },
+        { Wort: worte[3], von: 4.16, bis: 6.44 },
+        { Wort: worte[4], von: 6.44, bis: 9999 }
+      ]
+    },
+    { von: 350, bis: 499, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.47 },
+        { Wort: worte[1], von: 1.47, bis: 2.86 },
+        { Wort: worte[2], von: 2.86, bis: 4.99 },
+        { Wort: worte[3], von: 4.99, bis: 8.19 },
+        { Wort: worte[4], von: 8.19, bis: 9999 }
+      ]
+    },
+    { von: 500, bis: 20000, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.6 },
+        { Wort: worte[1], von: 1.6, bis: 3.65 },
+        { Wort: worte[2], von: 3.65, bis: 7.26 },
+        { Wort: worte[3], von: 7.26, bis: 13.36 },
+        { Wort: worte[4], von: 13.36, bis: 9999 }
+      ]
+    }
+  ];
+
+  for (let gruppe of gruppen) {
+    if (rank >= gruppe.von && rank <= gruppe.bis) {
+      for (let wert of gruppe.Werte) {
+        if (xWert >= wert.von && xWert <= wert.bis) {
+          const index = worte.indexOf(wert.Wort);
+          return wert.Wort;
+        }
+      }
+    }
+  }
+
+  return "N/A";
+};
+
+export const bewerteAssetSpaeteinsteiger = (rank, xWert) => {
+  const worte = ["Honey", "Gut", "OK", "Naja", "Teuer"];
+
+  const gruppen = [
+    { von: 0, bis: 5, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.11 },
+        { Wort: worte[1], von: 1.11, bis: 1.28 },
+        { Wort: worte[2], von: 1.28, bis: 1.45 },
+        { Wort: worte[3], von: 1.45, bis: 1.75 },
+        { Wort: worte[4], von: 1.75, bis: 9999 }
+      ]
+    },
+    { von: 6, bis: 10, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.14 },
+        { Wort: worte[1], von: 1.14, bis: 1.3 },
+        { Wort: worte[2], von: 1.3, bis: 1.5 },
+        { Wort: worte[3], von: 1.5, bis: 1.77 },
+        { Wort: worte[4], von: 1.77, bis: 9999 }
+      ]
+    },
+    { von: 11, bis: 17, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.15 },
+        { Wort: worte[1], von: 1.15, bis: 1.31 },
+        { Wort: worte[2], von: 1.31, bis: 1.52 },
+        { Wort: worte[3], von: 1.52, bis: 1.79 },
+        { Wort: worte[4], von: 1.79, bis: 9999 }
+      ]
+    },
+    { von: 17, bis: 24, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.16 },
+        { Wort: worte[1], von: 1.16, bis: 1.32 },
+        { Wort: worte[2], von: 1.32, bis: 1.53 },
+        { Wort: worte[3], von: 1.53, bis: 1.8 },
+        { Wort: worte[4], von: 1.8, bis: 9999 }
+      ]
+    },
+    { von: 25, bis: 40, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.17 },
+        { Wort: worte[1], von: 1.17, bis: 1.33 },
+        { Wort: worte[2], von: 1.33, bis: 1.54 },
+        { Wort: worte[3], von: 1.54, bis: 1.81 },
+        { Wort: worte[4], von: 1.81, bis: 9999 }
+      ]
+    },
+    { von: 40, bis: 65, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.18 },
+        { Wort: worte[1], von: 1.18, bis: 1.34 },
+        { Wort: worte[2], von: 1.34, bis: 1.55 },
+        { Wort: worte[3], von: 1.55, bis: 1.82 },
+        { Wort: worte[4], von: 1.82, bis: 9999 }
+      ]
+    },
+    { von: 66, bis: 85, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.19 },
+        { Wort: worte[1], von: 1.19, bis: 1.35 },
+        { Wort: worte[2], von: 1.35, bis: 1.56 },
+        { Wort: worte[3], von: 1.56, bis: 1.83 },
+        { Wort: worte[4], von: 1.83, bis: 9999 }
+      ]
+    },
+    { von: 86, bis: 119, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.2 },
+        { Wort: worte[1], von: 1.2, bis: 1.36 },
+        { Wort: worte[2], von: 1.36, bis: 1.57 },
+        { Wort: worte[3], von: 1.57, bis: 1.84 },
+        { Wort: worte[4], von: 1.84, bis: 9999 }
+      ]
+    },
+    { von: 120, bis: 179, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.21 },
+        { Wort: worte[1], von: 1.21, bis: 1.37 },
+        { Wort: worte[2], von: 1.37, bis: 1.58 },
+        { Wort: worte[3], von: 1.58, bis: 1.85 },
+        { Wort: worte[4], von: 1.85, bis: 9999 }
+      ]
+    },
+    { von: 180, bis: 249, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.22 },
+        { Wort: worte[1], von: 1.22, bis: 1.38 },
+        { Wort: worte[2], von: 1.38, bis: 1.59 },
+        { Wort: worte[3], von: 1.59, bis: 1.86 },
+        { Wort: worte[4], von: 1.86, bis: 9999 }
+      ]
+    },
+    { von: 250, bis: 349, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.23 },
+        { Wort: worte[1], von: 1.23, bis: 1.39 },
+        { Wort: worte[2], von: 1.39, bis: 1.6 },
+        { Wort: worte[3], von: 1.6, bis: 1.87 },
+        { Wort: worte[4], von: 1.87, bis: 9999 }
+      ]
+    },
+    { von: 350, bis: 499, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.24 },
+        { Wort: worte[1], von: 1.24, bis: 1.4 },
+        { Wort: worte[2], von: 1.4, bis: 1.61 },
+        { Wort: worte[3], von: 1.61, bis: 1.88 },
+        { Wort: worte[4], von: 1.88, bis: 9999 }
+      ]
+    },
+    { von: 500, bis: 20000, Werte: [
+        { Wort: worte[0], von: 1, bis: 1.25 },
+        { Wort: worte[1], von: 1.25, bis: 1.4 },
+        { Wort: worte[2], von: 1.4, bis: 1.61 },
+        { Wort: worte[3], von: 1.61, bis: 1.88 },
+        { Wort: worte[4], von: 1.88, bis: 9999 }
+      ]
+    }
+  ];
+
+  for (let gruppe of gruppen) {
+    if (rank >= gruppe.von && rank <= gruppe.bis) {
+      for (let wert of gruppe.Werte) {
+        if (xWert >= wert.von && xWert <= wert.bis) {
+          const index = worte.indexOf(wert.Wort);
+          return wert.Wort;
+        }
+      }
+    }
+  }
+
+  return "N/A";
+};
+
+
 
 export const categoriesDisplay1 = {
   ai: "AI",
