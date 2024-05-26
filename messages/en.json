@@ -91,6 +91,18 @@
     "yes": "Yes",
     "no": "No"
   },
+  "SubscribeDialog": {
+    "Subscribe": "Import User Data",
+    "subscribeInstructions": "To import your data from our previous application, please enter your username and password.",
+    "name": "Name",
+    "pin": "Pin",
+    "cancel": "Cancel",
+    "import": "Import",
+    "confirmAction": "Confirm Action",
+    "confirmCloseMessage": "Are you sure you do not want to import your previous data? You won't be asked again later.",
+    "yes": "Yes",
+    "no": "No"
+  },
   "footer": {
     "footerText": "Copyright © 2024, All rights reserved. · Impressum · Privacy Policy · The information provided does not constitute financial advice. Any actions are taken at your own risk."
   },
@@ -114,7 +126,9 @@
     "cbdcNetworks": "CBDC-Netzwerke",
     "eCommerce": "E-Commerce",
     "tokenizationRWA": "Tokenisierung/RWA",
-    "noHypeTopic": "Kein Hype-Thema"
+    "noHypeTopic": "Kein Hype-Thema",
+    "hideRiskCoins": "Hide Risk Coins",
+    "showRiskCoins": "Show Risk Coins"
   },
   "bubbleChart": {
     "symbolSize": "Symbol Size",

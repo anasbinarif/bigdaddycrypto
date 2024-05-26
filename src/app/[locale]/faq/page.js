@@ -257,7 +257,7 @@ function VideoPlayer() {
   return (
     <>
       <Navbar />
-      <Box sx={{ marginTop: isSmallScreen ? "5rem" : "9rem", backgroundColor: "#111826" }}>
+      <Box sx={{ marginTop: isSmallScreen ? "5rem" : "9rem", backgroundColor: "#111826", overflowX: "hidden" }}>
         <Typography
           sx={{
             color: "#24ffa7",

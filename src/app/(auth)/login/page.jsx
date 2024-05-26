@@ -140,7 +140,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ overflew: "no-wrap" }}>
       <AlertBar
         open={alert.open}
         message={alert.message}
@@ -280,7 +280,6 @@ const LoginPage = () => {
             label="PIN code"
             variant="filled"
             placeholder="4-8 numbers"
-            place
             type="password"
             value={user.pin}
             onChange={handleUserChange}

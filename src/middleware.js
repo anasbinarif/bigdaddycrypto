@@ -1,82 +1,17 @@
-// // middleware.js
-// import { withAuth } from "next-auth/middleware";
-// import { NextResponse } from "next/server";
-//
-// export default withAuth(
-//     async function middleware(req) {
-//         const token = req.nextauth.token;
-//
-//         // Log user access
-//         console.log("Middleware - token:", token);
-//
-//         if (req.nextUrl.pathname.startsWith("/admin")) {
-//             if (!token || !token.isAdmin) {
-//                 return NextResponse.redirect(new URL("/", req.url));
-//             }
-//         }
-//     },
-//     {
-//         callbacks: {
-//             authorized: ({ token }) => {
-//                 // Only allow if user is authenticated
-//                 return !!token;
-//             },
-//         },
-//     }
-// );
-//
-// export const config = {
-//     matcher: ["/", "/admin", "/faq", "/media", "/assetsGraph"],
-// };
-
-
 // middleware.js
-import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
-import createMiddleware from 'next-intl/middleware';
+import { NextResponse } from 'next/server';
+import { chain } from './chain';
+import { withIntlMiddleware } from './intlMiddleware';
+import { withAuthMiddleware } from './authMiddleware';
 
-// Internationalization middleware
-const intlMiddleware = createMiddleware({
-    locales: ['en', 'de'],
-    defaultLocale: 'en'
-});
+export default function middleware(req, event) {
+    const middlewareChain = chain([
+        withAuthMiddleware,
+        withIntlMiddleware,
+    ]);
 
-export default async function middleware(req) {
-    // Run the internationalization middleware
-    const intlResponse = intlMiddleware(req);
-    if (intlResponse) {
-        return intlResponse;
-    }
-
-    // Log user access (debugging purpose)
-    console.log("Middleware - before auth");
-
-    // Authentication handling
-    const authMiddleware = withAuth(
-        async function middleware(req) {
-            const token = req.nextauth.token;
-
-            // Log user access
-            console.log("Middleware - token:", token);
-
-            if (req.nextUrl.pathname.startsWith("/admin")) {
-                if (!token || !token.isAdmin) {
-                    return NextResponse.redirect(new URL("/", req.url));
-                }
-            }
-            return NextResponse.next();
-        },
-        {
-            callbacks: {
-                authorized: ({ token }) => {
-                    // Only allow if user is authenticated
-                    return !!token;
-                },
-            },
-        }
-    );
-
-    return authMiddleware(req);
+    const response = NextResponse.next();
+    return middlewareChain(req, event, response);
 }
 
 // Combine matchers from both middlewares

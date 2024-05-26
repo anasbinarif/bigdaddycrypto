@@ -127,7 +127,7 @@ function BewertungCard() {
               >
                 {t("sicherheit")}
                 <CustomizedTooltips
-                  text1={t("sicherhei   tTooltipText1")}
+                  text1={t("sicherheitTooltipText1")}
                   text2={t("sicherheitTooltipText2")}
                 />
               </span>{" "}

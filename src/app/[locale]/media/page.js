@@ -216,7 +216,7 @@ const MediaVideoPlayer = () => {
     return (
         <>
             <Navbar />
-            <Box sx={{ marginTop: isSmallScreen ? "5rem" : "9rem", backgroundColor: "#111826" }}>
+            <Box sx={{ marginTop: isSmallScreen ? "5rem" : "9rem", backgroundColor: "#111826", overflowX: "hidden" }}>
                 <Typography
                     sx={{
                         marginLeft: isSmallScreen ? "1rem" : "6rem",

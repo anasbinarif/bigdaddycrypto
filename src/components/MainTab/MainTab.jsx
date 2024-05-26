@@ -56,9 +56,9 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   const [assetsLeangth, setAssetsLeangth] = useState(0);
 
   useEffect(() => {
-    if (session) {
-      setSession(session);
-    }
+    // if (session) {
+    //   setSession(session);
+    // }
     const fetchData = async () => {
       if (sessionJotai?.user) {
         const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);

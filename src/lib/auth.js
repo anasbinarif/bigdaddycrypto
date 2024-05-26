@@ -58,7 +58,7 @@ export const authOptions = {
         token.username = user.username;
         token.email = user.email;
         token.pastUserCheck = user.pastUserCheck;
-        console.log("calling again token");
+        token.subscribed = user.subscribed;
       }
       return token;
     },
@@ -69,7 +69,7 @@ export const authOptions = {
         session.user.username = token.username;
         session.user.email = token.email;
         session.user.pastUserCheck = token.pastUserCheck;
-        console.log("calling again session");
+        session.user.subscribed = token.subscribed;
       }
       return session;
     },

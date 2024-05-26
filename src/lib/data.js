@@ -38,15 +38,6 @@ export const getUser = async (id) => {
   }
 };
 
-export const getUsers = async () => {
-  try {
-    await connectToDb();
-    return await User.find();
-  } catch (e) {
-    console.log(e);
-  }
-};
-
 export const importCryptoData = async (cryptoData) => {
   try {
     await connectToDb();
@@ -246,6 +237,7 @@ export const getUserPortfolio = async (userId) => {
     none: 0,
   };
   const data1 = await res.json();
+  console.log("data_testing_new_login", data1);
   const data = {
     assets: data1.data.assetDetails,
     assetsCalculations: data1.data.portfolio,
@@ -609,6 +601,31 @@ export const bewerteAssetSpaeteinsteiger = (rank, xWert) => {
 
   return "N/A";
 };
+
+export async function fetchUserSubscriptionPlan(userId) {
+    try {
+        const response = await fetch('/api/getUserSubscriptionPlan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId })
+        });
+
+        console.log("fetchUserSubscriptionPlan");
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to fetch subscription plan');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error in fetchUserSubscriptionPlan:', error);
+        throw error;
+    }
+}
+
 
 
 

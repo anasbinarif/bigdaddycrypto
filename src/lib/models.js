@@ -36,8 +36,61 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    currentSubscription: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Payments',
+        default: null
+    }
 }, { timestamps: true }
 );
+
+const PaymentsSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    Subscription: {
+        plan: {
+            type: String,
+            enum: ["Pro", "Premium"],
+            required: true
+        },
+        planId: {
+            type: String,
+            required: true
+        },
+        billingCycle: {
+            type: String,
+            enum: ["monthly", "yearly"],
+            required: true
+        },
+        status: {
+            type: String,
+            enum: ["active", "pastDue"],
+            required: true
+        },
+        subscriptionId: {
+            type: String,
+            required: true
+        },
+        nextBilledAt: {
+            type: Number,
+        },
+        endDate: {
+            type: Number || null,
+        }
+    },
+    oneTimePayment: [
+        {
+            date: {
+                type: Date,
+                required: true
+            }
+        }
+    ],
+}, { timestamps: true });
+
 
 const assetsSchema = new mongoose.Schema({
     ID: {
@@ -143,6 +196,10 @@ const portfolioSchema = new mongoose.Schema({
         DCA: {
             type: Number,
             default: 0.0
+        },
+        DCA_0: {
+            type: Number,
+            default: 0
         },
         Gewichtung: {
             type: Number,
@@ -341,6 +398,8 @@ const pastBuyAndSellSchema = new mongoose.Schema({
     }
 });
 
+
+export const Payments = mongoose.models?.Payments || mongoose.model("Payments", PaymentsSchema);
 export const PastPortfolio = mongoose.models?.PastPortfolio || mongoose.model("PastPortfolio", pastPortfolioSchema);
 export const PastUsers = mongoose.models?.PastUsers || mongoose.model("PastUsers", pastUserSchema);
 export const PastBuyAndSell = mongoose.models?.PastBuyAndSell || mongoose.model("PastBuyAndSell", pastBuyAndSellSchema);

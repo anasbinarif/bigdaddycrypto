@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Avatar,
   Box,
   Button, Dialog, DialogActions, DialogContent, DialogTitle,
   IconButton,
   MenuItem,
   Paper,
-  Select,
+  Select, Snackbar,
   Tab,
   Table,
   TableBody,
@@ -18,7 +19,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCrown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./coinDetails.module.css";
 import { useAtom } from "jotai/index";
@@ -33,6 +34,7 @@ import { parse } from 'date-fns';
 const CoinDetails = (props) => {
   const { coin, index } = props;
   const [value, setValue] = useState(0);
+  const [alertOpen, setAlertOpen] = useState(false);
   const [rowVals, setRowVals] = useState([]);
   const [validationError, setValidationError] = useState("");
   const [sessionJotai] = useAtom(sessionAtom);
@@ -284,6 +286,10 @@ const CoinDetails = (props) => {
   };
 
   const handleExportCSV = () => {
+    if (sessionJotai?.user?.subscriptionPlan === "free") {
+      setAlertOpen(true)
+      return
+    }
     const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
 
     const rows = rowVals.map(row => {
@@ -312,6 +318,14 @@ const CoinDetails = (props) => {
     link.click();
     document.body.removeChild(link);
   };
+
+  const handleImport = () => {
+    if (sessionJotai?.user?.subscriptionPlan === "free") {
+      setAlertOpen(true)
+      return
+    }
+    handleOpenDialog()
+  }
 
 
   const handleOpenDialog = () => setOpenDialog(true);
@@ -394,183 +408,91 @@ const CoinDetails = (props) => {
 
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "#202530",
-        color: "white",
-        height: "100%",
-        borderRadius: "8px",
-        padding: "35px 30px",
-      }}
-    >
-      <Box sx={{ display: "flex" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignSelf: "flex-start",
-            width: "25%",
-            marginRight: "1.5rem",
-          }}
-        >
+    <>
+      <Box
+        sx={{
+          backgroundColor: "#202530",
+          color: "white",
+          height: "100%",
+          borderRadius: "8px",
+          padding: "35px 30px",
+        }}
+      >
+        <Box sx={{ display: "flex" }}>
           <Box
-            sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1, mr: 2 }}
+            sx={{
+              display: "flex",
+              alignSelf: "flex-start",
+              width: "25%",
+              marginRight: "1.5rem",
+            }}
           >
-            <Avatar
-              src={coin.cgImageURL}
-              sx={{
-                width: 50,
-                height: 50,
-                marginRight: 1,
-                alignSelf: "flex-start",
-              }}
-            />
+            <Box
+              sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1, mr: 2 }}
+            >
+              <Avatar
+                src={coin.cgImageURL}
+                sx={{
+                  width: 50,
+                  height: 50,
+                  marginRight: 1,
+                  alignSelf: "flex-start",
+                }}
+              />
+            </Box>
+            <Box sx={{ alignSelf: "center" }}>
+              <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
+                {coin.Ticker}
+              </Typography>
+              <Typography noWrap>{coin.CoinGeckoID}</Typography>
+              <Typography>{coin.Price.toFixed(2)} €</Typography>
+            </Box>
           </Box>
-          <Box sx={{ alignSelf: "center" }}>
-            <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
-              {coin.Ticker}
-            </Typography>
-            <Typography noWrap>{coin.CoinGeckoID}</Typography>
-            <Typography>{coin.Price.toFixed(2)} €</Typography>
-          </Box>
-        </Box>
-        <Box className={styles.grid}>
-          <Box className={styles.grid__item}>
-            <Typography sx={{ fontSize: "0.9rem" }}>Bestand</Typography>
-            <Typography
-              sx={{
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {financialSummary.totalHoldingsValue},00 €
-            </Typography>
-            <Typography sx={{ color: "#ffffff88" }}>
-              {financialSummary.totalCoins} {coin.Ticker}
-            </Typography>
-          </Box>
-          <Box className={styles.grid__item}>
-            <Typography sx={{ fontSize: "0.9rem" }}>Investiert</Typography>
-            <Typography
-              sx={{
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {financialSummary.totalInvested},00 €
-            </Typography>
-            <Typography sx={{ color: "#ffffff88" }}>Geplant: 0,00 €</Typography>
-          </Box>
-          <Box className={styles.grid__item}>
-            <Typography sx={{ fontSize: "0.9rem" }}>
-              Gesamtgewinn/-Verlust
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {financialSummary.totalWinLoss},00 €
-            </Typography>
-            <Typography
-              className={
-                financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
-              }
-              sx={{
-                "&.down": {
-                  color: "red",
-                },
-
-                "&.up": {
-                  color: "green",
-                },
-
-                "&.down:before": {
-                  content: '"▼ "',
-                  fontSize: "80%",
-                  marginRight: "3px",
-                },
-
-                "&.up:before": {
-                  content: '"▲ "',
-                  fontSize: "80%",
-                  marginRight: "3px",
-                },
-              }}
-            >
-              {financialSummary.totalWinLossPercentage} %
-            </Typography>
-          </Box>
-          <Box className={styles.grid__item}>
-            <Typography sx={{ fontSize: "0.9rem" }}>
-              Durchschn. Kaufpreis
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                color: `${financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
-                  }`,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {financialSummary.avgPurchasePrice > 0
-                ? `${financialSummary.avgPurchasePrice} €`
-                : "--,-- €"}
-            </Typography>
-            <Typography
-              className={
-                financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
-              }
-              sx={{
-                "&.down": {
-                  color: "red",
-                },
-
-                "&.up": {
-                  color: "green",
-                },
-
-                "&.down:before": {
-                  content: '"▼ "',
-                  fontSize: "80%",
-                  marginRight: "3px",
-                },
-
-                "&.up:before": {
-                  content: '"▲ "',
-                  fontSize: "80%",
-                  marginRight: "3px",
-                },
-              }}
-            >
-              {financialSummary.avgPurchasePricePercentage} %
-            </Typography>
-          </Box>
-          <Box className={styles.grid__item}>
-            <Typography sx={{ fontSize: "0.9rem" }}>
-              Durchschn. Verkaufspreis
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                color: `${financialSummary.avgSellingPrice > 0 ? "" : "rgb(68, 68, 68)"
-                  }`,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {financialSummary.avgSellingPrice > 0
-                ? `${financialSummary.avgSellingPrice} €`
-                : "--,-- €"}
-            </Typography>
-            {financialSummary.avgSellingPricePercentage > 0 && (
+          <Box className={styles.grid}>
+            <Box className={styles.grid__item}>
+              <Typography sx={{ fontSize: "0.9rem" }}>Bestand</Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.8rem",
+                  fontWeight: "bold",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {financialSummary.totalHoldingsValue},00 €
+              </Typography>
+              <Typography sx={{ color: "#ffffff88" }}>
+                {financialSummary.totalCoins} {coin.Ticker}
+              </Typography>
+            </Box>
+            <Box className={styles.grid__item}>
+              <Typography sx={{ fontSize: "0.9rem" }}>Investiert</Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.8rem",
+                  fontWeight: "bold",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {financialSummary.totalInvested},00 €
+              </Typography>
+              <Typography sx={{ color: "#ffffff88" }}>Geplant: 0,00 €</Typography>
+            </Box>
+            <Box className={styles.grid__item}>
+              <Typography sx={{ fontSize: "0.9rem" }}>
+                Gesamtgewinn/-Verlust
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.8rem",
+                  fontWeight: "bold",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {financialSummary.totalWinLoss},00 €
+              </Typography>
               <Typography
                 className={
-                  financialSummary.avgSellingPricePercentage < 0 ? "up" : "down"
+                  financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
                 }
                 sx={{
                   "&.down": {
@@ -594,410 +516,518 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {financialSummary.avgSellingPricePercentage} %
+                {financialSummary.totalWinLossPercentage} %
               </Typography>
-            )}
-          </Box>
-          <Box className={styles.grid__item}>
-            <Typography sx={{ fontSize: "0.9rem" }}>
-              Gewinn realisiert
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {financialSummary.realizedProfit},00 €
-            </Typography>
-            <Typography sx={{ color: "#ffffff88" }}>% von Invest</Typography>
+            </Box>
+            <Box className={styles.grid__item}>
+              <Typography sx={{ fontSize: "0.9rem" }}>
+                Durchschn. Kaufpreis
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.8rem",
+                  fontWeight: "bold",
+                  color: `${financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
+                    }`,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {financialSummary.avgPurchasePrice > 0
+                  ? `${financialSummary.avgPurchasePrice} €`
+                  : "--,-- €"}
+              </Typography>
+              <Typography
+                className={
+                  financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
+                }
+                sx={{
+                  "&.down": {
+                    color: "red",
+                  },
+
+                  "&.up": {
+                    color: "green",
+                  },
+
+                  "&.down:before": {
+                    content: '"▼ "',
+                    fontSize: "80%",
+                    marginRight: "3px",
+                  },
+
+                  "&.up:before": {
+                    content: '"▲ "',
+                    fontSize: "80%",
+                    marginRight: "3px",
+                  },
+                }}
+              >
+                {financialSummary.avgPurchasePricePercentage} %
+              </Typography>
+            </Box>
+            <Box className={styles.grid__item}>
+              <Typography sx={{ fontSize: "0.9rem" }}>
+                Durchschn. Verkaufspreis
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.8rem",
+                  fontWeight: "bold",
+                  color: `${financialSummary.avgSellingPrice > 0 ? "" : "rgb(68, 68, 68)"
+                    }`,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {financialSummary.avgSellingPrice > 0
+                  ? `${financialSummary.avgSellingPrice} €`
+                  : "--,-- €"}
+              </Typography>
+              {financialSummary.avgSellingPricePercentage > 0 && (
+                <Typography
+                  className={
+                    financialSummary.avgSellingPricePercentage < 0 ? "up" : "down"
+                  }
+                  sx={{
+                    "&.down": {
+                      color: "red",
+                    },
+
+                    "&.up": {
+                      color: "green",
+                    },
+
+                    "&.down:before": {
+                      content: '"▼ "',
+                      fontSize: "80%",
+                      marginRight: "3px",
+                    },
+
+                    "&.up:before": {
+                      content: '"▲ "',
+                      fontSize: "80%",
+                      marginRight: "3px",
+                    },
+                  }}
+                >
+                  {financialSummary.avgSellingPricePercentage} %
+                </Typography>
+              )}
+            </Box>
+            <Box className={styles.grid__item}>
+              <Typography sx={{ fontSize: "0.9rem" }}>
+                Gewinn realisiert
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.8rem",
+                  fontWeight: "bold",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {financialSummary.realizedProfit},00 €
+              </Typography>
+              <Typography sx={{ color: "#ffffff88" }}>% von Invest</Typography>
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Box sx={{ width: "100%", marginTop: "3rem" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="transparent"
-          sx={{
-            "& .MuiTab-root": {
-              color: "#ffffff80",
-              "&.Mui-selected": {
-                backgroundColor: "#ffffff08",
-                color: "#ffffff",
-                border: "none",
+        <Box sx={{ width: "100%", marginTop: "3rem" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="transparent"
+            sx={{
+              "& .MuiTab-root": {
+                color: "#ffffff80",
+                "&.Mui-selected": {
+                  backgroundColor: "#ffffff08",
+                  color: "#ffffff",
+                  border: "none",
+                },
               },
-            },
-          }}
-        >
-          <Tab
-            label="Transaktionen"
-            sx={{
-              backgroundColor: value === 0 ? "#ffffff08" : "#00000033",
-              marginRight: "15px",
-              borderTopLeftRadius: "8px",
-              borderTopRightRadius: "8px",
-              fontWeight: value === 0 ? "bold" : "normal",
-              color: value === 0 ? "#ffffff" : "#ffffff80",
-              fontSize: "12px",
             }}
-          />
-          <Tab
-            label="Kaufzonen"
-            sx={{
-              backgroundColor: value === 1 ? "#ffffff08" : "#00000033",
-              marginRight: "15px",
-              borderTopLeftRadius: "8px",
-              borderTopRightRadius: "8px",
-              fontWeight: value === 1 ? "bold" : "normal",
-              fontSize: "12px",
-            }}
-          />
-          <Tab
-            label="Verkaufszonen"
-            sx={{
-              backgroundColor: value === 2 ? "#ffffff08" : "#00000033",
-              marginRight: "15px",
-              borderTopLeftRadius: "8px",
-              borderTopRightRadius: "8px",
-              fontWeight: value === 2 ? "bold" : "normal",
-              fontSize: "12px",
-            }}
-          />
-        </Tabs>
-        <Box>
-          {value === 0 && (
-            <TableContainer
-              component={Paper}
+          >
+            <Tab
+              label="Transaktionen"
               sx={{
-                backgroundColor: "#ffffff08",
-                "& .MuiTableCell-head": {
-                  color: "#ffffff50",
-                  border: "none",
-                  fontWeight: "bold",
-                },
-                "& .MuiTableBody-root .MuiTableRow-root": {
-                  backgroundColor: "#00000033",
-                  "&:hover": {
-                    backgroundColor: "#00000050",
-                  },
-                },
-                "& .MuiTableCell-body": {
-                  color: "white",
-                  border: "none",
-                },
+                backgroundColor: value === 0 ? "#ffffff08" : "#00000033",
+                marginRight: "15px",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+                fontWeight: value === 0 ? "bold" : "normal",
+                color: value === 0 ? "#ffffff" : "#ffffff80",
+                fontSize: "12px",
               }}
-            >
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Aktion</TableCell>
-                    <TableCell>Datum</TableCell>
-                    <TableCell>Preis pro Coin</TableCell>
-                    <TableCell>Betrag in EUR</TableCell>
-                    <TableCell>Coins</TableCell>
-                    <TableCell>Haltedauer</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {/* Render six rows */}
-                  {rowVals.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <Select
-                          inputProps={{ "aria-label": "Without label" }}
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={row.Type}
-                          label="Age"
-                          onChange={(e) =>
-                            handleRowData(e.target.value, index, "Type")
-                          }
-                          variant="outlined"
-                          sx={{
-                            color:
-                              row.Type === "Kauf"
-                                ? "#4CAF50"
-                                : row.Type === "Verkauf"
-                                  ? "#F44336"
-                                  : "white",
-                            fontSize: "0.8rem",
-                            border: "none",
+            />
+            <Tab
+              label="Kaufzonen"
+              sx={{
+                backgroundColor: value === 1 ? "#ffffff08" : "#00000033",
+                marginRight: "15px",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+                fontWeight: value === 1 ? "bold" : "normal",
+                fontSize: "12px",
+              }}
+            />
+            <Tab
+              label="Verkaufszonen"
+              sx={{
+                backgroundColor: value === 2 ? "#ffffff08" : "#00000033",
+                marginRight: "15px",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+                fontWeight: value === 2 ? "bold" : "normal",
+                fontSize: "12px",
+              }}
+            />
+          </Tabs>
+          <Box>
+            {value === 0 && (
+              <TableContainer
+                component={Paper}
+                sx={{
+                  backgroundColor: "#ffffff08",
+                  "& .MuiTableCell-head": {
+                    color: "#ffffff50",
+                    border: "none",
+                    fontWeight: "bold",
+                  },
+                  "& .MuiTableBody-root .MuiTableRow-root": {
+                    backgroundColor: "#00000033",
+                    "&:hover": {
+                      backgroundColor: "#00000050",
+                    },
+                  },
+                  "& .MuiTableCell-body": {
+                    color: "white",
+                    border: "none",
+                  },
+                }}
+              >
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Aktion</TableCell>
+                      <TableCell>Datum</TableCell>
+                      <TableCell>Preis pro Coin</TableCell>
+                      <TableCell>Betrag in EUR</TableCell>
+                      <TableCell>Coins</TableCell>
+                      <TableCell>Haltedauer</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {/* Render six rows */}
+                    {rowVals.map((row, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Select
+                            inputProps={{ "aria-label": "Without label" }}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={row.Type}
+                            label="Age"
+                            onChange={(e) =>
+                              handleRowData(e.target.value, index, "Type")
+                            }
+                            variant="outlined"
+                            sx={{
+                              color:
+                                row.Type === "Kauf"
+                                  ? "#4CAF50"
+                                  : row.Type === "Verkauf"
+                                    ? "#F44336"
+                                    : "white",
+                              fontSize: "0.8rem",
+                              border: "none",
 
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              border: "1px solid #ffffff20",
-                            },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              border: "1px solid #ffffff20",
-                            },
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "1px solid #ffffff20",
+                              },
+                              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                border: "1px solid #ffffff20",
+                              },
 
-                            "& .MuiFormHelperText-root": {
-                              color: "#ffffff",
-                            },
-                            "& .MuiFormLabel-root": {
-                              color: "#ffffff",
-                              "&.Mui-focused": {
+                              "& .MuiFormHelperText-root": {
                                 color: "#ffffff",
                               },
-                            },
-
-                            "& .MuiOutlinedInput-root": {
-                              "&:selected": {
-                                border: "none",
+                              "& .MuiFormLabel-root": {
+                                color: "#ffffff",
+                                "&.Mui-focused": {
+                                  color: "#ffffff",
+                                },
                               },
-                            },
 
-                            "& .MuiInputBase-root": {
-                              // border: "none",
-                            },
-                            "& .MuiSelect-select": {
-                              // border: "1px solid #ffffff20",
-                              // border: "none",
-                              padding: "5px",
-                              "&:focus-visible": {
-                                outline: "none",
+                              "& .MuiOutlinedInput-root": {
+                                "&:selected": {
+                                  border: "none",
+                                },
                               },
-                            },
-                            "& .MuiSvgIcon-root": { color: "#ffffff" },
-                          }}
-                        >
-                          <MenuItem value="Kauf">Kauf</MenuItem>
-                          <MenuItem value="Verkauf">VerKauf</MenuItem>
-                        </Select>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          {/* <label htmlFor="datePicker">Select a date:</label> */}
-                          <input
-                            type="date"
-                            id="datePicker"
-                            value={row.Date}
-                            onChange={(e) =>
-                              handleRowData(e.target.value, index, "Date")
-                            }
-                            max={getTodayString()}
-                            className={styles["input--date"]}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            border: "1px solid #ffffff20",
-                            padding: "3px 5px",
-                            borderRadius: "4px",
-                            maxWidth: "100px",
-                          }}
-                        >
-                          {row.PricePerCoin} €
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            border: "1px solid #ffffff20",
-                            padding: "3px 5px",
-                            borderRadius: "4px",
-                            maxWidth: "100px",
-                          }}
-                        >
-                          <input
-                            type="text"
-                            id="betragInput"
-                            value={row.Betrag}
-                            onChange={(e) =>
-                              handleRowData(
-                                parseFloat(e.target.value) || 0,
-                                index,
-                                "Betrag"
-                              )
-                            }
-                            style={{
-                              marginRight: "5px",
-                              width: "100px",
-                              backgroundColor: "transparent",
-                              border: "none",
+
+                              "& .MuiInputBase-root": {
+                                // border: "none",
+                              },
+                              "& .MuiSelect-select": {
+                                // border: "1px solid #ffffff20",
+                                // border: "none",
+                                padding: "5px",
+                                "&:focus-visible": {
+                                  outline: "none",
+                                },
+                              },
+                              "& .MuiSvgIcon-root": { color: "#ffffff" },
                             }}
-                          />
-                          €
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            border: "1px solid #ffffff20",
-                            padding: "3px 5px",
-                            borderRadius: "4px",
-                            maxWidth: "100px",
-                          }}
-                        >
-                          <input
-                            type="text"
-                            id="numberInput"
-                            value={row.Coins}
-                            onChange={(e) =>
-                              handleRowData(
-                                parseFloat(e.target.value) || 0,
-                                index,
-                                "Coins"
-                              )
-                            }
-                            className={styles.input}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Box sx={{ display: "flex", flexDirection: "row" }}>
+                          >
+                            <MenuItem value="Kauf">Kauf</MenuItem>
+                            <MenuItem value="Verkauf">VerKauf</MenuItem>
+                          </Select>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            {/* <label htmlFor="datePicker">Select a date:</label> */}
+                            <input
+                              type="date"
+                              id="datePicker"
+                              value={row.Date}
+                              onChange={(e) =>
+                                handleRowData(e.target.value, index, "Date")
+                              }
+                              max={getTodayString()}
+                              className={styles["input--date"]}
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell>
                           <div
                             style={{
                               display: "flex",
                               alignItems: "center",
+                              border: "1px solid #ffffff20",
                               padding: "3px 5px",
+                              borderRadius: "4px",
                               maxWidth: "100px",
                             }}
                           >
-                            {row.Date === "00/00/00"
-                              ? ""
-                              : `${computeDaysPast(row.Date)} Tage`}
+                            {row.PricePerCoin} €
                           </div>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Tooltip
-                          title="Delete"
-                          onClick={() => handleDeleteRow(index)}
-                        >
-                          <IconButton
-                            sx={{ color: "gray", "&:hover": { color: "red" } }}
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              border: "1px solid #ffffff20",
+                              padding: "3px 5px",
+                              borderRadius: "4px",
+                              maxWidth: "100px",
+                            }}
                           >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {validationError && (
-                <Typography color="error" sx={{ mt: 2 }}>
-                  {validationError}
-                </Typography>
-              )}
-            </TableContainer>
-          )}
-          {value === 1 && <div>Content for Tab 2</div>}
-          {value === 2 && <div>Content for Tab 3</div>}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <Button
-            sx={{
-              marginTop: "20px",
-              backgroundColor: "#00000033",
-              color: "white",
-              fontSize: "0.8rem",
-            }}
-            onClick={addRow}
-          >
-            <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />
-            Neue Transaktion hinzufügen
-          </Button>
-          <Button
-            sx={{
-              marginTop: "20px",
-              backgroundColor: "#4CAF50", // Green for import
-              color: "white",
-              fontSize: "0.8rem",
-              "&:hover": { backgroundColor: "#45a049" }, // Darker green on hover
-            }}
-            onClick={handleOpenDialog}
-          >
-            Import CSV
-          </Button>
-          <Button
-            sx={{
-              marginTop: "20px",
-              backgroundColor: "#2196F3", // Blue for export
-              color: "white",
-              fontSize: "0.8rem",
-              marginLeft: "10px", // Add some space between buttons
-              "&:hover": { backgroundColor: "#0b7dda" }, // Darker blue on hover
-            }}
-            onClick={handleExportCSV}
-          >
-            Export CSV
-          </Button>
-          <Button
-            sx={{
-              marginTop: "20px",
-              backgroundColor: "#1188ff",
-              color: "white",
-              fontSize: "0.8rem",
-              "&:hover": { backgroundColor: "#0a549f" },
-            }}
-            onClick={handleBuyAndSell}
-            disabled={rowVals.length <= 0}
-          >
-            Update
-          </Button>
-        </Box>
-      </Box>
-      <AlertBar
-        open={showAlert}
-        message={alertInfo.message}
-        severity={alertInfo.severity}
-        onClose={closeAlert}
-      />
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>Import CSV</DialogTitle>
-        <DialogContent sx={{ maxWidth: "600px", width: "100%" }}>
+                            <input
+                              type="text"
+                              id="betragInput"
+                              value={row.Betrag}
+                              onChange={(e) =>
+                                handleRowData(
+                                  parseFloat(e.target.value) || 0,
+                                  index,
+                                  "Betrag"
+                                )
+                              }
+                              style={{
+                                marginRight: "5px",
+                                width: "100px",
+                                backgroundColor: "transparent",
+                                border: "none",
+                              }}
+                            />
+                            €
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              border: "1px solid #ffffff20",
+                              padding: "3px 5px",
+                              borderRadius: "4px",
+                              maxWidth: "100px",
+                            }}
+                          >
+                            <input
+                              type="text"
+                              id="numberInput"
+                              value={row.Coins}
+                              onChange={(e) =>
+                                handleRowData(
+                                  parseFloat(e.target.value) || 0,
+                                  index,
+                                  "Coins"
+                                )
+                              }
+                              className={styles.input}
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Box sx={{ display: "flex", flexDirection: "row" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                padding: "3px 5px",
+                                maxWidth: "100px",
+                              }}
+                            >
+                              {row.Date === "00/00/00"
+                                ? ""
+                                : `${computeDaysPast(row.Date)} Tage`}
+                            </div>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Tooltip
+                            title="Delete"
+                            onClick={() => handleDeleteRow(index)}
+                          >
+                            <IconButton
+                              sx={{ color: "gray", "&:hover": { color: "red" } }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                {validationError && (
+                  <Typography color="error" sx={{ mt: 2 }}>
+                    {validationError}
+                  </Typography>
+                )}
+              </TableContainer>
+            )}
+            {value === 1 && <div>Content for Tab 2</div>}
+            {value === 2 && <div>Content for Tab 3</div>}
+          </Box>
           <Box
             sx={{
-              border: "2px dashed #ccc",
-              padding: "20px",
-              borderRadius: "8px",
-              textAlign: "center",
-              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
             }}
-            onDrop={handleFileDrop}
-            onDragOver={(e) => e.preventDefault()}
-            onClick={() => document.getElementById("fileInput").click()}
           >
-            {file ? (
-              <Typography>{file.name}</Typography>
-            ) : (
-              <Typography>Drag and drop a file or click to select</Typography>
-            )}
-            <input
+            <Button
+              sx={{
+                marginTop: "20px",
+                backgroundColor: "#00000033",
+                color: "white",
+                fontSize: "0.8rem",
+              }}
+              onClick={addRow}
+            >
+              <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />
+              Neue Transaktion hinzufügen
+            </Button>
+            <Button
+              sx={{
+                marginTop: "20px",
+                backgroundColor: "#00000033",
+                color: "white",
+                fontSize: "0.8rem",
+              }}
+              onClick={handleImport}
+            >
+              Import CSV
+              <FontAwesomeIcon
+                icon={faCrown}
+                style={{ paddingLeft: "5px", opacity: "0.5", fontSize: "0.9rem", marginRight: "15px" }}
+                color="gold"
+              />
+            </Button>
+            <Button
+              sx={{
+                marginTop: "20px",
+                backgroundColor: "#00000033",
+                color: "white",
+                fontSize: "0.8rem",
+                marginLeft: "10px",
+              }}
+              onClick={handleExportCSV}
+              disabled={rowVals.length <= 0}
+            >
+              Export CSV
+              <FontAwesomeIcon
+                icon={faCrown}
+                style={{ paddingLeft: "5px", opacity: "0.5", fontSize: "0.9rem", marginRight: "15px" }}
+                color="gold"
+              />
+            </Button>
+            <Button
+              sx={{
+                marginTop: "20px",
+                backgroundColor: "#1188ff",
+                color: "white",
+                fontSize: "0.8rem",
+                "&:hover": { backgroundColor: "#0a549f" },
+              }}
+              onClick={handleBuyAndSell}
+              disabled={rowVals.length <= 0}
+            >
+              Update
+            </Button>
+          </Box>
+        </Box>
+        <AlertBar
+          open={showAlert}
+          message={alertInfo.message}
+          severity={alertInfo.severity}
+          onClose={closeAlert}
+        />
+        <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+          <DialogTitle>Import CSV</DialogTitle>
+          <DialogContent sx={{ maxWidth: "600px", width: "100%" }}>
+            <Box
+              sx={{
+                border: "2px dashed #ccc",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+              onDrop={handleFileDrop}
+              onDragOver={(e) => e.preventDefault()}
+              onClick={() => document.getElementById("fileInput").click()}
+            >
+              {file ? (
+                <Typography>{file.name}</Typography>
+              ) : (
+                <Typography>Drag and drop a file or click to select</Typography>
+              )}
+              <input
                 type="file"
                 accept=".csv"
                 onChange={handleFileChange}
-                style={{display: "none"}}
+                style={{ display: "none" }}
                 id="fileInput"
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleFileUpload} color="primary">
-            Upload
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleFileUpload} color="primary">
+              Upload
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
+        <Alert onClose={() => setAlertOpen(false)} severity="info" variant="filled" sx={{ width: '100%' }}>
+          To access the Import/Export, please subscribe to one of our plans.
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import LanguageSwitcher from "../../app/lang/LanguageSwitcher";
 import { useTranslations } from "next-intl";
+import { fetchUserSubscriptionPlan } from "../../lib/data";
 
 const NavbarLink = ({ mobileView, handleClose }) => {
   const { data: session, status } = useSession();
@@ -15,14 +16,33 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   const t = useTranslations("navbar");
 
   useEffect(() => {
-    if (session) {
-      setSession(session);
-    }
-    if (status === "unauthenticated") {
-      handleLogoutFun();
-    }
-    console.log("session for admin", session, status);
+    const updateSessionWithSubscription = async () => {
+      try {
+        if (session) {
+          const subscriptionData = await fetchUserSubscriptionPlan(session.user?.id);
+          console.log("subscriptionData", subscriptionData);
+          setSession({
+            ...session,
+            user: {
+              ...session.user,
+              subscriptionPlan: subscriptionData.plan,
+              paymentDetails: subscriptionData.payment,
+              subscribed: subscriptionData.plan !== "free",
+            },
+          });
+        }
+        if (status === "unauthenticated") {
+          handleLogoutFun();
+        }
+        console.log("session for admin", session, status);
+      } catch (error) {
+        console.error('Error updating session with subscription:', error);
+      }
+    };
+
+    updateSessionWithSubscription();
   }, [status, session]);
+
 
   const handleLogoutFun = async () => {
     await signOut({ redirect: true, callbackUrl: "/login" });
@@ -31,6 +51,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   };
 
   return (
+      <>
     <Box sx={{ display: "flex", alignItems: "center" }}>
       {session &&
         session.user.isAdmin &&
@@ -84,6 +105,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         </IconButton>
       )}
     </Box>
+      </>
   );
 };
 

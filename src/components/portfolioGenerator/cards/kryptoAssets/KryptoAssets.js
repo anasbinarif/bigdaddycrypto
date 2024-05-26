@@ -1,9 +1,9 @@
 import { Box, Divider, useTheme, useMediaQuery } from "@mui/material";
 import KryptoFilter from "./kryptoFilter";
 import ScrollableKryptoTabs from "./kryptoCoinsTabs";
-import {useState} from "react";
+import { useState } from "react";
 
-const KryptoAssets = ({ portfolio, loadingPortfolio }) => {
+const KryptoAssets = ({ portfolio, loadingPortfolio, assetsLeangth }) => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const [priceIndicator, setPriceIndicator] = useState("pi");
@@ -25,6 +25,7 @@ const KryptoAssets = ({ portfolio, loadingPortfolio }) => {
                 loadingPortfolio={loadingPortfolio}
                 userID={portfolio.userId}
                 priceIndicator={priceIndicator}
+                assetsLeangth={assetsLeangth}
             />
         </Box>
     );

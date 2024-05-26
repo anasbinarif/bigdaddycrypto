@@ -7,7 +7,7 @@ import {
   Grid,
   Tooltip,
   IconButton,
-  styled,
+  styled, Alert, Snackbar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -56,6 +56,7 @@ const PortfolioComponent = ({
   // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [deleteIconIndex, setDeleteIconIndex] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [alertOpen, setAlertOpen] = useState(false);
   const t = useTranslations("portfolioComponent");
 
   const [alert, setAlert] = useState({
@@ -183,6 +184,10 @@ const PortfolioComponent = ({
   };
 
   async function handleFavouriteClick(asset) {
+    if (sessionJotai?.user?.subscriptionPlan === "free") {
+      setAlertOpen(true);
+      return;
+    }
     console.log("FavouriteClick", asset);
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = asset?.CoinGeckoID;
@@ -204,7 +209,7 @@ const PortfolioComponent = ({
     );
   };
 
-  return (
+  return (<>
     <Box sx={{ position: "sticky", top: "100px" }}>
       <AlertBar
         open={alert.open}
@@ -375,6 +380,12 @@ const PortfolioComponent = ({
         />
       </Box>
     </Box>
+    <Snackbar open={alertOpen} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
+      <Alert onClose={() => setAlertOpen(false)} severity="info" variant="filled" sx={{ width: '100%' }}>
+        If you want to add/remove a coin to Favourites, please subscribe to one of our plans.
+      </Alert>
+    </Snackbar>
+  </>
   );
 };
 

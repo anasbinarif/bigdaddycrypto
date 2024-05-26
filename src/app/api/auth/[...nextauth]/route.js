@@ -1,8 +1,4 @@
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
-import { connectToDb } from "../../../../lib/utils";
-import { User } from "../../../../lib/models";
 import {authOptions} from "../../../../lib/auth";
 
 // const login = async (credentials) => {

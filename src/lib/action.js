@@ -1,4 +1,65 @@
-// "use server";
+"use server";
+
+import {connectToDb} from "../lib/utils";
+import {Payments, User} from "../lib/models";
+
+export const getUsers = async () => {
+    try {
+        await connectToDb();
+        return await User.find();
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const saveSubscriptionDetails = async (data, userId, plan, planId, billingCycle) => {
+    try {
+        await connectToDb();
+        const currentDate = new Date();
+
+        let payment = await Payments.findOne({ userId: userId });
+
+        if (payment) {
+            payment.Subscription = {
+                plan: plan,
+                planId: planId,
+                billingCycle: billingCycle,
+                status: "active",
+                subscriptionId: data.subscriptionID,
+                nextBilledAt: currentDate.setMonth(currentDate.getMonth() + (billingCycle === "monthly" ? 1 : 12)),
+                endDate: null
+            };
+        } else {
+            payment = new Payments({
+                userId: userId,
+                Subscription: {
+                    plan: plan,
+                    planId: planId,
+                    billingCycle: billingCycle,
+                    status: "active",
+                    subscriptionId: data.subscriptionID,
+                    nextBilledAt: currentDate.setMonth(currentDate.getMonth() + (billingCycle === "monthly" ? 1 : 12)),
+                    endDate: null
+                },
+                oneTimePayment: []
+            });
+        }
+
+        await payment.save();
+
+        // Update the user's subscription status
+        await User.findByIdAndUpdate(userId, {
+            subscribed: true,
+            currentSubscription: payment._id
+        });
+
+        console.log('Subscription details saved successfully.');
+    } catch (error) {
+        console.error('Error saving subscription details:', error);
+    }
+};
+
+
 //
 // import { promises as fs } from 'fs';
 // import {Assets} from "../lib/models";

@@ -7,7 +7,7 @@ export async function POST(req) {
 
     try {
         const userPortfolio = await UserPortfolio.findOne({ userId: userId });
-        console.log("debug userPortfolio", userPortfolio);
+        // console.log("debug userPortfolio", userPortfolio);
 
         if (!userPortfolio) {
             try {

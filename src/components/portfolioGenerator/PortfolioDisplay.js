@@ -34,6 +34,7 @@ const PortfolioDisplay = ({
           portfolio={portfolio}
           loadingPortfolio={loadingPortfolio}
           userID={portfolio.userId}
+          assetsLeangth={assetsLeangth}
         />
       </Grid>
       <Grid item xs={4} sm={4} md={4} style={{ position: "relative" }}>
