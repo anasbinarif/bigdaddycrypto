@@ -4,12 +4,13 @@ const connection = {};
 
 export const connectToDb = async () => {
     try {
-        if(connection.isConnected) {
+        if (connection.isConnected) {
             console.log("Using existing connection");
             return;
         }
-        const db = await mongoose.connect('mongodb+srv://anasarifamazon:AJy3V461deLCXopA@cryptodaddy.cluwbt9.mongodb.net/?retryWrites=true&w=majority&appName=cryptodaddy');
+        const db = await mongoose.connect(process.env.MONGODB_URI);
         connection.isConnected = db.connections[0].readyState;
+        console.log("MongoDB Connected");
     } catch (error) {
         console.log(error);
         throw new Error(error);

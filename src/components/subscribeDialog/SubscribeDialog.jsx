@@ -32,8 +32,10 @@ const plans = [
   { name: "Premium", description: "Premium plan description" },
 ];
 
+const client_id = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
+
 const initialOptions = {
-  clientId: "AcDXowtS9OWXniZaHnlZ9Hu3_ZrT1oZfPT2TjrhRv08Rg6_s3F4IQwH-81s6OXaVFVtf0kTuVmxI81EM",
+  clientId: client_id,
   currency: "USD",
   intent: "subscription",
   vault: "true"
@@ -42,12 +44,12 @@ const initialOptions = {
 // Define plan IDs for different billing cycles and plans
 const planIds = {
   Pro: {
-    monthly: "P-3KM72035UG134911JMZJH7SY",
-    yearly: "P-0KB55690D61389417MZJIALI",
+    monthly: process.env.NEXT_PUBLIC_PAYPAL_PRO_MONTHLY_PLAN_ID || "",
+    yearly: process.env.NEXT_PUBLIC_PAYPAL_PRO_YEARLY_PLAN_ID || "",
   },
   Premium: {
-    monthly: "P-6Y6093855G604654RMZJIAZY",
-    yearly: "P-04708021AF779952XMZJIBDQ",
+    monthly: process.env.NEXT_PUBLIC_PAYPAL_PREMIUM_MONTHLY_PLAN_ID || "",
+    yearly: process.env.NEXT_PUBLIC_PAYPAL_PREMIUM_YEARLY_PLAN_ID || "",
   },
 };
 

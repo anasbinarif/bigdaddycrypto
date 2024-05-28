@@ -7,10 +7,6 @@ function withAuthMiddleware(middleware) {
         async (req, event, response) => {
             const token = req.nextauth.token;
 
-            // Log user access
-            console.log("Middleware - token:", token);
-            console.log("Middleware - nextUrl:", req.nextUrl.pathname);
-
             const path = req.nextUrl.pathname;
             const adminRegex = /^\/(en|de)\/admin/;
             const assetsGraphRegex = /^\/(en|de)\/assetsGraph/;
