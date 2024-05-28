@@ -1,30 +1,24 @@
-import { buffer } from 'micro';
+import { NextRequest, NextResponse } from 'next/server';
 import paypal from '@paypal/checkout-server-sdk';
-import {Payments} from "../../../lib/models";
-import {connectToDb} from "../../../lib/utils";
+import { connectToDb } from "../../../lib/utils";
+import { Payments } from "../../../lib/models";
 
 const payPalClient = new paypal.core.PayPalHttpClient(new paypal.core.SandboxEnvironment(
-    process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-    process.env.NEXT_PUBLIC_PAYPAL_CLIENT_SECRET
+    process.env.PAYPAL_CLIENT_ID,
+    process.env.PAYPAL_CLIENT_SECRET
 ));
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
-
 const validatePayPalSignature = async (req, rawBody) => {
-    const transmissionId = req.headers['paypal-transmission-id'];
-    const transmissionTime = req.headers['paypal-transmission-time'];
-    const certUrl = req.headers['paypal-cert-url'];
-    const authAlgo = req.headers['paypal-auth-algo'];
-    const transmissionSig = req.headers['paypal-transmission-sig'];
+    const transmissionId = req.headers.get('paypal-transmission-id');
+    const transmissionTime = req.headers.get('paypal-transmission-time');
+    const certUrl = req.headers.get('paypal-cert-url');
+    const authAlgo = req.headers.get('paypal-auth-algo');
+    const transmissionSig = req.headers.get('paypal-transmission-sig');
     const webhookId = process.env.PAYPAL_WEBHOOK_ID;
 
     const webhookEvent = JSON.parse(rawBody);
 
-    const expectedSignature = await payPalClient.verifyWebhookSignature({
+    const requestBody = JSON.stringify({
         auth_algo: authAlgo,
         cert_url: certUrl,
         transmission_id: transmissionId,
@@ -33,6 +27,8 @@ const validatePayPalSignature = async (req, rawBody) => {
         webhook_id: webhookId,
         webhook_event: webhookEvent
     });
+
+    const expectedSignature = await payPalClient.verifyWebhookSignature(requestBody);
 
     return expectedSignature.verification_status === 'SUCCESS';
 };
@@ -65,13 +61,6 @@ const updateSubscriptionStatus = async (event) => {
             await user.save();
             break;
 
-        // case 'BILLING.SUBSCRIPTION.CREATED':
-        // case 'BILLING.SUBSCRIPTION.ACTIVATED':
-        //     user.subscribed = true;
-        //     user.currentSubscription = payment._id;
-        //     await user.save();
-        //     break;
-
         case 'BILLING.SUBSCRIPTION.CANCELLED':
         case 'BILLING.SUBSCRIPTION.EXPIRED':
         case 'BILLING.SUBSCRIPTION.SUSPENDED':
@@ -91,21 +80,24 @@ const updateSubscriptionStatus = async (event) => {
     }
 };
 
-export default async (req, res) => {
-    const buf = await buffer(req);
-    const rawBody = buf.toString('utf8');
+export async function POST(req: NextRequest) {
+    const rawBody = await req.text();
     const webhookEvent = JSON.parse(rawBody);
 
     try {
         if (!(await validatePayPalSignature(req, rawBody))) {
-            return res.status(400).send('Invalid signature');
+            return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
         }
 
         await connectToDb();
         await updateSubscriptionStatus(webhookEvent);
-        res.status(200).send('Webhook received');
+        return NextResponse.json({ message: 'Webhook received' }, { status: 200 });
     } catch (error) {
         console.error('Error processing webhook:', error);
-        res.status(500).send('Internal Server Error');
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
-};
+}
+
+// Route segment config
+export const runtime = 'nodejs';
+export const preferredRegion = 'auto';
