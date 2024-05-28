@@ -83,6 +83,7 @@ const updateSubscriptionStatus = async (event) => {
 export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const webhookEvent = JSON.parse(rawBody);
+    console.log("no way paypl webhook worked")
 
     try {
         if (!(await validatePayPalSignature(req, rawBody))) {
