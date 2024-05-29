@@ -99,7 +99,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
           {isSubscribed === "false" && <SubscribeDialog />}
           <FormDialog />
           {isMobile ? (
-            <>
+            <Box>
               <IconButton color="inherit" onClick={handleMenuClick}>
                 <MenuIcon />
               </IconButton>
@@ -133,12 +133,20 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Link href="/assetsGraph" onClick={handleGraphClick} className={styles.nav__link}>
+                  <Link
+                    href="/assetsGraph"
+                    onClick={handleGraphClick}
+                    className={styles.nav__link}
+                  >
                     {t("graph")}
                   </Link>
                   <FontAwesomeIcon
                     icon={faCrown}
-                    style={{ paddingLeft: "10px", opacity: "0.25", fontSize: "0.9rem" }}
+                    style={{
+                      paddingLeft: "10px",
+                      opacity: "0.25",
+                      fontSize: "0.9rem",
+                    }}
                   />
                 </MenuItem>
               </Menu>
@@ -163,7 +171,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   <NavbarLink mobileView={true} handleClose={handleClose} />
                 </Menu>
               </SessionProvider>
-            </>
+            </Box>
           ) : (
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Link
@@ -198,7 +206,12 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 </Link>
                 <FontAwesomeIcon
                   icon={faCrown}
-                  style={{ paddingLeft: "5px", opacity: "0.25", fontSize: "0.9rem", marginRight: "15px" }}
+                  style={{
+                    paddingLeft: "5px",
+                    opacity: "0.25",
+                    fontSize: "0.9rem",
+                    marginRight: "15px",
+                  }}
                 />
               </Box>
               <SessionProvider>
@@ -208,8 +221,17 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
           )}
         </Toolbar>
       </AppBar>
-      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
-        <Alert onClose={() => setAlertOpen(false)} severity="info" variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={() => setAlertOpen(false)}
+      >
+        <Alert
+          onClose={() => setAlertOpen(false)}
+          severity="info"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
           To access the assets graph, please subscribe to one of our plans.
         </Alert>
       </Snackbar>

@@ -26,7 +26,7 @@ const PortfolioDisplay = ({
       <Grid item xs={4} sm={4} md={5} lg={4}>
         <BewertungCard />
       </Grid>
-      <Grid item xs={4} sm={4} md={5} lg={4}>
+      <Grid item xs={4} sm={8} md={5} lg={4}>
         <DonutCard />
       </Grid>
       <Grid item xs={4} sm={8} md={8}>
