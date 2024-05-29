@@ -8,6 +8,24 @@ const payPalClient = new paypal.core.PayPalHttpClient(new paypal.core.SandboxEnv
     process.env.PAYPAL_CLIENT_SECRET
 ));
 
+const getAccessToken = async () => {
+    const clientId = process.env.PAYPAL_CLIENT_ID;
+    const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+    const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
+    const response = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Basic ${auth}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'grant_type=client_credentials'
+    });
+
+    const data = await response.json();
+    return data.access_token;
+};
+
 const validatePayPalSignature = async (req, rawBody) => {
     const transmissionId = req.headers.get('paypal-transmission-id');
     const transmissionTime = req.headers.get('paypal-transmission-time');
@@ -28,11 +46,19 @@ const validatePayPalSignature = async (req, rawBody) => {
         webhook_event: webhookEvent
     };
 
-    const verifySignature = new paypal.notification.webhookEvent.verify(webhookId, requestBody, transmissionId, transmissionTime, transmissionSig, authAlgo, certUrl);
+    const accessToken = await getAccessToken();
 
-    const response = await payPalClient.execute(verifySignature);
+    const response = await fetch('https://api-m.paypal.com/v1/notifications/verify-webhook-signature', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    });
 
-    return response.result.verification_status === 'SUCCESS';
+    const data = await response.json();
+    return data.verification_status === 'SUCCESS';
 };
 
 const updateSubscriptionStatus = async (event) => {
