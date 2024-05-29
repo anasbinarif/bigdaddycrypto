@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import paypal from '@paypal/checkout-server-sdk';
 import { connectToDb } from "../../../lib/utils";
 import { Payments } from "../../../lib/models";
+import { log } from 'console';
 
 const payPalClient = new paypal.core.PayPalHttpClient(new paypal.core.SandboxEnvironment(
     process.env.PAYPAL_CLIENT_ID,
@@ -21,6 +22,12 @@ const getAccessToken = async () => {
         },
         body: 'grant_type=client_credentials'
     });
+
+    if (!response.ok) {
+        console.log("error from verify-webhook-token", response);
+        
+    }
+    
 
     const data = await response.json();
     return data.access_token;
@@ -56,8 +63,13 @@ const validatePayPalSignature = async (req, rawBody) => {
         },
         body: JSON.stringify(requestBody)
     });
+    if (!response.ok) {
+        console.log("error from verify-webhook-signature", response);
+        
+    }
 
     const data = await response.json();
+    console.log("data from verify-webhook-signature", data)
     return data.verification_status === 'SUCCESS';
 };
 
