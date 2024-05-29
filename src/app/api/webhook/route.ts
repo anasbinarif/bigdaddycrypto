@@ -28,10 +28,9 @@ const validatePayPalSignature = async (req, rawBody) => {
         webhook_event: webhookEvent
     };
 
-    const request = new paypal.webhooks.WebhookVerifySignatureRequest();
-    request.requestBody(requestBody);
+    const verifySignature = new paypal.notification.webhookEvent.verify(webhookId, requestBody, transmissionId, transmissionTime, transmissionSig, authAlgo, certUrl);
 
-    const response = await payPalClient.execute(request);
+    const response = await payPalClient.execute(verifySignature);
 
     return response.result.verification_status === 'SUCCESS';
 };
