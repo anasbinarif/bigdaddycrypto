@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import paypal from '@paypal/checkout-server-sdk';
 import { connectToDb } from "../../../lib/utils";
 import { Payments } from "../../../lib/models";
-import { log } from 'console';
 
 const payPalClient = new paypal.core.PayPalHttpClient(new paypal.core.SandboxEnvironment(
     process.env.PAYPAL_CLIENT_ID,
@@ -24,10 +23,10 @@ const getAccessToken = async () => {
     });
 
     if (!response.ok) {
-        console.log("error from verify-webhook-token", response);
-        
+        const errorText = await response.text();
+        console.log("Error obtaining access token:", response.status, response.statusText, errorText);
+        throw new Error(`Error obtaining access token: ${response.statusText}`);
     }
-    
 
     const data = await response.json();
     return data.access_token;
@@ -63,13 +62,15 @@ const validatePayPalSignature = async (req, rawBody) => {
         },
         body: JSON.stringify(requestBody)
     });
+
     if (!response.ok) {
-        console.log("error from verify-webhook-signature", response);
-        
+        const errorText = await response.text();
+        console.log("Error from verify-webhook-signature:", response.status, response.statusText, errorText);
+        throw new Error(`Error from verify-webhook-signature: ${response.statusText}`);
     }
 
     const data = await response.json();
-    console.log("data from verify-webhook-signature", data)
+    console.log("Data from verify-webhook-signature:", data);
     return data.verification_status === 'SUCCESS';
 };
 
@@ -123,7 +124,7 @@ const updateSubscriptionStatus = async (event) => {
 export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const webhookEvent = JSON.parse(rawBody);
-    console.log("no way paypl webhook worked", rawBody, webhookEvent);
+    console.log("Webhook received================:", webhookEvent);
 
     try {
         if (!(await validatePayPalSignature(req, rawBody))) {
