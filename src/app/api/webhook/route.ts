@@ -18,7 +18,7 @@ const validatePayPalSignature = async (req, rawBody) => {
 
     const webhookEvent = JSON.parse(rawBody);
 
-    const requestBody = JSON.stringify({
+    const requestBody = {
         auth_algo: authAlgo,
         cert_url: certUrl,
         transmission_id: transmissionId,
@@ -26,11 +26,14 @@ const validatePayPalSignature = async (req, rawBody) => {
         transmission_time: transmissionTime,
         webhook_id: webhookId,
         webhook_event: webhookEvent
-    });
+    };
 
-    const expectedSignature = await payPalClient.verifyWebhookSignature(requestBody);
+    const request = new paypal.webhooks.WebhookVerifySignatureRequest();
+    request.requestBody(requestBody);
 
-    return expectedSignature.verification_status === 'SUCCESS';
+    const response = await payPalClient.execute(request);
+
+    return response.result.verification_status === 'SUCCESS';
 };
 
 const updateSubscriptionStatus = async (event) => {
@@ -83,7 +86,7 @@ const updateSubscriptionStatus = async (event) => {
 export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const webhookEvent = JSON.parse(rawBody);
-    console.log("no way paypl webhook worked")
+    console.log("no way paypl webhook worked");
 
     try {
         if (!(await validatePayPalSignature(req, rawBody))) {
