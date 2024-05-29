@@ -13,19 +13,20 @@ const getAccessToken = async () => {
     const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
     const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
-    const response = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
+    const response = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
         method: 'POST',
         headers: {
             'Authorization': `Basic ${auth}`,
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept-Language': 'en_US'
         },
         body: 'grant_type=client_credentials'
     });
 
     if (!response.ok) {
-        const errorText = await response.text();
-        console.log("Error obtaining access token:", response.status, response.statusText, errorText);
-        throw new Error(`Error obtaining access token: ${response.statusText}`);
+        console.error("Error fetching access token from PayPal:", response.status, response.statusText);
+        const errorDetails = await response.text();
+        throw new Error(`Failed to get access token: ${errorDetails}`);
     }
 
     const data = await response.json();
@@ -54,7 +55,7 @@ const validatePayPalSignature = async (req, rawBody) => {
 
     const accessToken = await getAccessToken();
 
-    const response = await fetch('https://api-m.paypal.com/v1/notifications/verify-webhook-signature', {
+    const response = await fetch('https://api-m.sandbox.paypal.com/v1/notifications/verify-webhook-signature', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -64,13 +65,12 @@ const validatePayPalSignature = async (req, rawBody) => {
     });
 
     if (!response.ok) {
-        const errorText = await response.text();
-        console.log("Error from verify-webhook-signature:", response.status, response.statusText, errorText);
-        throw new Error(`Error from verify-webhook-signature: ${response.statusText}`);
+        console.error("Error verifying webhook signature:", response.status, response.statusText);
+        const errorDetails = await response.json();
+        throw new Error(`Failed to verify webhook signature: ${errorDetails.error_description}`);
     }
 
     const data = await response.json();
-    console.log("Data from verify-webhook-signature:", data);
     return data.verification_status === 'SUCCESS';
 };
 
@@ -124,7 +124,7 @@ const updateSubscriptionStatus = async (event) => {
 export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const webhookEvent = JSON.parse(rawBody);
-    console.log("Webhook received================:", webhookEvent);
+    console.log("no way paypl webhook worked", rawBody, webhookEvent);
 
     try {
         if (!(await validatePayPalSignature(req, rawBody))) {
