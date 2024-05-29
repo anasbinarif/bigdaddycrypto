@@ -4,13 +4,13 @@ import { connectToDb } from "../../../lib/utils";
 import { Payments } from "../../../lib/models";
 
 const payPalClient = new paypal.core.PayPalHttpClient(new paypal.core.SandboxEnvironment(
-    process.env.PAYPAL_CLIENT_ID,
-    process.env.PAYPAL_CLIENT_SECRET
+    process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+    process.env.NEXT_PUBLIC_PAYPAL_CLIENT_SECRET
 ));
 
 const getAccessToken = async () => {
-    const clientId = process.env.PAYPAL_CLIENT_ID;
-    const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+    const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+    const clientSecret = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_SECRET;
     const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
     const response = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
