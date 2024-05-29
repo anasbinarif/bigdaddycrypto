@@ -18,6 +18,7 @@ const getAccessToken = async () => {
         headers: {
             'Authorization': `Basic ${auth}`,
             'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
             'Accept-Language': 'en_US'
         },
         body: 'grant_type=client_credentials'
