@@ -116,7 +116,7 @@ const KryptoFilter = ({ userID, portfolio, priceIndicator, setPriceIndicator }) 
   };
 
   const checkCoinSelected = (coin) => {
-    if (!portfolio.assets) return false;
+    if (!portfolio?.assets) return false;
     return portfolio?.assets.some(
       (asset) => asset.CoinGeckoID === coin.CoinGeckoID
     );
@@ -325,7 +325,7 @@ const KryptoFilter = ({ userID, portfolio, priceIndicator, setPriceIndicator }) 
       </Box>
       <Snackbar open={alertOpen} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
         <Alert onClose={() => setAlertOpen(false)} severity="info" variant="filled" sx={{ width: '100%' }}>
-          To access the Import/Export, please subscribe to Premium plan.
+          To access the Coins Filter, please subscribe to Premium plan.
         </Alert>
       </Snackbar>
     </>

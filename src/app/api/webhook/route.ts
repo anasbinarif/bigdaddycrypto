@@ -92,7 +92,12 @@ const updateSubscriptionStatus = async (event) => {
         case 'PAYMENT.SALE.COMPLETED':
             const lastPayment = new Date(billing_info.last_payment.time);
             const nextBillingDate = new Date(lastPayment);
-            nextBillingDate.setMonth(nextBillingDate.getMonth() + 1); // assuming monthly subscription
+
+            if (payment.Subscription.billingCycle === 'monthly') {
+                nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
+            } else if (payment.Subscription.billingCycle === 'yearly') {
+                nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
+            }
 
             payment.Subscription.status = 'active';
             payment.Subscription.nextBilledAt = nextBillingDate.getTime();
@@ -125,7 +130,6 @@ const updateSubscriptionStatus = async (event) => {
 export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const webhookEvent = JSON.parse(rawBody);
-    console.log("no way paypl webhook worked", rawBody, webhookEvent);
 
     try {
         if (!(await validatePayPalSignature(req, rawBody))) {

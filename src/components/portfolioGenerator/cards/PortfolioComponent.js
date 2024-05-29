@@ -8,6 +8,7 @@ import {
   Tooltip,
   IconButton,
   styled, Alert, Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -58,7 +59,7 @@ const PortfolioComponent = ({
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);
   const t = useTranslations("portfolioComponent");
-
+  const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({
     open: false,
     message: "",
@@ -84,6 +85,7 @@ const PortfolioComponent = ({
     console.log("testing delete", CoinGeckoID, userId);
 
     try {
+      setLoading(true);
       // Call the API to delete the coin from the portfolioGenerator
       const response = await fetch("/api/deleteCoinPortfolio", {
         method: "POST",
@@ -112,6 +114,7 @@ const PortfolioComponent = ({
           message: `${t("coinRemovedSuccess")}`,
           severity: "success",
         });
+        setLoading(false);
       } else {
         throw new Error(data.message || "Failed to delete the coin");
       }
@@ -188,6 +191,7 @@ const PortfolioComponent = ({
       setAlertOpen(true);
       return;
     }
+    setLoading(true);
     console.log("FavouriteClick", asset);
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = asset?.CoinGeckoID;
@@ -201,6 +205,7 @@ const PortfolioComponent = ({
     if (response.ok) {
       const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
       setPortfolio(userPortfolio.data);
+      setLoading(false);
     }
   }
   const getCategoryColors = (categories) => {
@@ -245,7 +250,6 @@ const PortfolioComponent = ({
               {loadingPortfolio &&
                 portfolio.assets
                   .slice()
-                  .reverse()
                   .map((asset, index) => (
                     <Grid item key={index} xs={12} sm={6} md={15}>
                       <Card
@@ -380,6 +384,24 @@ const PortfolioComponent = ({
         />
       </Box>
     </Box>
+    {loading && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9999,
+          }}
+        >
+          <CircularProgress color="inherit" />
+        </Box>
+      )}
     <Snackbar open={alertOpen} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
       <Alert onClose={() => setAlertOpen(false)} severity="info" variant="filled" sx={{ width: '100%' }}>
         If you want to add/remove a coin to Favourites, please subscribe to one of our plans.

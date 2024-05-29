@@ -18,7 +18,7 @@ const categoryColors = {
 
 const DonutLegend = ({ portfolioCalculations }) => {
   const theme = useTheme();
-  const categories = Object.entries(portfolioCalculations.percentages || {})
+  const categories = Object.entries(portfolioCalculations?.percentages || {})
     .filter(([key]) => key.toLowerCase() !== "none")
     .map(([key, value]) => ({
       name: key.toUpperCase(),

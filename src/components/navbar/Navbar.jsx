@@ -201,6 +201,13 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   style={{ paddingLeft: "5px", opacity: "0.25", fontSize: "0.9rem", marginRight: "15px" }}
                 />
               </Box>
+              <Link
+                  style={{ marginRight: "15px", fontFamily: "inherit" }}
+                  href="/pricingPlans"
+                  className={styles.nav__link}
+              >
+                Pricing Plans
+              </Link>
               <SessionProvider>
                 <NavbarLink />
               </SessionProvider>

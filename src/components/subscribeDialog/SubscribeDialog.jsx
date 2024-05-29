@@ -18,6 +18,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  Slide,
 } from "@mui/material";
 import { useAtom } from "jotai";
 import { sessionAtom } from "../../app/stores/sessionStore";
@@ -26,6 +27,7 @@ import { useTranslations } from "next-intl";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { saveSubscriptionDetails } from "../../lib/action";
 import { fetchUserSubscriptionPlan } from "../../lib/data";
+import { signOut } from "next-auth/react";
 
 const plans = [
   { name: "Pro", description: "Pro plan description" },
@@ -53,9 +55,12 @@ const planIds = {
   },
 };
 
-const SubscribeDialog = () => {
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const SubscribeDialog = ({ open, handleClose }) => {
   const t = useTranslations("SubscribeDialog");
-  const [open, setOpen] = useState(false);
   const [, setPortfolio] = useAtom(portfolioAtom);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -66,29 +71,34 @@ const SubscribeDialog = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [sessionJotai, setSession] = useAtom(sessionAtom);
   const [openLogin, setOpenLogin] = useState(false);
+  const [countdown, setCountdown] = useState(60);
 
-  const vertical = "top";
-  const horizontal = "center";
+  useEffect(() => {
+    let timer;
+    if (openLogin) {
+      timer = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          if (prevCountdown === 1) {
+            handleLogoutFun();
+            clearInterval(timer);
+            return prevCountdown;
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [openLogin]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+  const handleLogoutFun = async () => {
+    await signOut({ redirect: true, callbackUrl: "/login" });
+    console.log("Logged out successfully");
+    handleClose();
   };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-
-  useEffect(() => {
-    if (sessionJotai) {
-      if (sessionJotai?.user?.subscriptionPlan === "free") {
-        handleClickOpen();
-      }
-    }
-  }, [sessionJotai]);
 
   const createSubscription = (data, actions) => {
     const planId = planIds[selectedPlan][billingCycle];
@@ -99,6 +109,7 @@ const SubscribeDialog = () => {
 
   const onApprove = async (data, actions) => {
     console.log("Subscription approved!", data);
+    handleClose();
 
     const userId = sessionJotai?.user.id; // Replace this with your user ID fetching logic
     const plan = selectedPlan;
@@ -119,7 +130,6 @@ const SubscribeDialog = () => {
         },
       });
       setOpenLogin(true);
-      setSnackbarOpen(true);
     } catch (error) {
       setSnackbarMessage("Error saving subscription details.");
       setSnackbarSeverity("error");
@@ -150,9 +160,6 @@ const SubscribeDialog = () => {
 
   return (
       <Box>
-        <Button variant="outlined" onClick={handleClickOpen}>
-          Subscribe
-        </Button>
         <Dialog
             open={open}
             onClose={handleClose}
@@ -215,23 +222,29 @@ const SubscribeDialog = () => {
           </DialogActions>
         </Dialog>
         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-          <Alert
-              onClose={handleSnackbarClose}
-              severity={snackbarSeverity}
-              variant="filled"
-              sx={{ width: '100%' }}
-          >
+          <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} variant="filled" sx={{ width: "100%" }}>
             {snackbarMessage}
           </Alert>
         </Snackbar>
-        <Snackbar
-            anchorOrigin={{ vertical, horizontal }}
+        <Dialog
             open={openLogin}
+            TransitionComponent={Transition}
+            keepMounted
             onClose={() => setOpenLogin(false)}
-            message="You have to login again to access graphs"
-            key={vertical + horizontal}
-            autoHideDuration={6000}
-        />
+            aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Session Expired"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              You will be logged out in {countdown} seconds. Please log in again to access locked features.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleLogoutFun} color="primary">
+              Logout Now
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
   );
 };

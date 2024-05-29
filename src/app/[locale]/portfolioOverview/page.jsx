@@ -17,6 +17,8 @@ import Image from "next/image";
 import Checkout from "../../../components/oneTimePayment/OneTimePaymentCheckout";
 import CustomizedSteppers from "./CustomizedSteppers";
 import { usePathname, useRouter } from 'next/navigation';
+import Footer from "../../../components/footer/Footer";
+import Navbar from "../../../components/navbar/Navbar";
 
 const steps = [
     'Wieviele Assets hast du in deinem Portfolio?',
@@ -84,7 +86,8 @@ const PortfolioForm = () => {
         return <Alert severity="error">{error}</Alert>;
     }
 
-    return (
+    return (<>
+            <Navbar />
         <Container>
             <Box my={4} display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
                 <Box elevation={3} style={{ padding: 16, backgroundColor: "transparent", color: "white", borderRadius: 12, width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: "none" }}>
@@ -374,6 +377,8 @@ const PortfolioForm = () => {
                 </Box>
             </Box>
         </Container>
+            <Footer />
+        </>
     );
 };
 

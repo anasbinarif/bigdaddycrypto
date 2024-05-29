@@ -237,10 +237,13 @@ export const getUserPortfolio = async (userId) => {
     none: 0,
   };
   const data1 = await res.json();
+  // if (data1?.message == "No portfolio found") {
+  //   return {}
+  // }
   console.log("data_testing_new_login", data1);
   const data = {
-    assets: data1.data.assetDetails,
-    assetsCalculations: data1.data.portfolio,
+    assets: data1?.data.assetDetails,
+    assetsCalculations: data1?.data.portfolio,
   };
   console.log("data_testing_new_login", data1);
   let count = 0;

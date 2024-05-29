@@ -18,12 +18,12 @@ const KryptoAssets = ({ portfolio, loadingPortfolio, assetsLeangth }) => {
                 padding: isSmallScreen ? "10px" : "20px",
             }}
         >
-            <KryptoFilter portfolio={portfolio} userID={portfolio.userID} priceIndicator={priceIndicator} setPriceIndicator={setPriceIndicator} />
+            <KryptoFilter portfolio={portfolio} userID={portfolio?.userID} priceIndicator={priceIndicator} setPriceIndicator={setPriceIndicator} />
             <Divider sx={{ my: isSmallScreen ? 1 : 2 }} />
             <ScrollableKryptoTabs
                 portfolio={portfolio}
                 loadingPortfolio={loadingPortfolio}
-                userID={portfolio.userId}
+                userID={portfolio?.userId}
                 priceIndicator={priceIndicator}
                 assetsLeangth={assetsLeangth}
             />

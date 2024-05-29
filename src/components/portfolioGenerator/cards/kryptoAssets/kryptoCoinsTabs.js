@@ -102,10 +102,10 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
 
   const categorizedData = tabLabels.reduce((acc, label) => {
     if (label === t("favourite")) {
-      const favouriteAssetsIds = portfolio.assetsCalculations?.assets
+      const favouriteAssetsIds = portfolio?.assetsCalculations?.assets
         .filter((asset) => asset.Favourite)
         .map((asset) => asset.CoinGeckoID);
-      acc[label] = portfolio.assets && portfolio?.assets.filter((asset) =>
+      acc[label] = portfolio?.assets && portfolio?.assets.filter((asset) =>
         favouriteAssetsIds.includes(asset.CoinGeckoID)
       );
     } else {

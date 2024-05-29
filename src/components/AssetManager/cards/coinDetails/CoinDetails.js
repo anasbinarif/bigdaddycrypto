@@ -287,28 +287,37 @@ const CoinDetails = (props) => {
 
   const handleExportCSV = () => {
     if (sessionJotai?.user?.subscriptionPlan === "free") {
-      setAlertOpen(true)
-      return
+      setAlertOpen(true);
+      return;
     }
+    console.log("portfolioportfolioportfolio,", portfolio);
+  
     const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
-
-    const rows = rowVals.map(row => {
-      return {
-        Date: new Date(row.Date).toLocaleDateString("en-US"), // Format date to MM/DD/YYYY
-        Name: coin.Name, // Assuming all are Bitcoin, adjust if necessary
-        Symbol: coin.Ticker, // Assuming all are BTC, adjust if necessary
-        Action: row.Type === "Kauf" ? "Buy" : "Sell",
-        Coins: row.Coins,
-        Amount: row.Betrag
-      };
+    const rows = [];
+  
+    portfolio.assetsCalculations.assets.forEach((asset) => {
+      const coin = portfolio.assets.find(c => c.CoinGeckoID === asset.CoinGeckoID);
+      if (coin && asset.buyAndSell) {
+        asset.buyAndSell.forEach((transaction) => {
+          rows.push({
+            Date: new Date(transaction.Date).toLocaleDateString("en-US"), // Format date to MM/DD/YYYY
+            Name: coin.Name, // Assuming all are Bitcoin, adjust if necessary
+            Symbol: coin.Ticker, // Assuming all are BTC, adjust if necessary
+            Action: transaction.Type === "Kauf" ? "Buy" : "Sell",
+            Coins: transaction.Coins,
+            Amount: transaction.Betrag
+          });
+        });
+      }
     });
-    console.log("coinnnnn-rows", rows)
-
+  
+    console.log("portfolio-rows", rows);
+  
     const csvContent = [
       headers.join(","),
       ...rows.map(row => Object.values(row).join(","))
     ].join("\n");
-
+  
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -318,6 +327,7 @@ const CoinDetails = (props) => {
     link.click();
     document.body.removeChild(link);
   };
+  
 
   const handleImport = () => {
     if (sessionJotai?.user?.subscriptionPlan === "free") {
@@ -345,26 +355,32 @@ const CoinDetails = (props) => {
     if (file) {
       Papa.parse(file, {
         header: true,
-        complete: (results) => {
+        complete: async (results) => {
           console.log("Parsed CSV Data:", results.data);
-
-          // Check if all symbols in the imported data match the current coin's ticker
-          const allSymbolsMatch = results.data.every(row => row.Symbol === coin.Ticker);
-
-          if (!allSymbolsMatch) {
-            console.error("Symbols in the imported data do not match the current coin's ticker.");
-            setAlertInfo({ message: "Symbols in the imported data do not match the current coin's ticker.", severity: "error" });
+  
+          // Filter and map the parsed data to match portfolio coins
+          const portfolioCoins = portfolio.assetsCalculations.assets.map((asset) => {
+            const coin = portfolio.assets.find(c => c.CoinGeckoID === asset.CoinGeckoID);
+            return coin ? { ...coin, buyAndSell: asset.buyAndSell || [] } : null;
+          }).filter(coin => coin);
+  
+          // Check if all symbols in the imported data match the current portfolio's tickers
+          const validData = results.data.filter(row => {
+            return portfolioCoins.some(coin => coin.Ticker === row.Symbol);
+          });
+  
+          if (validData.length === 0) {
+            setAlertInfo({ message: "No matching symbols found in the current portfolio.", severity: "error" });
             setShowAlert(true);
             return;
           }
-
-          const importedData = results.data.map(row => {
-            // console.log("Raw Date String:", row.Date);
-
-            let parsedDate;
+  
+          // Map imported data to the buy and sell structure
+          const importedData = validData.map(row => {
+            let parsedDate = null;
             if (row.Date) {
               try {
-                parsedDate = parse(row.Date, 'dd-MM-yyyy', new Date());
+                parsedDate = parse(row.Date, 'M/d/yyyy', new Date());
                 if (isNaN(parsedDate)) {
                   throw new Error("Invalid Date");
                 }
@@ -373,10 +389,10 @@ const CoinDetails = (props) => {
                 parsedDate = null;
               }
             }
-
+  
             return {
               Type: row.Action === "Buy" ? "Kauf" : "Verkauf",
-              Date: parsedDate ? parsedDate.toISOString().split("T")[0] : "",
+              Date: parsedDate ? parsedDate.toISOString().split("T")[0] : null,
               PricePerCoin: row.Amount / row.Coins,
               Betrag: row.Amount,
               Coins: row.Coins,
@@ -384,27 +400,62 @@ const CoinDetails = (props) => {
               Symbol: row.Symbol,
             };
           });
-
-          // Check and add the new data to the current rowVals
-          const updatedRowVals = [...rowVals];
-          importedData.forEach(newRow => {
-            // Find existing row by Name and Symbol (if unique per coin)
-            const existingRow = updatedRowVals.find(row => row.Name === newRow.Name && row.Symbol === newRow.Symbol);
-            if (!existingRow) {
-              updatedRowVals.push(newRow);
+  
+          // Group data by coin symbol
+          const groupedData = portfolioCoins.reduce((acc, coin) => {
+            const coinData = importedData.filter(row => row.Symbol === coin.Ticker);
+            if (coinData.length > 0) {
+              acc[coin.Ticker] = coinData;
             }
+            return acc;
+          }, {});
+  
+          // Prepare data for API call
+          const apiData = Object.keys(groupedData).map(symbol => {
+            const coin = portfolioCoins.find(coin => coin.Ticker === symbol);
+            return {
+              CoinGeckoID: coin.CoinGeckoID,
+              buyAndSell: groupedData[symbol],
+            };
           });
-
-          console.log("Updated Row Values:", updatedRowVals);
-          setRowVals(updatedRowVals);
-          handleCloseDialog();
+  
+          try {
+            console.log("/api/importBuyAndSell", apiData);
+            // Call the API to store the data
+            const response = await fetch("/api/importBuyAndSell", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userID: sessionJotai?.user.id, data: apiData }),
+            });
+  
+            if (response.ok) {
+              const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+              setPortfolio(userPortfolio?.data);
+              setAlertInfo({ message: "Data successfully imported!", severity: "success" });
+              setShowAlert(true);
+              handleCloseDialog();
+            } else {
+              const errorData = await response.json();
+              throw new Error(errorData.message || "Failed to import data");
+            }
+          } catch (error) {
+            setAlertInfo({ message: error.message, severity: "error" });
+            setShowAlert(true);
+          }
         },
         error: (error) => {
           console.error("Error parsing CSV: ", error);
+          setAlertInfo({ message: "Error parsing CSV", severity: "error" });
+          setShowAlert(true);
         }
       });
     }
   };
+  
+  
+  
 
 
   return (
