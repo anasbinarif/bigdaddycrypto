@@ -257,8 +257,8 @@ const CoinCard = ({ coin, selected, search = false, risk, priceIndicator, assets
                   onClick={handleFavouriteClick}
                   sx={{
                     position: "absolute",
-                    right: "0",
-                    top: "0",
+                    left: "0",
+                    bottom: "0",
                   }}
                 >
                   <IconButton
@@ -379,8 +379,8 @@ const CoinCard = ({ coin, selected, search = false, risk, priceIndicator, assets
             <>
               {selected && <Box sx={{
                 position: "absolute",
-                right: "0",
-                top: "0",
+                left: "0",
+                bottom: "0",
               }}>
                 <Tooltip
                   title="Favourite"
