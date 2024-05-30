@@ -7,7 +7,9 @@ import {
   Grid,
   Tooltip,
   IconButton,
-  styled, Alert, Snackbar,
+  styled,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -52,12 +54,26 @@ const PortfolioComponent = ({
   setSelectedCoin,
   setTabSelector,
 }) => {
+  const [width, setWidth] = useState(0);
   const [sessionJotai] = useAtom(sessionAtom);
   // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [deleteIconIndex, setDeleteIconIndex] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);
   const t = useTranslations("portfolioComponent");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const [alert, setAlert] = useState({
     open: false,
@@ -209,183 +225,202 @@ const PortfolioComponent = ({
     );
   };
 
-  return (<>
-    <Box sx={{ position: "sticky", top: "100px" }}>
-      <AlertBar
-        open={alert.open}
-        message={alert.message}
-        severity={alert.severity}
-        onClose={() => setAlert({ ...alert, open: false })}
-      />
+  return (
+    <>
       <Box
         sx={{
-          width: "100%",
-          backgroundColor: "#202530",
-          // p: "2px",
-          display: "flex",
-          borderRadius: "8px",
+          position: "sticky",
+          top: "100px",
+          // pl: width < 900 ? 0 : 3,
+          // width: width >= 1400 ? "33.33%" : width > 900 ? "400px" : "100%",
+          mt: width < 900 ? "2rem" : 0,
         }}
       >
-        <Box sx={{ p: 3 }}>
-          <Typography variant="h4" gutterBottom>
-            {t("title")} ({assetsLeangth})
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            {t("subtitle")}
-          </Typography>
-          {loadingPortfolio ? (
-            <Grid
-              sx={{
-                borderRadius: "4px",
-                overflow: "auto",
-                scrollbarColor: "#555559 #333339",
-                maxHeight: "500px",
-              }}
-            >
-              {loadingPortfolio &&
-                portfolio.assets
-                  .slice()
-                  .reverse()
-                  .map((asset, index) => (
-                    <Grid item key={index} xs={12} sm={6} md={15}>
-                      <Card
-                        onMouseEnter={() => handleMouseEnter(index)}
-                        onMouseLeave={() => handleMouseLeave()}
-                        onDoubleClick={() => setCoin(index)}
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          p: 2,
-                          cursor: "pointer",
-                          borderRadius: 0,
-                          backgroundColor: "#23252b",
-                          "&:hover": { backgroundColor: "#00000099" },
-                          position: "relative",
-                          userSelect: "none",
-                        }}
-                      >
-                        {deleteIconIndex === index && (
-                          <CategoryColorBar
-                            colors={getCategoryColors(asset.Category)}
-                          />
-                        )}
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Avatar
-                            src={asset.cgImageURL}
-                            sx={{ width: 28, height: 28, mr: 1 }}
-                          />
-                          <Box sx={{ flexGrow: 1 }}>
-                            <Typography
-                              variant="h6"
-                              sx={{ color: "#fff", fontSize: "14px" }}
-                            >
-                              {asset.Ticker}
-                            </Typography>
-                          </Box>
-                        </Box>
-                        <Typography variant="body2" sx={{ color: "#fff" }}>
-                          {asset?.Price ? asset?.Price.toFixed(6) : 0} €
-                        </Typography>
-                        <Box
+        <AlertBar
+          open={alert.open}
+          message={alert.message}
+          severity={alert.severity}
+          onClose={() => setAlert({ ...alert, open: false })}
+        />
+        <Box
+          sx={{
+            width: "100%",
+            backgroundColor: "#202530",
+            // p: "2px",
+            display: "flex",
+            borderRadius: "8px",
+          }}
+        >
+          <Box sx={{ p: 3 }}>
+            <Typography variant="h4" gutterBottom>
+              {t("title")} ({assetsLeangth})
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom>
+              {t("subtitle")}
+            </Typography>
+            {loadingPortfolio ? (
+              <Grid
+                sx={{
+                  borderRadius: "4px",
+                  overflow: "auto",
+                  scrollbarColor: "#555559 #333339",
+                  maxHeight: "500px",
+                }}
+              >
+                {loadingPortfolio &&
+                  portfolio.assets
+                    .slice()
+                    .reverse()
+                    .map((asset, index) => (
+                      <Grid item key={index} xs={12} sm={6} md={15}>
+                        <Card
+                          onMouseEnter={() => handleMouseEnter(index)}
+                          onMouseLeave={() => handleMouseLeave()}
+                          onDoubleClick={() => setCoin(index)}
                           sx={{
                             display: "flex",
+                            justifyContent: "space-between",
                             alignItems: "center",
-                            flexDirection: "row",
+                            p: 2,
+                            cursor: "pointer",
+                            borderRadius: 0,
+                            backgroundColor: "#23252b",
+                            "&:hover": { backgroundColor: "#00000099" },
+                            position: "relative",
+                            userSelect: "none",
                           }}
                         >
+                          {deleteIconIndex === index && (
+                            <CategoryColorBar
+                              colors={getCategoryColors(asset.Category)}
+                            />
+                          )}
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Avatar
+                              src={asset.cgImageURL}
+                              sx={{ width: 28, height: 28, mr: 1 }}
+                            />
+                            <Box sx={{ flexGrow: 1 }}>
+                              <Typography
+                                variant="h6"
+                                sx={{ color: "#fff", fontSize: "14px" }}
+                              >
+                                {asset.Ticker}
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Typography variant="body2" sx={{ color: "#fff" }}>
+                            {asset?.Price ? asset?.Price.toFixed(6) : 0} €
+                          </Typography>
                           <Box
                             sx={{
                               display: "flex",
                               alignItems: "center",
-                              flexDirection: "column",
+                              flexDirection: "row",
                             }}
                           >
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              sx={{ color: "#fff" }}
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "column",
+                              }}
                             >
-                              {setFinancialSummaryAPI(asset.CoinGeckoID)[1]} €
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              sx={{ color: "gray" }}
-                            >
-                              {setFinancialSummaryAPI(
-                                asset.CoinGeckoID
-                              )[0].toFixed(2)}{" "}
-                              {asset.Ticker}
-                            </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ color: "#fff" }}
+                              >
+                                {setFinancialSummaryAPI(asset.CoinGeckoID)[1]} €
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ color: "gray" }}
+                              >
+                                {setFinancialSummaryAPI(
+                                  asset.CoinGeckoID
+                                )[0].toFixed(2)}{" "}
+                                {asset.Ticker}
+                              </Typography>
+                            </Box>
+                            {deleteIconIndex === index && (
+                              <>
+                                <Tooltip
+                                  title="Delete"
+                                  onClick={() => handleDeleteClick(asset)}
+                                >
+                                  <IconButton
+                                    sx={{
+                                      color: "gray",
+                                      "&:hover": { color: "red" },
+                                    }}
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip
+                                  title="Favourite"
+                                  onClick={() => handleFavouriteClick(asset)}
+                                >
+                                  <IconButton
+                                    sx={{
+                                      color: isFavorite(
+                                        asset.CoinGeckoID,
+                                        portfolio.assetsCalculations
+                                      )
+                                        ? "red"
+                                        : "gray",
+                                    }}
+                                  >
+                                    <FavoriteIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
                           </Box>
-                          {deleteIconIndex === index && (
-                            <>
-                              <Tooltip
-                                title="Delete"
-                                onClick={() => handleDeleteClick(asset)}
-                              >
-                                <IconButton
-                                  sx={{
-                                    color: "gray",
-                                    "&:hover": { color: "red" },
-                                  }}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip
-                                title="Favourite"
-                                onClick={() => handleFavouriteClick(asset)}
-                              >
-                                <IconButton
-                                  sx={{
-                                    color: isFavorite(
-                                      asset.CoinGeckoID,
-                                      portfolio.assetsCalculations
-                                    )
-                                      ? "red"
-                                      : "gray",
-                                  }}
-                                >
-                                  <FavoriteIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </>
-                          )}
-                        </Box>
-                      </Card>
-                    </Grid>
-                  ))}
-            </Grid>
-          ) : (
-            <Card
-              sx={{
-                height: "300px",
-                backgroundColor: "#23252b",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography sx={{ color: "gray" }}>Keine Einträge</Typography>
-            </Card>
-          )}
+                        </Card>
+                      </Grid>
+                    ))}
+              </Grid>
+            ) : (
+              <Card
+                sx={{
+                  height: "300px",
+                  backgroundColor: "#23252b",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography sx={{ color: "gray" }}>Keine Einträge</Typography>
+              </Card>
+            )}
+          </Box>
+          <DeleteConfirmationDialog
+            open={Boolean(selectedAsset)}
+            handleClose={handleCloseDialog}
+            handleDeleteConfirm={handleDeleteConfirm}
+            asset={selectedAsset}
+          />
         </Box>
-        <DeleteConfirmationDialog
-          open={Boolean(selectedAsset)}
-          handleClose={handleCloseDialog}
-          handleDeleteConfirm={handleDeleteConfirm}
-          asset={selectedAsset}
-        />
       </Box>
-    </Box>
-    <Snackbar open={alertOpen} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
-      <Alert onClose={() => setAlertOpen(false)} severity="info" variant="filled" sx={{ width: '100%' }}>
-        If you want to add/remove a coin to Favourites, please subscribe to one of our plans.
-      </Alert>
-    </Snackbar>
-  </>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={() => setAlertOpen(false)}
+      >
+        <Alert
+          onClose={() => setAlertOpen(false)}
+          severity="info"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          If you want to add/remove a coin to Favourites, please subscribe to
+          one of our plans.
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

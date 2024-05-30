@@ -129,7 +129,7 @@ const PortfolioForm = () => {
     return <Alert severity="error">{error}</Alert>;
   }
 
-  console.log(steps);
+  // console.log(steps);
 
   return (
     <Container>
@@ -195,7 +195,14 @@ const PortfolioForm = () => {
                 }}
                 // className={activeStep === 0 && styles.animate}
               >
-                <Box sx={{ width: "100%" }}>
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                  }}
+                >
                   <Typography
                     variant="h4"
                     sx={{
@@ -249,7 +256,7 @@ const PortfolioForm = () => {
                             sx={{
                               color: "#E8B01B",
                               fontSize: "1.8rem",
-                              fontWeight: "600",
+                              fontWeight: "bold",
                               mb: "1.5rem",
                               color:
                                 portfolioData.assets === label
@@ -302,7 +309,10 @@ const PortfolioForm = () => {
                 }}
               >
                 <Box sx={{ width: "100%" }}>
-                  <Typography variant="h4">
+                  <Typography
+                    variant="h4"
+                    sx={{ fontSize: "1.8rem", fontWeight: "bold" }}
+                  >
                     Wie viel Euro hast du bereits in Kryptos investiert?
                   </Typography>
 
@@ -317,7 +327,7 @@ const PortfolioForm = () => {
                       "400.000 - 750.000 €",
                       "750.000+",
                     ].map((label) => (
-                      <Grid item key={label} xs={6} sm={4}>
+                      <Grid item key={label} xs={6} sm={3}>
                         <Paper
                           onClick={() => handleSelection("investment", label)}
                           sx={{
@@ -355,7 +365,7 @@ const PortfolioForm = () => {
                               style={{
                                 color: "#43B97F",
                                 position: "absolute",
-                                left: "50px",
+                                left: "1rem",
                               }}
                             />
                           )}
@@ -386,14 +396,29 @@ const PortfolioForm = () => {
                   ],
                 }}
               >
-                <Box sx={{ width: "100%" }}>
-                  <Typography variant="h4">
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    sx={{ fontSize: "1.8rem", fontWeight: "bold" }}
+                  >
                     Wieviele X willst du mit deinem Portfolio von hier aus
                     erreichen?
                   </Typography>
-                  <Grid container spacing={2} justifyContent="center" mt={2}>
+                  <Grid
+                    container
+                    spacing={2}
+                    justifyContent="center"
+                    mt={2}
+                    sx={{ width: "100%" }}
+                  >
                     {["10x", "20x", "30x", "50x", "100x"].map((label) => (
-                      <Grid item key={label}>
+                      <Grid item key={label} sx={{ width: "20%" }}>
                         <Paper
                           onClick={() => handleSelection("target", label)}
                           sx={{

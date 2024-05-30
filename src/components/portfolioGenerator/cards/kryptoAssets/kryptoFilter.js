@@ -38,7 +38,7 @@ const KryptoFilter = ({
   setPriceIndicator,
 }) => {
   const t = useTranslations("kryptoFilter");
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(0);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -51,9 +51,10 @@ const KryptoFilter = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setScreenWidth(window.innerWidth);
+      setWidth(window.innerWidth);
     };
 
+    handleResize();
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -148,7 +149,8 @@ const KryptoFilter = ({
         sx={{
           width: "100%",
           bgcolor: "#202530",
-          padding: isSmallScreen ? "20px 10px" : "35px 30px",
+          padding: "0.5rem",
+          // padding: isSmallScreen ? "20px 10px" : "35px 30px",
           display: "flex",
           flexDirection: width < 1100 ? "column-reverse" : "row",
           justifyContent: isSmallScreen ? "center" : "space-between",
@@ -163,7 +165,7 @@ const KryptoFilter = ({
             textAlign: isSmallScreen ? "center" : "left",
           }}
         >
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
             {t("chooseAssets")}
           </Typography>
           {width > 1400 && (
@@ -185,14 +187,19 @@ const KryptoFilter = ({
           id="filters"
           sx={{
             display: "flex",
-            flexDirection: isSmallScreen ? "column" : "row",
+            flexDirection: width < 1300 ? "column" : "row",
             alignItems: "center",
             justifyContent: width < 1100 ? "space-between" : "stretch",
             gap: isSmallScreen ? "10px" : "2rem",
             width: width < 1100 ? "100%" : "auto",
           }}
         >
-          <Box sx={{ position: "relative" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: width < 1300 ? "column" : "row",
+            }}
+          >
             <FontAwesomeIcon
               icon={faCrown}
               style={{
