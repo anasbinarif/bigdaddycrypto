@@ -105,9 +105,13 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
         height: "auto",
         display: "flex",
         mr: "-25px",
-        "@media (max-width:1600px)": {
+        "@media only screen and (max-width:1600px)": {
           width: "40%",
           mr: 0,
+        },
+        "@media only screen and (max-width:500px)": {
+          width: "100%",
+          mt: "1rem",
         },
       }}
     >
@@ -138,9 +142,9 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
           textAlign: "center", // Center text horizontally
           zIndex: "100",
 
-          "@media (max-width:600px)": {
-            backgroundColor: "secondary.main",
-          },
+          // "@media (max-width:600px)": {
+          //   // backgroundColor: "secondary.main",
+          // },
         }}
       >
         <Typography

@@ -51,6 +51,10 @@ export const DonutCard = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            "@media only screen and (max-width:500px)": {
+              alignItems: "flex-start",
+              flexDirection: "column",
+            },
           }}
         >
           {loadingPortfolio ? (

@@ -18,6 +18,12 @@
   }
 }
 
+@media only screen and (max-width: 500px) {
+  .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
 .input {
   margin-right: 5px;
   width: 100%;

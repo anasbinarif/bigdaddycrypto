@@ -92,6 +92,9 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
       >
         <Tabs
           value={value}
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
           onChange={handleChange}
           textColor="primary"
           indicatorColor="primary"
@@ -135,6 +138,10 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
               "&.MuiTab-root:not(.Mui-selected):hover": {
                 backgroundColor: "var(--color-secondary-2)",
               },
+              "@media only screen and (max-width: 600px)": {
+                fontSize: "0.8rem",
+                padding: "0.5rem",
+              },
             }}
           />
           <Tab
@@ -149,6 +156,10 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
               "&.MuiTab-root:not(.Mui-selected):hover": {
                 backgroundColor: "var(--color-secondary-2)",
               },
+              "@media only screen and (max-width: 600px)": {
+                fontSize: "0.8rem",
+                padding: "0.5rem",
+              },
             }}
           />
           <Tab
@@ -162,6 +173,10 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
               // },
               "&.MuiTab-root:not(.Mui-selected):hover": {
                 backgroundColor: "var(--color-secondary-2)",
+              },
+              "@media only screen and (max-width: 600px)": {
+                fontSize: "0.8rem",
+                padding: "0.5rem",
               },
             }}
           />

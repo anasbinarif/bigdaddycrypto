@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import DoneIcon from '@mui/icons-material/Done';
+import DoneIcon from "@mui/icons-material/Done";
 import { categoriesDisplay } from "../../../../lib/data";
 
 const categoryColors = {
@@ -31,7 +31,12 @@ const DonutLegend = ({ portfolioCalculations }) => {
   }, [categories]);
 
   return (
-    <Box sx={{ background: "#202530" }}>
+    <Box
+      sx={{
+        background: "#202530",
+        "@media only screen and (max-width: 500px)": { width: "100%" },
+      }}
+    >
       {categories.map((category, index) => (
         <Box
           key={index}

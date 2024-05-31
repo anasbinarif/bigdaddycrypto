@@ -152,7 +152,7 @@ const KryptoFilter = ({
           padding: "0.5rem",
           // padding: isSmallScreen ? "20px 10px" : "35px 30px",
           display: "flex",
-          flexDirection: width < 1100 ? "column-reverse" : "row",
+          flexDirection: width > 1100 ? "row" : "column-reverse",
           justifyContent: isSmallScreen ? "center" : "space-between",
           alignItems: isSmallScreen ? "center" : "flex-start",
           borderRadius: "8px",
@@ -187,7 +187,14 @@ const KryptoFilter = ({
           id="filters"
           sx={{
             display: "flex",
-            flexDirection: width < 1300 ? "column" : "row",
+            flexDirection:
+              width > 1300
+                ? "row"
+                : width > 1100
+                ? "column"
+                : width > 500
+                ? "row"
+                : "column",
             alignItems: "center",
             justifyContent: width < 1100 ? "space-between" : "stretch",
             gap: isSmallScreen ? "10px" : "2rem",
