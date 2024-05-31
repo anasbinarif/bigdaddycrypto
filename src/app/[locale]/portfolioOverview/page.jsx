@@ -421,8 +421,8 @@ const PortfolioForm = () => {
                                             <Typography variant="h6" gutterBottom>So geht es jetzt weiter:</Typography>
                                             <Typography variant="body2" gutterBottom>
                                                 <CustomOrderedList>
-                                                    <CustomListItem>Klicke auf "Zum Warenkorb" und schließe die Bestellung ab.</CustomListItem>
-                                                    <CustomListItem>Gib im Checkout <strong>unbedingt</strong> deine Portfolio-ID im Feld "Zusätzliche Adressdaten" an!</CustomListItem>
+                                                    <CustomListItem>Klicke auf Zum Warenkorb und schließe die Bestellung ab.</CustomListItem>
+                                                    <CustomListItem>Gib im Checkout <strong>unbedingt</strong> deine Portfolio-ID im Feld Zusätzliche Adressdaten an!</CustomListItem>
                                                 </CustomOrderedList>
                                             </Typography>
                                             <Box>
