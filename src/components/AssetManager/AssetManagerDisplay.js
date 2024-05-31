@@ -25,7 +25,21 @@ const AssetManagerDisplay = ({
   assetsLeangth,
 }) => {
   const theme = useTheme();
+  const [width, setWidth] = useState(0);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <Grid
@@ -33,16 +47,16 @@ const AssetManagerDisplay = ({
       spacing={{ xs: 2, md: 3 }}
       columns={{ xs: 4, sm: 8, md: 12 }}
     >
-      <Grid item xs={4} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={width > 1350 ? 4 : 3}>
         <BitpandaCard />
       </Grid>
       <Grid item xs={4} sm={4} md={4}>
         <Second />
       </Grid>
-      <Grid item xs={4} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={width > 1350 ? 4 : 5}>
         <Third />
       </Grid>
-      <Grid item xs={4} sm={4} md={4}>
+      <Grid item xs={4} sm={4} md={width > 1350 ? 4 : 5}>
         <PortfolioComponent
           portfolio={portfolio}
           setPortfolio={setPortfolio}
@@ -59,7 +73,7 @@ const AssetManagerDisplay = ({
           />
         </Grid>
       ) : (
-        <Grid item xs={8} sm={8} md={8}>
+        <Grid item xs={8} sm={8} md={width > 1350 ? 8 : 7}>
           <CoinDetails
             coin={portfolio?.assets[selectedCoin]}
             index={selectedCoin}

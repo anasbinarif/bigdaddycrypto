@@ -3,11 +3,16 @@ import {
   Alert,
   Avatar,
   Box,
-  Button, Dialog, DialogActions, DialogContent, DialogTitle,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   MenuItem,
   Paper,
-  Select, Snackbar,
+  Select,
+  Snackbar,
   Tab,
   Table,
   TableBody,
@@ -28,11 +33,12 @@ import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AlertBar from "../../../customAllert/Alert";
 import { getUserPortfolio } from "../../../../lib/data";
-import Papa from 'papaparse';
-import { parse } from 'date-fns';
+import Papa from "papaparse";
+import { parse } from "date-fns";
 
 const CoinDetails = (props) => {
   const { coin, index } = props;
+  const [width, setWidth] = useState(0);
   const [value, setValue] = useState(0);
   const [alertOpen, setAlertOpen] = useState(false);
   const [rowVals, setRowVals] = useState([]);
@@ -58,6 +64,19 @@ const CoinDetails = (props) => {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [file, setFile] = useState(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const asset = portfolio.assetsCalculations.assets.find(
@@ -287,26 +306,26 @@ const CoinDetails = (props) => {
 
   const handleExportCSV = () => {
     if (sessionJotai?.user?.subscriptionPlan === "free") {
-      setAlertOpen(true)
-      return
+      setAlertOpen(true);
+      return;
     }
     const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
 
-    const rows = rowVals.map(row => {
+    const rows = rowVals.map((row) => {
       return {
         Date: new Date(row.Date).toLocaleDateString("en-US"), // Format date to MM/DD/YYYY
         Name: coin.Name, // Assuming all are Bitcoin, adjust if necessary
         Symbol: coin.Ticker, // Assuming all are BTC, adjust if necessary
         Action: row.Type === "Kauf" ? "Buy" : "Sell",
         Coins: row.Coins,
-        Amount: row.Betrag
+        Amount: row.Betrag,
       };
     });
-    console.log("coinnnnn-rows", rows)
+    console.log("coinnnnn-rows", rows);
 
     const csvContent = [
       headers.join(","),
-      ...rows.map(row => Object.values(row).join(","))
+      ...rows.map((row) => Object.values(row).join(",")),
     ].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -321,12 +340,11 @@ const CoinDetails = (props) => {
 
   const handleImport = () => {
     if (sessionJotai?.user?.subscriptionPlan === "free") {
-      setAlertOpen(true)
-      return
+      setAlertOpen(true);
+      return;
     }
-    handleOpenDialog()
-  }
-
+    handleOpenDialog();
+  };
 
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => {
@@ -349,22 +367,30 @@ const CoinDetails = (props) => {
           console.log("Parsed CSV Data:", results.data);
 
           // Check if all symbols in the imported data match the current coin's ticker
-          const allSymbolsMatch = results.data.every(row => row.Symbol === coin.Ticker);
+          const allSymbolsMatch = results.data.every(
+            (row) => row.Symbol === coin.Ticker
+          );
 
           if (!allSymbolsMatch) {
-            console.error("Symbols in the imported data do not match the current coin's ticker.");
-            setAlertInfo({ message: "Symbols in the imported data do not match the current coin's ticker.", severity: "error" });
+            console.error(
+              "Symbols in the imported data do not match the current coin's ticker."
+            );
+            setAlertInfo({
+              message:
+                "Symbols in the imported data do not match the current coin's ticker.",
+              severity: "error",
+            });
             setShowAlert(true);
             return;
           }
 
-          const importedData = results.data.map(row => {
+          const importedData = results.data.map((row) => {
             // console.log("Raw Date String:", row.Date);
 
             let parsedDate;
             if (row.Date) {
               try {
-                parsedDate = parse(row.Date, 'dd-MM-yyyy', new Date());
+                parsedDate = parse(row.Date, "dd-MM-yyyy", new Date());
                 if (isNaN(parsedDate)) {
                   throw new Error("Invalid Date");
                 }
@@ -387,9 +413,11 @@ const CoinDetails = (props) => {
 
           // Check and add the new data to the current rowVals
           const updatedRowVals = [...rowVals];
-          importedData.forEach(newRow => {
+          importedData.forEach((newRow) => {
             // Find existing row by Name and Symbol (if unique per coin)
-            const existingRow = updatedRowVals.find(row => row.Name === newRow.Name && row.Symbol === newRow.Symbol);
+            const existingRow = updatedRowVals.find(
+              (row) => row.Name === newRow.Name && row.Symbol === newRow.Symbol
+            );
             if (!existingRow) {
               updatedRowVals.push(newRow);
             }
@@ -401,11 +429,10 @@ const CoinDetails = (props) => {
         },
         error: (error) => {
           console.error("Error parsing CSV: ", error);
-        }
+        },
       });
     }
   };
-
 
   return (
     <>
@@ -418,7 +445,12 @@ const CoinDetails = (props) => {
           padding: "35px 30px",
         }}
       >
-        <Box sx={{ display: "flex" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: width < 1200 ? "column" : "row",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -428,7 +460,13 @@ const CoinDetails = (props) => {
             }}
           >
             <Box
-              sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1, mr: 2 }}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                pl: 1,
+                mr: 2,
+              }}
             >
               <Avatar
                 src={coin.cgImageURL}
@@ -450,35 +488,82 @@ const CoinDetails = (props) => {
           </Box>
           <Box className={styles.grid}>
             <Box className={styles.grid__item}>
-              <Typography sx={{ fontSize: "0.9rem" }}>Bestand</Typography>
+              <Typography
+                sx={{
+                  fontSize: "0.9rem",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
+                Bestand
+              </Typography>
               <Typography
                 sx={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
                   whiteSpace: "nowrap",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "1.5rem",
+                  },
                 }}
               >
                 {financialSummary.totalHoldingsValue},00 €
               </Typography>
-              <Typography sx={{ color: "#ffffff88" }}>
+              <Typography
+                sx={{
+                  color: "#ffffff88",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
                 {financialSummary.totalCoins} {coin.Ticker}
               </Typography>
             </Box>
             <Box className={styles.grid__item}>
-              <Typography sx={{ fontSize: "0.9rem" }}>Investiert</Typography>
+              <Typography
+                sx={{
+                  fontSize: "0.9rem",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
+                Investiert
+              </Typography>
               <Typography
                 sx={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
                   whiteSpace: "nowrap",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "1.5rem",
+                  },
                 }}
               >
                 {financialSummary.totalInvested},00 €
               </Typography>
-              <Typography sx={{ color: "#ffffff88" }}>Geplant: 0,00 €</Typography>
+              <Typography
+                sx={{
+                  color: "#ffffff88",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
+                Geplant: 0,00 €
+              </Typography>
             </Box>
             <Box className={styles.grid__item}>
-              <Typography sx={{ fontSize: "0.9rem" }}>
+              <Typography
+                sx={{
+                  fontSize: "0.9rem",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
                 Gesamtgewinn/-Verlust
               </Typography>
               <Typography
@@ -486,13 +571,18 @@ const CoinDetails = (props) => {
                   fontSize: "1.8rem",
                   fontWeight: "bold",
                   whiteSpace: "nowrap",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "1.5rem",
+                  },
                 }}
               >
                 {financialSummary.totalWinLoss},00 €
               </Typography>
               <Typography
                 className={
-                  financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
+                  financialSummary.avgPurchasePricePercentage < 0
+                    ? "down"
+                    : "up"
                 }
                 sx={{
                   "&.down": {
@@ -514,22 +604,38 @@ const CoinDetails = (props) => {
                     fontSize: "80%",
                     marginRight: "3px",
                   },
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
                 }}
               >
                 {financialSummary.totalWinLossPercentage} %
               </Typography>
             </Box>
             <Box className={styles.grid__item}>
-              <Typography sx={{ fontSize: "0.9rem" }}>
+              <Typography
+                sx={{
+                  fontSize: "0.9rem",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
                 Durchschn. Kaufpreis
               </Typography>
               <Typography
                 sx={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
-                  color: `${financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
-                    }`,
+                  color: `${
+                    financialSummary.avgPurchasePrice > 0
+                      ? ""
+                      : "rgb(68, 68, 68)"
+                  }`,
                   whiteSpace: "nowrap",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "1.5rem",
+                  },
                 }}
               >
                 {financialSummary.avgPurchasePrice > 0
@@ -538,7 +644,9 @@ const CoinDetails = (props) => {
               </Typography>
               <Typography
                 className={
-                  financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
+                  financialSummary.avgPurchasePricePercentage < 0
+                    ? "down"
+                    : "up"
                 }
                 sx={{
                   "&.down": {
@@ -560,22 +668,39 @@ const CoinDetails = (props) => {
                     fontSize: "80%",
                     marginRight: "3px",
                   },
+
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.9rem",
+                  },
                 }}
               >
                 {financialSummary.avgPurchasePricePercentage} %
               </Typography>
             </Box>
             <Box className={styles.grid__item}>
-              <Typography sx={{ fontSize: "0.9rem" }}>
+              <Typography
+                sx={{
+                  fontSize: "0.9rem",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
                 Durchschn. Verkaufspreis
               </Typography>
               <Typography
                 sx={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
-                  color: `${financialSummary.avgSellingPrice > 0 ? "" : "rgb(68, 68, 68)"
-                    }`,
+                  color: `${
+                    financialSummary.avgSellingPrice > 0
+                      ? ""
+                      : "rgb(68, 68, 68)"
+                  }`,
                   whiteSpace: "nowrap",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "1.5rem",
+                  },
                 }}
               >
                 {financialSummary.avgSellingPrice > 0
@@ -585,7 +710,9 @@ const CoinDetails = (props) => {
               {financialSummary.avgSellingPricePercentage > 0 && (
                 <Typography
                   className={
-                    financialSummary.avgSellingPricePercentage < 0 ? "up" : "down"
+                    financialSummary.avgSellingPricePercentage < 0
+                      ? "up"
+                      : "down"
                   }
                   sx={{
                     "&.down": {
@@ -607,6 +734,10 @@ const CoinDetails = (props) => {
                       fontSize: "80%",
                       marginRight: "3px",
                     },
+
+                    "@media only screen and (max-width: 1500px)": {
+                      fontSize: "0.8rem",
+                    },
                   }}
                 >
                   {financialSummary.avgSellingPricePercentage} %
@@ -614,7 +745,14 @@ const CoinDetails = (props) => {
               )}
             </Box>
             <Box className={styles.grid__item}>
-              <Typography sx={{ fontSize: "0.9rem" }}>
+              <Typography
+                sx={{
+                  fontSize: "0.9rem",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
                 Gewinn realisiert
               </Typography>
               <Typography
@@ -622,11 +760,23 @@ const CoinDetails = (props) => {
                   fontSize: "1.8rem",
                   fontWeight: "bold",
                   whiteSpace: "nowrap",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "1.5rem",
+                  },
                 }}
               >
                 {financialSummary.realizedProfit},00 €
               </Typography>
-              <Typography sx={{ color: "#ffffff88" }}>% von Invest</Typography>
+              <Typography
+                sx={{
+                  color: "#ffffff88",
+                  "@media only screen and (max-width: 1500px)": {
+                    fontSize: "0.8rem",
+                  },
+                }}
+              >
+                % von Invest
+              </Typography>
             </Box>
           </Box>
         </Box>
@@ -735,17 +885,18 @@ const CoinDetails = (props) => {
                                 row.Type === "Kauf"
                                   ? "#4CAF50"
                                   : row.Type === "Verkauf"
-                                    ? "#F44336"
-                                    : "white",
+                                  ? "#F44336"
+                                  : "white",
                               fontSize: "0.8rem",
                               border: "none",
 
                               "& .MuiOutlinedInput-notchedOutline": {
                                 border: "1px solid #ffffff20",
                               },
-                              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                border: "1px solid #ffffff20",
-                              },
+                              "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                {
+                                  border: "1px solid #ffffff20",
+                                },
 
                               "& .MuiFormHelperText-root": {
                                 color: "#ffffff",
@@ -890,7 +1041,10 @@ const CoinDetails = (props) => {
                             onClick={() => handleDeleteRow(index)}
                           >
                             <IconButton
-                              sx={{ color: "gray", "&:hover": { color: "red" } }}
+                              sx={{
+                                color: "gray",
+                                "&:hover": { color: "red" },
+                              }}
                             >
                               <DeleteIcon />
                             </IconButton>
@@ -940,7 +1094,12 @@ const CoinDetails = (props) => {
               Import CSV
               <FontAwesomeIcon
                 icon={faCrown}
-                style={{ paddingLeft: "5px", opacity: "0.5", fontSize: "0.9rem", marginRight: "15px" }}
+                style={{
+                  paddingLeft: "5px",
+                  opacity: "0.5",
+                  fontSize: "0.9rem",
+                  marginRight: "15px",
+                }}
                 color="gold"
               />
             </Button>
@@ -958,7 +1117,12 @@ const CoinDetails = (props) => {
               Export CSV
               <FontAwesomeIcon
                 icon={faCrown}
-                style={{ paddingLeft: "5px", opacity: "0.5", fontSize: "0.9rem", marginRight: "15px" }}
+                style={{
+                  paddingLeft: "5px",
+                  opacity: "0.5",
+                  fontSize: "0.9rem",
+                  marginRight: "15px",
+                }}
                 color="gold"
               />
             </Button>
@@ -983,7 +1147,12 @@ const CoinDetails = (props) => {
           severity={alertInfo.severity}
           onClose={closeAlert}
         />
-        <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          maxWidth="sm"
+          fullWidth
+        >
           <DialogTitle>Import CSV</DialogTitle>
           <DialogContent sx={{ maxWidth: "600px", width: "100%" }}>
             <Box
@@ -1022,8 +1191,17 @@ const CoinDetails = (props) => {
           </DialogActions>
         </Dialog>
       </Box>
-      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
-        <Alert onClose={() => setAlertOpen(false)} severity="info" variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={() => setAlertOpen(false)}
+      >
+        <Alert
+          onClose={() => setAlertOpen(false)}
+          severity="info"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
           To access the Import/Export, please subscribe to one of our plans.
         </Alert>
       </Snackbar>

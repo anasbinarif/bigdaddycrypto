@@ -106,6 +106,12 @@ a {
   text-decoration: none;
 }
 
+@media only screen and (max-width: 1350px) {
+  body {
+    font-size: 62.5%;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

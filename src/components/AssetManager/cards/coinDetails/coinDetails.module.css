@@ -12,6 +12,12 @@
   border-radius: 8px;
 }
 
+@media only screen and (max-width: 1350px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .input {
   margin-right: 5px;
   width: 100%;
