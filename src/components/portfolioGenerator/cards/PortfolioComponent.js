@@ -10,6 +10,7 @@ import {
   styled,
   Alert,
   Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -61,6 +62,7 @@ const PortfolioComponent = ({
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);
   const t = useTranslations("portfolioComponent");
+  console.log(portfolio.assets, loadingPortfolio);
 
   useEffect(() => {
     const handleResize = () => {
@@ -100,6 +102,7 @@ const PortfolioComponent = ({
     console.log("testing delete", CoinGeckoID, userId);
 
     try {
+      setLoading(true);
       // Call the API to delete the coin from the portfolioGenerator
       const response = await fetch("/api/deleteCoinPortfolio", {
         method: "POST",
@@ -128,6 +131,7 @@ const PortfolioComponent = ({
           message: `${t("coinRemovedSuccess")}`,
           severity: "success",
         });
+        setLoading(false);
       } else {
         throw new Error(data.message || "Failed to delete the coin");
       }
@@ -204,6 +208,7 @@ const PortfolioComponent = ({
       setAlertOpen(true);
       return;
     }
+    setLoading(true);
     console.log("FavouriteClick", asset);
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = asset?.CoinGeckoID;
@@ -217,6 +222,7 @@ const PortfolioComponent = ({
     if (response.ok) {
       const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
       setPortfolio(userPortfolio.data);
+      setLoading(false);
     }
   }
   const getCategoryColors = (categories) => {

@@ -10,15 +10,26 @@ import {
   CircularProgress,
   Alert,
   TextField,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Allocation from "../../../../public/assets/images/Allocation.webp";
+import Check from "../../../../public/assets/images/Check.webp";
 import Image from "next/image";
 import Checkout from "../../../components/oneTimePayment/OneTimePaymentCheckout";
 import CustomizedSteppers from "./CustomizedSteppers";
 import { usePathname, useRouter } from "next/navigation";
-import styles from "./page.module.css";
-// import { transform } from "next/dist/build/swc";
+import Footer from "../../../components/footer/Footer";
+import Navbar from "../../../components/navbar/Navbar";
+import { calculatePrice } from "../../../lib/action";
+import { green } from "@mui/material/colors";
+import DoneIcon from "@mui/icons-material/Done";
+import styled from "@emotion/styled";
+import { sessionAtom } from "../../stores/sessionStore";
+import { useAtom } from "jotai";
 
 const steps = [
   "Wieviele Assets hast du in deinem Portfolio?",

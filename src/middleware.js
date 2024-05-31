@@ -22,6 +22,8 @@ export const config = {
         '/admin',
         '/faq',
         '/media',
-        '/assetsGraph'
+        '/assetsGraph',
+        '/pricingPlans',
+        '/portfolioOverview'
     ],
 };

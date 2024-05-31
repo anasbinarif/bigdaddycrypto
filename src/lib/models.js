@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { type } from "os";
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -86,6 +87,14 @@ const PaymentsSchema = new mongoose.Schema({
             date: {
                 type: Date,
                 required: true
+            },
+            price: {
+                type: Number,
+                required: true
+            },
+            status: {
+                type: String,
+                enum: ["Pending", "Paid"]
             }
         }
     ],

@@ -89,15 +89,15 @@ const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
     const [dropdownValues, setDropdownValues] = useState({});
 
     useEffect(() => {
-        if (portfolio.assetsCalculations && portfolio.assets) {
-            const totalInvestment = portfolio.assetsCalculations.assets.reduce(
+        if (portfolio?.assetsCalculations && portfolio?.assets) {
+            const totalInvestment = portfolio?.assetsCalculations.assets.reduce(
                 (acc, curr) => acc + curr.totalInvest,
                 0
             );
 
-            const mergedData = portfolio.assets.map((asset) => {
+            const mergedData = portfolio?.assets.map((asset) => {
                 const calc =
-                    portfolio.assetsCalculations.assets.find(
+                    portfolio?.assetsCalculations.assets.find(
                         (ac) => ac.CoinGeckoID === asset.CoinGeckoID
                     ) || {};
                 const percentage = totalInvestment
@@ -162,7 +162,7 @@ const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
     };
 
     const handleUpdate = async () => {
-        const updatedAssets = portfolio.assetsCalculations?.assets.map((asset, index) => {
+        const updatedAssets = portfolio?.assetsCalculations?.assets.map((asset, index) => {
             const newRelevanz = valueMap[dropdownValues[index]?.relevanz || asset.Relevanz];
             const newDca = valueMap[dropdownValues[index]?.dca || asset?.DCA_0];
             const newGewichtung = valueMap[dropdownValues[index]?.gewichtung || asset.Gewichtung];

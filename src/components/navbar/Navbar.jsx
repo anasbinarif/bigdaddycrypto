@@ -214,6 +214,13 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   }}
                 />
               </Box>
+              <Link
+                  style={{ marginRight: "15px", fontFamily: "inherit" }}
+                  href="/pricingPlans"
+                  className={styles.nav__link}
+              >
+                Pricing Plans
+              </Link>
               <SessionProvider>
                 <NavbarLink />
               </SessionProvider>

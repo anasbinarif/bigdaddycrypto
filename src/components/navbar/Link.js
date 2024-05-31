@@ -34,7 +34,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         if (status === "unauthenticated") {
           handleLogoutFun();
         }
-        console.log("session for admin", session, status);
+        // console.log("session for admin", session, status);
       } catch (error) {
         console.error('Error updating session with subscription:', error);
       }

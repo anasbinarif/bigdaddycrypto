@@ -77,7 +77,7 @@ const PortfolioDisplay = ({
         <KryptoAssets
           portfolio={portfolio}
           loadingPortfolio={loadingPortfolio}
-          userID={portfolio.userId}
+          userID={portfolio?.userId}
           assetsLeangth={assetsLeangth}
         />
       </Grid>

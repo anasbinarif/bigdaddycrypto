@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import { sessionAtom } from "../../app/stores/sessionStore";
+import { useAtom } from "jotai";
 
-const Checkout = ({open, handleClose}) => {
+const Checkout = ({open, handleClose, price}) => {
     const [show, setShow] = useState(false);
     const [success, setSuccess] = useState(false);
     const [ErrorMessage, setErrorMessage] = useState("");
     const [orderID, setOrderID] = useState(false);
-
+    const [sessionJotai, setSession] = useAtom(sessionAtom);
     const createOrder = (data, actions) => {
         return actions.order.create({
             purchase_units: [
@@ -15,7 +17,7 @@ const Checkout = ({open, handleClose}) => {
                     description: "One Time Payment for Review Portfolio",
                     amount: {
                         currency_code: "USD",
-                        value: 5,
+                        value: price,
                     },
                 },
             ],
@@ -26,10 +28,26 @@ const Checkout = ({open, handleClose}) => {
     };
 
     // check Approval
-    const onApprove = (data, actions) => {
-        return actions.order.capture().then(function (details) {
+    const onApprove = async (data, actions) => {
+        return actions.order.capture().then(async function (details) {
             const { payer } = details;
+            const userId = sessionJotai?.user.id;
             setSuccess(true);
+
+            // Call API to save payment data
+            const response = await fetch('/api/saveOneTimePayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, price, status: "Paid" }),
+            });
+
+            if (response.ok) {
+                console.log('Payment data saved successfully');
+            } else {
+                console.error('Failed to save payment data');
+            }
         });
     };
 
@@ -40,7 +58,7 @@ const Checkout = ({open, handleClose}) => {
 
     useEffect(() => {
         if (success) {
-            alert("Payment successful!!");
+            handleClose()
             console.log('Order successful . Your order id is--', orderID);
         }
     }, [success]);

@@ -113,7 +113,11 @@
   "colorTabs": {
     "portfolioGenerator": "Portfolio Generator",
     "assetManager": "Asset Manager",
-    "portfolioOverview": "Portfolio Overview"
+    "portfolioOverview": "Portfolio Overview",
+    "pricingPlans": "Pricing Plans"
+  },
+  "userPricingPlan": {
+    "pricingPlans": "Pricing Plans"
   },
   "scrollableKryptoTabs": {
     "favourite": "Favoriten",

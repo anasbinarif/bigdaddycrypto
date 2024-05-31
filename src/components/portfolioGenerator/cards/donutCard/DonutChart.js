@@ -48,7 +48,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
       setSecurityScore(weightedScore.toFixed(2));
     };
 
-    if (portfolio.assetsCalculations && portfolio.assets) {
+    if (portfolio?.assetsCalculations && portfolio.assets) {
       calculateSecurityScore();
     }
   }, [portfolio]);
@@ -56,7 +56,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   const data = loadingPortfolio
     ? [
         ["Category", "Percentage"],
-        ...Object.entries(portfolioCalculations.percentages || {}).map(
+        ...Object.entries(portfolioCalculations?.percentages || {}).map(
           ([key, value]) => {
             return [
               categoriesDisplay[key] || key,

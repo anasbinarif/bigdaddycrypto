@@ -10,7 +10,11 @@ import {
   Button,
   Snackbar,
   Alert,
+  Tooltip,
+  IconButton,
+  CircularProgress,
 } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import {
   bewerteAssetExtremPessimistisch,
   bewerteAssetSpaeteinsteiger,
@@ -79,10 +83,11 @@ const CoinCard = ({
   } = coin;
   const [width, setWidth] = useState(0);
   const [sessionJotai] = useAtom(sessionAtom);
-  const [, setPortfolio] = useAtom(portfolioAtom);
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [filterTag, setFilterTag] = useState("");
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -131,6 +136,8 @@ const CoinCard = ({
       return;
     }
 
+    setLoading(true);
+
     const userId = sessionJotai?.user.id;
     const res = await storeUserPortfolioCoin(userId, coin);
 
@@ -143,6 +150,8 @@ const CoinCard = ({
         res.message
       );
     }
+
+    setLoading(false); // Set loading to false
     setOpen(false);
   };
 
@@ -178,6 +187,35 @@ const CoinCard = ({
     Ok: "#FFA500cc", // Gelb
     Naja: "#FF4500cc", // Orange
     Teuer: "#DC143Ccc", // Rot
+  };
+
+  async function handleFavouriteClick() {
+    setLoading(true);
+    console.log("handleFavouriteClick", coin);
+    if (sessionJotai?.user?.subscriptionPlan === "free") {
+      setAlertOpen(true);
+      return;
+    }
+    const userId = sessionJotai?.user.id;
+    const CoinGeckoID = coin?.CoinGeckoID;
+    const response = await fetch("/api/addCoinToFavorites", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId, CoinGeckoID }),
+    });
+    if (response.ok) {
+      const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+      setPortfolio(userPortfolio.data);
+      setLoading(false);
+    }
+  }
+
+  const isFavorite = (CoinGeckoID, assetsCalculations) => {
+    return assetsCalculations?.assets.some(
+      (asset) => asset.CoinGeckoID === CoinGeckoID && asset.Favourite
+    );
   };
 
   return (
@@ -410,6 +448,24 @@ const CoinCard = ({
             )}
           </CardContent>
         </StyledCard>
+      )}
+      {loading && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
+          }}
+        >
+          <CircularProgress color="inherit" />
+        </Box>
       )}
       <DeleteConfirmationDialog
         open={open}
