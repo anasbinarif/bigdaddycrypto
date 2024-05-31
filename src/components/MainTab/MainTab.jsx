@@ -6,7 +6,7 @@ import {
     Box,
     Typography,
     useMediaQuery,
-    useTheme,
+    useTheme, CircularProgress,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import PortfolioDisplay from "../../components/portfolioGenerator/PortfolioDisplay";
@@ -44,7 +44,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     const t = useTranslations("colorTabs");
     const [value, setValue] = useState("one");
     const [selectedCoin, setSelectedCoin] = useState(0);
-
+    const [loading, setLoading] = useState(false)
     const handleChange = (event, newValue) => {
         setValue(newValue);
         setTabSelector(newValue);
@@ -60,10 +60,12 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         // if (session) {
         //   setSession(session);
         // }
+        setLoading(true)
         const fetchData = async () => {
             if (sessionJotai?.user) {
                 const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
                 setPortfolio(userPortfolio?.data);
+                setLoading(false)
             }
         };
         fetchData();
@@ -208,6 +210,24 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         {t("portfolioId")}: {session?.user.username}
         Hello
       </Typography> */}
+            {loading && (
+                <Box
+                    sx={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        zIndex: 9999,
+                    }}
+                >
+                    <CircularProgress color="inherit" />
+                </Box>
+            )}
         </>
     );
 }

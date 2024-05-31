@@ -330,7 +330,6 @@ export const setCoinObject = (coin) => {
 // }
 
 export const getCategoryColor = (category) => {
-  console.log("ho kiya raha hai", category);
   switch (category.toLowerCase()) {
     case "ai":
       return "#FFD700";

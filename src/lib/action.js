@@ -59,6 +59,48 @@ export const saveSubscriptionDetails = async (data, userId, plan, planId, billin
     }
 };
 
+export const calculatePrice = (portfolioData) => {
+    const { assets, investment } = portfolioData;
+    if (investment === 'Unter 10.000 €') {
+        return 999;
+    }
+    const assetRanges = {
+        '1-15': [
+            { range: ['10.000 - 25.000 €', '25.000 - 50.000 €', '50.000 - 100.000 €'], price: 999 },
+            { range: ['100.000 - 200.000 €'], price: 1299 },
+            { range: ['200.000 - 400.000 €', '400.000 - 750.000 €', '750.000+'], price: 1499 },
+        ],
+        '16-25': [
+            { range: ['10.000 - 25.000 €'], price: 999 },
+            { range: ['25.000 - 50.000 €'], price: 1199 },
+            { range: ['50.000 - 100.000 €'], price: 1299 },
+            { range: ['100.000 - 200.000 €', '200.000 - 400.000 €'], price: 1499 },
+            { range: ['400.000 - 750.000 €', '750.000+'], price: 1699 },
+        ],
+        '26-35': [
+            { range: ['10.000 - 25.000 €'], price: 1199 },
+            { range: ['25.000 - 50.000 €'], price: 1299 },
+            { range: ['50.000 - 100.000 €'], price: 1499 },
+            { range: ['100.000 - 200.000 €', '200.000 - 400.000 €'], price: 1699 },
+            { range: ['400.000 - 750.000 €', '750.000+'], price: 1899 },
+        ],
+        '36+': [
+            { range: ['10.000 - 25.000 €'], price: 1299 },
+            { range: ['25.000 - 50.000 €'], price: 1499 },
+            { range: ['50.000 - 100.000 €'], price: 1699 },
+            { range: ['100.000 - 200.000 €', '200.000 - 400.000 €', '400.000 - 750.000 €', '750.000+'], price: 1899 },
+        ],
+    };
+
+    for (let i = 0; i < assetRanges[assets].length; i++) {
+        if (assetRanges[assets][i].range.includes(investment)) {
+            return assetRanges[assets][i].price;
+        }
+    }
+
+    return 0; // Default case if no match found
+};
+
 
 //
 // import { promises as fs } from 'fs';

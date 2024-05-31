@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
     const { userId, coin } = await req.json();
-    console.log("debug price", coin, userId);
 
     try {
         const userPortfolio = await UserPortfolio.findOne({ userId: userId });

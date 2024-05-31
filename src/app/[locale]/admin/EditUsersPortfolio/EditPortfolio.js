@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { getUsers } from "../../../../lib/action";
 import { Grid, Paper, styled } from "@mui/material";
 import UserList from "./UserList";
 import UserPortfolioTable from "./UserPortfolioTable";
@@ -17,10 +16,17 @@ const EditPortfolio = () => {
     const [selectedUserPortfolio, setSelectedUserPortfolio] = useState([])
 
     useEffect(() => {
-        getUsers().then((data) => {
-            console.log("Users data", data);
-            setUsers(data);
-        });
+        const getOneTimePaidUsers = async () => {
+            const response = await fetch('/api/getAllOneTimePayments', {
+                cache: "no-store",
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("One-time paid users:", data);
+                setUsers(data.data);
+            }
+        }
+        getOneTimePaidUsers();
     }, []);
 
     return (
@@ -29,7 +35,7 @@ const EditPortfolio = () => {
                 <UserList users={users} setSelectedUserPortfolio={setSelectedUserPortfolio} />
             </Grid>
             <Grid item xs={9}>
-                <UserPortfolioTable portfolio={selectedUserPortfolio} setSelectedUserPortfolio={setSelectedUserPortfolio}/>
+                <UserPortfolioTable portfolio={selectedUserPortfolio} setSelectedUserPortfolio={setSelectedUserPortfolio} />
             </Grid>
         </Grid>
     );

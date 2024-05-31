@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tab, SvgIcon, Box, Typography, useMediaQuery, useTheme, Button } from "@mui/material";
+import {Tab, SvgIcon, Box, Typography, useMediaQuery, useTheme, Button, CircularProgress} from "@mui/material";
 import { categoryColors, getAssets } from "../../../../lib/data";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
@@ -253,6 +253,24 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
           )}
         </TabPanel>
       ))}
+      {loading && (
+          <Box
+              sx={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                zIndex: 9999,
+              }}
+          >
+            <CircularProgress color="inherit" />
+          </Box>
+      )}
     </>
   );
 };

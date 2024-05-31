@@ -69,8 +69,8 @@ function descendingComparator(a, b, orderBy) {
 
 function getComparator(order, orderBy) {
   return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 function stableSort(array, comparator) {
@@ -92,22 +92,22 @@ const EnhancedTable = () => {
   useEffect(() => {
     if (portfolio.assetsCalculations && portfolio.assets) {
       const totalInvestment = portfolio.assetsCalculations.assets.reduce(
-          (acc, curr) => acc + curr.totalInvest,
-          0
+        (acc, curr) => acc + curr.totalInvest,
+        0
       );
 
       const mergedData = portfolio.assets.map((asset) => {
         const calc =
-            portfolio.assetsCalculations.assets.find(
-                (ac) => ac.CoinGeckoID === asset.CoinGeckoID
-            ) || {};
+          portfolio.assetsCalculations.assets.find(
+            (ac) => ac.CoinGeckoID === asset.CoinGeckoID
+          ) || {};
         const percentage = totalInvestment
-            ? ((calc.totalInvest / totalInvestment) * 100).toFixed(2)
-            : 0;
+          ? ((calc.totalInvest / totalInvestment) * 100).toFixed(2)
+          : 0;
         const xValue = calc.totalInvest ? (calc.Holdings / calc.totalInvest).toFixed(2) : "NaN";
         const pricePercentage = calc.DCA ? (
-            ((asset.Price - calc.DCA) / calc.DCA) *
-            100
+          ((asset.Price - calc.DCA) / calc.DCA) *
+          100
         ).toFixed(2) : "Infinity";
         return {
           asset: asset.Name,
@@ -152,203 +152,231 @@ const EnhancedTable = () => {
     return color;
   };
 
+  const valueMap = {
+    1: "Scam?",
+    2: "Bad",
+    3: "Naja",
+    4: "Ok",
+    5: "Gut",
+    6: "Honey",
+    "Scam?": 1,
+    "💀": 1,
+    "Bad": 2,
+    "Naja": 3,
+    "Ok": 4,
+    "Gut": 5,
+    "Honey": 6
+  };
+  const colorMap = {
+    "Scam?": "#B21C3C",
+    "💀": "#B21C3C",
+    "Bad": "#CE3F24",
+    "Naja": "#CE8A2C",
+    "Ok": "#CFD138",
+    "Gut": "#8FD141",
+    "Honey": "#31A93A"
+  };
+  const getDropdownBackgroundColor = (value) => {
+    return colorMap[valueMap[value]] || "transparent";
+  };
+
   return (
-      <Box
-          sx={{
-            backgroundColor: "#202530",
-            color: "white",
-            height: "100%",
-            borderRadius: "8px",
-            padding: "35px 20px",
-            overflowX: "auto",
-          }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Portfolio ({assetsLeangth})
-        </Typography>
-        <ThemeProvider theme={darkTheme}>
-          <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead
-                  sx={{
-                    "& .MuiTableCell-root": {
-                      padding: "2px",
-                      "&:first-child": {
-                        padding: "16px",
+    <Box
+      sx={{
+        backgroundColor: "#202530",
+        color: "white",
+        height: "100%",
+        borderRadius: "8px",
+        padding: "35px 20px",
+        overflowX: "auto",
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Portfolio ({assetsLeangth})
+      </Typography>
+      <ThemeProvider theme={darkTheme}>
+        <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead
+              sx={{
+                "& .MuiTableCell-root": {
+                  padding: "2px",
+                  "&:first-child": {
+                    padding: "16px",
+                  },
+                },
+              }}
+            >
+              <TableRow>
+                {[
+                  "Asset",
+                  "Bestand",
+                  "X",
+                  "Preis /+-%",
+                  "DCA Preis",
+                  "Investition",
+                  "Relevanz",
+                  "DCA",
+                  "Gewichtung",
+                ].map((headCell) => (
+                  <TableCell
+                    key={headCell}
+                    sortDirection={orderBy === headCell.toLowerCase() ? order : false}
+                  >
+                    <TableSortLabel
+                      active={orderBy === headCell.toLowerCase()}
+                      direction={orderBy === headCell.toLowerCase() ? order : "asc"}
+                      onClick={(event) => handleRequestSort(event, headCell.toLowerCase())}
+                      sx={{
+                        fontSize: "12px",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {headCell}
+                    </TableSortLabel>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {stableSort(sortedData, getComparator(order, orderBy)).map(
+                (row, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.08)",
                       },
-                    },
-                  }}
-              >
-                <TableRow>
-                  {[
-                    "Asset",
-                    "Bestand",
-                    "X",
-                    "Preis /+-%",
-                    "DCA Preis",
-                    "Investition",
-                    "Relevanz",
-                    "DCA",
-                    "Gewichtung",
-                  ].map((headCell) => (
-                      <TableCell
-                          key={headCell}
-                          sortDirection={orderBy === headCell.toLowerCase() ? order : false}
+                    }}
+                  >
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      sx={{ padding: "0px", width: "24%" }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          p: 2,
+                          borderRadius: 0,
+                          position: "relative",
+                        }}
                       >
-                        <TableSortLabel
-                            active={orderBy === headCell.toLowerCase()}
-                            direction={orderBy === headCell.toLowerCase() ? order : "asc"}
-                            onClick={(event) => handleRequestSort(event, headCell.toLowerCase())}
+                        <CategoryColorBar colors={getCategoryColors(row.category)} />
+                        <Box display="flex" alignItems="center">
+                          <Box display="flex" alignItems="center">
+                            <Avatar
+                              alt={row.asset}
+                              src={row.imageUrl}
+                              sx={{ width: 20, height: 20, marginRight: 1 }}
+                            />
+                            <Typography sx={{ fontSize: "14px" }}>
+                              {row.asset} ({row.ticker})
+                            </Typography>
+                          </Box>
+                          <Box
+                            component={Typography}
                             sx={{
+                              ml: 1,
+                              bgcolor: `${getRandomColor(index)}`,
+                              padding: "1px 4px 0",
+                              borderRadius: "12px",
                               fontSize: "12px",
-                              whiteSpace: "nowrap",
                             }}
-                        >
-                          {headCell}
-                        </TableSortLabel>
-                      </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {stableSort(sortedData, getComparator(order, orderBy)).map(
-                    (row, index) => (
-                        <TableRow
-                            key={index}
+                          >
+                            {row.percentage}
+                          </Box>
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      sx={{ padding: "5px" }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "end",
+                        }}
+                      >
+                        <StyledTypography sx={{ fontSize: "14px" }}>
+                          {row.bestand}
+                        </StyledTypography>
+                        <StyledTypography sx={{ color: "#999", fontSize: "12px" }}>
+                          {row.totalCoins} {row.ticker}
+                        </StyledTypography>
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px 0 5px 5px" }}>
+                      <StyledTypography>
+                        {row.X ? row.X : "0,00"}x
+                      </StyledTypography>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "end",
+                        }}
+                      >
+                        <StyledTypography>{row.preisChange} €</StyledTypography>
+                        {row.pricePercentage !== "Infinity" && (
+                          <Typography
+                            className={row.pricePercentage < 0 ? "down" : "up"}
                             sx={{
-                              "&:hover": {
-                                backgroundColor: "rgba(255, 255, 255, 0.08)",
+                              "&.down": {
+                                color: "red",
+                              },
+                              "&.up": {
+                                color: "green",
+                              },
+                              "&.down:before": {
+                                content: '"▼ "',
+                                fontSize: "80%",
+                                marginRight: "3px",
+                              },
+                              "&.up:before": {
+                                content: '"▲ "',
+                                fontSize: "80%",
+                                marginRight: "3px",
                               },
                             }}
-                        >
-                          <TableCell
-                              component="th"
-                              scope="row"
-                              sx={{ padding: "0px", width: "24%" }}
                           >
-                            <Box
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  alignItems: "center",
-                                  p: 2,
-                                  borderRadius: 0,
-                                  position: "relative",
-                                }}
-                            >
-                              <CategoryColorBar colors={getCategoryColors(row.category)} />
-                              <Box display="flex" alignItems="center">
-                                <Box display="flex" alignItems="center">
-                                  <Avatar
-                                      alt={row.asset}
-                                      src={row.imageUrl}
-                                      sx={{ width: 20, height: 20, marginRight: 1 }}
-                                  />
-                                  <Typography sx={{ fontSize: "14px" }}>
-                                    {row.asset} ({row.ticker})
-                                  </Typography>
-                                </Box>
-                                <Box
-                                    component={Typography}
-                                    sx={{
-                                      ml: 1,
-                                      bgcolor: `${getRandomColor(index)}`,
-                                      padding: "1px 4px 0",
-                                      borderRadius: "12px",
-                                      fontSize: "12px",
-                                    }}
-                                >
-                                  {row.percentage}
-                                </Box>
-                              </Box>
-                            </Box>
-                          </TableCell>
-                          <TableCell
-                              component="th"
-                              scope="row"
-                              sx={{ padding: "5px" }}
-                          >
-                            <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  alignItems: "end",
-                                }}
-                            >
-                              <StyledTypography sx={{ fontSize: "14px" }}>
-                                {row.bestand}
-                              </StyledTypography>
-                              <StyledTypography sx={{ color: "#999", fontSize: "12px" }}>
-                                {row.totalCoins} {row.ticker}
-                              </StyledTypography>
-                            </Box>
-                          </TableCell>
-                          <TableCell sx={{ padding: "5px 0 5px 5px" }}>
-                            <StyledTypography>
-                              {row.X ? row.X : "0,00"}x
-                            </StyledTypography>
-                          </TableCell>
-                          <TableCell sx={{ padding: "5px" }}>
-                            <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  alignItems: "end",
-                                }}
-                            >
-                              <StyledTypography>{row.preisChange} €</StyledTypography>
-                              {row.pricePercentage !== "Infinity" && (
-                                  <Typography
-                                      className={row.pricePercentage < 0 ? "down" : "up"}
-                                      sx={{
-                                        "&.down": {
-                                          color: "red",
-                                        },
-                                        "&.up": {
-                                          color: "green",
-                                        },
-                                        "&.down:before": {
-                                          content: '"▼ "',
-                                          fontSize: "80%",
-                                          marginRight: "3px",
-                                        },
-                                        "&.up:before": {
-                                          content: '"▲ "',
-                                          fontSize: "80%",
-                                          marginRight: "3px",
-                                        },
-                                      }}
-                                  >
-                                    {row.pricePercentage}
-                                  </Typography>
-                              )}
-                            </Box>
-                          </TableCell>
-                          <TableCell sx={{ padding: "5px" }}>
-                            <StyledTypography>{row.dcaPrice}</StyledTypography>
-                          </TableCell>
-                          <TableCell sx={{ padding: "5px" }}>
-                            <StyledTypography>{row.investition}</StyledTypography>
-                          </TableCell>
-                          <TableCell sx={{ padding: "5px" }}>
-                            <StyledTypography>{row.relevanz}</StyledTypography>
-                          </TableCell>
-                          <TableCell sx={{ padding: "5px" }}>
-                            <StyledTypography>{row.dca}</StyledTypography>
-                          </TableCell>
-                          <TableCell sx={{ padding: "5px" }}>
-                            <StyledTypography sx={{ alignItems: "center" }}>
-                              {row.gewichtung}
-                            </StyledTypography>
-                          </TableCell>
-                        </TableRow>
-                    )
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </ThemeProvider>
-      </Box>
+                            {row.pricePercentage}
+                          </Typography>
+                        )}
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <StyledTypography>{row.dcaPrice}</StyledTypography>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <StyledTypography>{row.investition}</StyledTypography>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.relevanz) }}>
+                      <StyledTypography>{row.relevanz}</StyledTypography>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.dca) }}>
+                      <StyledTypography>{row.dca === 1 ? "💀" : row.dca}</StyledTypography>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.gewichtung) }}>
+                      <StyledTypography sx={{ alignItems: "center" }}>
+                        {row.gewichtung === 1 ? "💀" : row.gewichtung}
+                      </StyledTypography>
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </ThemeProvider>
+    </Box>
   );
 };
 

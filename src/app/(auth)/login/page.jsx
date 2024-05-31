@@ -92,7 +92,6 @@ const LoginPage = () => {
     }
 
     if (!hasErrors) {
-      console.log("Login creds:", user);
       try {
         setPending(true);
         const res = await signIn("credentials", {
@@ -100,7 +99,6 @@ const LoginPage = () => {
           password: user.pin,
           redirect: false,
         });
-        console.log("res = ", res);
         if (res.error) {
           console.log(res.error);
           setPending(false);
@@ -110,7 +108,6 @@ const LoginPage = () => {
             userEmail: "",
             pin: "",
           });
-          console.log("hellloooooooo", res);
           setPending(false);
           setAlert({
             open: true,
