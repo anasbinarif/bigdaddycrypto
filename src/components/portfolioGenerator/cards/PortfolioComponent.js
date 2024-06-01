@@ -17,16 +17,17 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteConfirmationDialog from "../../AlertDialog/AlertDialog";
 import {
   categoryColors,
-  categoryColorsNew,
-  getCategoryColor,
+  categoryColorsNew, convertPrice, currencySign,
+  getCategoryColor, getCurrencyAndRates,
   getUserPortfolio,
   UpdateCryptoCoins,
 } from "../../../lib/data";
 import AlertBar from "../../customAllert/Alert";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../app/stores/sessionStore";
+import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
-import {portfolioAtom} from "../../../app/stores/portfolioStore";
+import { useSearchParams } from "next/navigation";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -63,6 +64,20 @@ const PortfolioComponent = ({
   const [alertOpen, setAlertOpen] = useState(false);
   const t = useTranslations("portfolioComponent");
   console.log(portfolio.assets, loadingPortfolio);
+
+  const [currency, setCurrency] = useState("EUR");
+  const [rates, setRates] = useState(null);
+  const searchParams = useSearchParams();
+  const currentCurrency = searchParams.get('currency') || "EUR";
+
+  useEffect(() => {
+    const fetchCurrencyAndRates = async () => {
+      const { rates } = await getCurrencyAndRates();
+      setCurrency(currentCurrency);
+      setRates(rates);
+    };
+    fetchCurrencyAndRates();
+  }, [currentCurrency, rates]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -330,7 +345,7 @@ const PortfolioComponent = ({
                             </Box>
                           </Box>
                           <Typography variant="body2" sx={{ color: "#fff" }}>
-                            {asset?.Price ? asset?.Price.toFixed(6) : 0} €
+                            {convertPrice(asset?.Price || 0, currency, rates)} {currencySign[currency]}
                           </Typography>
                           <Box
                             sx={{
@@ -351,7 +366,7 @@ const PortfolioComponent = ({
                                 color="text.secondary"
                                 sx={{ color: "#fff" }}
                               >
-                                {setFinancialSummaryAPI(asset.CoinGeckoID)[1]} €
+                                {convertPrice(setFinancialSummaryAPI(asset.CoinGeckoID)[1], currency, rates)} {currencySign[currency]}
                               </Typography>
                               <Typography
                                 variant="body2"

@@ -32,11 +32,14 @@ import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AlertBar from "../../../customAllert/Alert";
-import { getUserPortfolio } from "../../../../lib/data";
+import { convertPrice, currencySign, getCurrencyAndRates, getUserPortfolio } from "../../../../lib/data";
 import Papa from "papaparse";
 import { parse } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const CoinDetails = (props) => {
+  const t = useTranslations("coinDetails");
   const { coin, index } = props;
   const [width, setWidth] = useState(0);
   const [value, setValue] = useState(0);
@@ -492,6 +495,20 @@ const CoinDetails = (props) => {
     }
   };
 
+  const [currency, setCurrency] = useState("EUR");
+  const [rates, setRates] = useState(null);
+  const searchParams = useSearchParams();
+  const currentCurrency = searchParams.get('currency') || "EUR";
+
+  useEffect(() => {
+    const fetchCurrencyAndRates = async () => {
+      const { rates } = await getCurrencyAndRates();
+      setCurrency(currentCurrency);
+      setRates(rates);
+    };
+    fetchCurrencyAndRates();
+  }, [currentCurrency, rates]);
+
   return (
     <>
       <Box
@@ -542,7 +559,7 @@ const CoinDetails = (props) => {
                 {coin.Ticker}
               </Typography>
               <Typography noWrap>{coin.CoinGeckoID}</Typography>
-              <Typography>{coin.Price.toFixed(2)} €</Typography>
+              <Typography>{convertPrice(coin.Price.toFixed(2), currency, rates)} {currencySign[currency]}</Typography>
             </Box>
           </Box>
           <Box className={styles.grid}>
@@ -555,7 +572,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                Bestand
+                {t("duration")}
               </Typography>
               <Typography
                 sx={{
@@ -567,7 +584,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {financialSummary.totalHoldingsValue},00 €
+                {convertPrice(financialSummary.totalHoldingsValue, currency, rates)},00 {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{
@@ -589,7 +606,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                Investiert
+                {t("totalInvestment")}
               </Typography>
               <Typography
                 sx={{
@@ -601,7 +618,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {financialSummary.totalInvested},00 €
+                {convertPrice(financialSummary.totalInvested, currency, rates)},00 {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{
@@ -611,7 +628,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                Geplant: 0,00 €
+                Geplant: 0,00 {currencySign[currency]}
               </Typography>
             </Box>
             <Box className={styles.grid__item}>
@@ -623,7 +640,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                Gesamtgewinn/-Verlust
+                {t("totalWinLoss")}
               </Typography>
               <Typography
                 sx={{
@@ -635,7 +652,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {financialSummary.totalWinLoss},00 €
+                {convertPrice(financialSummary.totalWinLoss, currency, rates)},00 {currencySign[currency]}
               </Typography>
               <Typography
                 className={
@@ -680,17 +697,16 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                Durchschn. Kaufpreis
+                {t("avgPurchasePrice")}
               </Typography>
               <Typography
                 sx={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
-                  color: `${
-                    financialSummary.avgPurchasePrice > 0
+                  color: `${financialSummary.avgPurchasePrice > 0
                       ? ""
                       : "rgb(68, 68, 68)"
-                  }`,
+                    }`,
                   whiteSpace: "nowrap",
                   "@media only screen and (max-width: 1500px)": {
                     fontSize: "1.5rem",
@@ -698,8 +714,8 @@ const CoinDetails = (props) => {
                 }}
               >
                 {financialSummary.avgPurchasePrice > 0
-                  ? `${financialSummary.avgPurchasePrice} €`
-                  : "--,-- €"}
+                  ? `${convertPrice(financialSummary.avgPurchasePrice, currency, rates)} ${currencySign[currency]}`
+                  : `--,-- ${currencySign[currency]}`}
               </Typography>
               <Typography
                 className={
@@ -745,17 +761,16 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                Durchschn. Verkaufspreis
+                {t("avgSellingPrice")}
               </Typography>
               <Typography
                 sx={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
-                  color: `${
-                    financialSummary.avgSellingPrice > 0
+                  color: `${financialSummary.avgSellingPrice > 0
                       ? ""
                       : "rgb(68, 68, 68)"
-                  }`,
+                    }`,
                   whiteSpace: "nowrap",
                   "@media only screen and (max-width: 1500px)": {
                     fontSize: "1.5rem",
@@ -763,8 +778,8 @@ const CoinDetails = (props) => {
                 }}
               >
                 {financialSummary.avgSellingPrice > 0
-                  ? `${financialSummary.avgSellingPrice} €`
-                  : "--,-- €"}
+                  ? `${convertPrice(financialSummary.avgSellingPrice, currency, rates)} ${currencySign[currency]}`
+                  : `--,-- ${currencySign[currency]}`}
               </Typography>
               {financialSummary.avgSellingPricePercentage > 0 && (
                 <Typography
@@ -812,7 +827,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                Gewinn realisiert
+                {t("realizedProfit")}
               </Typography>
               <Typography
                 sx={{
@@ -824,7 +839,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {financialSummary.realizedProfit},00 €
+                {convertPrice(financialSummary.realizedProfit, currency, rates)},00 {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{
@@ -834,7 +849,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                % von Invest
+                % {t("ofInvestment")}
               </Typography>
             </Box>
           </Box>
@@ -856,7 +871,7 @@ const CoinDetails = (props) => {
             }}
           >
             <Tab
-              label="Transaktionen"
+              label={t("transactions")}
               sx={{
                 backgroundColor: value === 0 ? "#ffffff08" : "#00000033",
                 marginRight: "15px",
@@ -868,7 +883,7 @@ const CoinDetails = (props) => {
               }}
             />
             <Tab
-              label="Kaufzonen"
+              label={t("buyZones")}
               sx={{
                 backgroundColor: value === 1 ? "#ffffff08" : "#00000033",
                 marginRight: "15px",
@@ -879,7 +894,7 @@ const CoinDetails = (props) => {
               }}
             />
             <Tab
-              label="Verkaufszonen"
+              label={t("sellZones")}
               sx={{
                 backgroundColor: value === 2 ? "#ffffff08" : "#00000033",
                 marginRight: "15px",
@@ -923,9 +938,9 @@ const CoinDetails = (props) => {
                           },
                         }}
                       >
-                        Aktion
+                        {t("action")}
                       </TableCell>
-                      <TableCell>Datum</TableCell>
+                      <TableCell>{t("date")}</TableCell>
                       <TableCell
                         sx={{
                           "@media only screen and (max-width: 1500px)": {
@@ -933,7 +948,7 @@ const CoinDetails = (props) => {
                           },
                         }}
                       >
-                        Preis pro Coin
+                        {t("pricePerCoin")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -942,14 +957,13 @@ const CoinDetails = (props) => {
                           },
                         }}
                       >
-                        Betrag in EUR
+                        {t("amountInEUR")}
                       </TableCell>
-                      <TableCell>Coins</TableCell>
-                      <TableCell>Haltedauer</TableCell>
+                      <TableCell>{t("coins")}</TableCell>
+                      <TableCell>{t("holdingPeriod")}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {/* Render six rows */}
                     {rowVals.map((row, index) => (
                       <TableRow key={index}>
                         <TableCell>
@@ -1114,7 +1128,7 @@ const CoinDetails = (props) => {
                             >
                               {row.Date === "00/00/00"
                                 ? ""
-                                : `${computeDaysPast(row.Date)} Tage`}
+                                : `${computeDaysPast(row.Date)} ${t("days")}`}
                             </div>
                           </Box>
                         </TableCell>
@@ -1144,8 +1158,8 @@ const CoinDetails = (props) => {
                 )}
               </TableContainer>
             )}
-            {value === 1 && <div>Content for Tab 2</div>}
-            {value === 2 && <div>Content for Tab 3</div>}
+            {value === 1 && <div>{t("buyZonesContent")}</div>}
+            {value === 2 && <div>{t("sellZonesContent")}</div>}
           </Box>
           <Box
             sx={{
@@ -1163,7 +1177,7 @@ const CoinDetails = (props) => {
               onClick={addRow}
             >
               <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />
-              Neue Transaktion hinzufügen
+              {t("newTransaction")}
             </Button>
             <Button
               sx={{
@@ -1174,7 +1188,7 @@ const CoinDetails = (props) => {
               }}
               onClick={handleImport}
             >
-              Import CSV
+              {t("importCSV")}
               <FontAwesomeIcon
                 icon={faCrown}
                 style={{
@@ -1195,9 +1209,8 @@ const CoinDetails = (props) => {
                 marginLeft: "10px",
               }}
               onClick={handleExportCSV}
-              // disabled={rowVals.length <= 0}
             >
-              Export CSV
+              {t("exportCSV")}
               <FontAwesomeIcon
                 icon={faCrown}
                 style={{
@@ -1220,7 +1233,7 @@ const CoinDetails = (props) => {
               onClick={handleBuyAndSell}
               disabled={rowVals.length <= 0}
             >
-              Update
+              {t("update")}
             </Button>
           </Box>
         </Box>
@@ -1236,7 +1249,7 @@ const CoinDetails = (props) => {
           maxWidth="sm"
           fullWidth
         >
-          <DialogTitle>Import CSV</DialogTitle>
+          <DialogTitle>{t("importCSVTitle")}</DialogTitle>
           <DialogContent sx={{ maxWidth: "600px", width: "100%" }}>
             <Box
               sx={{
@@ -1253,7 +1266,7 @@ const CoinDetails = (props) => {
               {file ? (
                 <Typography>{file.name}</Typography>
               ) : (
-                <Typography>Drag and drop a file or click to select</Typography>
+                <Typography>{t("dragAndDrop")}</Typography>
               )}
               <input
                 type="file"
@@ -1266,10 +1279,10 @@ const CoinDetails = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog} color="primary">
-              Cancel
+              {t("cancel")}
             </Button>
             <Button onClick={handleFileUpload} color="primary">
-              Upload
+              {t("upload")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -1285,11 +1298,12 @@ const CoinDetails = (props) => {
           variant="filled"
           sx={{ width: "100%" }}
         >
-          To access the Import/Export, please subscribe to one of our plans.
+          {t("importExportInfo")}
         </Alert>
       </Snackbar>
     </>
   );
+
 };
 
 export default CoinDetails;

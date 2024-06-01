@@ -1,6 +1,29 @@
 import {Assets, PastBuyAndSell, User} from "../lib/models";
 import {connectToDb} from "./utils";
 // const fs = require('fs').promises;
+import { useSearchParams } from "next/navigation";
+
+const fetchExchangeRates = async () => {
+    const response = await fetch("https://api.exchangerate-api.com/v4/latest/EUR"); // Replace with your preferred API
+    if (!response.ok) {
+        throw new Error("Failed to fetch exchange rates");
+    }
+    return response.json();
+};
+
+export const getCurrencyAndRates = async () => {
+    const rates = await fetchExchangeRates();
+
+    return { rates: rates.rates };
+};
+
+export const convertPrice = (price, currency, rates) => {
+    if (!rates || !rates[currency]) {
+        return parseFloat(price); // Ensure price is a number
+    }
+    return (parseFloat(price) * rates[currency]).toFixed(2);
+};
+
 
 export const categoryColors = {
   AI: "#FFD700", // Gold
@@ -28,6 +51,11 @@ export const categoryColorsNew = {
   Favourite: "#2E8B57", // Sea Green
   none: "#00BFFF",
 };
+
+export const currencySign = {
+    "USD": "$",
+    "EUR": "€"
+}
 
 export const getUser = async (id) => {
   try {

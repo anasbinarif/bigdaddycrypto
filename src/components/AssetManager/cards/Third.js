@@ -3,9 +3,11 @@ import { Box, Divider, Typography, useMediaQuery, useTheme } from "@mui/material
 import { faCrown, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai/index";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import { useTranslations } from "next-intl";
 import { portfolioAtom } from "../../../../src/app/stores/portfolioStore";
+import {convertPrice, currencySign, getCurrencyAndRates} from "../../../lib/data";
+import {useSearchParams} from "next/navigation";
 
 const Third = () => {
   const t = useTranslations("third");
@@ -24,10 +26,20 @@ const Third = () => {
     (aktuellerProfit / totalInvestment) *
     100
   ).toFixed(2);
+    const [currency, setCurrency] = useState("EUR");
+    const [rates, setRates] = useState(null);
+    const searchParams = useSearchParams();
+    const currentCurrency = searchParams.get('currency') || "EUR";
 
-  useEffect(() => {
-    console.log("portfolioportfolio", portfolio);
-  }, [portfolio]);
+
+    useEffect(() => {
+        const fetchCurrencyAndRates = async () => {
+            const { rates } = await getCurrencyAndRates();
+            setCurrency(currentCurrency);
+            setRates(rates);
+        };
+        fetchCurrencyAndRates();
+    }, [currentCurrency, rates]);
 
   return (
     <Box
@@ -61,7 +73,7 @@ const Third = () => {
           {t("totalValue")}
         </Typography>
         <Typography sx={{ fontSize: isSmallScreen ? "1.5rem" : "2rem", fontWeight: "bold" }}>
-          {totalGesamtwert},00 €
+          {convertPrice(totalGesamtwert, currency, rates)},00 {currencySign[currency]}
         </Typography>
         <Typography
           className={gesamtwertPercentage < 0 ? "down" : "up"}
@@ -102,7 +114,7 @@ const Third = () => {
             {t("totalInvestment")}
           </Typography>
           <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
-            {totalInvestment},00 €
+            {convertPrice(totalInvestment, currency, rates)},00 {currencySign[currency]}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -110,7 +122,7 @@ const Third = () => {
             {t("currentProfit")}
           </Typography>
           <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
-            {aktuellerProfit},00 €
+            {convertPrice(aktuellerProfit, currency, rates)},00 {currencySign[currency]}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -118,7 +130,7 @@ const Third = () => {
             {t("realizedSoFar")}
           </Typography>
           <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
-            0,00 €
+            0,00 {currencySign[currency]}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -130,7 +142,7 @@ const Third = () => {
             />
           </Typography>
           <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
-            0,00 €
+            0,00 {currencySign[currency]}
           </Typography>
         </Box>
       </Box>
