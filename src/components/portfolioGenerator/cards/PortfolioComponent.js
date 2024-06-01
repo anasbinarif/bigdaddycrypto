@@ -26,6 +26,7 @@ import AlertBar from "../../customAllert/Alert";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../app/stores/sessionStore";
 import { useTranslations } from "next-intl";
+import {portfolioAtom} from "../../../app/stores/portfolioStore";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -48,8 +49,6 @@ const isFavorite = (CoinGeckoID, assetsCalculations) => {
 };
 
 const PortfolioComponent = ({
-  portfolio,
-  setPortfolio,
   loadingPortfolio,
   assetsLeangth,
   setSelectedCoin,
@@ -58,7 +57,7 @@ const PortfolioComponent = ({
   const [width, setWidth] = useState(0);
   const [sessionJotai] = useAtom(sessionAtom);
   const [loading, setLoading] = useState(false);
-  // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [deleteIconIndex, setDeleteIconIndex] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);

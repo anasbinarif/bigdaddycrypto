@@ -1,6 +1,6 @@
 import { UserPortfolio } from "../../../lib/models";
 import { NextResponse } from "next/server";
-import {updateCoinDetails} from "../../../app/api/crypto/route";
+import {updateCoinDetails} from "../../../lib/action";
 
 export async function POST(req) {
     const { userId, coin } = await req.json();

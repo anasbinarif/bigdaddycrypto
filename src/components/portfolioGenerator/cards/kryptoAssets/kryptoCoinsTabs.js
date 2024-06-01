@@ -17,6 +17,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useTranslations } from "next-intl";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { useAtom } from "jotai";
+import {portfolioAtom} from "../../../../app/stores/portfolioStore";
 
 const ColorCircle = ({ color }) => (
   <SvgIcon>
@@ -45,7 +46,6 @@ function TabPanel(props) {
 }
 
 const ScrollableKryptoTabs = ({
-  portfolio,
   loadingPortfolio,
   userID,
   priceIndicator,
@@ -58,6 +58,7 @@ const ScrollableKryptoTabs = ({
   const [loading, setLoading] = useState(true);
   const [currentCategory, setCurrentCategory] = useState("favourite");
   const [showRiskCoins, setShowRiskCoins] = useState({});
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const userId = sessionJotai?.user.id;
 
   const theme = useTheme();

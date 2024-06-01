@@ -10,6 +10,7 @@ import LanguageSwitcher from "../../app/lang/LanguageSwitcher";
 import { useTranslations } from "next-intl";
 import { fetchUserSubscriptionPlan } from "../../lib/data";
 import styles from "./navbar.module.css";
+import CurrencySwitcher from "../../app/currency/CurrencySwitcher";
 
 const NavbarLink = ({ mobileView, handleClose }) => {
   const { data: session, status } = useSession();
@@ -61,6 +62,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             <MenuItem onClick={handleClose}>
               <Link href="/admin">{t("admin")}</Link>
               <LanguageSwitcher />
+              <CurrencySwitcher/>
             </MenuItem>
           ) : (
             <Link
@@ -89,6 +91,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               {t("portfolioId")}: {session?.user.username}
             </Typography>
             <LanguageSwitcher />
+            <CurrencySwitcher/>
           </>
         )}
         {mobileView ? (

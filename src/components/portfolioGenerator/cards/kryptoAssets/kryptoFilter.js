@@ -22,6 +22,7 @@ import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {portfolioAtom} from "../../../../app/stores/portfolioStore";
 
 const MenuProps = {
   PaperProps: {
@@ -34,7 +35,6 @@ const MenuProps = {
 
 const KryptoFilter = ({
   userID,
-  portfolio,
   priceIndicator,
   setPriceIndicator,
 }) => {
@@ -45,6 +45,7 @@ const KryptoFilter = ({
   const [alertOpen, setAlertOpen] = useState(false);
   const [searchVal, setSearchVal] = useState("");
   const [sessionJotai] = useAtom(sessionAtom);
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [searchData, setSearchData] = useState([]);
 
   const theme = useTheme();

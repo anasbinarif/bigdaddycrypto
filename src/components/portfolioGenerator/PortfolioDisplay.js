@@ -5,10 +5,10 @@ import KryptoAssets from "./cards/kryptoAssets/KryptoAssets";
 import PortfolioComponent from "./cards/PortfolioComponent";
 import { DonutCard } from "./cards/donutCard/DonutCard";
 import { useState, useEffect } from "react";
+import {useAtom} from "jotai/index";
+import {portfolioAtom} from "../../app/stores/portfolioStore";
 
 const PortfolioDisplay = ({
-  portfolio,
-  setPortfolio,
   loadingPortfolio,
   assetsLeangth,
   setSelectedCoin,
@@ -16,6 +16,7 @@ const PortfolioDisplay = ({
 }) => {
   const [width, setWidth] = useState(1800);
   const [loading, setLoading] = useState(true);
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
 
   useEffect(() => {
     // setLoading(true);
@@ -87,7 +88,6 @@ const PortfolioDisplay = ({
         >
         </Box> */}
         <KryptoAssets
-          portfolio={portfolio}
           loadingPortfolio={loadingPortfolio}
           userID={portfolio?.userId}
           assetsLeangth={assetsLeangth}
@@ -101,8 +101,6 @@ const PortfolioDisplay = ({
         style={{ position: "relative" }}
       >
         <PortfolioComponent
-          portfolio={portfolio}
-          setPortfolio={setPortfolio}
           loadingPortfolio={loadingPortfolio}
           assetsLeangth={assetsLeangth}
           setSelectedCoin={setSelectedCoin}

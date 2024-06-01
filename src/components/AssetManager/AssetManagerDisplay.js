@@ -19,14 +19,13 @@ const Item = styled(Paper)(({ theme }) => ({
 const AssetManagerDisplay = ({
   selectedCoin,
   setSelectedCoin,
-  portfolio,
-  setPortfolio,
   loadingPortfolio,
   assetsLeangth,
 }) => {
   const theme = useTheme();
   const [width, setWidth] = useState(0);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,8 +57,6 @@ const AssetManagerDisplay = ({
       </Grid>
       <Grid item xs={4} sm={8} md={width > 1350 ? 4 : width < 1100 ? 12 : 5}>
         <PortfolioComponent
-          portfolio={portfolio}
-          setPortfolio={setPortfolio}
           loadingPortfolio={loadingPortfolio}
           assetsLeangth={assetsLeangth}
           setSelectedCoin={setSelectedCoin}

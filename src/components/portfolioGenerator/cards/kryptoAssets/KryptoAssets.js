@@ -2,12 +2,15 @@ import { Box, Divider, useTheme, useMediaQuery } from "@mui/material";
 import KryptoFilter from "./kryptoFilter";
 import ScrollableKryptoTabs from "./kryptoCoinsTabs";
 import { useState, useEffect } from "react";
+import {useAtom} from "jotai/index";
+import {portfolioAtom} from "../../../../app/stores/portfolioStore";
 
-const KryptoAssets = ({ portfolio, loadingPortfolio, assetsLeangth }) => {
+const KryptoAssets = ({ loadingPortfolio, assetsLeangth }) => {
   const theme = useTheme();
   const [width, setWidth] = useState(1920);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [priceIndicator, setPriceIndicator] = useState("pi");
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,14 +44,12 @@ const KryptoAssets = ({ portfolio, loadingPortfolio, assetsLeangth }) => {
       }}
     >
       <KryptoFilter
-        portfolio={portfolio}
         userID={portfolio.userID}
         priceIndicator={priceIndicator}
         setPriceIndicator={setPriceIndicator}
       />
       <Divider sx={{ my: isSmallScreen ? 1 : 2 }} />
       <ScrollableKryptoTabs
-        portfolio={portfolio}
         loadingPortfolio={loadingPortfolio}
         userID={portfolio.userId}
         priceIndicator={priceIndicator}

@@ -209,8 +209,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         </Tabs>
         <TabPanel value={value} index="one">
           <PortfolioDisplay
-            portfolio={portfolio}
-            setPortfolio={setPortfolio}
             loadingPortfolio={loadingPortfolio}
             assetsLeangth={assetsLeangth}
             setSelectedCoin={setSelectedCoin}
@@ -219,8 +217,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         </TabPanel>
         <TabPanel value={value} index="two">
           <AssetManagerDisplay
-            portfolio={portfolio}
-            setPortfolio={setPortfolio}
             loadingPortfolio={loadingPortfolio}
             assetsLeangth={assetsLeangth}
             selectedCoin={selectedCoin}

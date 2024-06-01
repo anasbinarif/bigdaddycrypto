@@ -114,7 +114,9 @@
     "cbdcNetworks": "CBDC-Netzwerke",
     "eCommerce": "E-Commerce",
     "tokenizationRWA": "Tokenisierung/RWA",
-    "noHypeTopic": "Kein Hype-Thema"
+    "noHypeTopic": "Kein Hype-Thema",
+    "hideRiskCoins": "Risikomünzen verstecken",
+    "showRiskCoins": "Risikomünzen anzeigen"
   },
   "bubbleChart": {
     "symbolSize": "Symbol-Größe",
