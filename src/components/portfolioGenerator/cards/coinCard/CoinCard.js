@@ -126,12 +126,6 @@ const CoinCard = ({
   };
 
   const handleDoubleClick = async () => {
-    console.log(
-      "sessionJotai?.user?.subscriptionPlan",
-      sessionJotai?.user?.subscriptionPlan,
-      assetsLeangth,
-      selected
-    );
     if (
       sessionJotai?.user?.subscriptionPlan === "free" &&
       assetsLeangth >= 10 &&
@@ -240,7 +234,7 @@ const CoinCard = ({
 
 
   const isFavorite = (CoinGeckoID, assetsCalculations) => {
-    console.log("assetsCalculations.Favourite", assetsCalculations.Favourite);
+    console.log("assetsCalculations.Favourite", assetsCalculations?.Favourite);
     return assetsCalculations?.Favourite.some(
       (asset) => asset.CoinGeckoID === CoinGeckoID
     );

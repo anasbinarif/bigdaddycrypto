@@ -10,7 +10,8 @@ export async function POST(req) {
       console.log("No portfolio found");
       return NextResponse.json(
         { message: "No portfolio found" },
-        { status: 404 }
+        { status: 404 },
+        { data: {} }
       );
     }
 

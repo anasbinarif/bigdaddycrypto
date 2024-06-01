@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Assets, UserPortfolio } from "../../../lib/models";
 
-async function updateCoinDetails(coinGeckoID) {
+export async function updateCoinDetails(coinGeckoID) {
   const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
   const url = `https://pro-api.coingecko.com/api/v3/coins/${coinGeckoID}/market_chart`;
   const params = new URLSearchParams({

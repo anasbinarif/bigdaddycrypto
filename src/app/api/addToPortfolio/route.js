@@ -1,10 +1,12 @@
 import { UserPortfolio } from "../../../lib/models";
 import { NextResponse } from "next/server";
+import {updateCoinDetails} from "../../../app/api/crypto/route";
 
 export async function POST(req) {
     const { userId, coin } = await req.json();
 
     try {
+        await updateCoinDetails(coin.CoinGeckoID)
         const userPortfolio = await UserPortfolio.findOne({ userId: userId });
         // console.log("debug userPortfolio", userPortfolio);
 

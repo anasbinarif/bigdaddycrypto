@@ -231,10 +231,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           <PortfolioUbersicht loadingPortfolio={loadingPortfolio} />
         </TabPanel>
       </Box>
-      {/* <Typography variant="body1">
-        {t("portfolioId")}: {session?.user.username}
-        Hello
-      </Typography> */}
       {loading && (
         <Box
           sx={{

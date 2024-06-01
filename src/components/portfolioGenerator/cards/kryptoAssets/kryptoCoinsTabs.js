@@ -96,7 +96,7 @@ const ScrollableKryptoTabs = ({
   const secondHalfLabels = tabLabels.slice(firstHalfCount);
 
   useEffect(() => {
-    if (currentCategory) {
+    if (currentCategory && userId) {
       setLoading(true);
       getAssets(currentCategory, userId)
         .then((data) => {
@@ -111,11 +111,7 @@ const ScrollableKryptoTabs = ({
           setLoading(false);
         });
     }
-  }, [currentCategory]);
-
-  useEffect(() => {
-    console.log("datatataattaa", data);
-  }, [data])
+  }, [currentCategory, userId]);
   
 
   const handleChange = (event, newValue, line) => {
