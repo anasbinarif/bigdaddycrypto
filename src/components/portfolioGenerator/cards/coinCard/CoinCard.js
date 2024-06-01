@@ -234,7 +234,6 @@ const CoinCard = ({
 
 
   const isFavorite = (CoinGeckoID, assetsCalculations) => {
-    console.log("assetsCalculations.Favourite", assetsCalculations?.Favourite);
     return assetsCalculations?.Favourite.some(
       (asset) => asset.CoinGeckoID === CoinGeckoID
     );

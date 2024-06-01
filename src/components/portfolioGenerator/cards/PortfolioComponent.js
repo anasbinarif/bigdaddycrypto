@@ -77,7 +77,7 @@ const PortfolioComponent = ({
       setRates(rates);
     };
     fetchCurrencyAndRates();
-  }, [currentCurrency, rates]);
+  }, [currentCurrency]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -208,12 +208,12 @@ const PortfolioComponent = ({
       .reduce((acc, row) => acc + parseFloat(row.Betrag), 0)
       .toFixed(2);
     if (CoinGeckoID === "hedera-hashgraph") {
-      console.log(
-        "check the asset",
-        totalCoins,
-        totalHoldingsValue,
-        totalInvested
-      );
+      // console.log(
+      //   "check the asset",
+      //   totalCoins,
+      //   totalHoldingsValue,
+      //   totalInvested
+      // );
     }
     return [totalCoins, totalHoldingsValue, totalInvested];
   };

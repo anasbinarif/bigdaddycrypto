@@ -90,6 +90,10 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             >
               {t("portfolioId")}: {session?.user.username}
             </Typography>
+            <Typography sx={{
+              color: "purple",
+              ml: "10px"
+            }}>{sessionJotai?.user?.subscriptionPlan}</Typography>
             <LanguageSwitcher />
             <CurrencySwitcher/>
           </>

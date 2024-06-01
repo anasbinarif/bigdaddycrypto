@@ -39,7 +39,7 @@ const Third = () => {
             setRates(rates);
         };
         fetchCurrencyAndRates();
-    }, [currentCurrency, rates]);
+    }, [currentCurrency]);
 
   return (
     <Box

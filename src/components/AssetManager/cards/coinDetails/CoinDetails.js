@@ -507,7 +507,7 @@ const CoinDetails = (props) => {
       setRates(rates);
     };
     fetchCurrencyAndRates();
-  }, [currentCurrency, rates]);
+  }, [currentCurrency]);
 
   return (
     <>

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Chart } from "react-google-charts";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { categoriesDisplay } from "../../../../lib/data";
 import { useAtom } from "jotai/index";
@@ -19,12 +18,18 @@ const categoryColors = {
 };
 
 const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
+  const canvasRef = useRef(null);
   const [portfolio] = useAtom(portfolioAtom, { assets: [] });
   const [securityScore, setSecurityScore] = useState(0);
+  const [tooltip, setTooltip] = useState({ visible: false, text: "", x: 0, y: 0, angle: 0 });
   const t = useTranslations("donutChart");
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    console.log("portfolioportfolio", portfolio)
+  }, [portfolio]);
 
   useEffect(() => {
     const calculateSecurityScore = () => {
@@ -45,7 +50,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
         }
       });
 
-      setSecurityScore(weightedScore.toFixed(2));
+      setSecurityScore(weightedScore.toFixed(1));
     };
 
     if (portfolio?.assetsCalculations && portfolio.assets) {
@@ -53,48 +58,141 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
     }
   }, [portfolio]);
 
-  const data = loadingPortfolio
-    ? [
-        ["Category", "Percentage"],
-        ...Object.entries(portfolioCalculations?.percentages || {}).map(
+  useEffect(() => {
+    const drawChart = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const data = loadingPortfolio
+        ? Object.entries(portfolioCalculations?.percentages || {}).map(
+            ([key, value]) => {
+              return [
+                categoriesDisplay[key] || key,
+                parseFloat(value.replace("%", "")),
+              ];
+            }
+          )
+        : [["AI", 100.0]];
+
+      const colors = data.map((item) => categoryColors[item[0]] || "#CCCCCC");
+
+      const total = data.reduce((acc, [, value]) => acc + value, 0);
+      let startAngle = -0.5 * Math.PI;
+      const radius = Math.min(canvas.width, canvas.height) / 2;
+      const innerRadius = radius * 0.68;
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      data.forEach(([category, value], index) => {
+        const sliceAngle = (value / total) * 2 * Math.PI;
+        const endAngle = startAngle + sliceAngle;
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.arc(centerX, centerY, innerRadius, endAngle, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = colors[index];
+        ctx.fill();
+
+        startAngle = endAngle;
+      });
+    };
+
+    const resizeCanvas = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const parent = canvas.parentElement;
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientWidth; // keep it square
+      drawChart();
+    };
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, [portfolioCalculations, loadingPortfolio]);
+
+  const handleMouseMove = (event) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(canvas.width, canvas.height) / 2;
+    const innerRadius = radius * 0.65; // Adjusted for desired width
+
+    const dx = x - centerX;
+    const dy = y - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance < innerRadius || distance > radius) {
+      setTooltip({ visible: false, text: "", x: 0, y: 0, angle: 0 });
+      return;
+    }
+
+    let angle = Math.atan2(dy, dx);
+    if (angle < -0.5 * Math.PI) {
+      angle += 2 * Math.PI;
+    }
+
+    const data = loadingPortfolio
+      ? Object.entries(portfolioCalculations?.percentages || {}).map(
           ([key, value]) => {
             return [
               categoriesDisplay[key] || key,
               parseFloat(value.replace("%", "")),
             ];
           }
-        ),
-      ]
-    : [
-        ["Category", "Percentage"],
-        ["AI", 100.0],
-      ];
+        )
+      : [["AI", 100.0]];
 
-  const colors = data
-    .slice(1)
-    .map((item) => categoryColors[item[0]] || "#CCCCCC");
+    const total = data.reduce((acc, [, value]) => acc + value, 0);
+    let startAngle = -0.5 * Math.PI;
 
-  const options = {
-    pieHole: 0.8,
-    pieSliceText: "none",
-    is3D: false,
-    legend: { position: "none" },
-    tooltip: {
-      textStyle: { color: "black" },
-      showColorCode: true,
-    },
-    colors: colors,
-    chartArea: { width: "100%", height: "100%" },
-    backgroundColor: "none",
-    animation: {
-      startup: true,
-      easing: "linear",
-      duration: 1500,
-    },
-    pieSliceBorderColor: "none",
-    textStyle: {
-      color: "white",
-    },
+    for (let i = 0; i < data.length; i++) {
+      const [category, value] = data[i];
+      const sliceAngle = (value / total) * 2 * Math.PI;
+      const endAngle = startAngle + sliceAngle;
+
+      if (angle >= startAngle && angle < endAngle) {
+        const tooltipAngle = (startAngle + endAngle) / 2;
+        const tooltipX = centerX + (radius + 10) * Math.cos(tooltipAngle);
+        const tooltipY = centerY + (radius + 10) * Math.sin(tooltipAngle);
+
+        setTooltip({
+          visible: true,
+          text: `${category}: ${value.toFixed(1)}%`,
+          x: tooltipX,
+          y: tooltipY,
+          angle: tooltipAngle,
+        });
+        return;
+      }
+
+      startAngle = endAngle;
+    }
+
+    setTooltip({ visible: false, text: "", x: 0, y: 0, angle: 0 });
+  };
+
+  const handleMouseOut = () => {
+    setTooltip({ visible: false, text: "", x: 0, y: 0, angle: 0 });
   };
 
   return (
@@ -125,26 +223,22 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
           },
         }}
       >
-        <Chart
-          chartType="PieChart"
-          height="100%"
-          width="100%"
-          data={data}
-          options={options}
+        <canvas
+          ref={canvasRef}
+          width={400}
+          height={400}
+          onMouseMove={handleMouseMove}
+          onMouseOut={handleMouseOut}
         />
       </Box>
       <Box
         sx={{
           position: "absolute",
-          top: "50%", // Center vertically in the donut hole
+          top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          textAlign: "center", // Center text horizontally
+          textAlign: "center",
           zIndex: "100",
-
-          // "@media (max-width:600px)": {
-          //   // backgroundColor: "secondary.main",
-          // },
         }}
       >
         <Typography
@@ -171,6 +265,35 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
           {t("veryGood")}
         </Typography>
       </Box>
+      {tooltip.visible && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: tooltip.y,
+            left: tooltip.x,
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            color: "#FFFFFF",
+            padding: "5px",
+            borderRadius: "3px",
+            pointerEvents: "none",
+            zIndex: "1000",
+            "::before": {
+              content: '""',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%) rotate(45deg)",
+              width: "10px",
+              height: "10px",
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
+            },
+          }}
+        >
+          {tooltip.text}
+        </Box>
+      )}
     </Box>
   );
 };
