@@ -229,13 +229,13 @@ const CoinCard = ({
             border: selected
               ? "1px solid #00aa66aa"
               : risk
-              ? "1px solid red"
-              : "none",
+                ? "1px solid red"
+                : "none",
             backgroundColor: selected
               ? "#00aa6633"
               : risk
-              ? "rgba(222,11,11,0.05)"
-              : "#333",
+                ? "rgba(222,11,11,0.05)"
+                : "#333",
             width: "95%",
             borderStyle: risk ? "dashed" : "none",
             borderLeft: selected ? "" : risk ? "none" : "",
@@ -375,25 +375,25 @@ const CoinCard = ({
             border: selected
               ? "1px solid #00aa66aa"
               : risk
-              ? "1px solid red"
-              : "none",
+                ? "1px solid red"
+                : "none",
             backgroundColor: selected
               ? "#00aa6633"
               : risk
-              ? "rgba(222,11,11,0.05)"
-              : "#333",
+                ? "rgba(222,11,11,0.05)"
+                : "#333",
             width:
               width >= 1500
                 ? "calc(25% - 16px)"
                 : width > 1200
-                ? "calc(33.33% - 16px)"
-                : width > 900
-                ? "calc(50% - 16px)"
-                : width > 700
-                ? "calc(33.33% - 16px)"
-                : width > 500
-                ? "calc(50% - 16px)"
-                : "calc(100% - 16px)",
+                  ? "calc(33.33% - 16px)"
+                  : width > 900
+                    ? "calc(50% - 16px)"
+                    : width > 700
+                      ? "calc(33.33% - 16px)"
+                      : width > 500
+                        ? "calc(50% - 16px)"
+                        : "calc(100% - 16px)",
             borderStyle: risk ? "dashed" : "none",
             borderLeft: selected ? "" : risk ? "none" : "",
           }}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
     Table,
     TableBody,
@@ -12,7 +12,8 @@ import {
     ThemeProvider,
     Box,
     FormControlLabel,
-    Switch
+    Switch,
+    TableSortLabel
 } from "@mui/material";
 import { getUserPortfolio } from "./../../../../lib/data";
 
@@ -24,6 +25,8 @@ const darkTheme = createTheme({
 
 const UserList = ({ users, setSelectedUserPortfolio }) => {
     const [blurEmail, setBlurEmail] = useState(false);
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('userEmail');
 
     const handleUserClicked = async (user) => {
         const userPortfolio = await getUserPortfolio(user.userId);
@@ -34,6 +37,34 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
     const handleToggleChange = (event) => {
         setBlurEmail(event.target.checked);
     };
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const sortedUsers = useMemo(() => {
+        return [...users].sort((a, b) => {
+            let aValue, bValue;
+            if (orderBy.includes('.')) {
+                const [parent, child] = orderBy.split('.');
+                aValue = a[parent][child];
+                bValue = b[parent][child];
+            } else {
+                aValue = a[orderBy];
+                bValue = b[orderBy];
+            }
+
+            if (aValue < bValue) {
+                return order === 'asc' ? -1 : 1;
+            }
+            if (aValue > bValue) {
+                return order === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+    }, [users, order, orderBy]);
 
     return (
         <Box>
@@ -48,13 +79,37 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
                     <Table aria-label="user table" stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <TableCell>User</TableCell>
-                                <TableCell>Status</TableCell>
-                                <TableCell>Payment Date</TableCell>
+                                <TableCell sortDirection={orderBy === 'userEmail' ? order : false}>
+                                    <TableSortLabel
+                                        active={orderBy === 'userEmail'}
+                                        direction={orderBy === 'userEmail' ? order : 'asc'}
+                                        onClick={(e) => handleRequestSort(e, 'userEmail')}
+                                    >
+                                        User
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell sortDirection={orderBy === 'oneTimePayment.status' ? order : false}>
+                                    <TableSortLabel
+                                        active={orderBy === 'oneTimePayment.status'}
+                                        direction={orderBy === 'oneTimePayment.status' ? order : 'asc'}
+                                        onClick={(e) => handleRequestSort(e, 'oneTimePayment.status')}
+                                    >
+                                        Status
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell sortDirection={orderBy === 'oneTimePayment.date' ? order : false}>
+                                    <TableSortLabel
+                                        active={orderBy === 'oneTimePayment.date'}
+                                        direction={orderBy === 'oneTimePayment.date' ? order : 'asc'}
+                                        onClick={(e) => handleRequestSort(e, 'oneTimePayment.date')}
+                                    >
+                                        Payment Date
+                                    </TableSortLabel>
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {users?.map((user, index) => (
+                            {sortedUsers?.map((user, index) => (
                                 <TableRow
                                     key={index}
                                     hover
@@ -62,8 +117,8 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
                                     sx={{ cursor: "pointer" }}
                                 >
                                     <TableCell>
-                                        <Typography 
-                                            variant="body2" 
+                                        <Typography
+                                            variant="body2"
                                             sx={{ opacity: blurEmail ? 0.5 : 1, filter: blurEmail ? 'blur(4px)' : 'none' }}
                                         >
                                             {user.userEmail}
