@@ -53,10 +53,10 @@ const AssetManagerDisplay = ({
       <Grid item xs={4} sm={4} md={4}>
         <Second />
       </Grid>
-      <Grid item xs={4} sm={4} md={width > 1350 ? 4 : 5}>
+      <Grid item xs={4} sm={8} md={width > 1350 ? 4 : 5}>
         <Third />
       </Grid>
-      <Grid item xs={4} sm={4} md={width > 1350 ? 4 : 5}>
+      <Grid item xs={4} sm={8} md={width > 1350 ? 4 : width < 1100 ? 12 : 5}>
         <PortfolioComponent
           portfolio={portfolio}
           setPortfolio={setPortfolio}
@@ -73,7 +73,7 @@ const AssetManagerDisplay = ({
           />
         </Grid>
       ) : (
-        <Grid item xs={8} sm={8} md={width > 1350 ? 8 : 7}>
+        <Grid item xs={8} sm={8} md={width > 1350 ? 8 : width < 1100 ? 12 : 7}>
           <CoinDetails
             coin={portfolio?.assets[selectedCoin]}
             index={selectedCoin}

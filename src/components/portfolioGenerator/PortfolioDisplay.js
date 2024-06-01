@@ -57,16 +57,28 @@ const PortfolioDisplay = ({
       columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
       style={{ position: "relative" }}
     >
-      <Grid item xs={4} sm={4} md={2} lg={4}>
+      <Grid
+        item
+        xs={4}
+        sm={width > 768 ? 4 : 8}
+        md={width > 992 ? 2 : 6}
+        lg={4}
+      >
         <BitpandaCard />
       </Grid>
-      <Grid item xs={4} sm={4} md={5} lg={4}>
+      <Grid
+        item
+        xs={4}
+        sm={width > 768 ? 4 : 8}
+        md={width > 992 ? 5 : 6}
+        lg={4}
+      >
         <BewertungCard />
       </Grid>
-      <Grid item xs={4} sm={8} md={5} lg={4}>
+      <Grid item xs={4} sm={8} md={width > 992 ? 5 : 12} lg={4}>
         <DonutCard />
       </Grid>
-      <Grid item xs={4} sm={8} md={width < 1200 ? (width < 1000 ? 12 : 7) : 8}>
+      <Grid item xs={4} sm={8} md={width < 1350 ? (width < 1000 ? 12 : 7) : 8}>
         {/* <Box
           sx={{
             display: "flex",
@@ -85,7 +97,7 @@ const PortfolioDisplay = ({
         item
         xs={4}
         sm={8}
-        md={width > 1200 ? 4 : width > 1000 ? 5 : 12}
+        md={width > 1350 ? 4 : width > 1000 ? 5 : 12}
         style={{ position: "relative" }}
       >
         <PortfolioComponent

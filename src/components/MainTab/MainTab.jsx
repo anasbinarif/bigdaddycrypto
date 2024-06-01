@@ -20,6 +20,7 @@ import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { getUserPortfolio } from "../../lib/data";
 import { useTranslations } from "next-intl";
 import PricingPlans from "../../components/PricingPlans/PricingPlans";
+import theme from "../../app/[locale]/theme";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,6 +44,7 @@ function TabPanel(props) {
 
 export default function ColorTabs({ tabSelector, setTabSelector }) {
   const t = useTranslations("colorTabs");
+  const [width, setWidth] = useState(0);
   const [value, setValue] = useState("one");
   const [selectedCoin, setSelectedCoin] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -56,6 +58,19 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [loadingPortfolio, setLoadingPortfolio] = useState(false);
   const [assetsLeangth, setAssetsLeangth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     // if (session) {
@@ -86,22 +101,22 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         sx={{
           width: "100%",
           bgcolor: "#111826",
-          padding: "1.25% 1%",
-          marginTop: "65px",
-          // margin: "32px 24px",
+          padding: width < 500 ? "0" : "1.25% 1%",
+          marginTop: "80px",
+          // margin: "1rem 0 0",
         }}
       >
         <Tabs
           value={value}
+          // indicatorColor={"white"}
           variant="scrollable"
-          scrollButtons
+          scrollButtons={width < 500}
           allowScrollButtonsMobile
           onChange={handleChange}
           textColor="primary"
-          indicatorColor="primary"
           aria-label="secondary tabs example"
           sx={{
-            paddingLeft: "24px",
+            paddingLeft: width < 500 ? 0 : "24px",
             ".MuiTabs-flexContainer": {
               justifyContent: "flex-start",
               gap: "15px",
@@ -121,9 +136,19 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
               border: 0,
               borderRadius: "4px",
               marginRight: "4px",
+              // "&.Mui-selected": {
+              //   color: "#1188ff",
+              // },
             },
-            ".MuiTabs-indicator": {
-              backgroundColor: "#1188ff",
+            "& .MuiTabs-indicator": {
+              backgroundColor: "var(--color-secondary-2)",
+            },
+            "& .MuiTab-root:not(.Mui-selected):hover": {
+              backgroundColor: "var(--color-secondary-2)",
+            },
+            "& .Mui-selected": {
+              // borderBottomColor: "var(--color-secondary)",
+              color: "var(--color-secondary)",
             },
           }}
         >
@@ -132,13 +157,13 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             label={t("portfolioGenerator")}
             sx={{
               textTransform: "capitalize",
-              // "&.Mui-selected": {
-              //   borderBottomColor: "var(--color-secondary)",
-              //   color: "var(--color-secondary)",
-              // },
-              "&.MuiTab-root:not(.Mui-selected):hover": {
-                backgroundColor: "var(--color-secondary-2)",
+              "&.Mui-selected": {
+                borderBottomColor: "var(--color-secondary)",
+                color: "var(--color-secondary)",
               },
+              // "&.MuiTab-root:not(.Mui-selected):hover": {
+              //   backgroundColor: "var(--color-secondary-2)",
+              // },
               "@media only screen and (max-width: 600px)": {
                 fontSize: "0.8rem",
                 padding: "0.5rem",
@@ -150,10 +175,10 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             label={t("assetManager")}
             sx={{
               textTransform: "capitalize",
-              // "&.Mui-selected": {
-              //   borderBottomColor: "var(--color-secondary)",
-              //   color: "var(--color-secondary)",
-              // },
+              "&.Mui-selected": {
+                borderBottomColor: "var(--color-secondary)",
+                color: "var(--color-secondary)",
+              },
               "&.MuiTab-root:not(.Mui-selected):hover": {
                 backgroundColor: "var(--color-secondary-2)",
               },
@@ -168,10 +193,10 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             label={t("portfolioOverview")}
             sx={{
               textTransform: "capitalize",
-              // "&.Mui-selected": {
-              //   borderBottomColor: "var(--color-secondary)",
-              //   color: "var(--color-secondary)",
-              // },
+              "&.Mui-selected": {
+                borderBottomColor: "var(--color-secondary)",
+                color: "var(--color-secondary)",
+              },
               "&.MuiTab-root:not(.Mui-selected):hover": {
                 backgroundColor: "var(--color-secondary-2)",
               },

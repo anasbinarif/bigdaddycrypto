@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {Tab, SvgIcon, Box, Typography, useMediaQuery, useTheme, Button, CircularProgress} from "@mui/material";
+import {
+  Tab,
+  SvgIcon,
+  Box,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { categoryColors, getAssets } from "../../../../lib/data";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
@@ -25,7 +34,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ mt: 3 }}>
           <Typography component="div">{children}</Typography>
         </Box>
       )}
@@ -33,7 +42,13 @@ function TabPanel(props) {
   );
 }
 
-const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndicator, assetsLeangth }) => {
+const ScrollableKryptoTabs = ({
+  portfolio,
+  loadingPortfolio,
+  userID,
+  priceIndicator,
+  assetsLeangth,
+}) => {
   const t = useTranslations("scrollableKryptoTabs");
   const [value, setValue] = useState(0);
   const [data, setData] = useState({});
@@ -81,7 +96,10 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
       setLoading(true);
       getAssets(currentCategory)
         .then((data) => {
-          setData((prevData) => ({ ...prevData, [currentCategory]: data.data }));
+          setData((prevData) => ({
+            ...prevData,
+            [currentCategory]: data.data,
+          }));
           setLoading(false);
         })
         .catch((error) => {
@@ -95,8 +113,11 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
     if (line === 2) {
       newValue += firstHalfCount;
     }
+    console.log(newValue);
     setValue(newValue);
+    // console.log("1111111111111111111111111111111111", tabLabels[newValue]);
     const selectedCategory = categoryMapping[tabLabels[newValue]];
+    // console.log(selectedCategory);
     setCurrentCategory(selectedCategory);
   };
 
@@ -105,9 +126,11 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
       const favouriteAssetsIds = portfolio?.assetsCalculations?.assets
         .filter((asset) => asset.Favourite)
         .map((asset) => asset.CoinGeckoID);
-      acc[label] = portfolio?.assets && portfolio?.assets.filter((asset) =>
-        favouriteAssetsIds.includes(asset.CoinGeckoID)
-      );
+      acc[label] =
+        portfolio?.assets &&
+        portfolio?.assets.filter((asset) =>
+          favouriteAssetsIds.includes(asset.CoinGeckoID)
+        );
     } else {
       const categoryName = categoryMapping[label];
       acc[label] = data[categoryName] || [];
@@ -132,67 +155,142 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
       [category]: !prevShowRiskCoins[category],
     }));
   };
+  // console.log(firstHalfLabels, secondHalfLabels);
 
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
-          value={value < firstHalfCount ? value : false}
-          onChange={(e, newValue) => handleChange(e, newValue, 1)}
+          value={value === 0 ? value : false}
+          onChange={(e, newValue) => {
+            setValue(0);
+            console.log(tabLabels[newValue]);
+            const selectedCategory = categoryMapping[tabLabels[value]];
+            console.log(selectedCategory);
+            setCurrentCategory(selectedCategory);
+          }}
           variant="scrollable"
-          scrollButtons
+          scrollButtons={false}
           allowScrollButtonsMobile
           aria-label="scrollable auto tabs example 1"
           sx={{
             [`& .${tabsClasses.scrollButtons}`]: {
               "&.Mui-disabled": { opacity: 0.3 },
             },
-          }}
-        >
-          {firstHalfLabels.map((label, index) => (
-            <Tab
-              key={index}
-              icon={
-                label === t("favourite") ? (
-                  <FavoriteIcon sx={{ color: "red" }} />
-                ) : (
-                  <ColorCircle color={categoryColors[label]} />
-                )
-              }
-              iconPosition="start"
-              label={label}
-              sx={{ color: "white", whiteSpace: "nowrap" }}
-            />
-          ))}
-        </Tabs>
-        <Tabs
-          value={value >= firstHalfCount ? value - firstHalfCount : false}
-          onChange={(e, newValue) => handleChange(e, newValue, 2)}
-          variant="scrollable"
-          scrollButtons
-          allowScrollButtonsMobile
-          aria-label="scrollable auto tabs example 2"
-          sx={{
-            [`& .${tabsClasses.scrollButtons}`]: {
-              "&.Mui-disabled": { opacity: 0.3 },
+            "& .MuiTab-root": {
+              width: "20%",
+              "@media only screen and (max-width: 1500px)": {
+                width: "25%",
+              },
+              "@media only screen and (max-width: 1200px)": {
+                width: "33.33%",
+              },
+              "@media only screen and (max-width: 700px)": {
+                minHeight: "auto",
+                padding: "20px 0",
+                width: "50%",
+              },
+              "@media only screen and (max-width: 450px)": {
+                fontSize: "clamp(0.625rem, -0.25rem + 4vw, 0.875rem)",
+              },
+            },
+            "& .MuiTabs-indicator": {
+              backgroundColor: "var(--color-secondary-2)",
+            },
+            "& .MuiTab-root:not(.Mui-selected):hover": {
+              backgroundColor: "#00000011",
+            },
+            "& .Mui-selected": {
+              // borderBottomColor: "var(--color-secondary)",
+              color: "var(--color-secondary)",
             },
           }}
         >
-          {secondHalfLabels.map((label, index) => (
-            <Tab
-              key={index + firstHalfCount}
-              icon={
-                label === t("favourite") ? (
-                  <FavoriteIcon sx={{ color: "red" }} />
-                ) : (
-                  <ColorCircle color={categoryColors[label]} />
-                )
-              }
-              iconPosition="start"
-              label={label}
-              sx={{ color: "white", whiteSpace: "nowrap" }}
-            />
-          ))}
+          <Tab
+            icon={<FavoriteIcon sx={{ color: "red" }} />}
+            iconPosition="start"
+            label="favourite"
+            sx={{
+              color: "white",
+              whiteSpace: "nowrap",
+              "&.Mui-selected": {
+                // borderBottomColor: "var(--color-secondary)",
+                color: "var(--color-secondary)",
+              },
+            }}
+          />
+        </Tabs>
+        <Tabs
+          value={value >= tabLabels.length ? false : value > 0 ? value : false}
+          onChange={(e, newValue) => handleChange(e, newValue, 1)}
+          variant="scrollable"
+          scrollButtons={false}
+          // allowScrollButtonsMobile
+          aria-label="scrollable auto tabs example 1"
+          sx={{
+            display: "flex",
+            [`& .${tabsClasses.scrollButtons}`]: {
+              "&.Mui-disabled": { opacity: 0.3 },
+            },
+            "& .MuiTabs-flexContainer": {
+              flexWrap: "wrap",
+            },
+            "& .MuiTab-root": {
+              width: "20%",
+              "@media only screen and (max-width: 1500px)": {
+                width: "25%",
+              },
+              "@media only screen and (max-width: 1200px)": {
+                width: "33.33%",
+              },
+              "@media only screen and (max-width: 700px)": {
+                minHeight: "auto",
+                padding: "20px 0",
+                width: "50%",
+              },
+              "@media only screen and (max-width: 450px)": {
+                fontSize: "clamp(0.625rem, -0.25rem + 4vw, 0.875rem)",
+              },
+            },
+            "& .MuiTabs-indicator": {
+              backgroundColor: "transparent",
+            },
+            "& .MuiTab-root:not(.Mui-selected):hover": {
+              backgroundColor: "#00000011",
+            },
+            "& .Mui-selected": {
+              // borderBottomColor: "var(--color-secondary)",
+              borderBottom: "1px solid var(--color-secondary)",
+              color: "var(--color-secondary)",
+            },
+          }}
+        >
+          {tabLabels.map((label, index) => {
+            // console.log(index, label);
+            return (
+              <Tab
+                key={index + 1}
+                icon={
+                  label === t("favourite") ? (
+                    <FavoriteIcon sx={{ color: "red" }} />
+                  ) : (
+                    <ColorCircle color={categoryColors[label]} />
+                  )
+                }
+                iconPosition="start"
+                label={label}
+                sx={{
+                  display: index === 0 ? "none" : "flex",
+                  color: "white",
+                  whiteSpace: "nowrap",
+                  "&.Mui-selected": {
+                    // borderBottomColor: "var(--color-secondary)",
+                    color: "var(--color-secondary)",
+                  },
+                }}
+              />
+            );
+          })}
         </Tabs>
       </Box>
       {tabLabels.map((label, index) => (
@@ -201,43 +299,51 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
             sx={{
               display: "flex",
               flexWrap: "wrap",
+              // padding: 0,
               justifyContent: isSmallScreen ? "center" : "flex-start",
             }}
           >
             {loading
               ? Array.from(new Array(15)).map((_, idx) => (
-                <CoinCardSkeleton key={idx} />
-              ))
-              : categorizedData[label] && (() => {
-                const nonRiskCoins = categorizedData[label].filter(coin => !checkCoinRisk(coin));
-                const riskCoins = categorizedData[label].filter(coin => checkCoinRisk(coin));
-                return [
-                  ...nonRiskCoins.map((coin, index) => (
-                    <CoinCard
-                      key={`${coin.CoinGeckoID}-${index}`}
-                      coin={coin}
-                      selected={checkCoinSelected(coin)}
-                      risk={checkCoinRisk(coin)}
-                      priceIndicator={priceIndicator}
-                      assetsLeangth={assetsLeangth}
-                    />
-                  )),
-                  ...(showRiskCoins[label] ? riskCoins.map((coin, index) => (
-                    <CoinCard
-                      key={`${coin.CoinGeckoID}-risk-${index}`}
-                      coin={coin}
-                      selected={checkCoinSelected(coin)}
-                      risk={checkCoinRisk(coin)}
-                      priceIndicator={priceIndicator}
-                      assetsLeangth={assetsLeangth}
-                    />
-                  )) : [])
-                ]
-              })()
-            }
+                  <CoinCardSkeleton key={idx} />
+                ))
+              : categorizedData[label] &&
+                (() => {
+                  const nonRiskCoins = categorizedData[label].filter(
+                    (coin) => !checkCoinRisk(coin)
+                  );
+                  const riskCoins = categorizedData[label].filter((coin) =>
+                    checkCoinRisk(coin)
+                  );
+                  return [
+                    ...nonRiskCoins.map((coin, index) => (
+                      <CoinCard
+                        key={`${coin.CoinGeckoID}-${index}`}
+                        coin={coin}
+                        selected={checkCoinSelected(coin)}
+                        risk={checkCoinRisk(coin)}
+                        priceIndicator={priceIndicator}
+                        assetsLeangth={assetsLeangth}
+                      />
+                    )),
+                    ...(showRiskCoins[label]
+                      ? riskCoins.map((coin, index) => (
+                          <CoinCard
+                            key={`${coin.CoinGeckoID}-risk-${index}`}
+                            coin={coin}
+                            selected={checkCoinSelected(coin)}
+                            risk={checkCoinRisk(coin)}
+                            priceIndicator={priceIndicator}
+                            assetsLeangth={assetsLeangth}
+                          />
+                        ))
+                      : []),
+                  ];
+                })()}
           </Box>
           {categorizedData[label]?.some(checkCoinRisk) && (
-            <Button onClick={() => handleToggleRiskCoins(label)}
+            <Button
+              onClick={() => handleToggleRiskCoins(label)}
               sx={{
                 margin: "16px",
                 color: "#bbb",
@@ -245,7 +351,7 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
                 padding: "5px 10px",
                 backgroundColor: "#ffffff22",
                 borderRadius: "4px",
-                transition: ".3s all"
+                transition: ".3s all",
               }}
             >
               {showRiskCoins[label] ? t("hideRiskCoins") : t("showRiskCoins")}
@@ -254,22 +360,22 @@ const ScrollableKryptoTabs = ({ portfolio, loadingPortfolio, userID, priceIndica
         </TabPanel>
       ))}
       {loading && (
-          <Box
-              sx={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                zIndex: 9999,
-              }}
-          >
-            <CircularProgress color="inherit" />
-          </Box>
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
+          }}
+        >
+          <CircularProgress color="inherit" />
+        </Box>
       )}
     </>
   );

@@ -10,6 +10,7 @@ import {
   useMediaQuery,
   Alert,
   Snackbar,
+  withTheme,
 } from "@mui/material";
 import React, { useState, useEffect, useCallback } from "react";
 import { getAllAssets, getAssets } from "../../../../lib/data";
@@ -152,7 +153,7 @@ const KryptoFilter = ({
           padding: "0.5rem",
           // padding: isSmallScreen ? "20px 10px" : "35px 30px",
           display: "flex",
-          flexDirection: width > 1100 ? "row" : "column-reverse",
+          flexDirection: width > 1100 ? "row" : "column",
           justifyContent: isSmallScreen ? "center" : "space-between",
           alignItems: isSmallScreen ? "center" : "flex-start",
           borderRadius: "8px",
@@ -161,27 +162,27 @@ const KryptoFilter = ({
       >
         <Box
           sx={{
-            width: isSmallScreen ? "100%" : "70%",
+            width: width < 1100 ? "100%" : "70%",
             textAlign: isSmallScreen ? "center" : "left",
           }}
         >
           <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
             {t("chooseAssets")}
           </Typography>
-          {width > 1400 && (
-            <Typography
-              variant="body2"
-              gutterBottom
-              sx={{
-                fontSize: "0.9rem",
-                color: "#ffffff80",
-                maxWidth: "100%",
-                padding: "1rem 0",
-              }}
-            >
-              {t("chooseAssetsDescription")}
-            </Typography>
-          )}
+          {/* {(width > 1400 || width < 1100) && ( */}
+          <Typography
+            variant="body2"
+            gutterBottom
+            sx={{
+              fontSize: "0.9rem",
+              color: "#ffffff80",
+              maxWidth: "100%",
+              padding: "1rem 0 0 0",
+            }}
+          >
+            {t("chooseAssetsDescription")}
+          </Typography>
+          {/* )} */}
         </Box>
         <Box
           id="filters"
@@ -197,29 +198,24 @@ const KryptoFilter = ({
                 : "column",
             alignItems: "center",
             justifyContent: width < 1100 ? "space-between" : "stretch",
-            gap: isSmallScreen ? "10px" : "2rem",
+            gap: isSmallScreen ? "16px" : "1rem",
             width: width < 1100 ? "100%" : "auto",
+            "@media only screen and (max-width: 1100px)": {
+              pt: "16px",
+            },
           }}
         >
           <Box
             sx={{
               display: "flex",
-              flexDirection: width < 1300 ? "column" : "row",
+              // flexDirection: width < 1300 ? "column" : "row",
+              "@media only screen and (max-width: 1100px)": {
+                width: "100%",
+              },
+              alignItems: "center",
+              position: "relative",
             }}
           >
-            <FontAwesomeIcon
-              icon={faCrown}
-              style={{
-                paddingLeft: "0px",
-                opacity: "0.5",
-                fontSize: "0.9rem",
-                marginRight: "0px",
-                position: "absolute",
-                top: "0",
-                right: "12px",
-              }}
-              color="gold"
-            />
             <Select
               inputProps={{ "aria-label": "Without label" }}
               labelId="demo-simple-select-label"
@@ -231,16 +227,22 @@ const KryptoFilter = ({
               sx={{
                 color: "white",
                 fontSize: "0.8rem",
-                border: "none",
-                marginRight: isSmallScreen ? "0" : "2rem",
+                border: "1px solid #ffffff80",
+                "@media only screen and (max-width: 1100px)": {
+                  width: "100%",
+                },
+                "&:hover": {
+                  border: "1px solid #ffffff",
+                },
+                // marginRight: isSmallScreen ? "0" : "2rem",
                 "& .MuiPaper-rounded": {
                   backgroundColor: "#1d1d1d",
                 },
                 "& .MuiOutlinedInput-notchedOutline": {
-                  border: "1px solid #ffffff20",
+                  // border: "1px solid #ffffff80",
                 },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  border: "1px solid #ffffff20",
+                  // border: "1px solid #ffffff80",
                 },
                 "& .MuiFormHelperText-root": {
                   color: "#ffffff",
@@ -256,9 +258,17 @@ const KryptoFilter = ({
                     border: "none",
                   },
                 },
-                "& .MuiInputBase-root": {},
                 "& .MuiSelect-select": {
-                  padding: "5px",
+                  padding: "9px 8px 9px 14px",
+                  minHeight: 0,
+                  // border: "1px solid white",
+
+                  "& .MuiSelect-outlined": {
+                    border: "1px solid red",
+                  },
+                  "&:focus": {
+                    border: "none",
+                  },
                   "&:focus-visible": {
                     outline: "none",
                   },
@@ -276,6 +286,19 @@ const KryptoFilter = ({
               <MenuItem value="pi3">{t("latecomer")}</MenuItem>
               <MenuItem value="pi4">{t("latecomerII")}</MenuItem>
             </Select>
+            <FontAwesomeIcon
+              icon={faCrown}
+              style={{
+                opacity: "0.5",
+                fontSize: "0.9rem",
+                marginRight: "0px",
+                marginLeft: "12px",
+                // position: "absolute",
+                // top: "-50%",
+                // right: "-15px",
+              }}
+              color="gold"
+            />
           </Box>
           <Autocomplete
             PopperComponent={PopperMy}
@@ -316,7 +339,11 @@ const KryptoFilter = ({
               event.preventDefault();
             }}
             sx={{
-              minWidth: "180px",
+              "@media only screen and (min-width:1100px)": {
+                minWidth: "180px",
+              },
+              // minWidth: "180px",
+              width: "100%",
               alignSelf: isSmallScreen ? "stretch" : "flex-start",
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 border: "1px solid #ffffff20",
@@ -333,7 +360,7 @@ const KryptoFilter = ({
                 padding: "0",
               },
               "& .MuiOutlinedInput-root": {
-                border: "1px solid #ffffff",
+                border: "1px solid #ffffff80",
                 padding: "0",
                 color: "white",
                 "&:selected": {
@@ -341,7 +368,7 @@ const KryptoFilter = ({
                 },
               },
               "& .MuiOutlinedInput-notchedOutline": {
-                border: "1px solid #ffffff",
+                border: "1px solid #ffffff80",
                 padding: "0",
               },
               "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
@@ -350,23 +377,24 @@ const KryptoFilter = ({
                 },
               "& .MuiOutlinedInput-root:selected .MuiOutlinedInput-notchedOutline":
                 {
-                  border: "1px solid #ffffff",
+                  border: "1px solid #ffffff80",
                 },
               "& .MuiFormLabel-root": {
                 color: "#ffffff",
                 "&.Mui-focused": {
-                  border: "1px solid #ffffff",
+                  border: "1px solid #ffffff80",
                   color: "#ffffff",
                 },
               },
               "& .MuiSvgIcon-root": {
                 color: "#ffffff",
+                paddingRight: 0,
               },
             }}
           />
         </Box>
       </Box>
-      {width < 1400 && (
+      {/* {width < 1400 && width > 1100 && (
         <Typography
           variant="body2"
           gutterBottom
@@ -374,12 +402,12 @@ const KryptoFilter = ({
             fontSize: "0.9rem",
             color: "#ffffff80",
             maxWidth: "100%",
-            paddingLeft: "30px",
+            padding: "4px 6px ",
           }}
         >
           {t("chooseAssetsDescription")}
         </Typography>
-      )}
+      )} */}
       <Snackbar
         open={alertOpen}
         autoHideDuration={6000}

@@ -159,93 +159,112 @@ const SubscribeDialog = ({ open, handleClose }) => {
   };
 
   return (
-      <Box>
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            fullScreen={fullScreen}
-            PaperProps={{
-              sx: {
-                width: { xs: "100%", sm: "90%", md: "70%" },
-                maxWidth: "600px",
-              },
-            }}
-        >
-          <DialogTitle>Subscribe</DialogTitle>
-          <DialogContent>
-            <DialogContentText>Select a Plan and Billing Cycle</DialogContentText>
-            <Grid container spacing={2}>
-              {plans.map((plan) => (
-                  <Grid item xs={12} sm={6} key={plan.name}>
-                    <Card
-                        sx={{
-                          cursor: "pointer",
-                          border: selectedPlan === plan.name ? "2px solid blue" : "none",
-                        }}
-                        onClick={() => setSelectedPlan(plan.name)}
-                    >
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {plan.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {plan.description}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-              ))}
-            </Grid>
-            <Box mt={2}>
-              <RadioGroup
-                  aria-label="billingCycle"
-                  value={billingCycle}
-                  onChange={(e) => setBillingCycle(e.target.value)}
-              >
-                <FormControlLabel value="monthly" control={<Radio />} label="Monthly" />
-                <FormControlLabel value="yearly" control={<Radio />} label="Yearly" />
-              </RadioGroup>
-            </Box>
-            <PayPalScriptProvider options={initialOptions}>
-              <PayPalButtons
-                  key={`${selectedPlan}-${billingCycle}`} // Force re-render by changing the key
-                  createSubscription={createSubscription}
-                  onApprove={onApprove}
-                  onCancel={onCancel}
-                  catchError={catchError}
-                  onError={onError}
+    <Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullScreen={fullScreen}
+        PaperProps={{
+          sx: {
+            width: { xs: "100%", sm: "90%", md: "70%" },
+            maxWidth: "600px",
+          },
+        }}
+      >
+        <DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Select a Plan and Billing Cycle</DialogContentText>
+          <Grid container spacing={2}>
+            {plans.map((plan) => (
+              <Grid item xs={12} sm={6} key={plan.name}>
+                <Card
+                  sx={{
+                    cursor: "pointer",
+                    border:
+                      selectedPlan === plan.name ? "2px solid blue" : "none",
+                  }}
+                  onClick={() => setSelectedPlan(plan.name)}
+                >
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {plan.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {plan.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+          <Box mt={2}>
+            <RadioGroup
+              aria-label="billingCycle"
+              value={billingCycle}
+              onChange={(e) => setBillingCycle(e.target.value)}
+            >
+              <FormControlLabel
+                value="monthly"
+                control={<Radio />}
+                label="Monthly"
               />
-            </PayPalScriptProvider>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
-        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-          <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} variant="filled" sx={{ width: "100%" }}>
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-        <Dialog
-            open={openLogin}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={() => setOpenLogin(false)}
-            aria-describedby="alert-dialog-slide-description"
+              <FormControlLabel
+                value="yearly"
+                control={<Radio />}
+                label="Yearly"
+              />
+            </RadioGroup>
+          </Box>
+          <PayPalScriptProvider options={initialOptions}>
+            <PayPalButtons
+              key={`${selectedPlan}-${billingCycle}`} // Force re-render by changing the key
+              createSubscription={createSubscription}
+              onApprove={onApprove}
+              onCancel={onCancel}
+              catchError={catchError}
+              onError={onError}
+            />
+          </PayPalScriptProvider>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
         >
-          <DialogTitle>{"Session Expired"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              You will be logged out in {countdown} seconds. Please log in again to access locked features.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleLogoutFun} color="primary">
-              Logout Now
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <Dialog
+        open={openLogin}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={() => setOpenLogin(false)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Session Expired"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            You will be logged out in {countdown} seconds. Please log in again
+            to access locked features.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleLogoutFun} color="primary">
+            Logout Now
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 

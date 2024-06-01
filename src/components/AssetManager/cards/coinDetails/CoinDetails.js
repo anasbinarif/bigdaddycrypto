@@ -515,6 +515,7 @@ const CoinDetails = (props) => {
               alignSelf: "flex-start",
               width: "25%",
               marginRight: "1.5rem",
+              mb: width < 1200 ? "2rem" : 0,
             }}
           >
             <Box
@@ -915,10 +916,34 @@ const CoinDetails = (props) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Aktion</TableCell>
+                      <TableCell
+                        sx={{
+                          "@media only screen and (max-width: 1500px)": {
+                            textWrap: "nowrap",
+                          },
+                        }}
+                      >
+                        Aktion
+                      </TableCell>
                       <TableCell>Datum</TableCell>
-                      <TableCell>Preis pro Coin</TableCell>
-                      <TableCell>Betrag in EUR</TableCell>
+                      <TableCell
+                        sx={{
+                          "@media only screen and (max-width: 1500px)": {
+                            textWrap: "nowrap",
+                          },
+                        }}
+                      >
+                        Preis pro Coin
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          "@media only screen and (max-width: 1500px)": {
+                            textWrap: "nowrap",
+                          },
+                        }}
+                      >
+                        Betrag in EUR
+                      </TableCell>
                       <TableCell>Coins</TableCell>
                       <TableCell>Haltedauer</TableCell>
                     </TableRow>
@@ -1010,7 +1035,7 @@ const CoinDetails = (props) => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              border: "1px solid #ffffff20",
+                              border: "none",
                               padding: "3px 5px",
                               borderRadius: "4px",
                               maxWidth: "100px",

@@ -57,6 +57,7 @@ const PortfolioComponent = ({
 }) => {
   const [width, setWidth] = useState(0);
   const [sessionJotai] = useAtom(sessionAtom);
+  const [loading, setLoading] = useState(false);
   // const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
   const [deleteIconIndex, setDeleteIconIndex] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
@@ -239,7 +240,7 @@ const PortfolioComponent = ({
           top: "100px",
           // pl: width < 900 ? 0 : 3,
           // width: width >= 1400 ? "33.33%" : width > 900 ? "400px" : "100%",
-          mt: width < 900 ? "2rem" : 0,
+          // mt: width < 900 ? "2rem" : 0,
         }}
       >
         <AlertBar
@@ -257,7 +258,7 @@ const PortfolioComponent = ({
             borderRadius: "8px",
           }}
         >
-          <Box sx={{ p: 3 }}>
+          <Box sx={{ p: 3, width: "100%" }}>
             <Typography variant="h4" gutterBottom>
               {t("title")} ({assetsLeangth})
             </Typography>
@@ -271,14 +272,27 @@ const PortfolioComponent = ({
                   overflow: "auto",
                   scrollbarColor: "#555559 #333339",
                   maxHeight: "500px",
+                  // width: "100%",
+                  "& .MuiGrid-item": {
+                    "@media only screen and (max-width: 1000px)": {
+                      maxWidth: "1000px",
+                    },
+                  },
                 }}
               >
                 {loadingPortfolio &&
                   portfolio.assets
                     .slice()
-                    .reverse()
+                    // .reverse()
                     .map((asset, index) => (
-                      <Grid item key={index} xs={12} sm={6} md={15}>
+                      <Grid
+                        item
+                        key={index}
+                        xs={12}
+                        sm={6}
+                        md={15}
+                        sx={{ width: "100%" }}
+                      >
                         <Card
                           onMouseEnter={() => handleMouseEnter(index)}
                           onMouseLeave={() => handleMouseLeave()}
@@ -294,6 +308,7 @@ const PortfolioComponent = ({
                             "&:hover": { backgroundColor: "#00000099" },
                             position: "relative",
                             userSelect: "none",
+                            width: "100%",
                           }}
                         >
                           {deleteIconIndex === index && (

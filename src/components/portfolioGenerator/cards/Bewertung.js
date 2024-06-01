@@ -93,7 +93,16 @@ function BewertungCard() {
                 <ListItemIcon sx={{ minWidth: "30px" }}>
                   <FiberManualRecordIcon sx={{ color: item.color }} />
                 </ListItemIcon>
-                <ListItemText primary={item.text} sx={{ fontSize: "13px" }} />
+                <ListItemText
+                  primary={item.text}
+                  sx={{
+                    "& .MuiTypography-root": {
+                      fontSize: "14px",
+                      // "@media only screen and (max-width: 400px)": {
+                      // },
+                    },
+                  }}
+                />
               </ListItem>
             ))}
           </List>
@@ -104,6 +113,14 @@ function BewertungCard() {
               "@media (max-width:1400px)": {
                 flexDirection: "column",
                 alignItems: "flex-start",
+              },
+              "@media (max-width:768px)": {
+                flexDirection: "row",
+                // alignItems: "flex-start",
+              },
+              "@media (max-width:500px)": {
+                flexDirection: "column",
+                // alignItems: "flex-start",
               },
             }}
           >

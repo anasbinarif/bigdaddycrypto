@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   AppBar,
   Toolbar,
@@ -33,11 +33,48 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
   const t = useTranslations("navbar");
   const [sessionJotai, setSession] = useAtom(sessionAtom);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [width, setWidth] = useState(0);
+  const isMobile = width < 992;
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const [accountAnchorEl, setAccountAnchorEl] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState("nope");
   const [alertOpen, setAlertOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const PopperMy = useCallback((props) => {
+    const anchorEl = document.getElementById("hamMenu");
+
+    return (
+      <Popper
+        {...props}
+        anchorEl={anchorEl}
+        style={{
+          width: anchorEl.clientWidth,
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+        }}
+        sx={{
+          "& > .MuiPaper-root": {
+            backgroundColor: "#1d1d1d",
+          },
+        }}
+        placement="bottom-end"
+      />
+    );
+  }, []);
 
   const handleMenuClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -74,7 +111,13 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
           borderBottom: "1px solid #444444",
         }}
       >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+          }}
+        >
           <Link style={{ display: "flex", alignItems: "center" }} href="/">
             <IconButton color="inherit">
               <Image
@@ -104,6 +147,8 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 <MenuIcon />
               </IconButton>
               <Menu
+                id="hamMenu"
+                // PopperComponent={PopperMy}
                 anchorEl={menuAnchorEl}
                 anchorOrigin={{
                   vertical: "top",
@@ -116,6 +161,10 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 }}
                 open={Boolean(menuAnchorEl)}
                 onClose={handleClose}
+                sx={{
+                  // backgroundColor: "black",
+                  fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                }}
               >
                 <MenuItem onClick={handleClose}>
                   <Link href="/" className={styles.nav__link}>
@@ -167,13 +216,22 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   }}
                   open={Boolean(accountAnchorEl)}
                   onClose={handleClose}
+                  sx={{
+                    fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                  }}
                 >
                   <NavbarLink mobileView={true} handleClose={handleClose} />
                 </Menu>
               </SessionProvider>
             </Box>
           ) : (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+              }}
+            >
               <Link
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
                 href="/"
@@ -214,13 +272,6 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   }}
                 />
               </Box>
-              <Link
-                  style={{ marginRight: "15px", fontFamily: "inherit" }}
-                  href="/pricingPlans"
-                  className={styles.nav__link}
-              >
-                Pricing Plans
-              </Link>
               <SessionProvider>
                 <NavbarLink />
               </SessionProvider>

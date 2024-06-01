@@ -226,15 +226,19 @@ const CoinCard = ({
           selected={selected}
           sx={{
             cursor: "pointer",
-            border: `${
-              selected ? "1px solid #00aa66aa" : risk ? "1px solid red" : "none"
-            }`,
-            backgroundColor: `${
-              selected ? "#00aa6633" : risk ? "rgba(222,11,11,0.05)" : "#333"
-            }`,
+            border: selected
+              ? "1px solid #00aa66aa"
+              : risk
+              ? "1px solid red"
+              : "none",
+            backgroundColor: selected
+              ? "#00aa6633"
+              : risk
+              ? "rgba(222,11,11,0.05)"
+              : "#333",
             width: "95%",
-            borderStyle: `${risk ? "dashed" : "none"}`,
-            borderLeft: `${selected ? "" : risk ? "none" : ""}`,
+            borderStyle: risk ? "dashed" : "none",
+            borderLeft: selected ? "" : risk ? "none" : "",
           }}
         >
           <CategoryColorBar
@@ -245,7 +249,7 @@ const CoinCard = ({
             <CheckCircleIcon
               sx={{
                 color: "#00aa66",
-                display: `${selected ? "block" : "none"}`,
+                display: selected ? "block" : "none",
                 position: "absolute",
                 zIndex: 1,
                 top: "5px",
@@ -299,6 +303,40 @@ const CoinCard = ({
                 <ColorCircle color={priceIndicatorColors[filterTag]} />
               </Box>
             )}
+            <>
+              {selected && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    right: "0",
+                    top: "0",
+                  }}
+                >
+                  <Tooltip
+                    title="Favourite"
+                    onClick={handleFavouriteClick}
+                    sx={{
+                      position: "absolute",
+                      left: "0",
+                      bottom: "0",
+                    }}
+                  >
+                    <IconButton
+                      sx={{
+                        color: isFavorite(
+                          coin.CoinGeckoID,
+                          portfolio.assetsCalculations
+                        )
+                          ? "red"
+                          : "gray",
+                      }}
+                    >
+                      <FavoriteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              )}
+            </>
             {checkCalculation(Potential, Sicherheit) && (
               <Box
                 sx={{
@@ -334,12 +372,16 @@ const CoinCard = ({
           selected={selected}
           sx={{
             cursor: "pointer",
-            border: `${
-              selected ? "1px solid #00aa66aa" : risk ? "1px solid red" : "none"
-            }`,
-            backgroundColor: `${
-              selected ? "#00aa6633" : risk ? "rgba(222,11,11,0.05)" : "#333"
-            }`,
+            border: selected
+              ? "1px solid #00aa66aa"
+              : risk
+              ? "1px solid red"
+              : "none",
+            backgroundColor: selected
+              ? "#00aa6633"
+              : risk
+              ? "rgba(222,11,11,0.05)"
+              : "#333",
             width:
               width >= 1500
                 ? "calc(25% - 16px)"
@@ -352,8 +394,8 @@ const CoinCard = ({
                 : width > 500
                 ? "calc(50% - 16px)"
                 : "calc(100% - 16px)",
-            borderStyle: `${risk ? "dashed" : "none"}`,
-            borderLeft: `${selected ? "" : risk ? "none" : ""}`,
+            borderStyle: risk ? "dashed" : "none",
+            borderLeft: selected ? "" : risk ? "none" : "",
           }}
         >
           <CategoryColorBar
@@ -364,7 +406,7 @@ const CoinCard = ({
             <CheckCircleIcon
               sx={{
                 color: "#00aa66",
-                display: `${selected ? "block" : "none"}`,
+                display: selected ? "block" : "none",
                 position: "absolute",
                 zIndex: 1,
                 top: "5px",
@@ -419,6 +461,32 @@ const CoinCard = ({
                 <ColorCircle color={priceIndicatorColors[filterTag]} />
               </Box>
             )}
+            <>
+              {selected && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    left: "0",
+                    bottom: "0",
+                  }}
+                >
+                  <Tooltip title="Favourite" onClick={handleFavouriteClick}>
+                    <IconButton
+                      sx={{
+                        color: isFavorite(
+                          coin.CoinGeckoID,
+                          portfolio.assetsCalculations
+                        )
+                          ? "red"
+                          : "gray",
+                      }}
+                    >
+                      <FavoriteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              )}
+            </>
             {checkCalculation(Potential, Sicherheit) && (
               <Box
                 sx={{
