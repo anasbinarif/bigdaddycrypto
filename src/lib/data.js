@@ -703,3 +703,16 @@ export const categoriesDisplay = {
   ecommerce: "eCommerce",
   nft: "Tokenisierung/ RWA",
 };
+
+export const reverseCategoriesDisplay = {
+    "AI": "ai",
+    "Web3/ Anonymität": "web3",
+    "DeFi": "defi",
+    "Grüne Coins": "green",
+    "Gaming/ Metaverse": "metaverse",
+    "BTC- Zusammenhang": "btc",
+    "CBDC- Netzwerke": "cbdc",
+    "eCommerce": "ecommerce",
+    "Tokenisierung/ RWA": "nft",
+};
+

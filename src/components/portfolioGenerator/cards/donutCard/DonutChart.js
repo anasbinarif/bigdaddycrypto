@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
-import { categoriesDisplay } from "../../../../lib/data";
+import { categoriesDisplay, reverseCategoriesDisplay } from "../../../../lib/data";
 import { useAtom } from "jotai/index";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
@@ -21,15 +21,11 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   const canvasRef = useRef(null);
   const [portfolio] = useAtom(portfolioAtom, { assets: [] });
   const [securityScore, setSecurityScore] = useState(0);
-  const [tooltip, setTooltip] = useState({ visible: false, text: "", x: 0, y: 0, angle: 0 });
+  const [tooltip, setTooltip] = useState({ visible: false, text: "", x: 0, y: 0, angle: 0, category: "", count: 0, color: "" });
   const t = useTranslations("donutChart");
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  useEffect(() => {
-    console.log("portfolioportfolio", portfolio)
-  }, [portfolio]);
 
   useEffect(() => {
     const calculateSecurityScore = () => {
@@ -42,7 +38,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
 
       portfolio.assetsCalculations.assets.forEach((asset) => {
         const assetDetails = portfolio.assets.find(
-          (a) => a.CoinGeckoID === asset.CoinGeckoID
+            (a) => a.CoinGeckoID === asset.CoinGeckoID
         );
         if (assetDetails && assetDetails.Sicherheit) {
           const weight = asset.totalInvest / totalInvestment;
@@ -67,22 +63,22 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
       if (!ctx) return;
 
       const data = loadingPortfolio
-        ? Object.entries(portfolioCalculations?.percentages || {}).map(
-            ([key, value]) => {
-              return [
-                categoriesDisplay[key] || key,
-                parseFloat(value.replace("%", "")),
-              ];
-            }
+          ? Object.entries(portfolioCalculations?.percentages || {}).map(
+              ([key, value]) => {
+                return [
+                  categoriesDisplay[key] || key,
+                  parseFloat(value.replace("%", "")),
+                ];
+              }
           )
-        : [["AI", 100.0]];
+          : [["AI", 100.0]];
 
       const colors = data.map((item) => categoryColors[item[0]] || "#CCCCCC");
 
       const total = data.reduce((acc, [, value]) => acc + value, 0);
       let startAngle = -0.5 * Math.PI;
       const radius = Math.min(canvas.width, canvas.height) / 2;
-      const innerRadius = radius * 0.68;
+      const innerRadius = radius * 0.75;
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
 
@@ -109,7 +105,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
 
       const parent = canvas.parentElement;
       canvas.width = parent.clientWidth;
-      canvas.height = parent.clientWidth; // keep it square
+      canvas.height = parent.clientWidth;
       drawChart();
     };
 
@@ -135,7 +131,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = Math.min(canvas.width, canvas.height) / 2;
-    const innerRadius = radius * 0.65; // Adjusted for desired width
+    const innerRadius = radius * 0.65;
 
     const dx = x - centerX;
     const dy = y - centerY;
@@ -152,15 +148,15 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
     }
 
     const data = loadingPortfolio
-      ? Object.entries(portfolioCalculations?.percentages || {}).map(
-          ([key, value]) => {
-            return [
-              categoriesDisplay[key] || key,
-              parseFloat(value.replace("%", "")),
-            ];
-          }
+        ? Object.entries(portfolioCalculations?.percentages || {}).map(
+            ([key, value]) => {
+              return [
+                categoriesDisplay[key] || key,
+                parseFloat(value.replace("%", "")),
+              ];
+            }
         )
-      : [["AI", 100.0]];
+        : [["AI", 100.0]];
 
     const total = data.reduce((acc, [, value]) => acc + value, 0);
     let startAngle = -0.5 * Math.PI;
@@ -174,13 +170,16 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
         const tooltipAngle = (startAngle + endAngle) / 2;
         const tooltipX = centerX + (radius + 10) * Math.cos(tooltipAngle);
         const tooltipY = centerY + (radius + 10) * Math.sin(tooltipAngle);
+        const categoryCount = portfolioCalculations?.counts[reverseCategoriesDisplay[category]] || 0;
 
         setTooltip({
           visible: true,
-          text: `${category}: ${value.toFixed(1)}%`,
+          text: category,
+          count: categoryCount,
           x: tooltipX,
           y: tooltipY,
           angle: tooltipAngle,
+          color: categoryColors[category] || "#CCCCCC",
         });
         return;
       }
@@ -196,105 +195,110 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        width: "60%",
-        height: "auto",
-        display: "flex",
-        mr: "-25px",
-        "@media only screen and (max-width:1600px)": {
-          width: "40%",
-          mr: 0,
-        },
-        "@media only screen and (max-width:500px)": {
-          width: "100%",
-          mt: "1rem",
-        },
-      }}
-    >
       <Box
-        sx={{
-          height: "auto",
-          width: "100%",
-          alignSelf: "flex-end",
-          "@media (max-width:1500px)": {
-            scale: 0.9,
-          },
-        }}
-      >
-        <canvas
-          ref={canvasRef}
-          width={400}
-          height={400}
-          onMouseMove={handleMouseMove}
-          onMouseOut={handleMouseOut}
-        />
-      </Box>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          textAlign: "center",
-          zIndex: "100",
-        }}
-      >
-        <Typography
-          variant="caption"
-          style={{
-            color: "#FFFFFF",
-          }}
-        >
-          {t("score")}
-        </Typography>
-        <Typography
-          variant="h4"
-          component="div"
-          style={{ color: "#FFFFFF" }}
           sx={{
-            "@media (max-width:1500px)": {
-              fontSize: "clamp(1.75rem, 0.25rem + 2vw, 2.125rem)",
+            position: "relative",
+            width: "60%",
+            height: "auto",
+            display: "flex",
+            mr: "-25px",
+            "@media only screen and (max-width:1600px)": {
+              width: "40%",
+              mr: 0,
+            },
+            "@media only screen and (max-width:500px)": {
+              width: "100%",
+              mt: "1rem",
             },
           }}
-        >
-          {securityScore}
-        </Typography>
-        <Typography variant="caption" style={{ color: "#FFFFFF" }}>
-          {t("veryGood")}
-        </Typography>
-      </Box>
-      {tooltip.visible && (
+      >
         <Box
-          sx={{
-            position: "absolute",
-            top: tooltip.y,
-            left: tooltip.x,
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "rgba(0, 0, 0, 0.8)",
-            color: "#FFFFFF",
-            padding: "5px",
-            borderRadius: "3px",
-            pointerEvents: "none",
-            zIndex: "1000",
-            "::before": {
-              content: '""',
+            sx={{
+              height: "auto",
+              width: "100%",
+              alignSelf: "flex-end",
+              "@media (max-width:1500px)": {
+                scale: 0.9,
+              },
+            }}
+        >
+          <canvas
+              ref={canvasRef}
+              width={400}
+              height={400}
+              onMouseMove={handleMouseMove}
+              onMouseOut={handleMouseOut}
+          />
+        </Box>
+        <Box
+            sx={{
               position: "absolute",
               top: "50%",
               left: "50%",
-              transform: "translate(-50%, -50%) rotate(45deg)",
-              width: "10px",
-              height: "10px",
-              backgroundColor: "rgba(0, 0, 0, 0.8)",
-              clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
-            },
-          }}
+              transform: "translate(-50%, -50%)",
+              textAlign: "center",
+              zIndex: "100",
+            }}
         >
-          {tooltip.text}
+          <Typography
+              variant="caption"
+              style={{
+                color: "#FFFFFF",
+              }}
+          >
+            {t("score")}
+          </Typography>
+          <Typography
+              variant="h4"
+              component="div"
+              style={{ color: "#FFFFFF" }}
+              sx={{
+                "@media (max-width:1500px)": {
+                  fontSize: "clamp(1.75rem, 0.25rem + 2vw, 2.125rem)",
+                },
+              }}
+          >
+            {securityScore}
+          </Typography>
+          <Typography variant="caption" style={{ color: "#FFFFFF" }}>
+            {t("veryGood")}
+          </Typography>
         </Box>
-      )}
-    </Box>
+        {tooltip.visible && (
+            <Box
+                sx={{
+                  position: "absolute",
+                  top: tooltip.y,
+                  left: tooltip.x,
+                  transform: "translate(-50%, -50%)",
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  color: "#FFFFFF",
+                  padding: "5px",
+                  borderRadius: "3px",
+                  pointerEvents: "none",
+                  zIndex: "1000",
+                  whiteSpace: "nowrap",
+                }}
+            >
+              <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
+                {tooltip.text}
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
+                <Box
+                    sx={{
+                      display: "inline-block",
+                      width: "10px",
+                      height: "10px",
+                      backgroundColor: tooltip.color,
+                      border: "1px solid #FFFFFF",
+                      marginRight: "5px",
+                    }}
+                ></Box>
+                <Typography variant="body2">{tooltip.count}</Typography>
+              </Box>
+            </Box>
+        )}
+      </Box>
   );
 };
 

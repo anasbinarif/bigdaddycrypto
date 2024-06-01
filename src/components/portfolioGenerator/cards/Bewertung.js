@@ -29,9 +29,15 @@ function BewertungCard() {
       const sicherheitValues = financialSummaries.map(
         (asset) => asset.Sicherheit || 0
       );
+      const totalGesamtwert = portfolio.assetsCalculations.assets
+        .reduce((acc, curr) => acc + curr.Holdings, 0)
+        .toFixed(2);
       const avgSicherheit =
         sicherheitValues.reduce((acc, val) => acc + val, 0) /
         sicherheitValues.length;
+      // const avgSicherheit =
+      //   sicherheitValues.reduce((acc, val) => acc + val, 0) /
+      //   totalGesamtwert;
       setSicherheitAverage(avgSicherheit.toFixed(1));
     }
   }, [portfolio]);
@@ -62,6 +68,17 @@ function BewertungCard() {
         Sicherheit,
       };
     });
+  };
+  const getBackgroundColor = (sicherheitAverage) => {
+    if (sicherheitAverage >= 0 && sicherheitAverage < 5.5) {
+      return "red";
+    } else if (sicherheitAverage >= 5.5 && sicherheitAverage < 7) {
+      return "lightgreen"; // or another shade for "light faded green"
+    } else if (sicherheitAverage >= 7 && sicherheitAverage <= 10) {
+      return "green";
+    } else {
+      return "gray"; // default color if the value is out of expected range
+    }
   };
 
   return (
@@ -151,7 +168,7 @@ function BewertungCard() {
               <span
                 style={{
                   color: "white",
-                  backgroundColor: "rgb(65, 180, 49)",
+                  backgroundColor: getBackgroundColor(sicherheitAverage),
                   padding: "4px 8px 2px",
                   textShadow: "1px 1px 5px rgba(0,0,0,.4)",
                   borderRadius: "6px",

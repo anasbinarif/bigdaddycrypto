@@ -57,10 +57,10 @@ const CurrencySwitcher = () => {
                 onClose={handleClose}
             >
                 <MenuItem onClick={() => changeCurrency("USD")}>
-                    <a style={{ textDecoration: "none", color: "inherit" }}>USD</a>
+                    <a style={{ textDecoration: "none", color: "inherit" }}>$</a>
                 </MenuItem>
                 <MenuItem onClick={() => changeCurrency("EUR")}>
-                    <a style={{ textDecoration: "none", color: "inherit" }}>EUR</a>
+                    <a style={{ textDecoration: "none", color: "inherit" }}>€</a>
                 </MenuItem>
             </Menu>
         </Box>

@@ -19,6 +19,7 @@ export const DonutCard = () => {
       if (sessionJotai?.user) {
         const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
         setPortfolioCalculations(userPortfolio.calculation);
+          console.log("userPortfoliouserPortfoliouserPortfolio", userPortfolio)
         setLoadingPortfolio(true);
       }
     };
