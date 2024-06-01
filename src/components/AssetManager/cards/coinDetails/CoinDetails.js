@@ -1195,7 +1195,7 @@ const CoinDetails = (props) => {
                 marginLeft: "10px",
               }}
               onClick={handleExportCSV}
-              disabled={rowVals.length <= 0}
+              // disabled={rowVals.length <= 0}
             >
               Export CSV
               <FontAwesomeIcon

@@ -259,6 +259,7 @@ const PricingPlans = () => {
         >
           {plans.map((plan, index) => (
             <Card
+              key={index}
               sx={{
                 backgroundColor: "#202530",
                 color: "white",
