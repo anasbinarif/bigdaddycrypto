@@ -419,7 +419,7 @@ const KryptoFilter = ({
           variant="filled"
           sx={{ width: "100%" }}
         >
-          To access the Import/Export, please subscribe to Premium plan.
+          To access the Filters, please subscribe to Premium plan.
         </Alert>
       </Snackbar>
     </>

@@ -42,8 +42,8 @@ const CategoryColorBar = styled(Box)(({ colors }) => {
 });
 
 const isFavorite = (CoinGeckoID, assetsCalculations) => {
-  return assetsCalculations?.assets.some(
-    (asset) => asset.CoinGeckoID === CoinGeckoID && asset.Favourite
+  return assetsCalculations?.Favourite.some(
+    (asset) => asset.CoinGeckoID === CoinGeckoID
   );
 };
 
@@ -380,7 +380,7 @@ const PortfolioComponent = ({
                                     <DeleteIcon />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip
+                                {/* <Tooltip
                                   title="Favourite"
                                   onClick={() => handleFavouriteClick(asset)}
                                 >
@@ -396,7 +396,7 @@ const PortfolioComponent = ({
                                   >
                                     <FavoriteIcon />
                                   </IconButton>
-                                </Tooltip>
+                                </Tooltip> */}
                               </>
                             )}
                           </Box>
@@ -441,6 +441,24 @@ const PortfolioComponent = ({
           one of our plans.
         </Alert>
       </Snackbar>
+      {loading && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
+          }}
+        >
+          <CircularProgress color="inherit" />
+        </Box>
+      )}
     </>
   );
 };

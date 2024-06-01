@@ -15,6 +15,8 @@ import CoinCard from "../coinCard/CoinCard";
 import CoinCardSkeleton from "../coinCard/CoinCardSkeleton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useTranslations } from "next-intl";
+import { sessionAtom } from "../../../../app/stores/sessionStore";
+import { useAtom } from "jotai";
 
 const ColorCircle = ({ color }) => (
   <SvgIcon>
@@ -51,10 +53,12 @@ const ScrollableKryptoTabs = ({
 }) => {
   const t = useTranslations("scrollableKryptoTabs");
   const [value, setValue] = useState(0);
+  const [sessionJotai] = useAtom(sessionAtom);
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentCategory, setCurrentCategory] = useState("favourite");
-  const [showRiskCoins, setShowRiskCoins] = useState({}); // State to manage risk coin visibility
+  const [showRiskCoins, setShowRiskCoins] = useState({});
+  const userId = sessionJotai?.user.id;
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -94,7 +98,7 @@ const ScrollableKryptoTabs = ({
   useEffect(() => {
     if (currentCategory) {
       setLoading(true);
-      getAssets(currentCategory)
+      getAssets(currentCategory, userId)
         .then((data) => {
           setData((prevData) => ({
             ...prevData,
@@ -109,6 +113,11 @@ const ScrollableKryptoTabs = ({
     }
   }, [currentCategory]);
 
+  useEffect(() => {
+    console.log("datatataattaa", data);
+  }, [data])
+  
+
   const handleChange = (event, newValue, line) => {
     if (line === 2) {
       newValue += firstHalfCount;
@@ -122,19 +131,21 @@ const ScrollableKryptoTabs = ({
   };
 
   const categorizedData = tabLabels.reduce((acc, label) => {
-    if (label === t("favourite")) {
-      const favouriteAssetsIds = portfolio?.assetsCalculations?.assets
-        .filter((asset) => asset.Favourite)
-        .map((asset) => asset.CoinGeckoID);
-      acc[label] =
-        portfolio?.assets &&
-        portfolio?.assets.filter((asset) =>
-          favouriteAssetsIds.includes(asset.CoinGeckoID)
-        );
-    } else {
-      const categoryName = categoryMapping[label];
-      acc[label] = data[categoryName] || [];
-    }
+    // if (label === t("favourite")) {
+    //   const favouriteAssetsIds = portfolio?.assetsCalculations?.assets
+    //     .filter((asset) => asset.Favourite)
+    //     .map((asset) => asset.CoinGeckoID);
+    //   acc[label] =
+    //     portfolio?.assets &&
+    //     portfolio?.assets.filter((asset) =>
+    //       favouriteAssetsIds.includes(asset.CoinGeckoID)
+    //     );
+    // } else {
+    //   const categoryName = categoryMapping[label];
+    //   acc[label] = data[categoryName] || [];
+    // }
+    const categoryName = categoryMapping[label];
+    acc[label] = data[categoryName] || [];
     return acc;
   }, {});
 
@@ -305,41 +316,45 @@ const ScrollableKryptoTabs = ({
           >
             {loading
               ? Array.from(new Array(15)).map((_, idx) => (
-                  <CoinCardSkeleton key={idx} />
-                ))
+                <CoinCardSkeleton key={idx} />
+              ))
               : categorizedData[label] &&
-                (() => {
-                  const nonRiskCoins = categorizedData[label].filter(
-                    (coin) => !checkCoinRisk(coin)
-                  );
-                  const riskCoins = categorizedData[label].filter((coin) =>
-                    checkCoinRisk(coin)
-                  );
-                  return [
-                    ...nonRiskCoins.map((coin, index) => (
+              (() => {
+                const nonRiskCoins = categorizedData[label].filter(
+                  (coin) => !checkCoinRisk(coin)
+                );
+                const riskCoins = categorizedData[label].filter((coin) =>
+                  checkCoinRisk(coin)
+                );
+                return [
+                  ...nonRiskCoins.map((coin, index) => (
+                    <CoinCard
+                      key={`${coin.CoinGeckoID}-${index}`}
+                      coin={coin}
+                      selected={checkCoinSelected(coin)}
+                      risk={checkCoinRisk(coin)}
+                      priceIndicator={priceIndicator}
+                      assetsLeangth={assetsLeangth}
+                      currentCategory={currentCategory}
+                      setData={setData}
+                    />
+                  )),
+                  ...(showRiskCoins[label]
+                    ? riskCoins.map((coin, index) => (
                       <CoinCard
-                        key={`${coin.CoinGeckoID}-${index}`}
+                        key={`${coin.CoinGeckoID}-risk-${index}`}
                         coin={coin}
                         selected={checkCoinSelected(coin)}
                         risk={checkCoinRisk(coin)}
                         priceIndicator={priceIndicator}
                         assetsLeangth={assetsLeangth}
+                        currentCategory={currentCategory}
+                        setData={setData}
                       />
-                    )),
-                    ...(showRiskCoins[label]
-                      ? riskCoins.map((coin, index) => (
-                          <CoinCard
-                            key={`${coin.CoinGeckoID}-risk-${index}`}
-                            coin={coin}
-                            selected={checkCoinSelected(coin)}
-                            risk={checkCoinRisk(coin)}
-                            priceIndicator={priceIndicator}
-                            assetsLeangth={assetsLeangth}
-                          />
-                        ))
-                      : []),
-                  ];
-                })()}
+                    ))
+                    : []),
+                ];
+              })()}
           </Box>
           {categorizedData[label]?.some(checkCoinRisk) && (
             <Button

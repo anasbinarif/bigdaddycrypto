@@ -48,8 +48,11 @@ const StyledCard = styled(Card)(({ theme, selected }) => ({
 }));
 
 const CategoryColorBar = styled(Box)(({ colors, selected }) => {
-  const gradient =
-    colors.length > 1 ? `linear-gradient(${colors.join(", ")})` : colors[0];
+  if (!colors || colors.length === 0) {
+    colors = ["#ffffff"]; // Default color if undefined or empty
+  }
+
+  const gradient = colors.length > 1 ? `linear-gradient(${colors.join(", ")})` : colors[0];
 
   return {
     width: 4,
@@ -69,6 +72,8 @@ const CoinCard = ({
   risk,
   priceIndicator,
   assetsLeangth,
+  currentCategory,
+  setData
 }) => {
   const {
     Name,
@@ -103,7 +108,7 @@ const CoinCard = ({
   }, []);
 
   const getCategoryColors = (categories) => {
-    return categories.map(
+    return categories?.map(
       (category) => categoryColorsNew[category] || "#ffffff"
     );
   };
@@ -194,6 +199,7 @@ const CoinCard = ({
     console.log("handleFavouriteClick", coin);
     if (sessionJotai?.user?.subscriptionPlan === "free") {
       setAlertOpen(true);
+      setLoading(false); // Reset loading state here
       return;
     }
     const userId = sessionJotai?.user.id;
@@ -206,15 +212,37 @@ const CoinCard = ({
       body: JSON.stringify({ userId, CoinGeckoID }),
     });
     if (response.ok) {
-      const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+      const userPortfolio = await getUserPortfolio(userId);
       setPortfolio(userPortfolio.data);
-      setLoading(false);
+      setData((prevData) => {
+        const updatedFavourite = prevData.favourite ? [...prevData.favourite] : [];
+        const coinIndex = updatedFavourite.findIndex(favCoin => favCoin.CoinGeckoID === CoinGeckoID);
+
+        if (coinIndex > -1) {
+          // Coin is already in favourites, remove it
+          updatedFavourite.splice(coinIndex, 1);
+        } else {
+          // Coin is not in favourites, add it
+          updatedFavourite.push(coin);
+        }
+
+        return {
+          ...prevData,
+          favourite: updatedFavourite,
+        };
+      });
+    } else {
+      console.error("Failed to toggle favourite status.");
     }
+    setLoading(false);
   }
 
+
+
   const isFavorite = (CoinGeckoID, assetsCalculations) => {
-    return assetsCalculations?.assets.some(
-      (asset) => asset.CoinGeckoID === CoinGeckoID && asset.Favourite
+    console.log("assetsCalculations.Favourite", assetsCalculations.Favourite);
+    return assetsCalculations?.Favourite.some(
+      (asset) => asset.CoinGeckoID === CoinGeckoID
     );
   };
 
@@ -304,38 +332,36 @@ const CoinCard = ({
               </Box>
             )}
             <>
-              {selected && (
-                <Box
+              <Box
+                sx={{
+                  position: "absolute",
+                  right: "0",
+                  top: "0",
+                }}
+              >
+                <Tooltip
+                  title="Favourite"
+                  onClick={handleFavouriteClick}
                   sx={{
                     position: "absolute",
-                    right: "0",
-                    top: "0",
+                    left: "0",
+                    bottom: "0",
                   }}
                 >
-                  <Tooltip
-                    title="Favourite"
-                    onClick={handleFavouriteClick}
+                  <IconButton
                     sx={{
-                      position: "absolute",
-                      left: "0",
-                      bottom: "0",
+                      color: isFavorite(
+                        coin.CoinGeckoID,
+                        portfolio.assetsCalculations
+                      )
+                        ? "red"
+                        : "gray",
                     }}
                   >
-                    <IconButton
-                      sx={{
-                        color: isFavorite(
-                          coin.CoinGeckoID,
-                          portfolio.assetsCalculations
-                        )
-                          ? "red"
-                          : "gray",
-                      }}
-                    >
-                      <FavoriteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              )}
+                    <FavoriteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </>
             {checkCalculation(Potential, Sicherheit) && (
               <Box
@@ -462,30 +488,28 @@ const CoinCard = ({
               </Box>
             )}
             <>
-              {selected && (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    left: "0",
-                    bottom: "0",
-                  }}
-                >
-                  <Tooltip title="Favourite" onClick={handleFavouriteClick}>
-                    <IconButton
-                      sx={{
-                        color: isFavorite(
-                          coin.CoinGeckoID,
-                          portfolio.assetsCalculations
-                        )
-                          ? "red"
-                          : "gray",
-                      }}
-                    >
-                      <FavoriteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              )}
+              <Box
+                sx={{
+                  position: "absolute",
+                  left: "0",
+                  bottom: "0",
+                }}
+              >
+                <Tooltip title="Favourite" onClick={handleFavouriteClick}>
+                  <IconButton
+                    sx={{
+                      color: isFavorite(
+                        coin.CoinGeckoID,
+                        portfolio.assetsCalculations
+                      )
+                        ? "red"
+                        : "gray",
+                    }}
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </>
             {checkCalculation(Potential, Sicherheit) && (
               <Box

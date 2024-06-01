@@ -9,32 +9,27 @@ export async function POST(req) {
     console.log("Received userId and CoinGeckoID:", userId, CoinGeckoID);
 
     try {
-        // First, find the user's portfolio that contains the asset with the given CoinGeckoID
-        const portfolio = await UserPortfolio.findOne({
-            userId: userId,
-            "assets.CoinGeckoID": CoinGeckoID
-        });
-
-        console.log("assets.CoinGeckoID", portfolio)
+        // First, find the user's portfolio
+        const portfolio = await UserPortfolio.findOne({ userId: userId });
 
         if (!portfolio) {
-            console.log("No portfolio found for the given user with CoinGeckoID:", CoinGeckoID);
-            return new NextResponse(null, { status: 404, statusText: 'Portfolio or asset not found' });
+            console.log("No portfolio found for the given user:", userId);
+            return new NextResponse(null, { status: 404, statusText: 'Portfolio not found' });
         }
 
-        // Find the asset to toggle the Favourite status
-        const assetToToggle = portfolio.assets.find(asset => asset.CoinGeckoID === CoinGeckoID);
+        // Check if the CoinGeckoID is already in the Favourite array
+        const isFavourite = portfolio.Favourite.some(fav => fav.CoinGeckoID === CoinGeckoID);
 
-        // Perform the update to toggle the Favourite status
-        const result = await UserPortfolio.updateOne(
-            { _id: portfolio._id, "assets.CoinGeckoID": CoinGeckoID },
-            { $set: { "assets.$.Favourite": !assetToToggle.Favourite } }
-        );
-
-        if (result.modifiedCount === 0) {
-            console.log("Failed to update the favourite status for asset.");
-            return new NextResponse(JSON.stringify({ success: false, message: "Failed to update favourite status" }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+        if (isFavourite) {
+            // Remove the CoinGeckoID from the Favourite array
+            portfolio.Favourite = portfolio.Favourite.filter(fav => fav.CoinGeckoID !== CoinGeckoID);
+        } else {
+            // Add the CoinGeckoID to the Favourite array
+            portfolio.Favourite.push({ CoinGeckoID });
         }
+
+        // Save the changes
+        await portfolio.save();
 
         console.log("Asset favourite status toggled successfully.");
         return new NextResponse(JSON.stringify({ success: true, message: "Asset favourite status toggled successfully" }), { status: 200, headers: { 'Content-Type': 'application/json' } });

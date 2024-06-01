@@ -256,7 +256,15 @@ const portfolioSchema = new mongoose.Schema({
                 required: true
             }
         }]
-    }]
+    }],
+    Favourite: [
+        {
+            CoinGeckoID: {
+                type: String,
+                required: true
+            }
+        }
+    ]
 }, { timestamps: true });
 
 const pastUserSchema = new mongoose.Schema({

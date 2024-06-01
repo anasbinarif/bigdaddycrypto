@@ -168,21 +168,42 @@ export const getAllAssets = async () => {
   return await data;
 };
 
-export const getAssets = async (category) => {
-  const res = await fetch(`/api/getAssets?category=${category}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "force-cache",
-  });
+export const getAssets = async (category, userId) => {
+  try {
+    let response;
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    if (category === "favourite") {
+      response = await fetch("/api/getFavoritiesCoins", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        body: JSON.stringify({ userId }),
+      });
+    } else {
+      response = await fetch(`/api/getAssets?category=${category}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "force-cache",
+      });
+    }
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const data = await response.json();
+    console.log(`Fetched assets for category: ${category}`, data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching assets:", error);
+    throw error;
   }
-  const data = await res.json();
-  return await data;
 };
+
 
 export const storeUserPortfolioCoin = async (userId, coin) => {
   // const coinData = setCoinObject(coin);
@@ -217,7 +238,7 @@ export const getUserPortfolio = async (userId) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ userId }),
-    cache: "force-cache",
+    cache: "no-store",
   });
 
   if (!res.ok) {
