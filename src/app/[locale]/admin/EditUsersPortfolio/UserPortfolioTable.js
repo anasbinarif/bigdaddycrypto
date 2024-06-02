@@ -68,6 +68,22 @@ const colorMap = {
     "Honey": "#31A93A"
 };
 
+const valueMap1 = {
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    "Scam?": 1,
+    "💀": 1,
+    "Bad": 2,
+    "Naja": 3,
+    "Ok": 4,
+    "Gut": 5,
+    "Honey": 6
+};
+
 const valueMap = {
     1: "Scam?",
     2: "Bad",
@@ -166,11 +182,12 @@ const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
             const newRelevanz = valueMap[dropdownValues[index]?.relevanz || asset.Relevanz];
             const newDca = valueMap[dropdownValues[index]?.dca || asset?.DCA_0];
             const newGewichtung = valueMap[dropdownValues[index]?.gewichtung || asset.Gewichtung];
+            console.log("updatedAssets", valueMap1[newRelevanz], valueMap1[newDca], valueMap1[newGewichtung]);
             return {
                 ...asset,
-                Relevanz: newRelevanz || 0,
-                DCA_0: newDca || 0,
-                Gewichtung: newGewichtung || 0,
+                Relevanz: valueMap1[newRelevanz] || 0,
+                DCA_0: valueMap1[newDca] || 0,
+                Gewichtung: valueMap1[newGewichtung] || 0,
             };
         });
         const userId = portfolio?.assetsCalculations.userId;

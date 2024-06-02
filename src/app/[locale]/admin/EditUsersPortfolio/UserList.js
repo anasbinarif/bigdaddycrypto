@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
     Table,
     TableBody,
@@ -13,9 +13,13 @@ import {
     Box,
     FormControlLabel,
     Switch,
-    TableSortLabel
+    TableSortLabel,
+    CircularProgress
 } from "@mui/material";
 import { getUserPortfolio } from "./../../../../lib/data";
+import Hashids from 'hashids';
+
+const hashids = new Hashids('this is my salt', 6);
 
 const darkTheme = createTheme({
     palette: {
@@ -23,14 +27,22 @@ const darkTheme = createTheme({
     },
 });
 
+const generateShortId = (id) => {
+    const intId = parseInt(id.slice(0, 8), 16);
+    return hashids.encode(intId);
+};
+
 const UserList = ({ users, setSelectedUserPortfolio }) => {
-    const [blurEmail, setBlurEmail] = useState(false);
+    const [loading, setLoading] = useState(false)
+    const [blurEmail, setBlurEmail] = useState(true);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('userEmail');
 
     const handleUserClicked = async (user) => {
+        setLoading(true);
         const userPortfolio = await getUserPortfolio(user.userId);
         setSelectedUserPortfolio(userPortfolio?.data);
+        setLoading(false)
         console.log("User portfolio:", user, userPortfolio);
     };
 
@@ -66,72 +78,104 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
         });
     }, [users, order, orderBy]);
 
+    const usersWithShortId = useMemo(() => {
+        return users.map(user => ({
+            ...user,
+            shortId: generateShortId(user.userId)
+        }));
+    }, [users]);
+
     return (
         <Box>
-            <ThemeProvider theme={darkTheme}>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                    <FormControlLabel
-                        control={<Switch checked={blurEmail} onChange={handleToggleChange} />}
-                        label="Blur User Email"
-                    />
-                </Box>
-                <TableContainer component={Paper} sx={{ maxHeight: "600px" }}>
-                    <Table aria-label="user table" stickyHeader>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell sortDirection={orderBy === 'userEmail' ? order : false}>
-                                    <TableSortLabel
-                                        active={orderBy === 'userEmail'}
-                                        direction={orderBy === 'userEmail' ? order : 'asc'}
-                                        onClick={(e) => handleRequestSort(e, 'userEmail')}
-                                    >
-                                        User
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell sortDirection={orderBy === 'oneTimePayment.status' ? order : false}>
-                                    <TableSortLabel
-                                        active={orderBy === 'oneTimePayment.status'}
-                                        direction={orderBy === 'oneTimePayment.status' ? order : 'asc'}
-                                        onClick={(e) => handleRequestSort(e, 'oneTimePayment.status')}
-                                    >
-                                        Status
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell sortDirection={orderBy === 'oneTimePayment.date' ? order : false}>
-                                    <TableSortLabel
-                                        active={orderBy === 'oneTimePayment.date'}
-                                        direction={orderBy === 'oneTimePayment.date' ? order : 'asc'}
-                                        onClick={(e) => handleRequestSort(e, 'oneTimePayment.date')}
-                                    >
-                                        Payment Date
-                                    </TableSortLabel>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {sortedUsers?.map((user, index) => (
-                                <TableRow
-                                    key={index}
-                                    hover
-                                    onClick={() => handleUserClicked(user)}
-                                    sx={{ cursor: "pointer" }}
-                                >
-                                    <TableCell>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{ opacity: blurEmail ? 0.5 : 1, filter: blurEmail ? 'blur(4px)' : 'none' }}
+            <Box>
+                <ThemeProvider theme={darkTheme}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                        <FormControlLabel
+                            control={<Switch checked={blurEmail} onChange={handleToggleChange} />}
+                            label="Blur User Email"
+                        />
+                    </Box>
+                    <TableContainer component={Paper} sx={{ maxHeight: "600px" }}>
+                        <Table aria-label="user table" stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sortDirection={orderBy === 'userEmail' ? order : false}>
+                                        <TableSortLabel
+                                            active={orderBy === 'userEmail'}
+                                            direction={orderBy === 'userEmail' ? order : 'asc'}
+                                            onClick={(e) => handleRequestSort(e, 'userEmail')}
                                         >
-                                            {user.userEmail}
-                                        </Typography>
+                                            User
+                                        </TableSortLabel>
                                     </TableCell>
-                                    <TableCell>{user.oneTimePayment.status}</TableCell>
-                                    <TableCell>{new Date(user.oneTimePayment.date).toLocaleString()}</TableCell>
+                                    <TableCell>
+                                        <TableSortLabel>
+                                            Email
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell sortDirection={orderBy === 'oneTimePayment.status' ? order : false}>
+                                        <TableSortLabel
+                                            active={orderBy === 'oneTimePayment.status'}
+                                            direction={orderBy === 'oneTimePayment.status' ? order : 'asc'}
+                                            onClick={(e) => handleRequestSort(e, 'oneTimePayment.status')}
+                                        >
+                                            Status
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell sortDirection={orderBy === 'oneTimePayment.date' ? order : false}>
+                                        <TableSortLabel
+                                            active={orderBy === 'oneTimePayment.date'}
+                                            direction={orderBy === 'oneTimePayment.date' ? order : 'asc'}
+                                            onClick={(e) => handleRequestSort(e, 'oneTimePayment.date')}
+                                        >
+                                            Payment Date
+                                        </TableSortLabel>
+                                    </TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </ThemeProvider>
+                            </TableHead>
+                            <TableBody>
+                                {usersWithShortId.map((user, index) => (
+                                    <TableRow
+                                        key={index}
+                                        hover
+                                        onClick={() => handleUserClicked(user)}
+                                        sx={{ cursor: "pointer" }}
+                                    >
+                                        <TableCell>
+                                            <Typography
+                                                variant="body2"
+                                            >
+                                                {user.shortId}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell sx={{ opacity: blurEmail ? 0.5 : 1, filter: blurEmail ? 'blur(4px)' : 'none' }}>{user.userEmail}</TableCell>
+                                        <TableCell sx={{ opacity: blurEmail ? 0.5 : 1, filter: blurEmail ? 'blur(4px)' : 'none' }}>{user.oneTimePayment.status}</TableCell>
+                                        <TableCell sx={{ opacity: blurEmail ? 0.5 : 1, filter: blurEmail ? 'blur(4px)' : 'none' }}>{new Date(user.oneTimePayment.date).toLocaleString()}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </ThemeProvider>
+            </Box>
+            {loading && (
+                <Box
+                    sx={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        zIndex: 9999,
+                    }}
+                >
+                    <CircularProgress color="inherit" />
+                </Box>
+            )}
         </Box>
     );
 };

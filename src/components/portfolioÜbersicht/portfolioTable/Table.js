@@ -17,7 +17,23 @@ import {
   ThemeProvider,
   styled,
 } from "@mui/material";
-import { categoryColors, categoryColorsNew } from "../../../lib/data"; // Import categoryColors directly
+import { categoryColors, categoryColorsNew } from "../../../lib/data";
+
+const valueMap = {
+  1: "Scam?",
+  2: "Bad",
+  3: "Naja",
+  4: "Ok",
+  5: "Gut",
+  6: "Honey",
+  "Scam?": 1,
+  "💀": 1,
+  "Bad": 2,
+  "Naja": 3,
+  "Ok": 4,
+  "Gut": 5,
+  "Honey": 6
+};
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient = colors.length > 1 ? `linear-gradient(${colors.join(", ")})` : colors[0];
@@ -52,15 +68,14 @@ function descendingComparator(a, b, orderBy) {
   let aValue = a[orderBy];
   let bValue = b[orderBy];
 
-  // Convert percentage strings to numbers for comparison
-  if (typeof aValue === 'string' && aValue.includes('%')) {
+  if (orderBy === 'asset') {
+    return aValue.localeCompare(bValue);
+  }
+
+  if (orderBy === 'percentage') {
     aValue = parseFloat(aValue.replace('%', ''));
     bValue = parseFloat(bValue.replace('%', ''));
   }
-
-  // Handle NaN and Infinity cases
-  if (isNaN(aValue) || aValue === 'NaN' || aValue === 'Infinity' || aValue === 'n/a') aValue = -Infinity;
-  if (isNaN(bValue) || bValue === 'NaN' || bValue === 'Infinity' || bValue === 'n/a') bValue = -Infinity;
 
   if (bValue < aValue) return -1;
   if (bValue > aValue) return 1;
@@ -165,7 +180,8 @@ const EnhancedTable = () => {
     "Naja": 3,
     "Ok": 4,
     "Gut": 5,
-    "Honey": 6
+    "Honey": 6,
+    "n/a": "n/a"
   };
   const colorMap = {
     "Scam?": "#B21C3C",
@@ -209,30 +225,30 @@ const EnhancedTable = () => {
             >
               <TableRow>
                 {[
-                  "Asset",
-                  "Bestand",
-                  "X",
-                  "Preis /+-%",
-                  "DCA Preis",
-                  "Investition",
-                  "Relevanz",
-                  "DCA",
-                  "Gewichtung",
+                  { label: "Asset", key: "asset" },
+                  { label: "Bestand", key: "bestand" },
+                  { label: "X", key: "X" },
+                  { label: "Preis /+-%", key: "preisChange" },
+                  { label: "DCA Preis", key: "dcaPrice" },
+                  { label: "Investition", key: "investition" },
+                  { label: "Relevanz", key: "relevanz" },
+                  { label: "DCA", key: "dca" },
+                  { label: "Gewichtung", key: "gewichtung" },
                 ].map((headCell) => (
                   <TableCell
-                    key={headCell}
-                    sortDirection={orderBy === headCell.toLowerCase() ? order : false}
+                    key={headCell.key}
+                    sortDirection={orderBy === headCell.key ? order : false}
                   >
                     <TableSortLabel
-                      active={orderBy === headCell.toLowerCase()}
-                      direction={orderBy === headCell.toLowerCase() ? order : "asc"}
-                      onClick={(event) => handleRequestSort(event, headCell.toLowerCase())}
+                      active={orderBy === headCell.key}
+                      direction={orderBy === headCell.key ? order : "asc"}
+                      onClick={(event) => handleRequestSort(event, headCell.key)}
                       sx={{
                         fontSize: "12px",
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {headCell}
+                      {headCell.label}
                     </TableSortLabel>
                   </TableCell>
                 ))}
@@ -359,14 +375,14 @@ const EnhancedTable = () => {
                       <StyledTypography>{row.investition}</StyledTypography>
                     </TableCell>
                     <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.relevanz) }}>
-                      <StyledTypography>{row.relevanz}</StyledTypography>
+                      <StyledTypography>{valueMap[row.relevanz]}</StyledTypography>
                     </TableCell>
                     <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.dca) }}>
-                      <StyledTypography>{row.dca === 1 ? "💀" : row.dca}</StyledTypography>
+                      <StyledTypography>{row.dca === 1 ? "💀" : valueMap[row.dca]}</StyledTypography>
                     </TableCell>
                     <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.gewichtung) }}>
                       <StyledTypography sx={{ alignItems: "center" }}>
-                        {row.gewichtung === 1 ? "💀" : row.gewichtung}
+                        {row.gewichtung === 1 ? "💀" : valueMap[row.gewichtung]}
                       </StyledTypography>
                     </TableCell>
                   </TableRow>
