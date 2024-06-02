@@ -322,7 +322,7 @@ export const getUserPortfolio = async (userId) => {
     const sumOfRawPercentages = Object.values(rawPercentages).reduce((acc, val) => acc + val, 0);
     for (const category in rawPercentages) {
         normalizedPercentages[category] =
-            ((rawPercentages[category] / sumOfRawPercentages) * 100).toFixed(2) + "%";
+            ((rawPercentages[category] / sumOfRawPercentages) * 100).toFixed(1) + "%";
     }
 
     return {
