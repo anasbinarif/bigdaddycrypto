@@ -242,7 +242,6 @@ const CoinCard = ({
   const [xfactorText, setXfactorText] = useState("");
 
   useEffect(() => {
-    console.log("1 / coin?.Bottom * coin?.Price", 1 / coin?.Bottom * coin?.Price);
     const xfactorText1 = (1 / coin?.Bottom * coin?.Price).toFixed(1);
     setXfactorText(`${xfactorText1}x in diesem Zyklus`)
   }, [coin])
@@ -251,6 +250,18 @@ const CoinCard = ({
 
   const handleMouseMove = (event) => {
     setCursorPos({ top: event.clientY, left: event.clientX });
+  };
+
+  const getBackgroundColor = (sicherheitAverage) => {
+    if (sicherheitAverage >= 0 && sicherheitAverage < 5.5) {
+      return "red";
+    } else if (sicherheitAverage >= 5.5 && sicherheitAverage < 7) {
+      return "lightgreen"; // or another shade for "light faded green"
+    } else if (sicherheitAverage >= 7 && sicherheitAverage <= 10) {
+      return "green";
+    } else {
+      return "gray"; // default color if the value is out of expected range
+    }
   };
 
 
@@ -377,7 +388,7 @@ const CoinCard = ({
                   position: "absolute",
                   right: "0",
                   bottom: "0",
-                  bgcolor: "red",
+                  bgcolor: getBackgroundColor(Sicherheit),
                   borderBottomRightRadius: "4px",
                   borderTopLeftRadius: "4px",
                   padding: "1px 6px 0",
@@ -552,7 +563,7 @@ const CoinCard = ({
                     position: "absolute",
                     right: "0",
                     bottom: "0",
-                    bgcolor: "red",
+                    bgcolor: getBackgroundColor(Sicherheit),
                     borderBottomRightRadius: "4px",
                     borderTopLeftRadius: "4px",
                     padding: "1px 6px 0",

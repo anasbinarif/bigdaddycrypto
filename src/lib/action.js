@@ -243,6 +243,87 @@ export const generateShortId = async (id) => {
     return shortId;
 }
 
+export async function calculatePotential(portfolio1) {
+    let totalPotential = 0;
+    let totalAssets = 0;
+    let totalSecurity = 0;
+    let pMinX = 0;
+    let pMaxX = 0;
+    let pMinXClean = 0;
+    let pMaxXClean = 0;
+    let totalAssetsAmount = 0;
+    var sAvg = 0;
+
+    portfolio1?.forEach(function(asset) {
+        let dataSecurity = parseFloat(asset.Sicherheit);
+        let dataPotential = parseFloat(asset.Potential);
+        let dataBottom = parseFloat(asset.Bottom);
+        let dataEK = parseFloat(asset?.EK);
+        if (!dataEK) { dataEK = dataBottom; }
+        if (!dataEK) { dataEK = 1; }
+        if (!dataBottom) { dataBottom = 1; }
+
+        let assetAmount = parseFloat(asset?.Price || 0);
+
+        if (dataPotential) {
+            totalPotential += dataPotential;
+            totalSecurity += (parseFloat(dataSecurity) * assetAmount);
+            totalAssets += 1;
+            totalAssetsAmount += parseFloat(assetAmount);
+
+            if (isNaN(dataSecurity) || isNaN(dataPotential)) {
+                pMinX += (1 * assetAmount);
+                pMaxX += (10 * assetAmount);
+                pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
+                pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
+            } else if (dataPotential >= 9) {
+                pMinX += (100 * assetAmount);
+                pMaxX += (200 * assetAmount);
+                pMinXClean += (100 * assetAmount) / dataEK * dataBottom;
+                pMaxXClean += (200 * assetAmount) / dataEK * dataBottom;
+            } else if (dataPotential > 8.5) {
+                pMinX += (75 * assetAmount);
+                pMaxX += (100 * assetAmount);
+                pMinXClean += (75 * assetAmount) / dataEK * dataBottom;
+                pMaxXClean += (100 * assetAmount) / dataEK * dataBottom;
+            } else if (dataPotential > 8) {
+                pMinX += (50 * assetAmount);
+                pMaxX += (75 * assetAmount);
+                pMinXClean += (50 * assetAmount) / dataEK * dataBottom;
+                pMaxXClean += (75 * assetAmount) / dataEK * dataBottom;
+            } else if (dataPotential > 7.5) {
+                pMinX += (30 * assetAmount);
+                pMaxX += (50 * assetAmount);
+                pMinXClean += (30 * assetAmount) / dataEK * dataBottom;
+                pMaxXClean += (50 * assetAmount) / dataEK * dataBottom;
+            } else if (dataPotential > 7) {
+                pMinX += (15 * assetAmount);
+                pMaxX += (30 * assetAmount);
+                pMinXClean += (15 * assetAmount) / dataEK * dataBottom;
+                pMaxXClean += (30 * assetAmount) / dataEK * dataBottom;
+            } else if (dataPotential > 6.7) {
+                pMinX += (10 * assetAmount);
+                pMaxX += (15 * assetAmount);
+                pMinXClean += (10 * assetAmount) / dataEK * dataBottom;
+                pMaxXClean += (15 * assetAmount) / dataEK * dataBottom;
+            } else {
+                pMinX += (1 * assetAmount);
+                pMaxX += (10 * assetAmount);
+                pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
+                pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
+            }
+        }
+    });
+
+    console.log("pMinXClean:", pMinXClean);
+    console.log("pMaxXClean:", pMaxXClean);
+
+    return {
+        pMinXClean: pMinXClean,
+        pMaxXClean: pMaxXClean
+    };
+}
+
 
 //
 // import { promises as fs } from 'fs';

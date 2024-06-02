@@ -13,6 +13,7 @@ import { useAtom } from "jotai";
 import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import {calculatePotential} from "../../../lib/action";
 
 function BewertungCard() {
   const [portfolio] = useAtom(portfolioAtom);
@@ -81,6 +82,17 @@ function BewertungCard() {
     }
   };
 
+    useEffect(() => {
+        const testFunctionAnything = async () => {
+            if (portfolio.assets) {
+                const portfolio1 = portfolio?.assets;
+                const potentialPromise = await calculatePotential(portfolio1);
+                console.log("calculatePotential", potentialPromise);
+            }
+        }
+        testFunctionAnything()
+        // console.log("portfolio from bewertung", portfolio?.assets)
+    }, [portfolio]);
   return (
     <Card
       sx={{
