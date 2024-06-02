@@ -2,8 +2,9 @@ import { Box, Divider, useTheme, useMediaQuery } from "@mui/material";
 import KryptoFilter from "./kryptoFilter";
 import ScrollableKryptoTabs from "./kryptoCoinsTabs";
 import { useState, useEffect } from "react";
-import {useAtom} from "jotai/index";
-import {portfolioAtom} from "../../../../app/stores/portfolioStore";
+import { useAtom } from "jotai/index";
+import { portfolioAtom } from "../../../../app/stores/portfolioStore";
+import "./stylesPopper.css";
 
 const KryptoAssets = ({ loadingPortfolio, assetsLeangth }) => {
   const theme = useTheme();
@@ -48,13 +49,13 @@ const KryptoAssets = ({ loadingPortfolio, assetsLeangth }) => {
         priceIndicator={priceIndicator}
         setPriceIndicator={setPriceIndicator}
       />
-      <Divider sx={{ my: isSmallScreen ? 1 : 2 }} />
       <ScrollableKryptoTabs
         loadingPortfolio={loadingPortfolio}
         userID={portfolio.userId}
         priceIndicator={priceIndicator}
         assetsLeangth={assetsLeangth}
       />
+      {/* <div className="divider"></div> */}
     </Box>
   );
 };

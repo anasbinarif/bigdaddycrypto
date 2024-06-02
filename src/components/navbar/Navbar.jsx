@@ -1,15 +1,16 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import {
-    AppBar,
-    Toolbar,
-    Typography,
-    IconButton,
-    Box,
-    Menu,
-    MenuItem,
-    Snackbar,
-    Alert, Popper,
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Box,
+  Menu,
+  MenuItem,
+  Snackbar,
+  Alert,
+  Popper,
 } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import NavbarLink from "../navbar/Link";
@@ -148,8 +149,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               </IconButton>
               <Menu
                 id="hamMenu"
-                // PopperComponent={PopperMy}
-                anchorEl={menuAnchorEl}
+                // anchorEl={menuAnchorEl}
                 anchorOrigin={{
                   vertical: "top",
                   horizontal: "right",
@@ -162,7 +162,10 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 open={Boolean(menuAnchorEl)}
                 onClose={handleClose}
                 sx={{
-                  // backgroundColor: "black",
+                  "& .MuiPaper-root": {
+                    backgroundColor: "rgb(32, 37, 48)",
+                    color: "#ffffff",
+                  },
                   fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
                 }}
               >
@@ -204,7 +207,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   <AccountCircle />
                 </IconButton>
                 <Menu
-                  anchorEl={accountAnchorEl}
+                  // anchorEl={accountAnchorEl}
                   anchorOrigin={{
                     vertical: "top",
                     horizontal: "right",
@@ -217,6 +220,19 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   open={Boolean(accountAnchorEl)}
                   onClose={handleClose}
                   sx={{
+                    "& .MuiPaper-root": {
+                      backgroundColor: "rgb(32, 37, 48)",
+                      color: "#ffffff",
+                    },
+                    "& .MuiBox-root": {
+                      display: "flex",
+                      flexDirection: "column",
+
+                      "& .MuiMenuItem-root": {
+                        display: "flex",
+                        flexDirection: "column",
+                      },
+                    },
                     fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
                   }}
                 >

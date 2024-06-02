@@ -52,7 +52,8 @@ const CategoryColorBar = styled(Box)(({ colors, selected }) => {
     colors = ["#ffffff"]; // Default color if undefined or empty
   }
 
-  const gradient = colors.length > 1 ? `linear-gradient(${colors.join(", ")})` : colors[0];
+  const gradient =
+    colors.length > 1 ? `linear-gradient(${colors.join(", ")})` : colors[0];
 
   return {
     width: 4,
@@ -73,7 +74,7 @@ const CoinCard = ({
   priceIndicator,
   assetsLeangth,
   currentCategory,
-  setData
+  setData,
 }) => {
   const {
     Name,
@@ -85,6 +86,7 @@ const CoinCard = ({
     BottomRanking,
     Bottom,
     Price,
+    Risk,
   } = coin;
   const [width, setWidth] = useState(0);
   const [sessionJotai] = useAtom(sessionAtom);
@@ -209,8 +211,12 @@ const CoinCard = ({
       const userPortfolio = await getUserPortfolio(userId);
       setPortfolio(userPortfolio.data);
       setData((prevData) => {
-        const updatedFavourite = prevData.favourite ? [...prevData.favourite] : [];
-        const coinIndex = updatedFavourite.findIndex(favCoin => favCoin.CoinGeckoID === CoinGeckoID);
+        const updatedFavourite = prevData.favourite
+          ? [...prevData.favourite]
+          : [];
+        const coinIndex = updatedFavourite.findIndex(
+          (favCoin) => favCoin.CoinGeckoID === CoinGeckoID
+        );
 
         if (coinIndex > -1) {
           // Coin is already in favourites, remove it
@@ -231,8 +237,6 @@ const CoinCard = ({
     setLoading(false);
   }
 
-
-
   const isFavorite = (CoinGeckoID, assetsCalculations) => {
     return assetsCalculations?.Favourite.some(
       (asset) => asset.CoinGeckoID === CoinGeckoID
@@ -249,16 +253,16 @@ const CoinCard = ({
             cursor: "pointer",
             border: selected
               ? "1px solid #00aa66aa"
-              : risk
-                ? "1px solid red"
-                : "none",
+              : Risk === "risk"
+              ? "1px solid rgb(222,11,11)"
+              : "none",
             backgroundColor: selected
               ? "#00aa6633"
-              : risk
-                ? "rgba(222,11,11,0.05)"
-                : "#333",
+              : Risk === "risk"
+              ? "rgba(222,11,11,0.05)"
+              : "#00000033",
             width: "95%",
-            borderStyle: risk ? "dashed" : "none",
+            borderStyle: risk ? "dashed" : selected ? "solid" : "none",
             borderLeft: selected ? "" : risk ? "none" : "",
           }}
         >
@@ -394,26 +398,26 @@ const CoinCard = ({
             border: selected
               ? "1px solid #00aa66aa"
               : risk
-                ? "1px solid red"
-                : "none",
+              ? "1px solid rgb(222, 11, 11)"
+              : "none",
             backgroundColor: selected
               ? "#00aa6633"
               : risk
-                ? "rgba(222,11,11,0.05)"
-                : "#333",
+              ? "rgba(222, 11, 11, .05)"
+              : "#00000033",
             width:
               width >= 1500
                 ? "calc(25% - 16px)"
                 : width > 1200
-                  ? "calc(33.33% - 16px)"
-                  : width > 900
-                    ? "calc(50% - 16px)"
-                    : width > 700
-                      ? "calc(33.33% - 16px)"
-                      : width > 500
-                        ? "calc(50% - 16px)"
-                        : "calc(100% - 16px)",
-            borderStyle: risk ? "dashed" : "none",
+                ? "calc(33.33% - 16px)"
+                : width > 900
+                ? "calc(50% - 16px)"
+                : width > 700
+                ? "calc(33.33% - 16px)"
+                : width > 500
+                ? "calc(50% - 16px)"
+                : "calc(100% - 16px)",
+            borderStyle: risk ? "dashed" : selected ? "solid" : "none",
             borderLeft: selected ? "" : risk ? "none" : "",
           }}
         >
@@ -441,11 +445,21 @@ const CoinCard = ({
               <Typography
                 variant="subtitle2"
                 noWrap
-                sx={{ marginBottom: "2px", marginTop: "2px" , fontWeight: 700, fontSize: 18 }}
+                sx={{
+                  marginBottom: "2px",
+                  marginTop: "2px",
+                  fontWeight: 700,
+                  fontSize: 18,
+                }}
               >
                 {Ticker}
               </Typography>
-              <Typography component="div" variant="body2" noWrap sx={{ color: '#ffffff80'}}>
+              <Typography
+                component="div"
+                variant="body2"
+                noWrap
+                sx={{ color: "#ffffff80" }}
+              >
                 {Name}
               </Typography>
             </Box>

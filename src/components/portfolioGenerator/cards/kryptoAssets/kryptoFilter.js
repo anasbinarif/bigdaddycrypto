@@ -22,7 +22,7 @@ import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {portfolioAtom} from "../../../../app/stores/portfolioStore";
+import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 
 const MenuProps = {
   PaperProps: {
@@ -33,11 +33,7 @@ const MenuProps = {
   },
 };
 
-const KryptoFilter = ({
-  userID,
-  priceIndicator,
-  setPriceIndicator,
-}) => {
+const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
   const t = useTranslations("kryptoFilter");
   const [width, setWidth] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -129,11 +125,15 @@ const KryptoFilter = ({
   const searchCoin = (event, newValue) => {
     const filteredResults = data.length
       ? data
-          .filter((item) =>
-            item?.Name?.toLowerCase().includes(newValue.toLowerCase())
+          .filter(
+            (item) =>
+              item?.Name?.toLowerCase().includes(newValue.toLowerCase()) ||
+              item?.Ticker?.toLowerCase().includes(newValue.toLowerCase())
           )
           .slice(0, 5)
       : [];
+
+    console.log(filteredResults);
 
     setSearchData(filteredResults);
   };
@@ -311,7 +311,8 @@ const KryptoFilter = ({
               if (option === undefined || option === null) {
                 return "";
               }
-              return option.Name;
+
+              return `${option.Name} ${option.Ticker}`;
             }}
             renderOption={(props, option) => {
               return (

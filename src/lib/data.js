@@ -1,29 +1,30 @@
-import {Assets, PastBuyAndSell, User} from "../lib/models";
-import {connectToDb} from "./utils";
+import { Assets, PastBuyAndSell, User } from "../lib/models";
+import { connectToDb } from "./utils";
 // const fs = require('fs').promises;
 import { useSearchParams } from "next/navigation";
 
 const fetchExchangeRates = async () => {
-    const response = await fetch("https://api.exchangerate-api.com/v4/latest/EUR"); // Replace with your preferred API
-    if (!response.ok) {
-        throw new Error("Failed to fetch exchange rates");
-    }
-    return response.json();
+  const response = await fetch(
+    "https://api.exchangerate-api.com/v4/latest/EUR"
+  ); // Replace with your preferred API
+  if (!response.ok) {
+    throw new Error("Failed to fetch exchange rates");
+  }
+  return response.json();
 };
 
 export const getCurrencyAndRates = async () => {
-    const rates = await fetchExchangeRates();
+  const rates = await fetchExchangeRates();
 
-    return { rates: rates.rates };
+  return { rates: rates.rates };
 };
 
 export const convertPrice = (price, currency, rates) => {
-    if (!rates || !rates[currency]) {
-        return parseFloat(price); // Ensure price is a number
-    }
-    return (parseFloat(price) * rates[currency]).toFixed(2);
+  if (!rates || !rates[currency]) {
+    return parseFloat(price); // Ensure price is a number
+  }
+  return (parseFloat(price) * rates[currency]).toFixed(2);
 };
-
 
 export const categoryColors = {
   AI: "#FFD700", // Gold
@@ -53,9 +54,9 @@ export const categoryColorsNew = {
 };
 
 export const currencySign = {
-    "USD": "$",
-    "EUR": "€"
-}
+  USD: "$",
+  EUR: "€",
+};
 
 export const getUser = async (id) => {
   try {
@@ -232,7 +233,6 @@ export const getAssets = async (category, userId) => {
   }
 };
 
-
 export const storeUserPortfolioCoin = async (userId, coin) => {
   // const coinData = setCoinObject(coin);
   const newCoin = {
@@ -260,86 +260,82 @@ export const UpdateCryptoCoins = async (userId) => {
 };
 
 export const getUserPortfolio = async (userId) => {
-    const res = await fetch("/api/getUserPortfolio", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
-        cache: "no-store",
+  const res = await fetch("/api/getUserPortfolio", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId }),
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    console.log("Failed to fetch data");
+    return null;
+  }
+
+  const categories = {
+    ai: 0,
+    metaverse: 0,
+    defi: 0,
+    web3: 0,
+    green: 0,
+    btc: 0,
+    cbdc: 0,
+    ecommerce: 0,
+    nft: 0,
+    none: 0,
+  };
+
+  const data1 = await res.json();
+  const data = {
+    assets: data1?.data.assetDetails,
+    assetsCalculations: data1?.data.portfolio,
+  };
+
+  let totalCategoryCount = 0;
+
+  data.assets.forEach((asset) => {
+    asset.Category.forEach((category) => {
+      const lowerCategory = category.toLowerCase();
+      if (categories.hasOwnProperty(lowerCategory)) {
+        categories[lowerCategory]++;
+        totalCategoryCount++;
+      } else {
+        console.log("category not found:", category);
+      }
     });
+  });
 
-    if (!res.ok) {
-        console.log("Failed to fetch data");
-        return null;
-    }
+  // Calculate the total count of assets
+  const totalCount = data.assets.length;
 
-    const categories = {
-        ai: 0,
-        metaverse: 0,
-        defi: 0,
-        web3: 0,
-        green: 0,
-        btc: 0,
-        cbdc: 0,
-        ecommerce: 0,
-        nft: 0,
-        none: 0,
-    };
+  // Calculate initial percentages
+  const rawPercentages = {};
+  for (const category in categories) {
+    rawPercentages[category] =
+      (categories[category] / totalCategoryCount) * 100;
+  }
 
-    const data1 = await res.json();
-    const data = {
-        assets: data1?.data.assetDetails,
-        assetsCalculations: data1?.data.portfolio,
-    };
+  // Normalize percentages to ensure they sum to 100%
+  const normalizedPercentages = {};
+  const sumOfRawPercentages = Object.values(rawPercentages).reduce(
+    (acc, val) => acc + val,
+    0
+  );
+  for (const category in rawPercentages) {
+    normalizedPercentages[category] =
+      ((rawPercentages[category] / sumOfRawPercentages) * 100).toFixed(1) + "%";
+  }
 
-    let totalCategoryCount = 0;
-
-    data.assets.forEach((asset) => {
-        asset.Category.forEach((category) => {
-            const lowerCategory = category.toLowerCase();
-            if (categories.hasOwnProperty(lowerCategory)) {
-                categories[lowerCategory]++;
-                totalCategoryCount++;
-            } else {
-                console.log("category not found:", category);
-            }
-        });
-    });
-
-    // Calculate the total count of assets
-    const totalCount = data.assets.length;
-
-    // Calculate initial percentages
-    const rawPercentages = {};
-    for (const category in categories) {
-        rawPercentages[category] =
-            ((categories[category] / totalCategoryCount) * 100);
-    }
-
-    // Normalize percentages to ensure they sum to 100%
-    const normalizedPercentages = {};
-    const sumOfRawPercentages = Object.values(rawPercentages).reduce((acc, val) => acc + val, 0);
-    for (const category in rawPercentages) {
-        normalizedPercentages[category] =
-            ((rawPercentages[category] / sumOfRawPercentages) * 100).toFixed(1) + "%";
-    }
-
-    return {
-        data,
-        calculation: {
-            counts: categories,
-            percentages: normalizedPercentages,
-        },
-    };
+  return {
+    data,
+    calculation: {
+      counts: categories,
+      percentages: normalizedPercentages,
+    },
+  };
 };
-
-
-
-
-
-
-
 
 export const setCoinObject = (coin) => {
   return {
@@ -424,110 +420,149 @@ export const bewerteAssetExtremPessimistisch = (rank, xWert) => {
   const worte = ["Honey", "Gut", "OK", "Naja", "Teuer"];
 
   const gruppen = [
-    { von: 0, bis: 5, Werte: [
+    {
+      von: 0,
+      bis: 5,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.11 },
         { Wort: worte[1], von: 1.11, bis: 1.33 },
         { Wort: worte[2], von: 1.33, bis: 1.55 },
         { Wort: worte[3], von: 1.55, bis: 1.77 },
-        { Wort: worte[4], von: 1.77, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.77, bis: 9999 },
+      ],
     },
-    { von: 6, bis: 10, Werte: [
+    {
+      von: 6,
+      bis: 10,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.12 },
         { Wort: worte[1], von: 1.12, bis: 1.38 },
         { Wort: worte[2], von: 1.38, bis: 1.63 },
-        { Wort: worte[3], von: 1.63, bis: 1.90 },
-        { Wort: worte[4], von: 1.90, bis: 9999 }
-      ]
+        { Wort: worte[3], von: 1.63, bis: 1.9 },
+        { Wort: worte[4], von: 1.9, bis: 9999 },
+      ],
     },
-    { von: 11, bis: 17, Werte: [
+    {
+      von: 11,
+      bis: 17,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.15 },
         { Wort: worte[1], von: 1.15, bis: 1.46 },
         { Wort: worte[2], von: 1.46, bis: 1.78 },
         { Wort: worte[3], von: 1.78, bis: 2.13 },
-        { Wort: worte[4], von: 2.13, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 2.13, bis: 9999 },
+      ],
     },
-    { von: 17, bis: 24, Werte: [
+    {
+      von: 17,
+      bis: 24,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.16 },
         { Wort: worte[1], von: 1.16, bis: 1.51 },
         { Wort: worte[2], von: 1.51, bis: 1.89 },
         { Wort: worte[3], von: 1.89, bis: 2.3 },
-        { Wort: worte[4], von: 2.3, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 2.3, bis: 9999 },
+      ],
     },
-    { von: 25, bis: 40, Werte: [
+    {
+      von: 25,
+      bis: 40,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.18 },
         { Wort: worte[1], von: 1.18, bis: 1.56 },
         { Wort: worte[2], von: 1.56, bis: 1.99 },
         { Wort: worte[3], von: 1.99, bis: 2.45 },
-        { Wort: worte[4], von: 2.45, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 2.45, bis: 9999 },
+      ],
     },
-    { von: 40, bis: 65, Werte: [
+    {
+      von: 40,
+      bis: 65,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.19 },
         { Wort: worte[1], von: 1.19, bis: 1.61 },
         { Wort: worte[2], von: 1.61, bis: 2.07 },
         { Wort: worte[3], von: 2.07, bis: 2.6 },
-        { Wort: worte[4], von: 2.6, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 2.6, bis: 9999 },
+      ],
     },
-    { von: 66, bis: 85, Werte: [
-        { Wort: worte[0], von: 1, bis: 1.20 },
-        { Wort: worte[1], von: 1.20, bis: 1.67 },
+    {
+      von: 66,
+      bis: 85,
+      Werte: [
+        { Wort: worte[0], von: 1, bis: 1.2 },
+        { Wort: worte[1], von: 1.2, bis: 1.67 },
         { Wort: worte[2], von: 1.67, bis: 2.18 },
         { Wort: worte[3], von: 2.18, bis: 2.78 },
-        { Wort: worte[4], von: 2.78, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 2.78, bis: 9999 },
+      ],
     },
-    { von: 86, bis: 119, Werte: [
+    {
+      von: 86,
+      bis: 119,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.22 },
         { Wort: worte[1], von: 1.22, bis: 1.72 },
         { Wort: worte[2], von: 1.72, bis: 2.29 },
         { Wort: worte[3], von: 2.29, bis: 2.95 },
-        { Wort: worte[4], von: 2.95, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 2.95, bis: 9999 },
+      ],
     },
-    { von: 120, bis: 179, Werte: [
+    {
+      von: 120,
+      bis: 179,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.25 },
         { Wort: worte[1], von: 1.25, bis: 1.84 },
         { Wort: worte[2], von: 1.84, bis: 2.54 },
         { Wort: worte[3], von: 2.54, bis: 3.38 },
-        { Wort: worte[4], von: 3.38, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 3.38, bis: 9999 },
+      ],
     },
-    { von: 180, bis: 249, Werte: [
+    {
+      von: 180,
+      bis: 249,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.29 },
         { Wort: worte[1], von: 1.29, bis: 2.03 },
         { Wort: worte[2], von: 2.03, bis: 2.95 },
         { Wort: worte[3], von: 2.95, bis: 4.11 },
-        { Wort: worte[4], von: 4.11, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 4.11, bis: 9999 },
+      ],
     },
-    { von: 250, bis: 349, Werte: [
-        { Wort: worte[0], von: 1, bis: 1.40 },
-        { Wort: worte[1], von: 1.40, bis: 2.53 },
+    {
+      von: 250,
+      bis: 349,
+      Werte: [
+        { Wort: worte[0], von: 1, bis: 1.4 },
+        { Wort: worte[1], von: 1.4, bis: 2.53 },
         { Wort: worte[2], von: 2.53, bis: 4.16 },
         { Wort: worte[3], von: 4.16, bis: 6.44 },
-        { Wort: worte[4], von: 6.44, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 6.44, bis: 9999 },
+      ],
     },
-    { von: 350, bis: 499, Werte: [
+    {
+      von: 350,
+      bis: 499,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.47 },
         { Wort: worte[1], von: 1.47, bis: 2.86 },
         { Wort: worte[2], von: 2.86, bis: 4.99 },
         { Wort: worte[3], von: 4.99, bis: 8.19 },
-        { Wort: worte[4], von: 8.19, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 8.19, bis: 9999 },
+      ],
     },
-    { von: 500, bis: 20000, Werte: [
+    {
+      von: 500,
+      bis: 20000,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.6 },
         { Wort: worte[1], von: 1.6, bis: 3.65 },
         { Wort: worte[2], von: 3.65, bis: 7.26 },
         { Wort: worte[3], von: 7.26, bis: 13.36 },
-        { Wort: worte[4], von: 13.36, bis: 9999 }
-      ]
-    }
+        { Wort: worte[4], von: 13.36, bis: 9999 },
+      ],
+    },
   ];
 
   for (let gruppe of gruppen) {
@@ -548,110 +583,149 @@ export const bewerteAssetSpaeteinsteiger = (rank, xWert) => {
   const worte = ["Honey", "Gut", "OK", "Naja", "Teuer"];
 
   const gruppen = [
-    { von: 0, bis: 5, Werte: [
+    {
+      von: 0,
+      bis: 5,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.11 },
         { Wort: worte[1], von: 1.11, bis: 1.28 },
         { Wort: worte[2], von: 1.28, bis: 1.45 },
         { Wort: worte[3], von: 1.45, bis: 1.75 },
-        { Wort: worte[4], von: 1.75, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.75, bis: 9999 },
+      ],
     },
-    { von: 6, bis: 10, Werte: [
+    {
+      von: 6,
+      bis: 10,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.14 },
         { Wort: worte[1], von: 1.14, bis: 1.3 },
         { Wort: worte[2], von: 1.3, bis: 1.5 },
         { Wort: worte[3], von: 1.5, bis: 1.77 },
-        { Wort: worte[4], von: 1.77, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.77, bis: 9999 },
+      ],
     },
-    { von: 11, bis: 17, Werte: [
+    {
+      von: 11,
+      bis: 17,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.15 },
         { Wort: worte[1], von: 1.15, bis: 1.31 },
         { Wort: worte[2], von: 1.31, bis: 1.52 },
         { Wort: worte[3], von: 1.52, bis: 1.79 },
-        { Wort: worte[4], von: 1.79, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.79, bis: 9999 },
+      ],
     },
-    { von: 17, bis: 24, Werte: [
+    {
+      von: 17,
+      bis: 24,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.16 },
         { Wort: worte[1], von: 1.16, bis: 1.32 },
         { Wort: worte[2], von: 1.32, bis: 1.53 },
         { Wort: worte[3], von: 1.53, bis: 1.8 },
-        { Wort: worte[4], von: 1.8, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.8, bis: 9999 },
+      ],
     },
-    { von: 25, bis: 40, Werte: [
+    {
+      von: 25,
+      bis: 40,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.17 },
         { Wort: worte[1], von: 1.17, bis: 1.33 },
         { Wort: worte[2], von: 1.33, bis: 1.54 },
         { Wort: worte[3], von: 1.54, bis: 1.81 },
-        { Wort: worte[4], von: 1.81, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.81, bis: 9999 },
+      ],
     },
-    { von: 40, bis: 65, Werte: [
+    {
+      von: 40,
+      bis: 65,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.18 },
         { Wort: worte[1], von: 1.18, bis: 1.34 },
         { Wort: worte[2], von: 1.34, bis: 1.55 },
         { Wort: worte[3], von: 1.55, bis: 1.82 },
-        { Wort: worte[4], von: 1.82, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.82, bis: 9999 },
+      ],
     },
-    { von: 66, bis: 85, Werte: [
+    {
+      von: 66,
+      bis: 85,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.19 },
         { Wort: worte[1], von: 1.19, bis: 1.35 },
         { Wort: worte[2], von: 1.35, bis: 1.56 },
         { Wort: worte[3], von: 1.56, bis: 1.83 },
-        { Wort: worte[4], von: 1.83, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.83, bis: 9999 },
+      ],
     },
-    { von: 86, bis: 119, Werte: [
+    {
+      von: 86,
+      bis: 119,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.2 },
         { Wort: worte[1], von: 1.2, bis: 1.36 },
         { Wort: worte[2], von: 1.36, bis: 1.57 },
         { Wort: worte[3], von: 1.57, bis: 1.84 },
-        { Wort: worte[4], von: 1.84, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.84, bis: 9999 },
+      ],
     },
-    { von: 120, bis: 179, Werte: [
+    {
+      von: 120,
+      bis: 179,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.21 },
         { Wort: worte[1], von: 1.21, bis: 1.37 },
         { Wort: worte[2], von: 1.37, bis: 1.58 },
         { Wort: worte[3], von: 1.58, bis: 1.85 },
-        { Wort: worte[4], von: 1.85, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.85, bis: 9999 },
+      ],
     },
-    { von: 180, bis: 249, Werte: [
+    {
+      von: 180,
+      bis: 249,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.22 },
         { Wort: worte[1], von: 1.22, bis: 1.38 },
         { Wort: worte[2], von: 1.38, bis: 1.59 },
         { Wort: worte[3], von: 1.59, bis: 1.86 },
-        { Wort: worte[4], von: 1.86, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.86, bis: 9999 },
+      ],
     },
-    { von: 250, bis: 349, Werte: [
+    {
+      von: 250,
+      bis: 349,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.23 },
         { Wort: worte[1], von: 1.23, bis: 1.39 },
         { Wort: worte[2], von: 1.39, bis: 1.6 },
         { Wort: worte[3], von: 1.6, bis: 1.87 },
-        { Wort: worte[4], von: 1.87, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.87, bis: 9999 },
+      ],
     },
-    { von: 350, bis: 499, Werte: [
+    {
+      von: 350,
+      bis: 499,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.24 },
         { Wort: worte[1], von: 1.24, bis: 1.4 },
         { Wort: worte[2], von: 1.4, bis: 1.61 },
         { Wort: worte[3], von: 1.61, bis: 1.88 },
-        { Wort: worte[4], von: 1.88, bis: 9999 }
-      ]
+        { Wort: worte[4], von: 1.88, bis: 9999 },
+      ],
     },
-    { von: 500, bis: 20000, Werte: [
+    {
+      von: 500,
+      bis: 20000,
+      Werte: [
         { Wort: worte[0], von: 1, bis: 1.25 },
         { Wort: worte[1], von: 1.25, bis: 1.4 },
         { Wort: worte[2], von: 1.4, bis: 1.61 },
         { Wort: worte[3], von: 1.61, bis: 1.88 },
-        { Wort: worte[4], von: 1.88, bis: 9999 }
-      ]
-    }
+        { Wort: worte[4], von: 1.88, bis: 9999 },
+      ],
+    },
   ];
 
   for (let gruppe of gruppen) {
@@ -669,31 +743,28 @@ export const bewerteAssetSpaeteinsteiger = (rank, xWert) => {
 };
 
 export async function fetchUserSubscriptionPlan(userId) {
-    try {
-        const response = await fetch('/api/getUserSubscriptionPlan', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userId })
-        });
+  try {
+    const response = await fetch("/api/getUserSubscriptionPlan", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId }),
+    });
 
-        console.log("fetchUserSubscriptionPlan");
+    console.log("fetchUserSubscriptionPlan");
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to fetch subscription plan');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Error in fetchUserSubscriptionPlan:', error);
-        throw error;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to fetch subscription plan");
     }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchUserSubscriptionPlan:", error);
+    throw error;
+  }
 }
-
-
-
 
 export const categoriesDisplay1 = {
   ai: "AI",
@@ -720,14 +791,13 @@ export const categoriesDisplay = {
 };
 
 export const reverseCategoriesDisplay = {
-    "AI": "ai",
-    "Web3/ Anonymität": "web3",
-    "DeFi": "defi",
-    "Grüne Coins": "green",
-    "Gaming/ Metaverse": "metaverse",
-    "BTC- Zusammenhang": "btc",
-    "CBDC- Netzwerke": "cbdc",
-    "eCommerce": "ecommerce",
-    "Tokenisierung/ RWA": "nft",
+  AI: "ai",
+  "Web3/ Anonymität": "web3",
+  DeFi: "defi",
+  "Grüne Coins": "green",
+  "Gaming/ Metaverse": "metaverse",
+  "BTC- Zusammenhang": "btc",
+  "CBDC- Netzwerke": "cbdc",
+  eCommerce: "ecommerce",
+  "Tokenisierung/ RWA": "nft",
 };
-

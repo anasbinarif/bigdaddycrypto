@@ -60,9 +60,11 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           session.user.isAdmin &&
           (mobileView ? (
             <MenuItem onClick={handleClose}>
-              <Link href="/admin">{t("admin")}</Link>
+              <Link href="/admin" style={{ marginBottom: "1rem" }}>
+                {t("admin")}
+              </Link>
               <LanguageSwitcher />
-              <CurrencySwitcher/>
+              <CurrencySwitcher />
             </MenuItem>
           ) : (
             <Link
@@ -90,12 +92,16 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             >
               {t("portfolioId")}: {session?.user.username}
             </Typography>
-            <Typography sx={{
-              color: "purple",
-              ml: "10px"
-            }}>{sessionJotai?.user?.subscriptionPlan}</Typography>
+            <Typography
+              sx={{
+                color: "purple",
+                ml: "10px",
+              }}
+            >
+              {sessionJotai?.user?.subscriptionPlan}
+            </Typography>
             <LanguageSwitcher />
-            <CurrencySwitcher/>
+            <CurrencySwitcher />
           </>
         )}
         {mobileView ? (

@@ -20,7 +20,8 @@ import {
 import { categoryColors, categoryColorsNew } from "../../../lib/data"; // Import categoryColors directly
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
-  const gradient = colors.length > 1 ? `linear-gradient(${colors.join(", ")})` : colors[0];
+  const gradient =
+    colors.length > 1 ? `linear-gradient(${colors.join(", ")})` : colors[0];
   return {
     width: "5px",
     height: "100%",
@@ -53,14 +54,26 @@ function descendingComparator(a, b, orderBy) {
   let bValue = b[orderBy];
 
   // Convert percentage strings to numbers for comparison
-  if (typeof aValue === 'string' && aValue.includes('%')) {
-    aValue = parseFloat(aValue.replace('%', ''));
-    bValue = parseFloat(bValue.replace('%', ''));
+  if (typeof aValue === "string" && aValue.includes("%")) {
+    aValue = parseFloat(aValue.replace("%", ""));
+    bValue = parseFloat(bValue.replace("%", ""));
   }
 
   // Handle NaN and Infinity cases
-  if (isNaN(aValue) || aValue === 'NaN' || aValue === 'Infinity' || aValue === 'n/a') aValue = -Infinity;
-  if (isNaN(bValue) || bValue === 'NaN' || bValue === 'Infinity' || bValue === 'n/a') bValue = -Infinity;
+  if (
+    isNaN(aValue) ||
+    aValue === "NaN" ||
+    aValue === "Infinity" ||
+    aValue === "n/a"
+  )
+    aValue = -Infinity;
+  if (
+    isNaN(bValue) ||
+    bValue === "NaN" ||
+    bValue === "Infinity" ||
+    bValue === "n/a"
+  )
+    bValue = -Infinity;
 
   if (bValue < aValue) return -1;
   if (bValue > aValue) return 1;
@@ -104,11 +117,12 @@ const EnhancedTable = () => {
         const percentage = totalInvestment
           ? ((calc.totalInvest / totalInvestment) * 100).toFixed(2)
           : 0;
-        const xValue = calc.totalInvest ? (calc.Holdings / calc.totalInvest).toFixed(2) : "NaN";
-        const pricePercentage = calc.DCA ? (
-          ((asset.Price - calc.DCA) / calc.DCA) *
-          100
-        ).toFixed(2) : "Infinity";
+        const xValue = calc.totalInvest
+          ? (calc.Holdings / calc.totalInvest).toFixed(2)
+          : "NaN";
+        const pricePercentage = calc.DCA
+          ? (((asset.Price - calc.DCA) / calc.DCA) * 100).toFixed(2)
+          : "Infinity";
         return {
           asset: asset.Name,
           ticker: asset.Ticker,
@@ -139,12 +153,14 @@ const EnhancedTable = () => {
   };
 
   const getCategoryColors = (categories) => {
-    return categories.map((category) => categoryColorsNew[category] || "#ffffff");
+    return categories.map(
+      (category) => categoryColorsNew[category] || "#ffffff"
+    );
   };
 
   const getRandomColor = (index) => {
-    let color = '#';
-    const letters = '0123456789ABCDEF';
+    let color = "#";
+    const letters = "0123456789ABCDEF";
     for (let i = 0; i < 6; i++) {
       // Use the index and bitwise operations to determine the color
       color += letters[(index * (i + 1) * 7) % 16];
@@ -161,20 +177,20 @@ const EnhancedTable = () => {
     6: "Honey",
     "Scam?": 1,
     "💀": 1,
-    "Bad": 2,
-    "Naja": 3,
-    "Ok": 4,
-    "Gut": 5,
-    "Honey": 6
+    Bad: 2,
+    Naja: 3,
+    Ok: 4,
+    Gut: 5,
+    Honey: 6,
   };
   const colorMap = {
     "Scam?": "#B21C3C",
     "💀": "#B21C3C",
-    "Bad": "#CE3F24",
-    "Naja": "#CE8A2C",
-    "Ok": "#CFD138",
-    "Gut": "#8FD141",
-    "Honey": "#31A93A"
+    Bad: "#CE3F24",
+    Naja: "#CE8A2C",
+    Ok: "#CFD138",
+    Gut: "#8FD141",
+    Honey: "#31A93A",
   };
   const getDropdownBackgroundColor = (value) => {
     return colorMap[valueMap[value]] || "transparent";
@@ -195,12 +211,18 @@ const EnhancedTable = () => {
         Portfolio ({assetsLeangth})
       </Typography>
       <ThemeProvider theme={darkTheme}>
-        <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+        <TableContainer
+          component={Paper}
+          sx={{ overflowX: "auto", backgroundColor: "transparent" }}
+        >
           <Table stickyHeader aria-label="sticky table">
             <TableHead
               sx={{
                 "& .MuiTableCell-root": {
+                  backgroundColor: "#ffffff08",
                   padding: "2px",
+                  color: "#ffffff50",
+                  fontWeight: "bold",
                   "&:first-child": {
                     padding: "16px",
                   },
@@ -221,12 +243,18 @@ const EnhancedTable = () => {
                 ].map((headCell) => (
                   <TableCell
                     key={headCell}
-                    sortDirection={orderBy === headCell.toLowerCase() ? order : false}
+                    sortDirection={
+                      orderBy === headCell.toLowerCase() ? order : false
+                    }
                   >
                     <TableSortLabel
                       active={orderBy === headCell.toLowerCase()}
-                      direction={orderBy === headCell.toLowerCase() ? order : "asc"}
-                      onClick={(event) => handleRequestSort(event, headCell.toLowerCase())}
+                      direction={
+                        orderBy === headCell.toLowerCase() ? order : "asc"
+                      }
+                      onClick={(event) =>
+                        handleRequestSort(event, headCell.toLowerCase())
+                      }
                       sx={{
                         fontSize: "12px",
                         whiteSpace: "nowrap",
@@ -238,7 +266,14 @@ const EnhancedTable = () => {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody
+              sx={{
+                "& .MuiTableCell-root": {
+                  backgroundColor: "#00000080",
+                  borderBottom: "none",
+                },
+              }}
+            >
               {stableSort(sortedData, getComparator(order, orderBy)).map(
                 (row, index) => (
                   <TableRow
@@ -264,7 +299,9 @@ const EnhancedTable = () => {
                           position: "relative",
                         }}
                       >
-                        <CategoryColorBar colors={getCategoryColors(row.category)} />
+                        <CategoryColorBar
+                          colors={getCategoryColors(row.category)}
+                        />
                         <Box display="flex" alignItems="center">
                           <Box display="flex" alignItems="center">
                             <Avatar
@@ -306,7 +343,9 @@ const EnhancedTable = () => {
                         <StyledTypography sx={{ fontSize: "14px" }}>
                           {row.bestand}
                         </StyledTypography>
-                        <StyledTypography sx={{ color: "#999", fontSize: "12px" }}>
+                        <StyledTypography
+                          sx={{ color: "#999", fontSize: "12px" }}
+                        >
                           {row.totalCoins} {row.ticker}
                         </StyledTypography>
                       </Box>
@@ -358,13 +397,34 @@ const EnhancedTable = () => {
                     <TableCell sx={{ padding: "5px" }}>
                       <StyledTypography>{row.investition}</StyledTypography>
                     </TableCell>
-                    <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.relevanz) }}>
+                    <TableCell
+                      sx={{
+                        padding: "5px",
+                        backgroundColor: getDropdownBackgroundColor(
+                          row.relevanz
+                        ),
+                      }}
+                    >
                       <StyledTypography>{row.relevanz}</StyledTypography>
                     </TableCell>
-                    <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.dca) }}>
-                      <StyledTypography>{row.dca === 1 ? "💀" : row.dca}</StyledTypography>
+                    <TableCell
+                      sx={{
+                        padding: "5px",
+                        backgroundColor: getDropdownBackgroundColor(row.dca),
+                      }}
+                    >
+                      <StyledTypography>
+                        {row.dca === 1 ? "💀" : row.dca}
+                      </StyledTypography>
                     </TableCell>
-                    <TableCell sx={{ padding: "5px", backgroundColor: getDropdownBackgroundColor(row.gewichtung) }}>
+                    <TableCell
+                      sx={{
+                        padding: "5px",
+                        backgroundColor: getDropdownBackgroundColor(
+                          row.gewichtung
+                        ),
+                      }}
+                    >
                       <StyledTypography sx={{ alignItems: "center" }}>
                         {row.gewichtung === 1 ? "💀" : row.gewichtung}
                       </StyledTypography>
