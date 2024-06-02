@@ -12,6 +12,79 @@ export const getUsers = async () => {
     }
 };
 
+export const calculateScore = (portfolioData) => {
+    const totalCategories = 9;
+    const maxAssetsCount = 20;
+    let selectedAssetsCount = 0;
+    let categoryCounts = {};
+
+    // Count the occurrences of each category in the portfolio
+    portfolioData.forEach((item) => {
+        item.Category.forEach((category) => {
+            if (!categoryCounts[category]) {
+                categoryCounts[category] = 0;
+            }
+            categoryCounts[category]++;
+        });
+        selectedAssetsCount++;
+    });
+
+    let score = 0;
+    let maxCategoryPercentage = 0;
+    let totalCategoryPercentage = 0;
+
+    Object.keys(categoryCounts).forEach((category) => {
+        let assetCount = categoryCounts[category];
+        let categoryPercentage = (assetCount / selectedAssetsCount) * 100;
+        totalCategoryPercentage += categoryPercentage;
+
+        if (categoryPercentage > maxCategoryPercentage) {
+            maxCategoryPercentage = categoryPercentage;
+        }
+
+        if (assetCount >= 2) {
+            score += (100 / totalCategories) * 0.9;
+        } else {
+            score += (100 / totalCategories) * 0.8;
+        }
+    });
+
+    score += Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
+
+    let averageCategoryAllocation = 100 / Object.keys(categoryCounts).length;
+    let maxCategoryAllocation = 0;
+    let minCategoryAllocation = 100;
+
+    for (let category in categoryCounts) {
+        let allocation = (categoryCounts[category] / selectedAssetsCount) * 100;
+        if (allocation > maxCategoryAllocation) {
+            maxCategoryAllocation = allocation;
+        }
+        if (allocation < minCategoryAllocation) {
+            minCategoryAllocation = allocation;
+        }
+    }
+
+    let alloScore = Math.min(10, Math.max(0, 15 - (maxCategoryAllocation - averageCategoryAllocation) / 2.5));
+    let alloFactor = ((80 + (alloScore * 2)) / 100);
+
+    let maxCategoryAllocationDiff = 100 / averageCategoryAllocation * maxCategoryAllocation;
+    let maxSF = Math.min(1, Math.max(0.8945, 1 - (maxCategoryAllocationDiff - 200) / (600 - 200) * 0.1));
+    let minCategoryAllocationDiff = 100 / averageCategoryAllocation * (averageCategoryAllocation - minCategoryAllocation);
+    let minSF = Math.min(1, Math.max(0.8945, 1 - (minCategoryAllocationDiff - 50) / (75 - 50) * 0.1));
+
+    let scoreFactor_Allocation = (minSF * maxSF) * 50 - 40;
+
+    score = score * maxSF * minSF;
+    score = Math.min(100, score);
+
+    if (totalCategories > Object.keys(categoryCounts).length) {
+        score = score * 0.9;
+    }
+
+    return score.toFixed(1);
+};
+
 export const saveSubscriptionDetails = async (data, userId, plan, planId, billingCycle) => {
     try {
         await connectToDb();

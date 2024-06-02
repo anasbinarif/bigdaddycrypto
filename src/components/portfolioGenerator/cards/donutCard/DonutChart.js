@@ -4,6 +4,7 @@ import { categoriesDisplay, reverseCategoriesDisplay } from "../../../../lib/dat
 import { useAtom } from "jotai/index";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
+import {calculateScore} from "../../../../lib/action";
 
 const categoryColors = {
   AI: "#FFD700",
@@ -193,6 +194,41 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   const handleMouseOut = () => {
     setTooltip({ visible: false, text: "", x: 0, y: 0, angle: 0 });
   };
+  const [score, setScore] = useState(0)
+
+  useEffect(() => {
+    const fetchScore = async () => {
+      if (portfolio?.assets) {
+        try {
+          const calculatedScore = await calculateScore(portfolio.assets);
+          setScore(calculatedScore); // Update the state with the resolved value
+          console.log("Calculated Score:", calculatedScore);
+        } catch (error) {
+          console.error("Error calculating score:", error);
+        }
+      }
+    };
+    fetchScore();
+  }, [portfolio]);
+  useEffect(() => {
+    console.log("Calculated Score2:", score);
+  }, [score]);
+
+  function calculateNote(score) {
+    if (score >= 91) {
+      return "Sehr gut"; // Sehr gut
+    } else if (score >= 80) {
+      return "Gut"; // Gut
+    } else if (score >= 67) {
+      return "Befriedigend"; // Befriedigend
+    } else if (score >= 50) {
+      return "Ausreichend"; // Ausreichend
+    } else if (score >= 30) {
+      return "Mangelhaft"; // Ausreichend
+    } else {
+      return "Schlecht"; // Mangelhaft
+    }
+  }
 
   return (
       <Box
@@ -258,10 +294,10 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
                 },
               }}
           >
-            {securityScore}
+            {score}
           </Typography>
           <Typography variant="caption" style={{ color: "#FFFFFF" }}>
-            {t("veryGood")}
+            {calculateNote(score)}
           </Typography>
         </Box>
         {tooltip.visible && (

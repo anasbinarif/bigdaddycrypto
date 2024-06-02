@@ -260,71 +260,86 @@ export const UpdateCryptoCoins = async (userId) => {
 };
 
 export const getUserPortfolio = async (userId) => {
-  const res = await fetch("/api/getUserPortfolio", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userId }),
-    cache: "no-store",
-  });
+    const res = await fetch("/api/getUserPortfolio", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+        cache: "no-store",
+    });
 
-  if (!res.ok) {
-    // throw new Error('Failed to fetch data');
-    console.log("Failed to fetch data");
-  }
-  const categories = {
-    ai: 0,
-    metaverse: 0,
-    defi: 0,
-    web3: 0,
-    green: 0,
-    btc: 0,
-    cbdc: 0,
-    ecommerce: 0,
-    nft: 0,
-    none: 0,
-  };
-  const data1 = await res.json();
-  // if (data1?.message == "No portfolio found") {
-  //   return {}
-  // }
-  console.log("data_testing_new_login", data1);
-  const data = {
-    assets: data1?.data.assetDetails,
-    assetsCalculations: data1?.data.portfolio,
-  };
-  console.log("data_testing_new_login", data1);
-  let count = 0;
-  await data.assets.forEach((asset) => {
-    const category = asset.Category[0].toLowerCase();
-    count++;
-    if (categories.hasOwnProperty(category)) {
-      categories[category]++;
-    } else {
-      console.log("category not found");
+    if (!res.ok) {
+        console.log("Failed to fetch data");
+        return null;
     }
-  });
-  // console.log("countttttt", count);
 
-  // Calculate the total count of assets
-  const totalCount = data.assets.length;
+    const categories = {
+        ai: 0,
+        metaverse: 0,
+        defi: 0,
+        web3: 0,
+        green: 0,
+        btc: 0,
+        cbdc: 0,
+        ecommerce: 0,
+        nft: 0,
+        none: 0,
+    };
 
-  // Calculate percentages
-  const percentages = {};
-  for (const category in categories) {
-    percentages[category] =
-      ((categories[category] / totalCount) * 100).toFixed(2) + "%";
-  }
+    const data1 = await res.json();
+    const data = {
+        assets: data1?.data.assetDetails,
+        assetsCalculations: data1?.data.portfolio,
+    };
 
-  return {
-    data,
-    calculation: {
-      counts: categories,
-      percentages: percentages,
-    },
-  };
+    let totalCategoryCount = 0;
+
+    data.assets.forEach((asset) => {
+        asset.Category.forEach((category) => {
+            const lowerCategory = category.toLowerCase();
+            if (categories.hasOwnProperty(lowerCategory)) {
+                categories[lowerCategory]++;
+                totalCategoryCount++;
+            } else {
+                console.log("category not found:", category);
+            }
+        });
+    });
+
+    // Calculate the total count of assets
+    const totalCount = data.assets.length;
+
+    // Calculate initial percentages
+    const rawPercentages = {};
+    for (const category in categories) {
+        rawPercentages[category] =
+            ((categories[category] / totalCategoryCount) * 100);
+    }
+
+    // Normalize percentages to ensure they sum to 100%
+    const normalizedPercentages = {};
+    const sumOfRawPercentages = Object.values(rawPercentages).reduce((acc, val) => acc + val, 0);
+    for (const category in rawPercentages) {
+        normalizedPercentages[category] =
+            ((rawPercentages[category] / sumOfRawPercentages) * 100).toFixed(2) + "%";
+    }
+
+    return {
+        data,
+        calculation: {
+            counts: categories,
+            percentages: normalizedPercentages,
+        },
+    };
 };
+
+
+
+
+
+
+
 
 export const setCoinObject = (coin) => {
   return {
