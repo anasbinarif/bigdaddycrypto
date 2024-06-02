@@ -2,6 +2,7 @@ import { MenuItem, Menu, Button, Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname, useSearchParams } from "next/navigation";
+import currencySymbol from '../../lib/currencySymbol' 
 
 const CurrencySwitcher = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -26,6 +27,8 @@ const CurrencySwitcher = () => {
         setAnchorEl(null);
     };
 
+
+
     const changeCurrency = (newCurrency) => {
         setCurrency(newCurrency);
 
@@ -45,9 +48,9 @@ const CurrencySwitcher = () => {
                 aria-controls="currency-menu"
                 aria-haspopup="true"
                 onClick={handleClick}
-                sx={{ mx: 0, color: "var(--color-secondary)" }}
+                sx={{ mx: 0, color: "var(--color-secondary)", fontSize: 16, fontWeight: 700}}
             >
-                {currency}
+                {currencySymbol[currency]}
             </Button>
             <Menu
                 id="currency-menu"

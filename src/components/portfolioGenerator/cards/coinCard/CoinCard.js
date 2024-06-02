@@ -437,15 +437,15 @@ const CoinCard = ({
                 sx={{ width: 35, height: 35, marginRight: 1 }}
               />
             </Box>
-            <Box sx={{ paddingLeft: 1 }}>
+            <Box sx={{ paddingLeft: 1, paddingBottom: 2 }}>
               <Typography
                 variant="subtitle2"
                 noWrap
-                sx={{ marginBottom: "5px" }}
+                sx={{ marginBottom: "2px", marginTop: "2px" , fontWeight: 700, fontSize: 18 }}
               >
                 {Ticker}
               </Typography>
-              <Typography component="div" variant="body2" noWrap>
+              <Typography component="div" variant="body2" noWrap sx={{ color: '#ffffff80'}}>
                 {Name}
               </Typography>
             </Box>
