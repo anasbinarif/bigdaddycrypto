@@ -11,7 +11,7 @@ const CurrentPlan = ({ planDetails }) => {
     };
 
     return (
-        <Card sx={{ backgroundColor: "#444", color: "white", mb: 4, borderRadius: "10px", textAlign: "center" }}>
+        <Card sx={{ backgroundColor: "#444", color: "white", mb: 4, borderRadius: "10px", textAlign: "center", width: 'max-content', padding: "24px 48px", margin: '0 auto'}}>
             <CardContent>
                 {planDetails ? (
                     <>

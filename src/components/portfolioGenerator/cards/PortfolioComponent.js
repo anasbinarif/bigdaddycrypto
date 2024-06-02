@@ -273,7 +273,7 @@ const PortfolioComponent = ({
           }}
         >
           <Box sx={{ p: 3, width: "100%" }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom sx={{fontWeight: 700}}>
               {t("title")} ({assetsLeangth})
             </Typography>
             <Typography variant="subtitle1" gutterBottom>

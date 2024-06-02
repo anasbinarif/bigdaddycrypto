@@ -19,6 +19,9 @@ import { fetchUserSubscriptionPlan } from "../../lib/data";
 import { useAtom } from "jotai";
 import { sessionAtom } from "../../app/stores/sessionStore";
 import CurrentPlan from "./CurrentPlan";
+import CancelIcon from '@mui/icons-material/Cancel';
+import ClearIcon from '@mui/icons-material/Clear';
+import CheckIcon from '@mui/icons-material/Check';
 import SubscribeDialog from "../../components/subscribeDialog/SubscribeDialog";
 
 const MySwitch = styled(Switch)(({ theme }) => ({
@@ -71,9 +74,20 @@ const plans = [
     features: [
       "max. 10 Coins in portfolio",
       "FAQ",
-      "Mediathek 1 day after the others – Info Prompt (which signals the user to go for paid plans)",
-      "Google Ads",
+      "Mediathek",
     ],
+    nonFeatures: [
+      "Favorite coins",
+      "Blocklist",
+      "Graph",
+      "Import / Export CSV of Portfolio",
+      "Access to all Dashboards (only in yearly subscription)",
+      "Portfolio Generator Indicators",
+      "Access to all Livestreams",
+      "Add new coins to assets",
+      "3 Sub Portfolios",
+      "Access to VIP discord Channel and Telegram",
+    ]
   },
   {
     title: "Pro",
@@ -82,14 +96,21 @@ const plans = [
     yearlySavings: "€60.00",
     features: [
       "Unlimited Coins",
-      "Mediathek 1 day access / updates before free users",
-      "Add to Favorites",
-      "Access to Graph",
-      "Import / Export CSV",
-      "All small Dashboards / (PDFs) - only in yearly subscription",
+      "FAQ",
+      "Mediathek (24 hours in advance)",
+      "Favorite coins",
       "Blocklist",
-      "all Livestreams (Integrated later)",
+      "Graph",
+      "Import / Export CSV of Portfolio",
+      "Access to small dashboards (only in yearly subscription)",
     ],
+    nonFeatures: [
+      "Portfolio Generator Indicators",
+      "Access to all Livestreams",
+      "Add new coins to assets",
+      "3 Sub Portfolios",
+      "Access to VIP discord Channel and Telegram",
+    ]
   },
   {
     title: "Premium",
@@ -98,18 +119,20 @@ const plans = [
     yearlySavings: "€120.00",
     features: [
       "Unlimited Coins",
-      "Mediathek 1 day access/updates before free users",
-      "Add to Favorites",
-      "Access to Graph",
-      "Import / Export CSV - Later separately for each Sub Portfolio",
-      "Indicators on Portfolio Generator",
-      "Add New Coins to Portfolio that were not added by us on their own (asset manager)",
-      "3 Sub Portfolios",
-      "All Dashboards (small + Large) / PDFs - only in yearly subscription",
+      "FAQ",
+      "Mediathek (24 hours in advance)",
+      "Favorite coins",
       "Blocklist",
-      "all Livestreams (Integrated later)",
-      "VIP discord Channel and Telegram (max. 1 Account per User) (Integrated later)",
+      "Graph",
+      "Import / Export CSV of Portfolio",
+      "Access to all Dashboards (only in yearly subscription)",
+      "Portfolio Generator Indicators",
+      "Access to all Livestreams",
+      "Add new coins to assets",
+      "3 Sub Portfolios",
+      "Access to VIP discord Channel and Telegram",
     ],
+    nonFeatures: []
   },
 ];
 
@@ -149,7 +172,7 @@ const PricingPlans = () => {
   }
 
   return (
-    <>
+    <Box sx={{}}>
       <SubscribeDialog open={open} handleClose={handleClose} />
       <Container>
         {userSubscription && userSubscription?.plan !== "free" && (
@@ -178,6 +201,7 @@ const PricingPlans = () => {
               "@media only screen and (max-width: 600px)": {
                 flexDirection: "column",
               },
+              marginBottom: 8
             }}
           >
             <Box
@@ -192,6 +216,8 @@ const PricingPlans = () => {
                 style={{
                   color: billingCycle === "monthly" ? "#ffffff" : "#aaa",
                   marginRight: "8px",
+                  fontWeight: 700,
+                  fontSize: 18
                 }}
               >
                 Monthly
@@ -215,6 +241,8 @@ const PricingPlans = () => {
                 style={{
                   color: billingCycle === "yearly" ? "#ffffff" : "#aaa",
                   marginLeft: "8px",
+                  fontWeight: 700,
+                  fontSize: 18
                 }}
               >
                 Annually
@@ -366,6 +394,8 @@ const PricingPlans = () => {
                     marginTop: "25px",
                   }}
                 >
+                  <Box sx={{marginTop: "16px"}} />
+
                   {plan.features.map((feature, index) => (
                     <li
                       key={index}
@@ -375,7 +405,7 @@ const PricingPlans = () => {
                         alignItems: "center",
                       }}
                     >
-                      <CheckCircleIcon
+                      <CheckIcon
                         sx={{ color: "white", marginRight: "8px" }}
                       />
                       <Typography
@@ -387,13 +417,40 @@ const PricingPlans = () => {
                       </Typography>
                     </li>
                   ))}
+
+                  <Box sx={{marginTop: "16px"}} />
+
+                  
+
+                  {plan.nonFeatures.map((feature, index) => (
+                    <li
+                      key={index}
+                      style={{
+                        marginBottom: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <ClearIcon
+                        sx={{ color: "#ffffff80", marginRight: "8px" }}
+                      />
+                      <Typography
+                        variant="body1"
+                        component="p"
+                        style={{ color: "#ffffff80" }}
+                      >
+                        {feature}
+                      </Typography>
+                    </li>
+                  ))}
+                  
                 </ul>
               </CardContent>
             </Card>
           ))}
         </Box>
       </Container>
-    </>
+    </Box>
   );
 };
 
