@@ -84,7 +84,7 @@ function BewertungCard() {
 
     useEffect(() => {
         const testFunctionAnything = async () => {
-            if (portfolio.assets) {
+            if (portfolio?.assets) {
                 const portfolio1 = portfolio?.assets;
                 const potentialPromise = await calculatePotential(portfolio1);
                 console.log("calculatePotential", potentialPromise);

@@ -4,7 +4,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, useMediaQuer
 import { sessionAtom } from "../../app/stores/sessionStore";
 import { useAtom } from "jotai";
 
-const Checkout = ({ open, handleClose, price }) => {
+const Checkout = ({ open, handleClose, price, confirmOneTimePayment }) => {
     const [show, setShow] = useState(false);
     const [success, setSuccess] = useState(false);
     const [ErrorMessage, setErrorMessage] = useState("");
@@ -47,6 +47,7 @@ const Checkout = ({ open, handleClose, price }) => {
 
             if (response.ok) {
                 console.log('Payment data saved successfully');
+                confirmOneTimePayment()
             } else {
                 console.error('Failed to save payment data');
             }

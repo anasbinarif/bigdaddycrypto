@@ -55,25 +55,25 @@ const PaymentsSchema = new mongoose.Schema({
         plan: {
             type: String,
             enum: ["Pro", "Premium"],
-            required: true
+            required: false
         },
         planId: {
             type: String,
-            required: true
+            required: false
         },
         billingCycle: {
             type: String,
             enum: ["monthly", "yearly"],
-            required: true
+            required: false
         },
         status: {
             type: String,
             enum: ["active", "pastDue"],
-            required: true
+            required: false
         },
         subscriptionId: {
             type: String,
-            required: true
+            required: false
         },
         nextBilledAt: {
             type: Number,

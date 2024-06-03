@@ -38,6 +38,8 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('userEmail');
 
+    console.log("usersusersusers", users);
+
     const handleUserClicked = async (user) => {
         setLoading(true);
         const userPortfolio = await getUserPortfolio(user.userId);
@@ -145,7 +147,7 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
                                             <Typography
                                                 variant="body2"
                                             >
-                                                {user.shortId}
+                                                {user.username}
                                             </Typography>
                                         </TableCell>
                                         <TableCell sx={{ opacity: blurEmail ? 0.5 : 1, filter: blurEmail ? 'blur(4px)' : 'none' }}>{user.userEmail}</TableCell>

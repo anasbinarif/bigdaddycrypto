@@ -7,12 +7,13 @@ export async function GET() {
 
     try {
         const payments = await Payments.find()
-            .populate('userId', 'email')
+            .populate('userId', 'email username')
 
         const paymentDetails = payments.flatMap(payment => 
             payment.oneTimePayment.map(oneTimePayment => ({
                 userEmail: payment.userId.email,
                 userId: payment.userId._id,
+                username: payment.userId.username,
                 oneTimePayment: {
                     date: oneTimePayment.date,
                     price: oneTimePayment.price,

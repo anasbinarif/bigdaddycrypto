@@ -269,8 +269,7 @@ const AddAsset = () => {
     };
 
     return (
-        <>
-
+        <Box>
             <Container
                 component="main"
                 maxWidth="xl"
@@ -560,7 +559,7 @@ const AddAsset = () => {
                     </IconButton>
                 }
             />
-        </>
+        </Box>
     );
 };
 

@@ -18,7 +18,7 @@ export const DonutCard = () => {
     const fetchData = async () => {
       if (sessionJotai?.user) {
         const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-        setPortfolioCalculations(userPortfolio.calculation);
+        setPortfolioCalculations(userPortfolio?.calculation);
         console.log("userPortfoliouserPortfoliouserPortfolio", userPortfolio);
         setLoadingPortfolio(true);
       }
@@ -59,7 +59,7 @@ export const DonutCard = () => {
             },
           }}
         >
-          {loadingPortfolio ? (
+          {loadingPortfolio && portfolioCalculations ? (
             <DonutLegend portfolioCalculations={portfolioCalculations} />
           ) : (
             <DonutLegendSkeleton />

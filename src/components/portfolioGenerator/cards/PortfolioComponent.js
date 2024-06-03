@@ -63,7 +63,6 @@ const PortfolioComponent = ({
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);
   const t = useTranslations("portfolioComponent");
-  console.log(portfolio.assets, loadingPortfolio);
 
   const [currency, setCurrency] = useState("EUR");
   const [rates, setRates] = useState(null);

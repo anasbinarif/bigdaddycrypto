@@ -82,8 +82,8 @@ const CoinDetails = (props) => {
   }, []);
 
   useEffect(() => {
-    const asset = portfolio.assetsCalculations.assets.find(
-      (a) => a.CoinGeckoID === coin.CoinGeckoID
+    const asset = portfolio?.assetsCalculations?.assets.find(
+      (a) => a.CoinGeckoID === coin?.CoinGeckoID
     );
     console.log("date asset", asset);
     if (asset && asset.buyAndSell) {
@@ -95,7 +95,7 @@ const CoinDetails = (props) => {
         }))
       );
     }
-  }, [coin.CoinGeckoID, portfolio.assetsCalculations.assets]);
+  }, [coin?.CoinGeckoID, portfolio?.assetsCalculations.assets]);
 
   useEffect(() => {
     setChangeTableValue(1);
@@ -103,7 +103,7 @@ const CoinDetails = (props) => {
       const coinsValue = parseFloat(row.Coins);
       return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
     }, 0);
-    const totalHoldingsValue = (totalCoins * parseFloat(coin.Price)).toFixed(2);
+    const totalHoldingsValue = (totalCoins * parseFloat(coin?.Price)).toFixed(2);
     const totalInvested = rowVals
       .reduce((acc, row) => {
         if (row.Type === "Kauf") {
@@ -147,7 +147,7 @@ const CoinDetails = (props) => {
       .toFixed(2);
     const avgPurchasePricePercentage = (
       100 -
-      (totalInvested / (kaufTotalCoin * coin.Price)) * 100
+      (totalInvested / (kaufTotalCoin * coin?.Price)) * 100
     ).toFixed(2);
     const avgSellingPrice = (realizedProfit / verkaufTotalCoin).toFixed(2);
     const avgSellingPricePercentage = (
@@ -184,9 +184,8 @@ const CoinDetails = (props) => {
       totalWinLossPercentage,
       X,
     });
-  }, [rowVals, coin.Price]);
+  }, [rowVals, coin?.Price]);
 
-  console.log("selected coin bro", coin);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -240,7 +239,7 @@ const CoinDetails = (props) => {
     if (!error) {
       // Perform the save operation here
       const userID = sessionJotai?.user.id;
-      const CoinGeckoID = coin.CoinGeckoID;
+      const CoinGeckoID = coin?.CoinGeckoID;
       console.log("Saving data", rowVals, CoinGeckoID, userID);
       const Portfolio_Assets = {
         totalInvest: financialSummary.totalInvested,
@@ -545,7 +544,7 @@ const CoinDetails = (props) => {
               }}
             >
               <Avatar
-                src={coin.cgImageURL}
+                src={coin?.cgImageURL}
                 sx={{
                   width: 50,
                   height: 50,
@@ -556,10 +555,10 @@ const CoinDetails = (props) => {
             </Box>
             <Box sx={{ alignSelf: "center" }}>
               <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
-                {coin.Ticker}
+                {coin?.Ticker}
               </Typography>
-              <Typography noWrap>{coin.CoinGeckoID}</Typography>
-              <Typography>{convertPrice(coin.Price.toFixed(2), currency, rates)} {currencySign[currency]}</Typography>
+              <Typography noWrap>{coin?.CoinGeckoID}</Typography>
+              <Typography>{convertPrice(coin?.Price.toFixed(2), currency, rates)} {currencySign[currency]}</Typography>
             </Box>
           </Box>
           <Box className={styles.grid}>
@@ -594,7 +593,7 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {financialSummary.totalCoins} {coin.Ticker}
+                {financialSummary.totalCoins} {coin?.Ticker}
               </Typography>
             </Box>
             <Box className={styles.grid__item}>

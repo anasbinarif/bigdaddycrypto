@@ -45,13 +45,13 @@ const KryptoAssets = ({ loadingPortfolio, assetsLeangth }) => {
       }}
     >
       <KryptoFilter
-        userID={portfolio.userID}
+        userID={portfolio?.userID}
         priceIndicator={priceIndicator}
         setPriceIndicator={setPriceIndicator}
       />
       <ScrollableKryptoTabs
         loadingPortfolio={loadingPortfolio}
-        userID={portfolio.userId}
+        userID={portfolio?.userId}
         priceIndicator={priceIndicator}
         assetsLeangth={assetsLeangth}
       />

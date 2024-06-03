@@ -566,7 +566,7 @@ const CoinCard = ({
                       sx={{
                         color: isFavorite(
                           coin.CoinGeckoID,
-                          portfolio.assetsCalculations
+                          portfolio?.assetsCalculations
                         )
                           ? "red"
                           : "gray",

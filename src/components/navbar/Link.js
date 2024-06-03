@@ -1,10 +1,10 @@
 "use client";
-import { Box, IconButton, Typography, MenuItem } from "@mui/material";
+import {Box, IconButton, Typography, MenuItem, CircularProgress} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { signOut, useSession } from "next-auth/react";
 import { useAtom } from "jotai";
 import { sessionAtom } from "../../app/stores/sessionStore";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import LanguageSwitcher from "../../app/lang/LanguageSwitcher";
 import { useTranslations } from "next-intl";
@@ -18,6 +18,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   const [sessionJotai, setSession] = useAtom(sessionAtom);
   const t = useTranslations("navbar");
   const [randonUserId, setRandonUserId] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const updateSessionWithSubscription = async () => {
@@ -52,16 +53,17 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   }, [status, session]);
 
   const handleLogoutFun = async () => {
+    setLoading(true)
     await signOut({ redirect: true, callbackUrl: "/login" });
-    console.log("Logged out successfully");
-    handleClose();
+    setLoading(false)
+    // handleClose();
   };
 
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {session &&
-          session.user.isAdmin &&
+          session.user?.isAdmin &&
           (mobileView ? (
             <MenuItem onClick={handleClose}>
               <Link href="/admin" style={{ marginBottom: "1rem" }}>
@@ -94,7 +96,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                 fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
               }}
             >
-              {t("portfolioId")}: {randonUserId}
+              {t("portfolioId")}: {session?.user?.username}
             </Typography>
             <Typography
               sx={{
@@ -161,6 +163,24 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           </>
         )}
       </Box>
+      {loading && (
+          <Box
+              sx={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                zIndex: 9999,
+              }}
+          >
+            <CircularProgress color="inherit" />
+          </Box>
+      )}
     </>
   );
 };
