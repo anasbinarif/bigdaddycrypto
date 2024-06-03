@@ -340,21 +340,22 @@ const ScrollableKryptoTabs = ({
                   const riskCoins = categorizedData[label].filter((coin) =>
                     checkCoinRisk(coin)
                   );
-                  // if (label === "favourite") {
-                  //   console.log("hellooooooo");
-                  //   return categorizedData[label].map(coin, (index) => {
-                  //     <CoinCard
-                  //       key={`${coin.CoinGeckoID}-${index}`}
-                  //       coin={coin}
-                  //       selected={checkCoinSelected(coin)}
-                  //       risk={checkCoinRisk(coin)}
-                  //       priceIndicator={priceIndicator}
-                  //       assetsLeangth={assetsLeangth}
-                  //       currentCategory={currentCategory}
-                  //       setData={setData}
-                  //     />;
-                  //   });
-                  // }
+                  // console.log(label);
+                  if (label === "Favoriten") {
+                    console.log("hellooooooo", categorizedData[label]);
+                    return categorizedData[label].map((coin, index) => (
+                      <CoinCard
+                        key={`${coin.CoinGeckoID}-${index}`}
+                        coin={coin}
+                        selected={checkCoinSelected(coin)}
+                        risk={checkCoinRisk(coin)}
+                        priceIndicator={priceIndicator}
+                        assetsLeangth={assetsLeangth}
+                        currentCategory={currentCategory}
+                        setData={setData}
+                      />
+                    ));
+                  }
                   return [
                     ...nonRiskCoins.map((coin, index) => (
                       <CoinCard
@@ -385,22 +386,23 @@ const ScrollableKryptoTabs = ({
                   ];
                 })()}
           </Box>
-          {categorizedData[label]?.some(checkCoinRisk) && (
-            <Button
-              onClick={() => handleToggleRiskCoins(label)}
-              sx={{
-                margin: "16px",
-                color: "#bbb",
-                fontSize: "13px",
-                padding: "5px 10px",
-                backgroundColor: "#ffffff22",
-                borderRadius: "4px",
-                transition: ".3s all",
-              }}
-            >
-              {showRiskCoins[label] ? t("hideRiskCoins") : t("showRiskCoins")}
-            </Button>
-          )}
+          {categorizedData[label]?.some(checkCoinRisk) &&
+            label !== "Favoriten" && (
+              <Button
+                onClick={() => handleToggleRiskCoins(label)}
+                sx={{
+                  margin: "16px",
+                  color: "#bbb",
+                  fontSize: "13px",
+                  padding: "5px 10px",
+                  backgroundColor: "#ffffff22",
+                  borderRadius: "4px",
+                  transition: ".3s all",
+                }}
+              >
+                {showRiskCoins[label] ? t("hideRiskCoins") : t("showRiskCoins")}
+              </Button>
+            )}
         </TabPanel>
       ))}
       {/*{loading && (*/}
