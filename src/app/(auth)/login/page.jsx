@@ -137,7 +137,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Box sx={{ overflew: "no-wrap" }}>
+    <Box sx={{ overflew: "no-wrap", position: "relative" }}>
       <AlertBar
         open={alert.open}
         message={alert.message}

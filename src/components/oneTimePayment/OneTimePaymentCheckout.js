@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, useMediaQuery, useTheme } from "@mui/material";
 import { sessionAtom } from "../../app/stores/sessionStore";
 import { useAtom } from "jotai";
 
-const Checkout = ({open, handleClose, price}) => {
+const Checkout = ({ open, handleClose, price }) => {
     const [show, setShow] = useState(false);
     const [success, setSuccess] = useState(false);
     const [ErrorMessage, setErrorMessage] = useState("");
     const [orderID, setOrderID] = useState(false);
     const [sessionJotai, setSession] = useAtom(sessionAtom);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const createOrder = (data, actions) => {
         return actions.order.create({
             purchase_units: [

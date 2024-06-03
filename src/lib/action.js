@@ -2,6 +2,8 @@
 
 import {connectToDb} from "../lib/utils";
 import {Assets, Payments, User} from "../lib/models";
+import Hashids from 'hashids';
+const hashids = new Hashids('this is my salt', 6);
 
 export const getUsers = async () => {
     try {
@@ -231,6 +233,14 @@ export async function updateCoinDetails(coinGeckoID) {
     } catch (error) {
         console.error(`An error occurred: ${error.message}`);
     }
+}
+
+
+export const generateShortId = async (id) => {
+    const intId = parseInt(id.slice(0, 8), 16);
+    const shortId = hashids.encode(intId);
+
+    return shortId;
 }
 
 

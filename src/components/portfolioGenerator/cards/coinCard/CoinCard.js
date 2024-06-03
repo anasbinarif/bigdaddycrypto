@@ -27,6 +27,7 @@ import { useAtom } from "jotai";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteConfirmationDialog from "../../../../components/AlertDialog/AlertDialog";
+import useEnhancedEffect from "@mui/utils/useEnhancedEffect";
 
 const ColorCircle = ({ color }) => (
   <SvgIcon>
@@ -242,6 +243,22 @@ const CoinCard = ({
       (asset) => asset.CoinGeckoID === CoinGeckoID
     );
   };
+  const [xfactorText, setXfactorText] = useState("");
+
+  useEffect(() => {
+    console.log(
+      "1 / coin?.Bottom * coin?.Price",
+      (1 / coin?.Bottom) * coin?.Price
+    );
+    const xfactorText1 = ((1 / coin?.Bottom) * coin?.Price).toFixed(1);
+    setXfactorText(`${xfactorText1}x in diesem Zyklus`);
+  }, [coin]);
+
+  const [cursorPos, setCursorPos] = useState({ top: 0, left: 0 });
+
+  const handleMouseMove = (event) => {
+    setCursorPos({ top: event.clientY, left: event.clientX });
+  };
 
   return (
     <>
@@ -425,127 +442,157 @@ const CoinCard = ({
             colors={getCategoryColors(Category)}
             selected={selected}
           />
-          <CardContent sx={{ display: "flex", alignItems: "flex-start" }}>
-            <CheckCircleIcon
-              sx={{
-                color: "#00aa66",
-                display: selected ? "block" : "none",
-                position: "absolute",
-                zIndex: 1,
-                top: "5px",
-              }}
-            />
-            <Box sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1 }}>
-              <Avatar
-                src={cgImageURL}
-                sx={{ width: 35, height: 35, marginRight: 1 }}
-              />
-            </Box>
-            <Box sx={{ paddingLeft: 1, paddingBottom: 2 }}>
-              <Typography
-                variant="subtitle2"
-                noWrap
+          <Tooltip
+            title={xfactorText}
+            arrow
+            PopperProps={{
+              anchorEl: {
+                getBoundingClientRect: () => ({
+                  top: cursorPos.top,
+                  left: cursorPos.left,
+                  right: cursorPos.left,
+                  bottom: cursorPos.top,
+                  width: 0,
+                  height: 0,
+                }),
+                clientWidth: 0,
+                clientHeight: 0,
+              },
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 10], // Offset from the cursor
+                  },
+                },
+              ],
+            }}
+          >
+            <CardContent
+              sx={{ display: "flex", alignItems: "flex-start" }}
+              onMouseMove={handleMouseMove}
+            >
+              <CheckCircleIcon
                 sx={{
-                  marginBottom: "2px",
-                  marginTop: "2px",
-                  fontWeight: 700,
-                  fontSize: 18,
-                }}
-              >
-                {Ticker}
-              </Typography>
-              <Typography
-                component="div"
-                variant="body2"
-                noWrap
-                sx={{ color: "#ffffff80" }}
-              >
-                {Name}
-              </Typography>
-            </Box>
-            {filterTag && (
-              <Box
-                sx={{
+                  color: "#00aa66",
+                  display: selected ? "block" : "none",
                   position: "absolute",
-                  right: "0",
-                  top: "0",
-                  zIndex: 2,
-                  padding: "3px 8px 2px",
-                  borderBottomLeftRadius: "4px",
-                  borderTopRightRadius: "4px",
-                  color: "#fff9",
-                  background: "#1114",
-                  display: "flex",
-                  alignItems: "center",
+                  zIndex: 1,
+                  top: "5px",
                 }}
-              >
+              />
+              <Box sx={{ display: "flex", alignItems: "center", mb: 1, pl: 1 }}>
+                <Avatar
+                  src={cgImageURL}
+                  sx={{ width: 35, height: 35, marginRight: 1 }}
+                />
+              </Box>
+              <Box sx={{ paddingLeft: 1, paddingBottom: 2 }}>
+                <Typography
+                  variant="subtitle2"
+                  noWrap
+                  sx={{
+                    marginBottom: "2px",
+                    marginTop: "2px",
+                    fontWeight: 700,
+                    fontSize: 18,
+                  }}
+                >
+                  {Ticker}
+                </Typography>
                 <Typography
                   component="div"
                   variant="body2"
+                  noWrap
+                  sx={{ color: "#ffffff80" }}
+                >
+                  {Name}
+                </Typography>
+              </Box>
+              {filterTag && (
+                <Box
                   sx={{
-                    fontSize: 12,
-                    display: "flex",
-                    gap: "2px",
+                    position: "absolute",
+                    right: "0",
+                    top: "0",
+                    zIndex: 2,
+                    padding: "3px 8px 2px",
+                    borderBottomLeftRadius: "4px",
+                    borderTopRightRadius: "4px",
                     color: "#fff9",
+                    background: "#1114",
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
-                  {filterTag}
-                </Typography>
-                <ColorCircle color={priceIndicatorColors[filterTag]} />
-              </Box>
-            )}
-            <>
-              <Box
-                sx={{
-                  position: "absolute",
-                  left: "0",
-                  bottom: "0",
-                }}
-              >
-                <Tooltip title="Favourite" onClick={handleFavouriteClick}>
-                  <IconButton
+                  <Typography
+                    component="div"
+                    variant="body2"
                     sx={{
-                      color: isFavorite(
-                        coin.CoinGeckoID,
-                        portfolio.assetsCalculations
-                      )
-                        ? "red"
-                        : "gray",
+                      fontSize: 12,
+                      display: "flex",
+                      gap: "2px",
+                      color: "#fff9",
                     }}
                   >
-                    <FavoriteIcon />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </>
-            {checkCalculation(Potential, Sicherheit) && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  right: "0",
-                  bottom: "0",
-                  bgcolor: "red",
-                  borderBottomRightRadius: "4px",
-                  borderTopLeftRadius: "4px",
-                  padding: "1px 6px 0",
-                }}
-              >
-                <Typography
-                  component="div"
-                  variant="body2"
+                    {filterTag}
+                  </Typography>
+                  <ColorCircle color={priceIndicatorColors[filterTag]} />
+                </Box>
+              )}
+              <>
+                <Box
                   sx={{
-                    fontSize: 13,
-                    display: "flex",
-                    gap: "2px",
+                    position: "absolute",
+                    left: "0",
+                    bottom: "0",
                   }}
                 >
-                  <span>{Potential}</span>
-                  <span>|</span>
-                  <span>{Sicherheit}</span>
-                </Typography>
-              </Box>
-            )}
-          </CardContent>
+                  <Tooltip title="Favourite" onClick={handleFavouriteClick}>
+                    <IconButton
+                      sx={{
+                        color: isFavorite(
+                          coin.CoinGeckoID,
+                          portfolio.assetsCalculations
+                        )
+                          ? "red"
+                          : "gray",
+                      }}
+                    >
+                      <FavoriteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </>
+              {checkCalculation(Potential, Sicherheit) && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    right: "0",
+                    bottom: "0",
+                    bgcolor: "red",
+                    borderBottomRightRadius: "4px",
+                    borderTopLeftRadius: "4px",
+                    padding: "1px 6px 0",
+                  }}
+                >
+                  <Typography
+                    component="div"
+                    variant="body2"
+                    sx={{
+                      fontSize: 13,
+                      display: "flex",
+                      gap: "2px",
+                    }}
+                  >
+                    <span>{Potential}</span>
+                    <span>|</span>
+                    <span>{Sicherheit}</span>
+                  </Typography>
+                </Box>
+              )}
+            </CardContent>
+          </Tooltip>
         </StyledCard>
       )}
       {loading && (

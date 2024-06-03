@@ -110,10 +110,26 @@ const AddAsset = () => {
     const searchCoin = (event) => {
         const searchText = event.target.value.toLowerCase();
         setSearch(searchText);
-        const newSearchData = data
-            .filter((coin) => coin.name.toLowerCase().includes(searchText))
-            .slice(0, 100);
-        setSearchData(newSearchData);
+
+        // Filter for exact matches first
+        let exactMatches = data.filter((coin) =>
+            coin.name.toLowerCase() === searchText ||
+            coin.symbol.toLowerCase() === searchText
+        );
+
+        // If there are fewer than 100 exact matches, include partial matches
+        if (exactMatches.length < 100) {
+            const partialMatches = data.filter((coin) =>
+                (coin.name.toLowerCase().includes(searchText) ||
+                    coin.symbol.toLowerCase().includes(searchText)) &&
+                !(coin.name.toLowerCase() === searchText ||
+                    coin.symbol.toLowerCase() === searchText) // Exclude exact matches already included
+            );
+
+            exactMatches = exactMatches.concat(partialMatches.slice(0, 100 - exactMatches.length));
+        }
+
+        setSearchData(exactMatches.slice(0, 100));
     };
 
     const handleChange = (event) => {

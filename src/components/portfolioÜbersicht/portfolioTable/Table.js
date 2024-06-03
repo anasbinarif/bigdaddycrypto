@@ -17,7 +17,30 @@ import {
   ThemeProvider,
   styled,
 } from "@mui/material";
-import { categoryColors, categoryColorsNew } from "../../../lib/data"; // Import categoryColors directly
+import { categoryColors, categoryColorsNew } from "../../../lib/data";
+import {
+  convertPrice,
+  currencySign,
+  getCurrencyAndRates,
+  getUserPortfolio,
+} from "../../../lib/data";
+import { useSearchParams } from "next/navigation";
+
+const valueMap = {
+  1: "Scam?",
+  2: "Bad",
+  3: "Naja",
+  4: "Ok",
+  5: "Gut",
+  6: "Honey",
+  "Scam?": 1,
+  "💀": 1,
+  Bad: 2,
+  Naja: 3,
+  Ok: 4,
+  Gut: 5,
+  Honey: 6,
+};
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -165,6 +188,7 @@ const EnhancedTable = () => {
       // Use the index and bitwise operations to determine the color
       color += letters[(index * (i + 1) * 7) % 16];
     }
+    // console.log(color);
     return color;
   };
 
@@ -175,6 +199,7 @@ const EnhancedTable = () => {
     4: "Ok",
     5: "Gut",
     6: "Honey",
+    "n/a": "n/a",
     "Scam?": 1,
     "💀": 1,
     Bad: 2,
@@ -196,6 +221,22 @@ const EnhancedTable = () => {
     return colorMap[valueMap[value]] || "transparent";
   };
 
+  const [currency, setCurrency] = useState("EUR");
+  const [rates, setRates] = useState(null);
+  const searchParams = useSearchParams();
+  const currentCurrency = searchParams.get("currency") || "EUR";
+
+  useEffect(() => {
+    const fetchCurrencyAndRates = async () => {
+      const { rates } = await getCurrencyAndRates();
+      setCurrency(currentCurrency);
+      setRates(rates);
+    };
+    fetchCurrencyAndRates();
+  }, [currentCurrency]);
+
+  // console.log(currency);
+
   return (
     <Box
       sx={{
@@ -207,60 +248,86 @@ const EnhancedTable = () => {
         overflowX: "auto",
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
         Portfolio ({assetsLeangth})
       </Typography>
       <ThemeProvider theme={darkTheme}>
         <TableContainer
           component={Paper}
-          sx={{ overflowX: "auto", backgroundColor: "transparent" }}
+          sx={{
+            overflowX: "auto",
+            backgroundColor: "transparent",
+            backgroundImage: "none",
+            boxShadow: "none",
+
+            "& .MuiTableCell-root": {
+              minWidth: "110px",
+            },
+          }}
         >
           <Table stickyHeader aria-label="sticky table">
             <TableHead
               sx={{
                 "& .MuiTableCell-root": {
-                  backgroundColor: "#ffffff08",
+                  backgroundColor: "transparent",
                   padding: "2px",
                   color: "#ffffff50",
                   fontWeight: "bold",
                   "&:first-child": {
                     padding: "16px",
                   },
+
+                  "& .MuiButtonBase-root": {
+                    marginLeft: "auto",
+                    display: "flex",
+                    alignItems: "flex-start",
+
+                    "& .MuiSvgIcon-root": {
+                      opacity: 1,
+                    },
+                  },
                 },
               }}
             >
               <TableRow>
                 {[
-                  "Asset",
-                  "Bestand",
-                  "X",
-                  "Preis /+-%",
-                  "DCA Preis",
-                  "Investition",
-                  "Relevanz",
-                  "DCA",
-                  "Gewichtung",
+                  { label: "Asset", key: "asset" },
+                  { label: "", key: "percentage" },
+                  { label: "Bestand", key: "bestand" },
+                  { label: "X", key: "X" },
+                  { label: "Preis /+-%", key: "preisChange" },
+                  { label: "DCA Preis", key: "dcaPrice" },
+                  { label: "Investition", key: "investition" },
+                  { label: "Relevanz", key: "relevanz" },
+                  { label: "DCA", key: "dca" },
+                  { label: "Gewichtung", key: "gewichtung" },
                 ].map((headCell) => (
                   <TableCell
-                    key={headCell}
-                    sortDirection={
-                      orderBy === headCell.toLowerCase() ? order : false
-                    }
+                    key={headCell.key}
+                    sortDirection={orderBy === headCell.key ? order : false}
                   >
                     <TableSortLabel
-                      active={orderBy === headCell.toLowerCase()}
-                      direction={
-                        orderBy === headCell.toLowerCase() ? order : "asc"
-                      }
+                      active={orderBy === headCell.key}
+                      direction={orderBy === headCell.key ? order : "asc"}
                       onClick={(event) =>
-                        handleRequestSort(event, headCell.toLowerCase())
+                        handleRequestSort(event, headCell.key)
                       }
                       sx={{
                         fontSize: "12px",
                         whiteSpace: "nowrap",
+                        // backgroundColor:
+                        //   headCell.key === "asset" ? "white" : "transparent",
+                        justifyContent:
+                          headCell.key === "asset"
+                            ? "flex-start"
+                            : headCell.key === "relevanz" ||
+                              headCell.key === "dca" ||
+                              headCell.key === "gewichtung"
+                            ? "center"
+                            : "flex-end",
                       }}
                     >
-                      {headCell}
+                      {headCell.label}
                     </TableSortLabel>
                   </TableCell>
                 ))}
@@ -268,9 +335,11 @@ const EnhancedTable = () => {
             </TableHead>
             <TableBody
               sx={{
+                border: "1px solid #ffffff18",
+                backgroundColor: "#00000030",
+
                 "& .MuiTableCell-root": {
-                  backgroundColor: "#00000080",
-                  borderBottom: "none",
+                  width: "auto",
                 },
               }}
             >
@@ -279,6 +348,11 @@ const EnhancedTable = () => {
                   <TableRow
                     key={index}
                     sx={{
+                      "& .MuiTableCell-root": {
+                        "&:not(:first-child)": {
+                          borderRight: "1px solid #ffffff18",
+                        },
+                      },
                       "&:hover": {
                         backgroundColor: "rgba(255, 255, 255, 0.08)",
                       },
@@ -287,10 +361,11 @@ const EnhancedTable = () => {
                     <TableCell
                       component="th"
                       scope="row"
-                      sx={{ padding: "0px", width: "24%" }}
+                      sx={{ padding: "0px" }}
                     >
                       <Box
                         sx={{
+                          width: "100%",
                           display: "flex",
                           justifyContent: "space-between",
                           alignItems: "center",
@@ -302,30 +377,75 @@ const EnhancedTable = () => {
                         <CategoryColorBar
                           colors={getCategoryColors(row.category)}
                         />
-                        <Box display="flex" alignItems="center">
-                          <Box display="flex" alignItems="center">
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          sx={{ width: "100%" }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              width: "100%",
+                            }}
+                          >
                             <Avatar
                               alt={row.asset}
                               src={row.imageUrl}
-                              sx={{ width: 20, height: 20, marginRight: 1 }}
+                              sx={{ width: 25, height: 25, marginRight: 1 }}
                             />
-                            <Typography sx={{ fontSize: "14px" }}>
-                              {row.asset} ({row.ticker})
+                            <Typography
+                              sx={{
+                                fontSize: "16px",
+                                fontWeight: "bold",
+                                // marginLeft: "30%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transform: "translateY(3px)",
+                              }}
+                            >
+                              {row.ticker}
                             </Typography>
                           </Box>
-                          <Box
-                            component={Typography}
-                            sx={{
-                              ml: 1,
-                              bgcolor: `${getRandomColor(index)}`,
-                              padding: "1px 4px 0",
-                              borderRadius: "12px",
-                              fontSize: "12px",
-                            }}
-                          >
-                            {row.percentage}
-                          </Box>
                         </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        boxSizing: "border-box",
+                        // display: "flex",
+                        // justifyContent: "center",
+                        height: "100%",
+                        padding: "5px",
+                      }}
+                    >
+                      <Box
+                        component={Typography}
+                        sx={{
+                          ml: 1,
+                          bgcolor: `${getRandomColor(index)}75`,
+                          fontWeight: "bold",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          maxWidth: "75%",
+                          // lineHeight: "25px",
+                          padding: "3px 12px",
+                          borderRadius: "32px",
+                          fontSize: "12px",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: "13px",
+                            fontWeight: "bold",
+                            transform: "translateY(1px)",
+                          }}
+                        >
+                          {row.percentage}
+                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell
@@ -341,7 +461,11 @@ const EnhancedTable = () => {
                         }}
                       >
                         <StyledTypography sx={{ fontSize: "14px" }}>
-                          {row.bestand}
+                          {row.bestand > 0
+                            ? `${convertPrice(row.bestand, currency, rates)} ${
+                                currencySign[currency]
+                              }`
+                            : 0}
                         </StyledTypography>
                         <StyledTypography
                           sx={{ color: "#999", fontSize: "12px" }}
@@ -363,7 +487,15 @@ const EnhancedTable = () => {
                           alignItems: "end",
                         }}
                       >
-                        <StyledTypography>{row.preisChange} €</StyledTypography>
+                        <StyledTypography>
+                          {row.preisChange !== 0
+                            ? `${convertPrice(
+                                row.preisChange,
+                                currency,
+                                rates
+                              )} ${currencySign[currency]}`
+                            : 0}
+                        </StyledTypography>
                         {row.pricePercentage !== "Infinity" && (
                           <Typography
                             className={row.pricePercentage < 0 ? "down" : "up"}
@@ -386,16 +518,36 @@ const EnhancedTable = () => {
                               },
                             }}
                           >
-                            {row.pricePercentage}
+                            {row.pricePercentage !== 0
+                              ? `${convertPrice(
+                                  row.pricePercentage,
+                                  currency,
+                                  rates
+                                )} ${currencySign[currency]}`
+                              : 0}
                           </Typography>
                         )}
                       </Box>
                     </TableCell>
                     <TableCell sx={{ padding: "5px" }}>
-                      <StyledTypography>{row.dcaPrice}</StyledTypography>
+                      <StyledTypography>
+                        {row.dcaPrice > 0
+                          ? `${convertPrice(row.dcaPrice, currency, rates)} ${
+                              currencySign[currency]
+                            }`
+                          : 0}
+                      </StyledTypography>
                     </TableCell>
                     <TableCell sx={{ padding: "5px" }}>
-                      <StyledTypography>{row.investition}</StyledTypography>
+                      <StyledTypography>
+                        {row.investition !== 0
+                          ? `${convertPrice(
+                              row.investition,
+                              currency,
+                              rates
+                            )} ${currencySign[currency]}`
+                          : 0}
+                      </StyledTypography>
                     </TableCell>
                     <TableCell
                       sx={{
@@ -405,7 +557,9 @@ const EnhancedTable = () => {
                         ),
                       }}
                     >
-                      <StyledTypography>{row.relevanz}</StyledTypography>
+                      <StyledTypography>
+                        {valueMap[row.relevanz]}
+                      </StyledTypography>
                     </TableCell>
                     <TableCell
                       sx={{
@@ -414,7 +568,7 @@ const EnhancedTable = () => {
                       }}
                     >
                       <StyledTypography>
-                        {row.dca === 1 ? "💀" : row.dca}
+                        {row.dca === 1 ? "💀" : valueMap[row.dca]}
                       </StyledTypography>
                     </TableCell>
                     <TableCell
@@ -426,7 +580,7 @@ const EnhancedTable = () => {
                       }}
                     >
                       <StyledTypography sx={{ alignItems: "center" }}>
-                        {row.gewichtung === 1 ? "💀" : row.gewichtung}
+                        {row.gewichtung === 1 ? "💀" : valueMap[row.gewichtung]}
                       </StyledTypography>
                     </TableCell>
                   </TableRow>

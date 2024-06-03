@@ -106,6 +106,9 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
         }}
         sx={{
           "& > .MuiPaper-root": {
+            "& .MuiTypography-root": {
+              color: "white",
+            },
             backgroundColor: "#1d1d1d",
           },
         }}
@@ -338,9 +341,10 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
               if (reason === "select-option" || reason === "blur") {
                 return;
               }
-              event.preventDefault();
+              // event.preventDefault();
             }}
             sx={{
+              // color: "white",
               "@media only screen and (min-width:1100px)": {
                 minWidth: "180px",
               },
@@ -421,7 +425,8 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
           variant="filled"
           sx={{ width: "100%" }}
         >
-          To access the Filters, please subscribe to Premium plan.
+          Um Zugriff auf dieses Feature zu erhalten ist eine Premium
+          Mitgliedschaft notwendig.
         </Alert>
       </Snackbar>
     </>

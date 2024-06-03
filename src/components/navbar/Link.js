@@ -4,23 +4,27 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { signOut, useSession } from "next-auth/react";
 import { useAtom } from "jotai";
 import { sessionAtom } from "../../app/stores/sessionStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import LanguageSwitcher from "../../app/lang/LanguageSwitcher";
 import { useTranslations } from "next-intl";
 import { fetchUserSubscriptionPlan } from "../../lib/data";
 import styles from "./navbar.module.css";
 import CurrencySwitcher from "../../app/currency/CurrencySwitcher";
+import { generateShortId } from "../../lib/action";
 
 const NavbarLink = ({ mobileView, handleClose }) => {
   const { data: session, status } = useSession();
   const [sessionJotai, setSession] = useAtom(sessionAtom);
   const t = useTranslations("navbar");
+  const [randonUserId, setRandonUserId] = useState("");
 
   useEffect(() => {
     const updateSessionWithSubscription = async () => {
       try {
         if (session) {
+          const id = await generateShortId(session.user.id);
+          setRandonUserId(id);
           const subscriptionData = await fetchUserSubscriptionPlan(
             session.user?.id
           );
@@ -90,11 +94,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                 fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
               }}
             >
-              {t("portfolioId")}: {session?.user.username}
+              {t("portfolioId")}: {randonUserId}
             </Typography>
             <Typography
               sx={{
-                color: "purple",
+                color: "var(--color-secondary)",
+                textTransform: "uppercase",
                 ml: "10px",
               }}
             >

@@ -104,6 +104,9 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           padding: width < 500 ? "0" : "1.25% 1%",
           marginTop: "80px",
           // margin: "1rem 0 0",
+          "& > #simple-tabpanel-one > .MuiBox-root": {
+            padding: "10px",
+          },
         }}
       >
         <Tabs
@@ -208,6 +211,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           />
         </Tabs>
         <TabPanel value={value} index="one">
+          {/* <Box>Hello</Box> */}
           <PortfolioDisplay
             loadingPortfolio={loadingPortfolio}
             assetsLeangth={assetsLeangth}

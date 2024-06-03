@@ -230,7 +230,6 @@ const ScrollableKryptoTabs = ({
               whiteSpace: "nowrap",
               backgroundColor: "rgba(0, 0, 0, 0.2)",
               margin: "4px 6px",
-              "&:not(:last-child)": {},
               "&.Mui-selected": {
                 // borderBottomColor: "var(--color-secondary)",
                 color: "var(--color-secondary)",
@@ -341,6 +340,21 @@ const ScrollableKryptoTabs = ({
                   const riskCoins = categorizedData[label].filter((coin) =>
                     checkCoinRisk(coin)
                   );
+                  // if (label === "favourite") {
+                  //   console.log("hellooooooo");
+                  //   return categorizedData[label].map(coin, (index) => {
+                  //     <CoinCard
+                  //       key={`${coin.CoinGeckoID}-${index}`}
+                  //       coin={coin}
+                  //       selected={checkCoinSelected(coin)}
+                  //       risk={checkCoinRisk(coin)}
+                  //       priceIndicator={priceIndicator}
+                  //       assetsLeangth={assetsLeangth}
+                  //       currentCategory={currentCategory}
+                  //       setData={setData}
+                  //     />;
+                  //   });
+                  // }
                   return [
                     ...nonRiskCoins.map((coin, index) => (
                       <CoinCard

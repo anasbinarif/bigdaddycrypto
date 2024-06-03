@@ -1,109 +1,22 @@
 "use client";
-import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Chart as ChartJS, LinearScale, PointElement, Tooltip, Legend } from 'chart.js';
-import { Bubble } from 'react-chartjs-2';
-import { Box, FormControl, InputLabel, MenuItem, Select, Slider, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import {
+    Box,
+    CircularProgress,
+    Container,
+    Typography,
+    Slider,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+} from "@mui/material";
+import Image from "next/image";
+import Graph from "../../../../public/assets/svg/BDC-Graph.svg";
+import { getAssetTest } from "../../../lib/data";
 import Navbar from "../../../components/navbar/Navbar";
 import Footer from "../../../components/footer/Footer";
-import { categoryColors, getAssets, getCategoryColor } from "../../../lib/data";
-import { useTranslations } from "next-intl";
-import './BubbleChart.css';
-
-const backgroundAreaPlugin = {
-    id: 'backgroundAreaPlugin',
-    beforeDraw: (chart) => {
-        const ctx = chart.ctx;
-        const xAxis = chart.scales.x;
-        const yAxis = chart.scales.y;
-
-        const shapes = [
-            {
-                color: 'red',
-                points: [
-                    { x: 0, y: 0 },
-                    { x: 9, y: 0 },
-                    { x: 8, y: 5.5 },
-                    { x: 0, y: 5.5 },
-                ]
-            },
-            {
-                color: '#e76808',
-                points: [
-                    { x: 9, y: 0 },
-                    { x: 10, y: 0 },
-                    { x: 10, y: 3 },
-                    { x: 8.45, y: 3 }
-                ]
-            },
-            {
-                color: '#dfe052',
-                points: [
-                    { x: 8.45, y: 3 },
-                    { x: 10, y: 3 },
-                    { x: 10, y: 5.5 },
-                    { x: 8, y: 5.5 }
-                ]
-            },
-            {
-                color: '#f8bea0',
-                points: [
-                    { x: 0, y: 5.5 },
-                    { x: 8, y: 5.5 },
-                    { x: 7, y: 10 },
-                    { x: 0, y: 10 }
-                ]
-            },
-            {
-                color: '#bfdcb1',
-                points: [
-                    { x: 8, y: 5.5 },
-                    { x: 10, y: 5.5 },
-                    { x: 10, y: 7 },
-                    { x: 7.5, y: 7 }
-                ]
-            },
-            {
-                color: '#96c456',
-                points: [
-                    { x: 7.5, y: 7 },
-                    { x: 10, y: 7 },
-                    { x: 10, y: 10 },
-                    { x: 7, y: 10 }
-                ]
-            }
-        ];
-
-        shapes.forEach(shape => {
-            ctx.beginPath();
-            ctx.fillStyle = shape.color;
-            shape.points.forEach((point, index) => {
-                const xPixel = xAxis.getPixelForValue(point.x);
-                const yPixel = yAxis.getPixelForValue(point.y);
-                if (index === 0) {
-                    ctx.moveTo(xPixel, yPixel);
-                } else {
-                    ctx.lineTo(xPixel, yPixel);
-                }
-            });
-            ctx.closePath();
-            ctx.fill();
-        });
-    }
-};
-
-const backgroundColorPlugin = {
-    id: 'backgroundColorPlugin',
-    beforeDraw: (chart) => {
-        const ctx = chart.ctx;
-        const canvas = ctx.canvas;
-        ctx.save();
-        ctx.fillStyle = chart.config.options.chartArea.backgroundColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.restore();
-    }
-};
-
-ChartJS.register(LinearScale, PointElement, Tooltip, Legend, backgroundColorPlugin, backgroundAreaPlugin);
 
 const reverseMapping = {
     ai: "AI",
@@ -118,215 +31,116 @@ const reverseMapping = {
     none: "Kein Hype-Thema",
 };
 
-const imagePlugin = {
-    id: 'customImagePlugin',
-    afterDraw: (chart) => {
-        const ctx = chart.ctx;
-        chart.data.datasets.forEach((dataset, i) => {
-            const meta = chart.getDatasetMeta(i);
-            if (!meta.hidden) {
-                meta.data.forEach((element, index) => {
-                    const { x, y } = element.tooltipPosition();
-                    const image = new Image();
-                    image.src = dataset.data[index].cgImageURL;
-                    const size = element.options.radius * 2;
-
-                    // Start clipping in a circle
-                    ctx.save(); // Save the current state
-                    ctx.beginPath(); // Start a new path
-                    ctx.arc(x, y, size / 2, 0, Math.PI * 2, true); // Create a circle path
-                    ctx.clip(); // Clip to the circle
-
-                    // Draw the image inside the clipped circle
-                    ctx.drawImage(image, x - size / 2, y - size / 2, size, size);
-
-                    ctx.restore(); // Restore the original state, removing the clipping
-                });
-            }
-        });
-    }
-};
-
-const BubbleChart = () => {
-    const t = useTranslations("bubbleChart");
-    const [radius, setRadius] = useState(20);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedItem, setSelectedItem] = useState('');
-    const [chartData, setChartData] = useState({ datasets: [] });
-    const [categories, setCategories] = useState([]);
-    const preloadedImages = useRef({});
+const Testing = () => {
+    const [assets, setAssets] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [tooltip, setTooltip] = useState({ visible: false, data: {}, x: 0, y: 0 });
+    const [symbolSize, setSymbolSize] = useState(40);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedItem, setSelectedItem] = useState("");
 
     useEffect(() => {
-        const fetchAllAssets = async () => {
-            try {
-                const categoriesToFetch = Object.keys(reverseMapping);
-                const allData = [];
-                const categorySet = new Set();
+        getAssetTest()
+            .then((data) => {
+                setAssets(data);
+            })
+            .catch((error) => {
+                console.log("error.message", error.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
 
-                for (const category of categoriesToFetch) {
-                    const data = await getAssets(category);
-                    data.data.forEach((item) => {
-                        allData.push(item);
-                        item.Category.forEach((cat) => categorySet.add(cat));
-                    });
-                }
+    useEffect(() => {
+        console.log("graph data:", assets);
+    }, [assets])
 
-                setCategories([...categorySet]);
-
-                const filteredData = allData.filter(item => {
-                    return item.Name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                        (selectedItem ? item.Category.includes(selectedItem) : true);
-                });
-
-                const groupedData = filteredData.reduce((acc, item) => {
-                    item.Category.forEach((category) => {
-                        const mappedCategory = reverseMapping[category] || 'none';
-                        acc[mappedCategory] = acc[mappedCategory] || [];
-                        acc[mappedCategory].push({
-                            x: item.Potential,
-                            y: item.Sicherheit,
-                            r: radius,
-                            Name: item.Name,
-                            MarketCap: item.MarketCap,
-                            Price: item.Price,
-                            cgImageURL: item.cgImageURL
-                        });
-                    });
-                    return acc;
-                }, {});
-
-                const datasets = Object.keys(groupedData).map((category) => ({
-                    label: category,
-                    data: groupedData[category],
-                    backgroundColor: categoryColors[category]
-                }));
-
-                setChartData({ datasets });
-
-                // Preload images
-                filteredData.forEach((item) => {
-                    if (!preloadedImages.current[item.cgImageURL]) {
-                        const img = new Image();
-                        img.src = item.cgImageURL;
-                        preloadedImages.current[item.cgImageURL] = img;
-                    }
-                });
-
-            } catch (error) {
-                console.error("Error fetching data:", error);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (tooltip.visible) {
+                setTooltip({ visible: false, data: {}, x: 0, y: 0 });
             }
         };
 
-        fetchAllAssets();
-    }, [radius, searchTerm, selectedItem]);
-
-    const options = useMemo(() => ({
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: t("safety"),
-                    color: '#ccc',
-                    font: {
-                        size: 40,
-                        weight: 'bold'
-                    }
-                },
-                ticks: {
-                    color: '#969696',
-                    font: {
-                        size: 30,
-                        weight: 'bold'
-                    },
-                    stepSize: 1,
-                    max: 10
-                }
-            },
-            x: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: t("potential"),
-                    color: '#ccc',
-                    font: {
-                        size: 40,
-                        weight: 'bold'
-                    }
-                },
-                ticks: {
-                    color: '#969696',
-                    font: {
-                        size: 30,
-                        weight: 'bold'
-                    },
-                    stepSize: 1,
-                    max: 10
-                }
-            }
-        },
-        plugins: {
-            tooltip: {
-                enabled: true,
-                z: 1000,
-                callbacks: {
-                    label: function (context) {
-                        const item = context.raw;
-                        return [
-                            `${t("name")}: ${item.Name}`,
-                            `${t("potential")}: ${item.x}`,
-                            `${t("safety")}: ${item.y}`,
-                            `${t("marketCap")}: ${item.MarketCap ? item.MarketCap.toLocaleString() : 'N/A'}`,
-                            `${t("price")}: ${item.Price ? item.Price.toFixed(2) : 'N/A'}`
-                        ];
-                    }
-                }
-            }
-        },
-        chartArea: {
-            backgroundColor: '#111826'
+        if (tooltip.visible) {
+            document.addEventListener("click", handleClickOutside);
         }
-    }), [t]);
 
-    return <>
-        <Navbar />
-        <Box sx={{ marginTop: "9rem", backgroundColor: "#111826", marginLeft: "6rem", marginRight: "6rem", }}>
-            <Box sx={{
-                backgroundColor: "#111826",
-                color: "#fff",
-                display: "flex",
-                justifyContent: "space-evenly",
-                marginBottom: "3rem",
-                alignItems: "center"
-            }}>
-                <Box sx={{
-                    mx: 1, width: "20%", display: "flex",
-                    alignItems: "center", gap: "5px", backgroundColor: "#202530",
-                    border: "none", borderRadius: "5px",
-                    padding: "10px 10px"
-                }}>
-                    <Typography sx={{
-                        fontSize: "13px",
-                        color: "#aaa",
-                        whiteSpace: "nowrap"
-                    }}>{t("symbolSize")}:</Typography>
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, [tooltip.visible]);
+
+    const calculatePosition = (value, offset) => {
+        return `calc(${(100 / 12) * 1 + (100 / 12) * value}% - ${offset}px)`;
+    };
+
+    const handleCoinClick = (event, asset) => {
+        event.stopPropagation(); // Prevent triggering the document click event
+        const assetX = calculatePosition(asset.Potential, symbolSize / 2);
+        const assetY = `calc(100% - ${calculatePosition(asset.Sicherheit, symbolSize / 2)})`;
+        setTooltip({
+            visible: true,
+            data: asset,
+            x: assetX,
+            y: assetY,
+        });
+    };
+
+    const filteredAssets = assets.filter(
+        (asset) =>
+            asset?.Name?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (selectedItem === "" || asset.Category.includes(selectedItem))
+    );
+
+    return (
+        <>
+            <Navbar />
+            <Box
+                sx={{
+                    backgroundColor: "#111826",
+                    color: "#fff",
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    marginTop: "8%",
+                }}
+            >
+                <Box
+                    sx={{
+                        mx: 1,
+                        width: "20%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        backgroundColor: "#202530",
+                        border: "none",
+                        borderRadius: "5px",
+                        padding: "10px 10px",
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            fontSize: "13px",
+                            color: "#aaa",
+                            whiteSpace: "nowrap",
+                        }}
+                    >
+                        Symbol Size:
+                    </Typography>
                     <Slider
+                        defaultValue={40}
+                        min={30}
+                        max={75}
                         aria-label="Default"
-                        defaultValue={20}
-                        shiftStep={6}
-                        step={5}
-                        marks
-                        min={10}
-                        max={40}
                         valueLabelDisplay="auto"
-                        onChange={(e, newValue) => setRadius(newValue)}
+                        onChange={(e, newValue) => setSymbolSize(newValue)}
                     />
                 </Box>
-                <Box sx={{
-                    width: "20%",
-                }}>
+                <Box sx={{ width: "20%" }}>
                     <TextField
-                        label={t("search")}
+                        label="Search"
                         variant="outlined"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -334,79 +148,187 @@ const BubbleChart = () => {
                             backgroundColor: "#202530",
                             borderRadius: "5px",
                             border: "none",
-                            '& .MuiOutlinedInput-root': {
-                                '& fieldset': {
-                                    borderColor: '#ffffff',
+                            "& .MuiOutlinedInput-root": {
+                                "& fieldset": {
+                                    borderColor: "#ffffff",
                                 },
-                                '&:hover fieldset': {
-                                    borderColor: '#ffffff',
+                                "&:hover fieldset": {
+                                    borderColor: "#ffffff",
                                 },
-                                '&.Mui-focused fieldset': {
-                                    borderColor: '#ffffff',
+                                "&.Mui-focused fieldset": {
+                                    borderColor: "#ffffff",
                                 },
                             },
-                            '& .MuiInputLabel-root': {
-                                color: '#ffffff',
+                            "& .MuiInputLabel-root": {
+                                color: "#ffffff",
                             },
-                            '& .MuiInputLabel-root.Mui-focused': {
-                                color: '#ffffff',
+                            "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#ffffff",
                             },
-                            '& .MuiInputBase-input': {
-                                color: '#ffffff',
+                            "& .MuiInputBase-input": {
+                                color: "#ffffff",
                             },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#ffffff',
-                            }
+                            "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "#ffffff",
+                            },
                         }}
                     />
                 </Box>
-                <FormControl sx={{
-                    m: 1,
-                    backgroundColor: "#202530",
-                    width: "20%",
-                    '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                            borderColor: '#ffffff',
+                <FormControl
+                    sx={{
+                        m: 1,
+                        backgroundColor: "#202530",
+                        width: "20%",
+                        "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                                borderColor: "#ffffff",
+                            },
+                            "&:hover fieldset": {
+                                borderColor: "#ffffff",
+                            },
+                            "&.Mui-focused fieldset": {
+                                borderColor: "#ffffff",
+                            },
                         },
-                        '&:hover fieldset': {
-                            borderColor: '#ffffff',
+                        "& .MuiInputLabel-root": {
+                            color: "#ffffff",
                         },
-                        '&.Mui-focused fieldset': {
-                            borderColor: '#ffffff',
+                        "& .MuiInputLabel-root.Mui-focused": {
+                            color: "#ffffff",
                         },
-                    },
-                    '& .MuiInputLabel-root': {
-                        color: '#ffffff',
-                    },
-                    '& .MuiInputLabel-root.Mui-focused': {
-                        color: '#ffffff',
-                    },
-                    '& .MuiSelect-icon': {
-                        color: '#ffffff',
-                    },
-                    '& .MuiSelect-select': {
-                        color: '#ffffff',
-                    },
-                }}>
-                    <InputLabel id="demo-simple-select-label">{t("allCategories")}</InputLabel>
+                        "& .MuiSelect-icon": {
+                            color: "#ffffff",
+                        },
+                        "& .MuiSelect-select": {
+                            color: "#ffffff",
+                        },
+                    }}
+                >
+                    <InputLabel id="demo-simple-select-label">All Categories</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={selectedItem}
-                        label={t("allCategories")}
+                        label="All Categories"
                         onChange={(e) => setSelectedItem(e.target.value)}
                     >
-                        <MenuItem value="">{t("all")}</MenuItem>
-                        {categories.map((category) => (
-                            <MenuItem key={category} value={category}>{reverseMapping[category]}</MenuItem>
+                        <MenuItem value="">All</MenuItem>
+                        {Object.entries(reverseMapping).map(([key, value]) => (
+                            <MenuItem key={key} value={key}>
+                                {value}
+                            </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
             </Box>
-            <Bubble options={options} plugins={[imagePlugin]} data={chartData} height={300} />
-        </Box>
-        <Footer />
-    </>;
+            <Container
+                sx={{
+                    position: "relative",
+                    maxWidth: "100%",
+                    height: "1200px",
+                    marginTop: "1rem",
+                    backgroundColor: "#111826",
+                    overflow: "hidden",
+                    padding: "0px",
+                }}
+            >
+                <Box
+                    sx={{
+                        position: "relative",
+                        width: "100%",
+                        height: "100%",
+                    }}
+                >
+                    <Image src={Graph} layout="fill" objectFit="cover" alt="Background" />
+                    {filteredAssets.map((asset) => (
+                        <Box
+                            key={asset._id}
+                            component="div"
+                            sx={{
+                                position: "absolute",
+                                left: calculatePosition(asset.Potential, symbolSize / 2),
+                                top: `calc(100% - ${calculatePosition(asset.Sicherheit, symbolSize / 2)})`,
+                                transform: "translate(-50%, -50%)",
+                                transition: "all 0.3s",
+                                cursor: "pointer",
+                                background: "#fff",
+                                display: "flex",
+                                boxShadow: "3px 3px 12px rgba(0, 0, 0, .1)",
+                                borderRadius: "100px",
+                                padding: "2px",
+                                "&:hover": {
+                                    transform: "scale(1.5) translate(-50%, -50%)",
+                                    zIndex: "21000"
+                                },
+                            }}
+                            onClick={(event) => handleCoinClick(event, asset)}
+                        >
+                            <Image
+                                src={asset.cgImageURL}
+                                alt={asset.Name}
+                                width={symbolSize}
+                                height={symbolSize}
+                                style={{
+                                    borderRadius: "50%",
+                                    boxShadow: "3px 3px 12px rgba(0,0,0,.1)",
+                                }}
+                            />
+                        </Box>
+                    ))}
+                </Box>
+                {tooltip.visible && (
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: `calc(${tooltip.y} + 20px)`,
+                            left: `calc(${tooltip.x} + 20px)`,
+                            backgroundColor: "#fff",
+                            color: "#000",
+                            padding: "1rem",
+                            borderRadius: "8px",
+                            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.2)",
+                            zIndex: 1000,
+                            pointerEvents: "none",
+                            width: "200px",
+                        }}
+                    >
+                        <Typography variant="h6" sx={{ color: "#000", fontWeight: "bold", whiteSpace: "nowrap", fontSize: "14px" }}>
+                            {tooltip.data.Name} ({tooltip.data.Ticker})
+                        </Typography>
+                        <Typography sx={{ color: "gray", marginTop: "5px" }}>Hype Topic:</Typography>
+                        <Typography sx={{ color: "#000", marginBottom: "8px" }}>
+                            {tooltip.data.Category[0] || "No hype topic"}
+                        </Typography>
+                        <Typography sx={{ color: "gray" }}>Evaluation:</Typography>
+                        <Typography sx={{ color: "#000", whiteSpace: "nowrap", fontSize: "12px" }}>
+                            Safety: <b>{tooltip.data.Sicherheit.toFixed(1)}</b>, Potential: <b>{tooltip.data.Potential.toFixed(1)}</b>
+                        </Typography>
+                    </Box>
+
+
+                )}
+            </Container>
+            <Footer />
+            {loading && (
+                <Box
+                    sx={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        zIndex: 9999,
+                    }}
+                >
+                    <CircularProgress color="inherit" />
+                </Box>
+            )}
+        </>
+    );
 };
 
-export default BubbleChart;
+export default Testing;
