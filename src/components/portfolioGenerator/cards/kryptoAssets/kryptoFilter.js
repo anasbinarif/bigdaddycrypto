@@ -106,7 +106,10 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
         }}
         sx={{
           "& > .MuiPaper-root": {
-            "& .MuiTypography-root": {
+            "& .MuiAutocomplete-noOptions": {
+              color: "white",
+            },
+            "& > .MuiTypography-root": {
               color: "white",
             },
             backgroundColor: "#1d1d1d",

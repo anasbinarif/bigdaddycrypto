@@ -342,7 +342,7 @@ const ScrollableKryptoTabs = ({
                   );
                   // console.log(label);
                   if (label === "Favoriten") {
-                    console.log("hellooooooo", categorizedData[label]);
+                    // console.log("hellooooooo", categorizedData[label]);
                     return categorizedData[label].map((coin, index) => (
                       <CoinCard
                         key={`${coin.CoinGeckoID}-${index}`}
