@@ -82,7 +82,7 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
       .then((data) => {
         setData(data.data);
         setSearchData(data.data.slice(0, 5));
-        console.log("getAllAssets", data.data);
+        // console.log("getAllAssets", data.data);
         setLoading(false);
       })
       .catch((error) => {

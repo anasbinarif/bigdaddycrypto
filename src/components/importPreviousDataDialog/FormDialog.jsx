@@ -49,10 +49,6 @@ const FormDialog = () => {
     });
   };
 
-  useEffect(() => {
-    console.log("sessionJotai-=-", sessionJotai);
-  }, [sessionJotai]);
-
   const handleCancelClose = () => {
     setConfirmClose(false);
     setOpen(true);
@@ -72,7 +68,6 @@ const FormDialog = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("hhhhhhhhhhhhhhhh", data);
           if (!data.pastUserCheck) {
             handleClickOpen();
           }
