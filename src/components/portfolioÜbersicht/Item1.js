@@ -33,10 +33,24 @@ const options = {
 };
 
 export default function Item1({ loadingPortfolio }) {
+  const [width, setWidth] = useState(0);
   const [portfolio] = useAtom(portfolioAtom);
   const [graphPercentage, setGraphPercentage] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const t = useTranslations("item1");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (portfolio.assetsCalculations && portfolio.assets) {
@@ -96,10 +110,16 @@ export default function Item1({ loadingPortfolio }) {
         padding: "25px",
       }}
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+      <Grid container spacing={2} sx={{ width: "100%" }}>
+        <Grid
+          item
+          xs={12}
+          md={width > 1800 ? 6 : width > 1100 ? 12 : 6}
+          sx={{ minWidth: "250px", width: "100%" }}
+        >
           <Box
             sx={{
+              // backgroundColor: "white",
               fontSize: "120%",
               fontWeight: "bold",
             }}
@@ -188,7 +208,7 @@ export default function Item1({ loadingPortfolio }) {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={width > 1800 ? 6 : width > 1100 ? 12 : 6}>
           <Box
             sx={{
               display: "flex",

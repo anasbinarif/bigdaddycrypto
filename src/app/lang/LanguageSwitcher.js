@@ -35,7 +35,7 @@ const LanguageSwitcher = () => {
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
-        sx={{ mx: 2, color: "var(--color-secondary)" }}
+        sx={{ color: "var(--color-secondary)", ml: 2, fontSize: "15px" }}
       >
         {t("selectLanguage")}
       </Button>
@@ -45,12 +45,18 @@ const LanguageSwitcher = () => {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        sx={{
+          "& .MuiPaper-root": {
+            backgroundColor: "rgb(32, 37, 48)",
+            color: "#ffffff",
+          },
+        }}
       >
         <MenuItem onClick={() => changeLanguage("en")}>
-          <a style={{ textDecoration: "none", color: "inherit" }}>In English</a>
+          <a style={{ textDecoration: "none", color: "inherit" }}>English</a>
         </MenuItem>
         <MenuItem onClick={() => changeLanguage("de")}>
-          <a style={{ textDecoration: "none", color: "inherit" }}>In Deutsch</a>
+          <a style={{ textDecoration: "none", color: "inherit" }}>Deutsch</a>
         </MenuItem>
       </Menu>
     </Box>

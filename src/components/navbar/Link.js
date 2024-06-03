@@ -17,13 +17,13 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   const { data: session, status } = useSession();
   const [sessionJotai, setSession] = useAtom(sessionAtom);
   const t = useTranslations("navbar");
-  const [randonUserId, setRandonUserId] = useState("")
+  const [randonUserId, setRandonUserId] = useState("");
 
   useEffect(() => {
     const updateSessionWithSubscription = async () => {
       try {
         if (session) {
-          const id = await generateShortId(session.user.id)
+          const id = await generateShortId(session.user.id);
           setRandonUserId(id);
           const subscriptionData = await fetchUserSubscriptionPlan(
             session.user?.id
@@ -64,9 +64,11 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           session.user.isAdmin &&
           (mobileView ? (
             <MenuItem onClick={handleClose}>
-              <Link href="/admin">{t("admin")}</Link>
+              <Link href="/admin" style={{ marginBottom: "1rem" }}>
+                {t("admin")}
+              </Link>
               <LanguageSwitcher />
-              <CurrencySwitcher/>
+              <CurrencySwitcher />
             </MenuItem>
           ) : (
             <Link
@@ -94,12 +96,17 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             >
               {t("portfolioId")}: {randonUserId}
             </Typography>
-            <Typography sx={{
-              color: "purple",
-              ml: "10px"
-            }}>{sessionJotai?.user?.subscriptionPlan}</Typography>
+            <Typography
+              sx={{
+                color: "var(--color-secondary)",
+                textTransform: "uppercase",
+                ml: "10px",
+              }}
+            >
+              {sessionJotai?.user?.subscriptionPlan}
+            </Typography>
             <LanguageSwitcher />
-            <CurrencySwitcher/>
+            <CurrencySwitcher />
           </>
         )}
         {mobileView ? (

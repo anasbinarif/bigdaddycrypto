@@ -5,8 +5,8 @@ import KryptoAssets from "./cards/kryptoAssets/KryptoAssets";
 import PortfolioComponent from "./cards/PortfolioComponent";
 import { DonutCard } from "./cards/donutCard/DonutCard";
 import { useState, useEffect } from "react";
-import {useAtom} from "jotai/index";
-import {portfolioAtom} from "../../app/stores/portfolioStore";
+import { useAtom } from "jotai/index";
+import { portfolioAtom } from "../../app/stores/portfolioStore";
 
 const PortfolioDisplay = ({
   loadingPortfolio,
@@ -44,6 +44,7 @@ const PortfolioDisplay = ({
           alignItems: "center",
           height: "90vh",
           width: "100%",
+          padding: 0,
         }}
       >
         <CircularProgress />
@@ -57,6 +58,7 @@ const PortfolioDisplay = ({
       spacing={{ xs: 2, md: 3 }}
       columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
       style={{ position: "relative" }}
+      // sx={{ padding: 0 }}
     >
       <Grid
         item

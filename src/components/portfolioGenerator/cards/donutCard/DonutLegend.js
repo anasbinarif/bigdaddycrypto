@@ -34,6 +34,7 @@ const DonutLegend = ({ portfolioCalculations }) => {
     <Box
       sx={{
         background: "#202530",
+        // width: "100%",
         "@media only screen and (max-width: 500px)": { width: "100%" },
       }}
     >

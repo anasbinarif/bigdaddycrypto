@@ -11,6 +11,7 @@ import GridExample from "./portfolioTable/Table";
 import Card from "@mui/material/Card";
 import { Typography } from "@mui/material";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -20,13 +21,28 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function PortfolioUbersicht({ loadingPortfolio }) {
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1, padding: 2 }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={width > 1100 ? 8 : 12}>
           <GridExample />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={width > 1100 ? 4 : 12}>
           <Card
             sx={{
               padding: "15px",

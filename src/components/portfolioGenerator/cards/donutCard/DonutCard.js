@@ -19,7 +19,7 @@ export const DonutCard = () => {
       if (sessionJotai?.user) {
         const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
         setPortfolioCalculations(userPortfolio.calculation);
-          console.log("userPortfoliouserPortfoliouserPortfolio", userPortfolio)
+        console.log("userPortfoliouserPortfoliouserPortfolio", userPortfolio);
         setLoadingPortfolio(true);
       }
     };
@@ -49,12 +49,13 @@ export const DonutCard = () => {
         </Typography>
         <Box
           sx={{
+            width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            // justifyContent: "space-evenly",
             "@media only screen and (max-width:500px)": {
-              alignItems: "flex-start",
               flexDirection: "column",
+              alignItems: "flex-start",
             },
           }}
         >

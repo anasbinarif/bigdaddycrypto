@@ -196,9 +196,9 @@ const PortfolioForm = () => {
                     alignItems: "flex-start",
                     transition: `all 300ms ease-in-out`,
                     ...transStyles[
-                    activeStep > 0
-                      ? "left"
-                      : activeStep === 0
+                      activeStep > 0
+                        ? "left"
+                        : activeStep === 0
                         ? "center"
                         : "right"
                     ],
@@ -206,7 +206,7 @@ const PortfolioForm = () => {
                     // opacity: activeStep === 0 ? 1 : 0,
                     // height: activeStep === 0 ? "auto" : 0,
                   }}
-                // className={activeStep === 0 && styles.animate}
+                  // className={activeStep === 0 && styles.animate}
                 >
                   <Box
                     sx={{
@@ -312,9 +312,9 @@ const PortfolioForm = () => {
                     transition: `all 300ms ease-in-out`,
                     opacity: 0,
                     ...transStyles[
-                    activeStep > 1
-                      ? "left"
-                      : activeStep === 1
+                      activeStep > 1
+                        ? "left"
+                        : activeStep === 1
                         ? "center"
                         : "right"
                     ],
@@ -400,9 +400,9 @@ const PortfolioForm = () => {
                     transition: `all 300ms ease-in-out`,
                     opacity: 0,
                     ...transStyles[
-                    activeStep > 2
-                      ? "left"
-                      : activeStep === 2
+                      activeStep > 2
+                        ? "left"
+                        : activeStep === 2
                         ? "center"
                         : "right"
                     ],
@@ -494,9 +494,9 @@ const PortfolioForm = () => {
                     transition: `all 300ms ease-in-out`,
                     opacity: 0,
                     ...transStyles[
-                    activeStep > 3
-                      ? "left"
-                      : activeStep === 3
+                      activeStep > 3
+                        ? "left"
+                        : activeStep === 3
                         ? "center"
                         : "right"
                     ],

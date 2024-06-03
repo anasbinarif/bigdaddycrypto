@@ -9,7 +9,11 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import { categoryColors, getAssets } from "../../../../lib/data";
+import {
+  categoryColors,
+  categoryColorsNew,
+  getAssets,
+} from "../../../../lib/data";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
 import CoinCardSkeleton from "../coinCard/CoinCardSkeleton";
@@ -17,7 +21,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useTranslations } from "next-intl";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { useAtom } from "jotai";
-import {portfolioAtom} from "../../../../app/stores/portfolioStore";
+import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 
 const ColorCircle = ({ color }) => (
   <SvgIcon>
@@ -113,7 +117,6 @@ const ScrollableKryptoTabs = ({
         });
     }
   }, [currentCategory, userId]);
-  
 
   const handleChange = (event, newValue, line) => {
     if (line === 2) {
@@ -168,6 +171,7 @@ const ScrollableKryptoTabs = ({
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <span className="divider" style={{ marginBottom: "24px" }}></span>
         <Tabs
           value={value === 0 ? value : false}
           onChange={(e, newValue) => {
@@ -186,17 +190,17 @@ const ScrollableKryptoTabs = ({
               "&.Mui-disabled": { opacity: 0.3 },
             },
             "& .MuiTab-root": {
-              width: "20%",
+              width: "calc(20% - 12px)",
               "@media only screen and (max-width: 1500px)": {
-                width: "25%",
+                width: "calc(25% - 12px)",
               },
               "@media only screen and (max-width: 1200px)": {
-                width: "33.33%",
+                width: "calc(33.33% - 12px)",
               },
               "@media only screen and (max-width: 700px)": {
                 minHeight: "auto",
                 padding: "20px 0",
-                width: "50%",
+                width: "calc(50% - 12px)",
               },
               "@media only screen and (max-width: 450px)": {
                 fontSize: "clamp(0.625rem, -0.25rem + 4vw, 0.875rem)",
@@ -219,8 +223,13 @@ const ScrollableKryptoTabs = ({
             iconPosition="start"
             label="favourite"
             sx={{
+              display: "flex",
               color: "white",
+              borderTopRightRadius: "8px",
+              borderTopLeftRadius: "8px",
               whiteSpace: "nowrap",
+              backgroundColor: "rgba(0, 0, 0, 0.2)",
+              margin: "4px 6px",
               "&.Mui-selected": {
                 // borderBottomColor: "var(--color-secondary)",
                 color: "var(--color-secondary)",
@@ -237,6 +246,7 @@ const ScrollableKryptoTabs = ({
           aria-label="scrollable auto tabs example 1"
           sx={{
             display: "flex",
+            // gap: "2rem",
             [`& .${tabsClasses.scrollButtons}`]: {
               "&.Mui-disabled": { opacity: 0.3 },
             },
@@ -244,17 +254,17 @@ const ScrollableKryptoTabs = ({
               flexWrap: "wrap",
             },
             "& .MuiTab-root": {
-              width: "20%",
+              width: "calc(20% - 12px)",
               "@media only screen and (max-width: 1500px)": {
-                width: "25%",
+                width: "calc(25% - 12px)",
               },
               "@media only screen and (max-width: 1200px)": {
-                width: "33.33%",
+                width: "calc(33.33% - 12px)",
               },
               "@media only screen and (max-width: 700px)": {
                 minHeight: "auto",
                 padding: "20px 0",
-                width: "50%",
+                width: "calc(50% - 12px)",
               },
               "@media only screen and (max-width: 450px)": {
                 fontSize: "clamp(0.625rem, -0.25rem + 4vw, 0.875rem)",
@@ -268,7 +278,7 @@ const ScrollableKryptoTabs = ({
             },
             "& .Mui-selected": {
               // borderBottomColor: "var(--color-secondary)",
-              borderBottom: "1px solid var(--color-secondary)",
+              borderBottom: `1px solid var(--color-secondary)`,
               color: "var(--color-secondary)",
             },
           }}
@@ -290,9 +300,15 @@ const ScrollableKryptoTabs = ({
                 sx={{
                   display: index === 0 ? "none" : "flex",
                   color: "white",
+                  borderTopRightRadius: "8px",
+                  borderTopLeftRadius: "8px",
                   whiteSpace: "nowrap",
+                  backgroundColor: "rgba(0, 0, 0, 0.2)",
+                  margin: "4px 6px",
+                  "&:not(:last-child)": {},
                   "&.Mui-selected": {
                     // borderBottomColor: "var(--color-secondary)",
+                    // borderBottom: `1px solid ${categoryColors[label]}`,
                     color: "var(--color-secondary)",
                   },
                 }}
@@ -301,6 +317,7 @@ const ScrollableKryptoTabs = ({
           })}
         </Tabs>
       </Box>
+      <span className="divider" style={{ marginTop: "24px" }}></span>
       {tabLabels.map((label, index) => (
         <TabPanel key={index} value={value} index={index}>
           <Box
@@ -313,33 +330,22 @@ const ScrollableKryptoTabs = ({
           >
             {loading
               ? Array.from(new Array(15)).map((_, idx) => (
-                <CoinCardSkeleton key={idx} />
-              ))
+                  <CoinCardSkeleton key={idx} />
+                ))
               : categorizedData[label] &&
-              (() => {
-                const nonRiskCoins = categorizedData[label].filter(
-                  (coin) => !checkCoinRisk(coin)
-                );
-                const riskCoins = categorizedData[label].filter((coin) =>
-                  checkCoinRisk(coin)
-                );
-                return [
-                  ...nonRiskCoins.map((coin, index) => (
-                    <CoinCard
-                      key={`${coin.CoinGeckoID}-${index}`}
-                      coin={coin}
-                      selected={checkCoinSelected(coin)}
-                      risk={checkCoinRisk(coin)}
-                      priceIndicator={priceIndicator}
-                      assetsLeangth={assetsLeangth}
-                      currentCategory={currentCategory}
-                      setData={setData}
-                    />
-                  )),
-                  ...(showRiskCoins[label]
-                    ? riskCoins.map((coin, index) => (
+                (() => {
+                  const nonRiskCoins = categorizedData[label].filter(
+                    (coin) => !checkCoinRisk(coin)
+                  );
+                  const riskCoins = categorizedData[label].filter((coin) =>
+                    checkCoinRisk(coin)
+                  );
+                  // console.log(label);
+                  if (label === "Favoriten") {
+                    // console.log("hellooooooo", categorizedData[label]);
+                    return categorizedData[label].map((coin, index) => (
                       <CoinCard
-                        key={`${coin.CoinGeckoID}-risk-${index}`}
+                        key={`${coin.CoinGeckoID}-${index}`}
                         coin={coin}
                         selected={checkCoinSelected(coin)}
                         risk={checkCoinRisk(coin)}
@@ -348,27 +354,55 @@ const ScrollableKryptoTabs = ({
                         currentCategory={currentCategory}
                         setData={setData}
                       />
-                    ))
-                    : []),
-                ];
-              })()}
+                    ));
+                  }
+                  return [
+                    ...nonRiskCoins.map((coin, index) => (
+                      <CoinCard
+                        key={`${coin.CoinGeckoID}-${index}`}
+                        coin={coin}
+                        selected={checkCoinSelected(coin)}
+                        risk={checkCoinRisk(coin)}
+                        priceIndicator={priceIndicator}
+                        assetsLeangth={assetsLeangth}
+                        currentCategory={currentCategory}
+                        setData={setData}
+                      />
+                    )),
+                    ...(showRiskCoins[label]
+                      ? riskCoins.map((coin, index) => (
+                          <CoinCard
+                            key={`${coin.CoinGeckoID}-risk-${index}`}
+                            coin={coin}
+                            selected={checkCoinSelected(coin)}
+                            risk={checkCoinRisk(coin)}
+                            priceIndicator={priceIndicator}
+                            assetsLeangth={assetsLeangth}
+                            currentCategory={currentCategory}
+                            setData={setData}
+                          />
+                        ))
+                      : []),
+                  ];
+                })()}
           </Box>
-          {categorizedData[label]?.some(checkCoinRisk) && (
-            <Button
-              onClick={() => handleToggleRiskCoins(label)}
-              sx={{
-                margin: "16px",
-                color: "#bbb",
-                fontSize: "13px",
-                padding: "5px 10px",
-                backgroundColor: "#ffffff22",
-                borderRadius: "4px",
-                transition: ".3s all",
-              }}
-            >
-              {showRiskCoins[label] ? t("hideRiskCoins") : t("showRiskCoins")}
-            </Button>
-          )}
+          {categorizedData[label]?.some(checkCoinRisk) &&
+            label !== "Favoriten" && (
+              <Button
+                onClick={() => handleToggleRiskCoins(label)}
+                sx={{
+                  margin: "16px",
+                  color: "#bbb",
+                  fontSize: "13px",
+                  padding: "5px 10px",
+                  backgroundColor: "#ffffff22",
+                  borderRadius: "4px",
+                  transition: ".3s all",
+                }}
+              >
+                {showRiskCoins[label] ? t("hideRiskCoins") : t("showRiskCoins")}
+              </Button>
+            )}
         </TabPanel>
       ))}
       {/*{loading && (*/}
