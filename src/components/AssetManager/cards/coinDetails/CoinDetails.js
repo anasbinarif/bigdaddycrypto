@@ -90,7 +90,7 @@ const CoinDetails = (props) => {
       setRowVals(
         asset.buyAndSell.map((row) => ({
           ...row,
-          Date: formatDateForInput(row.Date), // Format the date for input
+          Date: formatDateForInput(row.Date),
           Betrag: (row.PricePerCoin * row.Coins).toFixed(2),
         }))
       );
@@ -120,7 +120,7 @@ const CoinDetails = (props) => {
         return acc;
       }, 0)
       .toFixed(2);
-    const avgPurchasePrice = (
+    const avgPurchasePrice_0 = (
       totalInvested /
       rowVals.reduce((acc, row) => {
         if (row.Type === "Kauf") {
@@ -129,6 +129,7 @@ const CoinDetails = (props) => {
         return acc;
       }, 0)
     ).toFixed(2);
+    const avgPurchasePrice = isNaN(avgPurchasePrice_0) ? 0 : avgPurchasePrice_0;
     const kaufTotalCoin = rowVals
       .reduce((acc, row) => {
         if (row.Type === "Kauf") {
@@ -145,10 +146,11 @@ const CoinDetails = (props) => {
         return acc;
       }, 0)
       .toFixed(2);
-    const avgPurchasePricePercentage = (
+    const avgPurchasePricePercentage_0 = (
       100 -
       (totalInvested / (kaufTotalCoin * coin?.Price)) * 100
     ).toFixed(2);
+    const avgPurchasePricePercentage = isNaN(avgPurchasePricePercentage_0) ? 0 : avgPurchasePricePercentage_0;
     const avgSellingPrice = (realizedProfit / verkaufTotalCoin).toFixed(2);
     const avgSellingPricePercentage = (
       100 -
@@ -172,20 +174,21 @@ const CoinDetails = (props) => {
     );
 
     setFinancialSummary({
-      totalCoins,
-      totalHoldingsValue,
-      totalInvested,
-      realizedProfit,
-      avgPurchasePrice,
-      avgPurchasePricePercentage,
-      avgSellingPrice,
-      avgSellingPricePercentage,
-      totalWinLoss,
-      totalWinLossPercentage,
-      X,
+      totalCoins: checkNaN(totalCoins),
+      totalHoldingsValue: checkNaN(totalHoldingsValue),
+      totalInvested: checkNaN(totalInvested),
+      realizedProfit: checkNaN(realizedProfit),
+      avgPurchasePrice: checkNaN(avgPurchasePrice),
+      avgPurchasePricePercentage: checkNaN(avgPurchasePricePercentage),
+      avgSellingPrice: checkNaN(avgSellingPrice),
+      avgSellingPricePercentage: checkNaN(avgSellingPricePercentage),
+      totalWinLoss: checkNaN(totalWinLoss),
+      totalWinLossPercentage: checkNaN(totalWinLossPercentage),
+      X: checkNaN(X),
     });
   }, [rowVals, coin?.Price]);
 
+  const checkNaN = (value) => isNaN(value) ? 0 : value;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -242,11 +245,11 @@ const CoinDetails = (props) => {
       const CoinGeckoID = coin?.CoinGeckoID;
       console.log("Saving data", rowVals, CoinGeckoID, userID);
       const Portfolio_Assets = {
-        totalInvest: financialSummary.totalInvested,
-        totalSold: financialSummary.realizedProfit,
-        totalCoins: financialSummary.totalCoins,
-        Holdings: financialSummary.totalHoldingsValue,
-        DCA: financialSummary.avgPurchasePrice,
+        totalInvest: financialSummary.totalInvested || 0,
+        totalSold: financialSummary.realizedProfit || 0,
+        totalCoins: financialSummary.totalCoins || 0,
+        Holdings: financialSummary.totalHoldingsValue || 0,
+        DCA: financialSummary.avgPurchasePrice || 0, 
       };
       try {
         const response = await fetch("/api/addBuyAndSell", {
@@ -262,6 +265,7 @@ const CoinDetails = (props) => {
           }),
         });
         if (response.ok) {
+          console.log("hbhbhbhbhbhbhbhbhbhbhbh")
           setAlertInfo({
             message: "Transaktion erfolgreich gespeichert!",
             severity: "success",
@@ -269,7 +273,7 @@ const CoinDetails = (props) => {
           const userPortfolio = await getUserPortfolio(userID);
           setPortfolio(userPortfolio?.data);
         } else {
-          throw new Error("Failed to save data");
+          // throw new Error("Failed to save data");
         }
       } catch (error) {
         setAlertInfo({ message: error.message, severity: "error" });
