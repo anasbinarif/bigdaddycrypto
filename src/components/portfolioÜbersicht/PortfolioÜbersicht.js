@@ -37,7 +37,7 @@ export default function PortfolioUbersicht({ loadingPortfolio }) {
   }, []);
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 2 }}>
+    <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={width > 1100 ? 8 : 12}>
           <GridExample />
