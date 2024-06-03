@@ -105,7 +105,14 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           marginTop: "80px",
           // margin: "1rem 0 0",
           "& > #simple-tabpanel-one > .MuiBox-root": {
-            padding: "10px",
+            "@media only screen and (max-width: 500px)": {
+              padding: "10px",
+            },
+          },
+          "& > #simple-tabpanel-three > .MuiBox-root": {
+            "@media only screen and (max-width: 500px)": {
+              padding: "10px",
+            },
           },
         }}
       >

@@ -260,6 +260,18 @@ const CoinCard = ({
     setCursorPos({ top: event.clientY, left: event.clientX });
   };
 
+  const getBackgroundColor = (sicherheitAverage) => {
+    if (sicherheitAverage >= 0 && sicherheitAverage < 5.5) {
+      return "rgb(248, 190, 161)";
+    } else if (sicherheitAverage >= 5.5 && sicherheitAverage < 7) {
+      return "rgb(191, 218, 177)"; // or another shade for "light faded green"
+    } else if (sicherheitAverage >= 7 && sicherheitAverage <= 10) {
+      return "rgb(81, 196, 65)";
+    } else {
+      return "gray"; // default color if the value is out of expected range
+    }
+  };
+
   return (
     <>
       {search ? (
@@ -383,7 +395,7 @@ const CoinCard = ({
                   position: "absolute",
                   right: "0",
                   bottom: "0",
-                  bgcolor: "red",
+                  bgcolor: getBackgroundColor(Sicherheit),
                   borderBottomRightRadius: "4px",
                   borderTopLeftRadius: "4px",
                   padding: "1px 6px 0",
@@ -393,6 +405,7 @@ const CoinCard = ({
                   component="div"
                   variant="body2"
                   sx={{
+                    color: "#000000",
                     fontSize: 13,
                     display: "flex",
                     gap: "2px",
@@ -570,7 +583,7 @@ const CoinCard = ({
                     position: "absolute",
                     right: "0",
                     bottom: "0",
-                    bgcolor: "red",
+                    bgcolor: getBackgroundColor(Sicherheit),
                     borderBottomRightRadius: "4px",
                     borderTopLeftRadius: "4px",
                     padding: "1px 6px 0",
@@ -580,6 +593,7 @@ const CoinCard = ({
                     component="div"
                     variant="body2"
                     sx={{
+                      color: "#000000",
                       fontSize: 13,
                       display: "flex",
                       gap: "2px",
