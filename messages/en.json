@@ -47,7 +47,13 @@
   },
   "donutChart": {
     "score": "Score",
-    "veryGood": "Very good"
+    "veryGood": "Very good",
+    "Sehr gut": "Very Good",
+    "Gut": "Good",
+    "Befriedigend": "Satisfactory",
+    "Ausreichend": "Sufficient",
+    "Mangelhaft": "Inadequate",
+    "Schlecht": "Bad"
   },
   "kryptoFilter": {
     "chooseAssets": "Choose your Crypto Assets",
@@ -120,19 +126,30 @@
     "pricingPlans": "Pricing Plans"
   },
   "scrollableKryptoTabs": {
-    "favourite": "Favoriten",
+    "favourite": "Favorites",
     "ai": "AI",
-    "web3Anonymity": "Web3/Anonymität",
+    "web3Anonymity": "Web3/Anonymity",
     "defi": "DeFi",
-    "greenCoins": "Grüne Coins",
+    "greenCoins": "Green Coins",
     "gamingMetaverse": "Gaming/Metaverse",
-    "btcConnection": "BTC-Zusammenhang",
-    "cbdcNetworks": "CBDC-Netzwerke",
+    "btcConnection": "BTC Connection",
+    "cbdcNetworks": "CBDC Networks",
     "eCommerce": "E-Commerce",
-    "tokenizationRWA": "Tokenisierung/RWA",
-    "noHypeTopic": "Kein Hype-Thema",
+    "tokenizationRWA": "Tokenization/RWA",
+    "noHypeTopic": "No Hype Topic",
     "hideRiskCoins": "Hide Risk Coins",
     "showRiskCoins": "Show Risk Coins"
+  },
+  "donutLegend": {
+    "AI": "AI",
+    "WEB3": "Web3/Anonymity",
+    "DEFI": "DeFi",
+    "GREEN": "Green Coins",
+    "METAVERSE": "Gaming/Metaverse",
+    "BTC": "BTC Connection",
+    "CBDC": "CBDC Networks",
+    "ECOMMERCE": "E-Commerce",
+    "NFT": "Tokenization/RWA"
   },
   "coinDetails": {
     "transactions": "Transactions",

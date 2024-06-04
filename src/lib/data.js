@@ -29,14 +29,21 @@ export const convertPrice = (price, currency, rates) => {
 export const categoryColors = {
   AI: "#FFD700", // Gold
   "Web3/Anonymität": "#DC143C", // Crimson
+  "Web3/Anonymity": "#DC143C", // Crimson
   DeFi: "#1155bb", // Dark Blue
   "Grüne Coins": "#00aa66", // Green
+  "Green Coins": "#00aa66", // Green
   "Gaming/Metaverse": "#00BFFF", // Deep Sky Blue
   "BTC-Zusammenhang": "#FF9900", // Orange
+  "BTC Connection": "#FF9900", // Orange
   "CBDC-Netzwerke": "#667788", // Dark Gray
+  "CBDC Networks": "#667788", // Dark Gray
   ECommerce: "#8833bb", // Dark Magenta
+  "E-Commerce": "#8833bb", // Dark Magenta
   "Tokenisierung/RWA": "#ff5aac", // Pink
+  "Tokenization/RWA": "#ff5aac", // Pink
   Favourite: "#2E8B57", // Sea Green
+  Favorites: "#2E8B57", // Sea Green
 };
 
 export const categoryColorsNew = {

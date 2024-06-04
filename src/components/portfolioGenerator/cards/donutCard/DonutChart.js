@@ -323,7 +323,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
           {score}
         </Typography>
         <Typography variant="caption" style={{ color: "#FFFFFF" }}>
-          {calculateNote(score)}
+          {t(`${calculateNote(score)}`)}
         </Typography>
       </Box>
       {tooltip.visible && (
