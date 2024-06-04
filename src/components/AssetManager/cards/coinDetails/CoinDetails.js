@@ -43,6 +43,20 @@ import { parse } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
+function addCommas(number) {
+  let numberString = number.toString();
+
+  let parts = numberString.split(".");
+
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  let tempStr = parts.join(".").replace(/[.,]/g, function (match) {
+    return match === "," ? "." : ",";
+  });
+
+  return tempStr;
+}
+
 const CoinDetails = (props) => {
   const t = useTranslations("coinDetails");
   const { coin, index } = props;
@@ -572,7 +586,9 @@ const CoinDetails = (props) => {
               </Typography>
               <Typography noWrap>{coin?.CoinGeckoID}</Typography>
               <Typography>
-                {convertPrice(coin?.Price.toFixed(2), currency, rates)}{" "}
+                {addCommas(
+                  convertPrice(coin?.Price.toFixed(2), currency, rates)
+                )}{" "}
                 {currencySign[currency]}
               </Typography>
             </Box>
@@ -599,12 +615,14 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {convertPrice(
-                  financialSummary.totalHoldingsValue,
-                  currency,
-                  rates
-                )}
-                ,00 {currencySign[currency]}
+                {addCommas(
+                  convertPrice(
+                    financialSummary.totalHoldingsValue,
+                    currency,
+                    rates
+                  )
+                )}{" "}
+                {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{
@@ -638,8 +656,10 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {convertPrice(financialSummary.totalInvested, currency, rates)}
-                ,00 {currencySign[currency]}
+                {addCommas(
+                  convertPrice(financialSummary.totalInvested, currency, rates)
+                )}{" "}
+                {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{
@@ -673,8 +693,10 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {convertPrice(financialSummary.totalWinLoss, currency, rates)}
-                ,00 {currencySign[currency]}
+                {addCommas(
+                  convertPrice(financialSummary.totalWinLoss, currency, rates)
+                )}{" "}
+                {currencySign[currency]}
               </Typography>
               <Typography
                 className={
@@ -737,10 +759,12 @@ const CoinDetails = (props) => {
                 }}
               >
                 {financialSummary.avgPurchasePrice > 0
-                  ? `${convertPrice(
-                      financialSummary.avgPurchasePrice,
-                      currency,
-                      rates
+                  ? `${addCommas(
+                      convertPrice(
+                        financialSummary.avgPurchasePrice,
+                        currency,
+                        rates
+                      )
                     )} ${currencySign[currency]}`
                   : `--,-- ${currencySign[currency]}`}
               </Typography>
@@ -806,10 +830,12 @@ const CoinDetails = (props) => {
                 }}
               >
                 {financialSummary.avgSellingPrice > 0
-                  ? `${convertPrice(
-                      financialSummary.avgSellingPrice,
-                      currency,
-                      rates
+                  ? `${addCommas(
+                      convertPrice(
+                        financialSummary.avgSellingPrice,
+                        currency,
+                        rates
+                      )
                     )} ${currencySign[currency]}`
                   : `--,-- ${currencySign[currency]}`}
               </Typography>
@@ -871,8 +897,10 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {convertPrice(financialSummary.realizedProfit, currency, rates)}
-                ,00 {currencySign[currency]}
+                {addCommas(
+                  convertPrice(financialSummary.realizedProfit, currency, rates)
+                )}{" "}
+                {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{

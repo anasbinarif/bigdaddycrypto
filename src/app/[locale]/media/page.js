@@ -229,48 +229,75 @@ const MediaVideoPlayer = () => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        minHeight: "120vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       <Navbar />
       <Box
         sx={{
-          //   marginTop: isSmallScreen ? "5rem" : "9rem",
-          // margin:
-          //   width > 768 ? "0 10rem 0" : width > 500 ? "0 4rem 0" : "0 2rem 0",
-          // marginTop: "112px",
-          height: width > 1600 ? "calc(100vh - 80px)" : "calc(100% - )",
-          backgroundColor: "#111826",
-          overflowX: "hidden",
-          maxWidth: "1600px",
-          width: "100%",
-          paddingTop: "80px",
-          margin: "auto",
+          margin:
+            width > 1920
+              ? "8rem auto 4rem"
+              : width > 1500
+              ? "8rem 10rem 4rem"
+              : width > 900
+              ? "8rem 5rem 4rem"
+              : width > 500
+              ? "8rem 3rem 4rem"
+              : "8rem 1rem 4rem",
+          minWidth: width > 1920 ? "1700px" : "auto",
         }}
+        // sx={{
+        //   //   marginTop: isSmallScreen ? "5rem" : "9rem",
+        //   margin:
+        //     width > 768 ? "3rem auto 0" : width > 500 ? "0 4rem 0" : "0 2rem 0",
+        //   // marginTop: "112px",
+        //   // height: width > 1600 ? "calc(100vh - 80px)" : "calc(100% - )",
+        //   // backgroundColor: "#111826",
+        //   overflowX: "hidden",
+        //   // maxWidth: width > 2000 ? "1400px" : "",
+        //   // width: "100%",
+        //   paddingTop: "80px",
+        //   // margin: width > 1600 ? "0 0 4rem" : "0 3rem 4rem 3rem",
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   // alignItems: "center",
+        // }}
       >
         <Typography
           sx={{
-            // marginLeft: isSmallScreen ? "1rem" : "6rem",
             color: "#FFFFFF",
             fontFamily: '"Montserrat", Sans-serif',
             fontSize: "32px",
             fontWeight: 600,
-            textTransform: "uppercase",
-            letterSpacing: "0.01em",
-            textAlign: isSmallScreen ? "center" : "left",
           }}
+          // sx={{
+          //   // marginLeft: isSmallScreen ? "1rem" : "6rem",
+          //   textTransform: "uppercase",
+          //   letterSpacing: "0.01em",
+          //   textAlign: isSmallScreen ? "center" : "left",
+          // }}
         >
           {t("heading1")}
         </Typography>
         <Typography
           sx={{
             color: "#24ffa7",
-            // marginLeft: isSmallScreen ? "1rem" : "6rem",
             fontSize: width > 1500 ? "4rem" : width > 900 ? "3rem" : "2rem",
             fontWeight: "900",
             textTransform: "uppercase",
-            letterSpacing: "0.01em",
-            textAlign: isSmallScreen ? "center" : "left",
-            marginBottom: "2rem",
           }}
+          // sx={{
+          //   // marginLeft: isSmallScreen ? "1rem" : "6rem",
+          //   letterSpacing: "0.01em",
+          //   textAlign: isSmallScreen ? "center" : "left",
+          //   marginBottom: "2rem",
+          // }}
         >
           {t("heading2")}
         </Typography>
@@ -278,13 +305,18 @@ const MediaVideoPlayer = () => {
           container
           spacing={0}
           sx={{
-            // margin: isSmallScreen ? "1rem" : "0 0rem 10rem 5rem",
-            // minHeight: "543px",
-            maxHeight: "720px",
-            // height: isSmallScreen ? "350px" : width > 1900 ? "100%" : "543px",
             display: "flex",
             flexDirection: width < 1200 ? "column" : "row",
+            maxWidth: "1900px",
           }}
+          // sx={{
+          //   // margin: isSmal  lScreen ? "1rem" : "0 0rem 10rem 5rem",
+          //   // minHeight: "543px",
+          //   // height: isSmallScreen ? "350px" : width > 1900 ? "100%" : "543px",
+          //   display: "flex",
+          //   width: "100%",
+          //   maxWidth: "1900px",
+          // }}
         >
           {/* <Grid
             item
@@ -293,9 +325,10 @@ const MediaVideoPlayer = () => {
             sx={{ margin: "0px", height: isSmallScreen ? "auto" : "100%" }}
           >
           </Grid> */}
-          <Card sx={{ flexGrow: 1, flexBasis: "auto" }}>
+          <Card sx={{ flexGrow: 1, flexBasis: "70%", height: "540px" }}>
             <CardMedia
-              height="100%"
+              sx={{ height: width < 1200 ? "540px" : "100%" }}
+              // height="100%"
               component="iframe"
               // height={isSmallScreen ? "240px" : "100%"}
               src={selectedVideo}
@@ -315,17 +348,18 @@ const MediaVideoPlayer = () => {
           >
           </Grid> */}
           <List
-            style={{
+            sx={{
               overflow: "auto",
               backgroundColor: "#2A2A2A",
               borderRight: isSmallScreen ? "none" : "1px solid #333",
               height: "auto",
               // minHeight: "543px",
-              // maxHeight: "720px",
+              maxHeight: "540px",
               flexShrink: 1,
               flexBasis: "30%",
-              // width: "30%",
             }}
+            // style={{
+            // }}
           >
             <Box
               sx={{
@@ -387,7 +421,7 @@ const MediaVideoPlayer = () => {
                   primary={
                     <Typography
                       variant="body2"
-                      style={{
+                      sx={{
                         color: "white",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -409,7 +443,7 @@ const MediaVideoPlayer = () => {
         </Box>
       </Box>
       <Footer />
-    </>
+    </Box>
   );
 };
 
