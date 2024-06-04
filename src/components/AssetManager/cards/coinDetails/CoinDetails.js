@@ -157,7 +157,9 @@ const CoinDetails = (props) => {
       100 -
       (totalInvested / (kaufTotalCoin * coin?.Price)) * 100
     ).toFixed(2);
-    const avgPurchasePricePercentage = isNaN(avgPurchasePricePercentage_0) ? 0 : avgPurchasePricePercentage_0;
+    const avgPurchasePricePercentage = isNaN(avgPurchasePricePercentage_0)
+      ? 0
+      : avgPurchasePricePercentage_0;
     const avgSellingPrice = (realizedProfit / verkaufTotalCoin).toFixed(2);
     const avgSellingPricePercentage = (
       100 -
@@ -195,11 +197,8 @@ const CoinDetails = (props) => {
     });
   }, [rowVals, coin?.Price]);
 
-<<<<<<< HEAD
-=======
-  const checkNaN = (value) => isNaN(value) ? 0 : value;
+  const checkNaN = (value) => (isNaN(value) ? 0 : value);
 
->>>>>>> origin/master
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -259,7 +258,7 @@ const CoinDetails = (props) => {
         totalSold: financialSummary.realizedProfit || 0,
         totalCoins: financialSummary.totalCoins || 0,
         Holdings: financialSummary.totalHoldingsValue || 0,
-        DCA: financialSummary.avgPurchasePrice || 0, 
+        DCA: financialSummary.avgPurchasePrice || 0,
       };
       try {
         const response = await fetch("/api/addBuyAndSell", {
@@ -275,7 +274,7 @@ const CoinDetails = (props) => {
           }),
         });
         if (response.ok) {
-          console.log("hbhbhbhbhbhbhbhbhbhbhbh")
+          console.log("hbhbhbhbhbhbhbhbhbhbhbh");
           setAlertInfo({
             message: "Transaktion erfolgreich gespeichert!",
             severity: "success",
