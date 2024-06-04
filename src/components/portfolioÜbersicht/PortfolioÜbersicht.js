@@ -12,6 +12,7 @@ import Card from "@mui/material/Card";
 import { Typography } from "@mui/material";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -22,6 +23,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function PortfolioUbersicht({ loadingPortfolio }) {
   const [width, setWidth] = useState(0);
+  const t = useTranslations("Overview");
 
   useEffect(() => {
     const handleResize = () => {
@@ -60,7 +62,9 @@ export default function PortfolioUbersicht({ loadingPortfolio }) {
               href="/portfolioOverview"
             >
               <Typography sx={{ backgroundColor: "#1188ff", color: "white" }}>
-                Jetzt Kommentar von BigDaddy anfragen
+                {t("buttonText")}
+                {/* Jetzt Kommentar von BigDaddy anfragen */}
+                {/* Request comment from BigDaddy now */}
               </Typography>
             </Link>
           </Card>

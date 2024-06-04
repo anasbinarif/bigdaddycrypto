@@ -273,7 +273,7 @@ function VideoPlayer() {
       <Navbar />
       <Box
         sx={{
-          marginTop: isSmallScreen ? "5rem" : "9rem",
+          // marginTop: isSmallScreen ? "5rem" : "9rem",
           backgroundColor: "#111826",
           overflowX: "hidden",
           margin:
@@ -283,8 +283,9 @@ function VideoPlayer() {
               ? "8rem 4rem 0"
               : "8rem 2rem 0",
           display: "flex",
+          height: "100vh",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "space-between",
         }}
       >
         <Typography
@@ -327,7 +328,7 @@ function VideoPlayer() {
           >
             <CardMedia
               component="iframe"
-              height={isSmallScreen ? "240" : "520"}
+              height={isSmallScreen ? "240px" : "100%"}
               src={selectedVideo}
               allow="autoplay; encrypted-media"
               loading="lazy"
@@ -349,9 +350,9 @@ function VideoPlayer() {
               overflow: "auto",
               backgroundColor: "#2A2A2A",
               borderRight: isSmallScreen ? "none" : "1px solid #333",
-              // height: isSmallScreen ? "auto" : "100%",
+              height: isSmallScreen ? "60%" : "100%",
               flexShrink: 1,
-              flexBasis: "40%",
+              flexBasis: "30%",
             }}
           >
             <Box
@@ -434,9 +435,8 @@ function VideoPlayer() {
             ))}
           </List>
         </Box>
+        <Footer />
       </Box>
-
-      <Footer />
     </>
   );
 }

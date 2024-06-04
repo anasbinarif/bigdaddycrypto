@@ -111,7 +111,7 @@ const LoginPage = () => {
           setPending(false);
           setAlert({
             open: true,
-            message: "Login Successful",
+            message: "Login erfolgreich",
             severity: "success",
           });
           router.push("/");

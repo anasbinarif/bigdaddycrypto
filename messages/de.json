@@ -11,7 +11,7 @@
   },
   "navbar": {
     "companyName": "Portfolio Generator 2.1",
-    "home": "Heim",
+    "home": "Home",
     "faq": "FAQ",
     "media": "Medien",
     "graph": "Graph",
@@ -48,6 +48,18 @@
   "donutChart": {
     "score": "Score",
     "veryGood": "Sehr gut"
+  },
+  "donutLegend": {
+    "AI": "AI",
+    "DEFI": "DeFi",
+    "WEB3": "WEB3 / Anonymität",
+    "GREEN": "Grüne Coins",
+    "METAVERSE": "Gaming / Metaverse",
+    "BTC": "BTC - ZUSAMMENHANG",
+    "NFT": "TOKENISIERUNG / RWA",
+    "CBDC": "CBDC - Network",
+    "ECOMMERCE": "E - Commerce",
+    "KEIN HYPE-THEMA": "KEIN HYPE-THEMA"
   },
   "kryptoFilter": {
     "chooseAssets": "Wähle deine Krypto-Assets",
@@ -186,5 +198,8 @@
     "assetAdded": "Asset erfolgreich hinzugefügt!",
     "assetAddFailed": "Asset konnte nicht hinzugefügt werden.",
     "fillAllFields": "Bitte füllen Sie alle erforderlichen Felder aus."
+  },
+  "Overview": {
+    "buttonText": "Jetzt Kommentar von BigDaddy anfragen"
   }
 }

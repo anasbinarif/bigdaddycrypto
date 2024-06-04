@@ -13,7 +13,7 @@ import { useAtom } from "jotai";
 import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import {calculatePotential} from "../../../lib/action";
+import { calculatePotential } from "../../../lib/action";
 
 function BewertungCard() {
   const [portfolio] = useAtom(portfolioAtom);
@@ -26,10 +26,12 @@ function BewertungCard() {
       portfolio.assetsCalculations &&
       portfolio.assetsCalculations.assets.length > 0
     ) {
+      console.log(portfolio);
       const financialSummaries = calculateFinancialSummaryForAllAssets();
-      const sicherheitValues = financialSummaries.map(
-        (asset) => asset.Sicherheit || 0
-      );
+      console.log(financialSummaries);
+      const sicherheitValues = financialSummaries
+        .filter((item) => item.Sicherheit)
+        .map((asset) => asset.Sicherheit || 0);
       const totalGesamtwert = portfolio.assetsCalculations.assets
         .reduce((acc, curr) => acc + curr.Holdings, 0)
         .toFixed(2);
@@ -70,6 +72,7 @@ function BewertungCard() {
       };
     });
   };
+
   const getBackgroundColor = (sicherheitAverage) => {
     if (sicherheitAverage >= 0 && sicherheitAverage < 5.5) {
       return "red";
@@ -82,17 +85,18 @@ function BewertungCard() {
     }
   };
 
-    useEffect(() => {
-        const testFunctionAnything = async () => {
-            if (portfolio?.assets) {
-                const portfolio1 = portfolio?.assets;
-                const potentialPromise = await calculatePotential(portfolio1);
-                console.log("calculatePotential", potentialPromise);
-            }
-        }
-        testFunctionAnything()
-        // console.log("portfolio from bewertung", portfolio?.assets)
-    }, [portfolio]);
+  useEffect(() => {
+    const testFunctionAnything = async () => {
+      if (portfolio?.assets) {
+        const portfolio1 = portfolio?.assets;
+        const potentialPromise = await calculatePotential(portfolio1);
+        console.log("calculatePotential", potentialPromise);
+      }
+    };
+    testFunctionAnything();
+    // console.log("portfolio from bewertung", portfolio?.assets)
+  }, [portfolio]);
+
   return (
     <Card
       sx={{

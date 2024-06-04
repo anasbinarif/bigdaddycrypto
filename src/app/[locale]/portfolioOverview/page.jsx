@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Allocation from "../../../../public/assets/images/Allocation.webp";
-import Check from "../../../../public/assets/images/Check.webp"
+import Check from "../../../../public/assets/images/Check.webp";
 import Image from "next/image";
 import Checkout from "../../../components/oneTimePayment/OneTimePaymentCheckout";
 import CustomizedSteppers from "./CustomizedSteppers";
@@ -57,20 +57,24 @@ const transitionStyles = (activeNum) => {
 
 const PortfolioForm = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [visitorString, setVisitorString] = useState('dummyVisitorString');
-  const [userComment, setUserComment] = useState('This is a sample user comment.');
-  const [missingCoins, setMissingCoins] = useState('Sample missing coins data.');
+  const [visitorString, setVisitorString] = useState("dummyVisitorString");
+  const [userComment, setUserComment] = useState(
+    "This is a sample user comment."
+  );
+  const [missingCoins, setMissingCoins] = useState(
+    "Sample missing coins data."
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   const [sessionJotai, setSession] = useAtom(sessionAtom);
-  const [totalOneTimePrice, setTotalOneTimePrice] = useState(0)
+  const [totalOneTimePrice, setTotalOneTimePrice] = useState(0);
   const [activeHeight, setActiveHeight] = useState("auto");
   const sliderRef = useRef(null);
   const [portfolioData, setPortfolioData] = useState({
-    assets: '',
-    investment: '',
-    target: '',
+    assets: "",
+    investment: "",
+    target: "",
   });
   const [showNext, setShowNext] = useState(false);
 
@@ -113,40 +117,42 @@ const PortfolioForm = () => {
   const handleSelection = (step, value) => {
     setPortfolioData({
       ...portfolioData,
-      [step]: value
+      [step]: value,
     });
     setTimeout(handleNext, 200);
   };
 
   const updateUrl = (step) => {
     const currentPathname = pathname || "";
-    router.push(`${currentPathname}?step=${step}`, undefined, { shallow: true });
+    router.push(`${currentPathname}?step=${step}`, undefined, {
+      shallow: true,
+    });
   };
 
   const confirmOneTimePayment = () => {
-    router.push("/")
-  }
+    router.push("/");
+  };
 
   const handleFormSubmited = async () => {
-    handleNext()
+    handleNext();
     try {
       const price = await calculatePrice(portfolioData);
       console.log("Calculated Price:", price);
       setTotalOneTimePrice(price);
       const userId = sessionJotai?.user.id;
-      const response = await fetch('/api/saveOneTimePayment', {
-        method: 'POST',
+      const response = await fetch("/api/saveOneTimePayment", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         cache: "no-store",
         body: JSON.stringify({ userId, price, status: "Pending" }),
       });
 
       if (response.ok) {
-        console.log('Payment data saved successfully');
+        console.log("Payment data saved successfully");
       } else {
-        console.error('Failed to save payment data');
+        console.error("Failed to save payment data");
       }
     } catch (error) {
       console.error("Error calculating price:", error);
@@ -173,33 +179,32 @@ const PortfolioForm = () => {
     return <Alert severity="error">{error}</Alert>;
   }
 
-
   const items = [
     "Alle deine Coins werden von BigDaddy gecheckt",
     "30 Minütiges Video-Kommentar zu deinem Portfolio",
     "BigDaddy's Kommentare werden dir direkt im Portfolio Generator angezeigt",
-    "Coins aus deinem Portfolio die im Portfolio Generator fehlten werden dort ergänzt"
+    "Coins aus deinem Portfolio die im Portfolio Generator fehlten werden dort ergänzt",
   ];
 
-  const CustomOrderedList = styled('ol')({
-    textAlign: 'left',
-    display: 'inline-block',
-    counterReset: 'list-counter',
-    listStyle: 'none',
+  const CustomOrderedList = styled("ol")({
+    textAlign: "left",
+    display: "inline-block",
+    counterReset: "list-counter",
+    listStyle: "none",
     paddingLeft: 0,
   });
 
-  const CustomListItem = styled('li')({
-    position: 'relative',
-    paddingLeft: '1.5em',
-    marginBottom: '0.5em',
+  const CustomListItem = styled("li")({
+    position: "relative",
+    paddingLeft: "1.5em",
+    marginBottom: "0.5em",
 
-    '&::before': {
+    "&::before": {
       content: 'counter(list-counter) "."',
-      counterIncrement: 'list-counter',
-      position: 'absolute',
+      counterIncrement: "list-counter",
+      position: "absolute",
       left: 0,
-      color: 'yellow',
+      color: "yellow",
     },
   });
 
@@ -242,7 +247,7 @@ const PortfolioForm = () => {
                 ref={sliderRef}
                 style={{
                   display: "flex",
-                  width: "400%",
+                  width: "500%",
                   height: activeHeight,
                   transition: "all 300ms ease-in-out",
                 }}
@@ -253,15 +258,15 @@ const PortfolioForm = () => {
                   textAlign="center"
                   className={activeStep === 0 ? "active" : ""}
                   sx={{
-                    width: "25%",
+                    width: "20%",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "flex-start",
                     transition: `all 300ms ease-in-out`,
                     ...transStyles[
-                    activeStep > 0
-                      ? "left"
-                      : activeStep === 0
+                      activeStep > 0
+                        ? "left"
+                        : activeStep === 0
                         ? "center"
                         : "right"
                     ],
@@ -269,7 +274,7 @@ const PortfolioForm = () => {
                     // opacity: activeStep === 0 ? 1 : 0,
                     // height: activeStep === 0 ? "auto" : 0,
                   }}
-                // className={activeStep === 0 && styles.animate}
+                  // className={activeStep === 0 && styles.animate}
                 >
                   <Box
                     sx={{
@@ -371,13 +376,13 @@ const PortfolioForm = () => {
                   // sx={{ opacity: 0 }}
                   className={activeStep === 1 ? "active" : ""}
                   sx={{
-                    width: "25%",
+                    width: "20%",
                     transition: `all 300ms ease-in-out`,
                     opacity: 0,
                     ...transStyles[
-                    activeStep > 1
-                      ? "left"
-                      : activeStep === 1
+                      activeStep > 1
+                        ? "left"
+                        : activeStep === 1
                         ? "center"
                         : "right"
                     ],
@@ -459,13 +464,13 @@ const PortfolioForm = () => {
                   mt={2}
                   className={activeStep === 2 ? "active" : ""}
                   sx={{
-                    width: "25%",
+                    width: "20%",
                     transition: `all 300ms ease-in-out`,
                     opacity: 0,
                     ...transStyles[
-                    activeStep > 2
-                      ? "left"
-                      : activeStep === 2
+                      activeStep > 2
+                        ? "left"
+                        : activeStep === 2
                         ? "center"
                         : "right"
                     ],
@@ -553,13 +558,13 @@ const PortfolioForm = () => {
                   mt={2}
                   className={activeStep === 3 ? "active" : ""}
                   sx={{
-                    width: "25%",
+                    width: "20%",
                     transition: `all 300ms ease-in-out`,
                     opacity: 0,
                     ...transStyles[
-                    activeStep > 3
-                      ? "left"
-                      : activeStep === 3
+                      activeStep > 3
+                        ? "left"
+                        : activeStep === 3
                         ? "center"
                         : "right"
                     ],
@@ -696,26 +701,28 @@ const PortfolioForm = () => {
                   </Grid>
                   {/*<Checkout open={open} handleClose={() => setOpen(false)} />*/}
                 </Box>
-                <Box mt={2}
+                <Box
+                  mt={2}
                   className={activeStep === 4 ? "active" : ""}
                   sx={{
-                    width: "25%",
+                    width: "20%",
                     transition: `all 300ms ease-in-out`,
                     opacity: 0,
                     ...transStyles[
-                    activeStep > 4
-                      ? "left"
-                      : activeStep === 4
+                      activeStep > 4
+                        ? "left"
+                        : activeStep === 4
                         ? "center"
                         : "right"
                     ],
-                  }}>
+                  }}
+                >
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} md={6}>
                       <Image
                         src={Check}
                         alt="Summary Image"
-                        placeholder='blur'
+                        placeholder="blur"
                         style={{
                           borderRadius: 10,
                           width: "300px",
@@ -724,7 +731,13 @@ const PortfolioForm = () => {
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                      <Typography variant="h4" gutterBottom sx={{ color: green[500], fontWeight: "600px" }}>Das erwartet dich!</Typography>
+                      <Typography
+                        variant="h4"
+                        gutterBottom
+                        sx={{ color: green[500], fontWeight: "600px" }}
+                      >
+                        Das erwartet dich!
+                      </Typography>
                       <List>
                         {items.map((item, index) => (
                           <ListItem key={index}>
@@ -735,16 +748,32 @@ const PortfolioForm = () => {
                           </ListItem>
                         ))}
                       </List>
-                      <Typography variant="h6" gutterBottom>So geht es jetzt weiter:</Typography>
+                      <Typography variant="h6" gutterBottom>
+                        So geht es jetzt weiter:
+                      </Typography>
                       <Typography variant="body2" gutterBottom>
                         <CustomOrderedList>
-                          <CustomListItem>Klicke auf Zum Warenkorb und schließe die Bestellung ab.</CustomListItem>
-                          <CustomListItem>Gib im Checkout <strong>unbedingt</strong> deine Portfolio-ID im Feld Zusätzliche Adressdaten an!</CustomListItem>
+                          <CustomListItem>
+                            Klicke auf Zum Warenkorb und schließe die Bestellung
+                            ab.
+                          </CustomListItem>
+                          <CustomListItem>
+                            Gib im Checkout <strong>unbedingt</strong> deine
+                            Portfolio-ID im Feld Zusätzliche Adressdaten an!
+                          </CustomListItem>
                         </CustomOrderedList>
                       </Typography>
                       <Box>
-                        <Typography variant="h4" sx={{ color: "#E8B01B" }} gutterBottom>{totalOneTimePrice},00 €</Typography>
-                        <Typography variant="h6" gutterBottom>{totalOneTimePrice},zzgl. MwSt.</Typography>
+                        <Typography
+                          variant="h4"
+                          sx={{ color: "#E8B01B" }}
+                          gutterBottom
+                        >
+                          {totalOneTimePrice},00 €
+                        </Typography>
+                        <Typography variant="h6" gutterBottom>
+                          {totalOneTimePrice},zzgl. MwSt.
+                        </Typography>
                       </Box>
                       <Button
                         variant="contained"
@@ -753,17 +782,22 @@ const PortfolioForm = () => {
                           backgroundColor: "#C7900A",
                           padding: "1em 1.5em",
                           borderRadius: "12px",
-                          '&:hover': {
+                          "&:hover": {
                             color: "#0F2242",
-                            background: "#E8B01B"
-                          }
+                            background: "#E8B01B",
+                          },
                         }}
                         onClick={() => setOpen(true)}
                       >
                         Zum Warenkorb
                       </Button>
                     </Grid>
-                    <Checkout open={open} handleClose={() => setOpen(false)} price={totalOneTimePrice} confirmOneTimePayment={confirmOneTimePayment} />
+                    <Checkout
+                      open={open}
+                      handleClose={() => setOpen(false)}
+                      price={totalOneTimePrice}
+                      confirmOneTimePayment={confirmOneTimePayment}
+                    />
                   </Grid>
                 </Box>
                 {/* )} */}

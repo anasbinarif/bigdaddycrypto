@@ -3,6 +3,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import DoneIcon from "@mui/icons-material/Done";
 import { categoriesDisplay } from "../../../../lib/data";
+import { useTranslations } from "next-intl";
 
 const categoryColors = {
   AI: "#FFD700",
@@ -18,6 +19,7 @@ const categoryColors = {
 
 const DonutLegend = ({ portfolioCalculations }) => {
   const theme = useTheme();
+  const t = useTranslations("donutLegend");
   const categories = Object.entries(portfolioCalculations?.percentages || {})
     .filter(([key]) => key.toLowerCase() !== "none")
     .map(([key, value]) => ({
@@ -29,6 +31,8 @@ const DonutLegend = ({ portfolioCalculations }) => {
   useEffect(() => {
     // console.log("whatdata", categories, portfolioCalculations)
   }, [categories]);
+
+  console.log(categories);
 
   return (
     <Box
@@ -67,7 +71,7 @@ const DonutLegend = ({ portfolioCalculations }) => {
               whiteSpace: "nowrap",
             }}
           >
-            {categoriesDisplay[category.name.toLowerCase()]}
+            {t(category.name)}
           </Typography>
           {category.count > 0 && (
             <Typography

@@ -54,14 +54,14 @@ const DeleteConfirmationDialog = ({
       </DialogContent>
       <DialogActions sx={{ padding: 0 }}>
         <Button onClick={handleClose} sx={{ color: "var(--color-secondary)" }}>
-          Cancel
+          Abbrechen
         </Button>
         <Button
           onClick={handleDeleteConfirm}
           autoFocus
           sx={{ backgroundColor: "var(--color-secondary-2)", color: "#000" }}
         >
-          Delete
+          Löschen
         </Button>
       </DialogActions>
     </Dialog>

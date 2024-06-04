@@ -248,14 +248,14 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
     <Box
       sx={{
         position: "relative",
-        width: "100%",
+        width: "35%",
         maxWidth: "250px",
         height: "auto",
         display: "flex",
         margin: "0 auto",
         "@media only screen and (max-width:1600px)": {
           width: "40%",
-          mr: 0,
+          // mr: 0,
         },
         "@media only screen and (max-width:500px)": {
           width: "100%",
@@ -306,6 +306,8 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
           variant="caption"
           style={{
             color: "#FFFFFF",
+            fontSize: "1rem",
+            fontWeight: "bold",
           }}
         >
           {t("score")}
@@ -322,7 +324,10 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
         >
           {score}
         </Typography>
-        <Typography variant="caption" style={{ color: "#FFFFFF" }}>
+        <Typography
+          variant="caption"
+          style={{ color: "#FFFFFF", fontWeight: "bold" }}
+        >
           {calculateNote(score)}
         </Typography>
       </Box>

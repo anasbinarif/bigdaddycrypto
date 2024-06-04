@@ -23,6 +23,26 @@ import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { useAtom } from "jotai";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 
+function toCamelCase(str) {
+  // Split the string based on '-' or '/' character
+  const words = str.split(/[-/]/);
+
+  // Convert each word to camelCase
+  const camelCasedWords = words.map((word, index) => {
+    // Capitalize first letter of each word except for the first one
+    if (index !== 0) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    } else {
+      return word.toLowerCase(); // Keep the first word as it is
+    }
+  });
+
+  // Join the words back together
+  const camelCasedString = camelCasedWords.join("");
+
+  return camelCasedString;
+}
+
 const ColorCircle = ({ color }) => (
   <SvgIcon>
     <circle cx="12" cy="12" r="6" fill={color} />
@@ -56,6 +76,7 @@ const ScrollableKryptoTabs = ({
   assetsLeangth,
 }) => {
   const t = useTranslations("scrollableKryptoTabs");
+  const t2 = useTranslations("donutLegend");
   const [value, setValue] = useState(0);
   const [sessionJotai] = useAtom(sessionAtom);
   const [data, setData] = useState({});
@@ -284,7 +305,7 @@ const ScrollableKryptoTabs = ({
           }}
         >
           {tabLabels.map((label, index) => {
-            // console.log(index, label);
+            console.log(index, toCamelCase(label.toLowerCase()));
             return (
               <Tab
                 key={index + 1}

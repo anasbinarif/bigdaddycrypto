@@ -8,6 +8,7 @@ import {
   Tooltip,
   IconButton,
   styled,
+  Button,
   Alert,
   Snackbar,
   CircularProgress,
@@ -17,8 +18,11 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteConfirmationDialog from "../../AlertDialog/AlertDialog";
 import {
   categoryColors,
-  categoryColorsNew, convertPrice, currencySign,
-  getCategoryColor, getCurrencyAndRates,
+  categoryColorsNew,
+  convertPrice,
+  currencySign,
+  getCategoryColor,
+  getCurrencyAndRates,
   getUserPortfolio,
   UpdateCryptoCoins,
 } from "../../../lib/data";
@@ -28,6 +32,8 @@ import { sessionAtom } from "../../../app/stores/sessionStore";
 import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
+import { faCrown, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -67,7 +73,10 @@ const PortfolioComponent = ({
   const [currency, setCurrency] = useState("EUR");
   const [rates, setRates] = useState(null);
   const searchParams = useSearchParams();
-  const currentCurrency = searchParams.get('currency') || "EUR";
+  const currentCurrency = searchParams.get("currency") || "EUR";
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const fetchCurrencyAndRates = async () => {
@@ -132,26 +141,33 @@ const PortfolioComponent = ({
       if (response.ok) {
         console.log("Success:", data.message);
         setSelectedAsset(null);
+
         // Remove the asset from the local state to update the UI
         setPortfolio((prevState) => ({
           ...prevState,
           assets: prevState.assets.filter(
             (asset) => asset.CoinGeckoID !== CoinGeckoID
           ),
+          assetsCalculations: {
+            ...prevState.assetsCalculations,
+            assets: prevState.assetsCalculations.assets.filter(
+              (asset) => asset.CoinGeckoID !== CoinGeckoID
+            ),
+          },
         }));
         // alert('Coin removed successfully');
-        setAlert({
-          open: true,
-          message: `${t("coinRemovedSuccess")}`,
-          severity: "success",
-        });
-        setLoading(false);
+        // setAlert({
+        //   open: true,
+        //   message: `${t("coinRemovedSuccess")}`,
+        //   severity: "success",
+        // });
       } else {
         throw new Error(data.message || "Failed to delete the coin");
       }
+      setLoading(false);
     } catch (error) {
       console.error("Error:", error.message);
-      alert("Error removing coin: " + error.message);
+      // alert("Error removing coin: " + error.message);
     }
 
     // Close the dialog regardless of success or failure
@@ -245,6 +261,213 @@ const PortfolioComponent = ({
     );
   };
 
+  const computeDaysPast = (dateStr) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const formatDateForInput = (isoDateString) => {
+    return isoDateString.split("T")[0]; // Splits the ISO string at 'T' and returns the date part
+  };
+
+  const getTodayString = () => {
+    const today = new Date();
+    const day = `0${today.getDate()}`.slice(-2); // Ensuring two digits
+    const month = `0${today.getMonth() + 1}`.slice(-2); // Ensuring two digits, adding 1 because getMonth() is zero-indexed
+    const year = today.getFullYear();
+    return `${day} / ${month} / ${year}`; // Formats date as "YYYY-MM-DD"
+  };
+
+  const handleExportCSV = () => {
+    if (sessionJotai?.user?.subscriptionPlan === "free") {
+      setAlertOpen(true);
+      return;
+    }
+    console.log("portfolioportfolioportfolio,", portfolio);
+
+    const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
+    const rows = [];
+
+    portfolio.assetsCalculations.assets.forEach((asset) => {
+      const coin = portfolio.assets.find(
+        (c) => c.CoinGeckoID === asset.CoinGeckoID
+      );
+      if (coin && asset.buyAndSell) {
+        asset.buyAndSell.forEach((transaction) => {
+          rows.push({
+            Date: new Date(transaction.Date).toLocaleDateString("en-US"), // Format date to MM/DD/YYYY
+            Name: coin.Name, // Assuming all are Bitcoin, adjust if necessary
+            Symbol: coin.Ticker, // Assuming all are BTC, adjust if necessary
+            Action: transaction.Type === "Kauf" ? "Buy" : "Sell",
+            Coins: transaction.Coins,
+            Amount: transaction.Betrag,
+          });
+        });
+      }
+    });
+
+    console.log("portfolio-rows", rows);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => Object.values(row).join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "exported_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleImport = () => {
+    if (sessionJotai?.user?.subscriptionPlan === "free") {
+      setAlertOpen(true);
+      return;
+    }
+    handleOpenDialog();
+  };
+
+  const handleOpenDialog = () => setOpenDialog(true);
+  const handleCloseImpDialog = () => {
+    setFile(null);
+    setOpenDialog(false);
+  };
+
+  const handleFileChange = (e) => setFile(e.target.files[0]);
+
+  const handleFileDrop = (e) => {
+    e.preventDefault();
+    setFile(e.dataTransfer.files[0]);
+  };
+
+  const handleFileUpload = () => {
+    if (file) {
+      Papa.parse(file, {
+        header: true,
+        complete: async (results) => {
+          console.log("Parsed CSV Data:", results.data);
+
+          // Filter and map the parsed data to match portfolio coins
+          const portfolioCoins = portfolio.assetsCalculations.assets
+            .map((asset) => {
+              const coin = portfolio.assets.find(
+                (c) => c.CoinGeckoID === asset.CoinGeckoID
+              );
+              return coin
+                ? { ...coin, buyAndSell: asset.buyAndSell || [] }
+                : null;
+            })
+            .filter((coin) => coin);
+
+          // Check if all symbols in the imported data match the current portfolio's tickers
+          const validData = results.data.filter((row) => {
+            return portfolioCoins.some((coin) => coin.Ticker === row.Symbol);
+          });
+
+          if (validData.length === 0) {
+            setAlertInfo({
+              message: "No matching symbols found in the current portfolio.",
+              severity: "error",
+            });
+            setShowAlert(true);
+            return;
+          }
+
+          // Map imported data to the buy and sell structure
+          const importedData = validData.map((row) => {
+            let parsedDate = null;
+            if (row.Date) {
+              try {
+                parsedDate = parse(row.Date, "M/d/yyyy", new Date());
+                if (isNaN(parsedDate)) {
+                  throw new Error("Invalid Date");
+                }
+              } catch (error) {
+                console.error("Invalid Date format:", row.Date);
+                parsedDate = null;
+              }
+            }
+
+            return {
+              Type: row.Action === "Buy" ? "Kauf" : "Verkauf",
+              Date: parsedDate ? parsedDate.toISOString().split("T")[0] : null,
+              PricePerCoin: row.Amount / row.Coins,
+              Betrag: row.Amount,
+              Coins: row.Coins,
+              Name: row.Name,
+              Symbol: row.Symbol,
+            };
+          });
+
+          // Group data by coin symbol
+          const groupedData = portfolioCoins.reduce((acc, coin) => {
+            const coinData = importedData.filter(
+              (row) => row.Symbol === coin.Ticker
+            );
+            if (coinData.length > 0) {
+              acc[coin.Ticker] = coinData;
+            }
+            return acc;
+          }, {});
+
+          // Prepare data for API call
+          const apiData = Object.keys(groupedData).map((symbol) => {
+            const coin = portfolioCoins.find((coin) => coin.Ticker === symbol);
+            return {
+              CoinGeckoID: coin.CoinGeckoID,
+              buyAndSell: groupedData[symbol],
+            };
+          });
+
+          try {
+            console.log("/api/importBuyAndSell", apiData);
+            // Call the API to store the data
+            const response = await fetch("/api/importBuyAndSell", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userID: sessionJotai?.user.id,
+                data: apiData,
+              }),
+            });
+
+            if (response.ok) {
+              const userPortfolio = await getUserPortfolio(
+                sessionJotai?.user.id
+              );
+              setPortfolio(userPortfolio?.data);
+              setAlertInfo({
+                message: "Data successfully imported!",
+                severity: "success",
+              });
+              setShowAlert(true);
+              handleCloseImpDialog();
+            } else {
+              const errorData = await response.json();
+              throw new Error(errorData.message || "Failed to import data");
+            }
+          } catch (error) {
+            setAlertInfo({ message: error.message, severity: "error" });
+            setShowAlert(true);
+          }
+        },
+        error: (error) => {
+          console.error("Error parsing CSV: ", error);
+          setAlertInfo({ message: "Error parsing CSV", severity: "error" });
+          setShowAlert(true);
+        },
+      });
+    }
+  };
+
   return (
     <>
       <Box
@@ -272,7 +495,7 @@ const PortfolioComponent = ({
           }}
         >
           <Box sx={{ p: 3, width: "100%" }}>
-            <Typography variant="h4" gutterBottom sx={{fontWeight: 700}}>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
               {t("title")} ({assetsLeangth})
             </Typography>
             <Typography variant="subtitle1" gutterBottom>
@@ -304,7 +527,12 @@ const PortfolioComponent = ({
                         xs={12}
                         sm={6}
                         md={15}
-                        sx={{ width: "100%" }}
+                        sx={{
+                          width: "100%",
+                          "& .MuiPaper-root": {
+                            backgroundColor: "#00000033",
+                          },
+                        }}
                       >
                         <Card
                           onMouseEnter={() => handleMouseEnter(index)}
@@ -344,7 +572,8 @@ const PortfolioComponent = ({
                             </Box>
                           </Box>
                           <Typography variant="body2" sx={{ color: "#fff" }}>
-                            {convertPrice(asset?.Price || 0, currency, rates)} {currencySign[currency]}
+                            {convertPrice(asset?.Price || 0, currency, rates)}{" "}
+                            {currencySign[currency]}
                           </Typography>
                           <Box
                             sx={{
@@ -365,7 +594,12 @@ const PortfolioComponent = ({
                                 color="text.secondary"
                                 sx={{ color: "#fff" }}
                               >
-                                {convertPrice(setFinancialSummaryAPI(asset.CoinGeckoID)[1], currency, rates)} {currencySign[currency]}
+                                {convertPrice(
+                                  setFinancialSummaryAPI(asset.CoinGeckoID)[1],
+                                  currency,
+                                  rates
+                                )}{" "}
+                                {currencySign[currency]}
                               </Typography>
                               <Typography
                                 variant="body2"
@@ -416,6 +650,53 @@ const PortfolioComponent = ({
                         </Card>
                       </Grid>
                     ))}
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Button
+                    sx={{
+                      marginTop: "20px",
+                      backgroundColor: "#00000033",
+                      color: "white",
+                      fontSize: "0.8rem",
+                    }}
+                    onClick={handleImport}
+                  >
+                    import
+                    {/* {t("importCSV")} */}
+                    <FontAwesomeIcon
+                      icon={faCrown}
+                      style={{
+                        paddingLeft: "5px",
+                        opacity: "0.5",
+                        fontSize: "0.9rem",
+                        marginRight: "15px",
+                      }}
+                      color="gold"
+                    />
+                  </Button>
+                  <Button
+                    sx={{
+                      marginTop: "20px",
+                      backgroundColor: "#00000033",
+                      color: "white",
+                      fontSize: "0.8rem",
+                      marginLeft: "10px",
+                    }}
+                    onClick={handleExportCSV}
+                  >
+                    export
+                    {/* {t("exportCSV")} */}
+                    <FontAwesomeIcon
+                      icon={faCrown}
+                      style={{
+                        paddingLeft: "5px",
+                        opacity: "0.5",
+                        fontSize: "0.9rem",
+                        marginRight: "15px",
+                      }}
+                      color="gold"
+                    />
+                  </Button>
+                </Box>
               </Grid>
             ) : (
               <Card

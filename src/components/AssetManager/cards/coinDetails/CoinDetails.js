@@ -32,7 +32,12 @@ import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AlertBar from "../../../customAllert/Alert";
-import { convertPrice, currencySign, getCurrencyAndRates, getUserPortfolio } from "../../../../lib/data";
+import {
+  convertPrice,
+  currencySign,
+  getCurrencyAndRates,
+  getUserPortfolio,
+} from "../../../../lib/data";
 import Papa from "papaparse";
 import { parse } from "date-fns";
 import { useSearchParams } from "next/navigation";
@@ -103,7 +108,9 @@ const CoinDetails = (props) => {
       const coinsValue = parseFloat(row.Coins);
       return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
     }, 0);
-    const totalHoldingsValue = (totalCoins * parseFloat(coin?.Price)).toFixed(2);
+    const totalHoldingsValue = (totalCoins * parseFloat(coin?.Price)).toFixed(
+      2
+    );
     const totalInvested = rowVals
       .reduce((acc, row) => {
         if (row.Type === "Kauf") {
@@ -185,7 +192,6 @@ const CoinDetails = (props) => {
       X,
     });
   }, [rowVals, coin?.Price]);
-
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -497,7 +503,7 @@ const CoinDetails = (props) => {
   const [currency, setCurrency] = useState("EUR");
   const [rates, setRates] = useState(null);
   const searchParams = useSearchParams();
-  const currentCurrency = searchParams.get('currency') || "EUR";
+  const currentCurrency = searchParams.get("currency") || "EUR";
 
   useEffect(() => {
     const fetchCurrencyAndRates = async () => {
@@ -558,7 +564,10 @@ const CoinDetails = (props) => {
                 {coin?.Ticker}
               </Typography>
               <Typography noWrap>{coin?.CoinGeckoID}</Typography>
-              <Typography>{convertPrice(coin?.Price.toFixed(2), currency, rates)} {currencySign[currency]}</Typography>
+              <Typography>
+                {convertPrice(coin?.Price.toFixed(2), currency, rates)}{" "}
+                {currencySign[currency]}
+              </Typography>
             </Box>
           </Box>
           <Box className={styles.grid}>
@@ -583,7 +592,12 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {convertPrice(financialSummary.totalHoldingsValue, currency, rates)},00 {currencySign[currency]}
+                {convertPrice(
+                  financialSummary.totalHoldingsValue,
+                  currency,
+                  rates
+                )}
+                ,00 {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{
@@ -617,7 +631,8 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {convertPrice(financialSummary.totalInvested, currency, rates)},00 {currencySign[currency]}
+                {convertPrice(financialSummary.totalInvested, currency, rates)}
+                ,00 {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{
@@ -651,7 +666,8 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {convertPrice(financialSummary.totalWinLoss, currency, rates)},00 {currencySign[currency]}
+                {convertPrice(financialSummary.totalWinLoss, currency, rates)}
+                ,00 {currencySign[currency]}
               </Typography>
               <Typography
                 className={
@@ -702,10 +718,11 @@ const CoinDetails = (props) => {
                 sx={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
-                  color: `${financialSummary.avgPurchasePrice > 0
+                  color: `${
+                    financialSummary.avgPurchasePrice > 0
                       ? ""
                       : "rgb(68, 68, 68)"
-                    }`,
+                  }`,
                   whiteSpace: "nowrap",
                   "@media only screen and (max-width: 1500px)": {
                     fontSize: "1.5rem",
@@ -713,7 +730,11 @@ const CoinDetails = (props) => {
                 }}
               >
                 {financialSummary.avgPurchasePrice > 0
-                  ? `${convertPrice(financialSummary.avgPurchasePrice, currency, rates)} ${currencySign[currency]}`
+                  ? `${convertPrice(
+                      financialSummary.avgPurchasePrice,
+                      currency,
+                      rates
+                    )} ${currencySign[currency]}`
                   : `--,-- ${currencySign[currency]}`}
               </Typography>
               <Typography
@@ -766,10 +787,11 @@ const CoinDetails = (props) => {
                 sx={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
-                  color: `${financialSummary.avgSellingPrice > 0
+                  color: `${
+                    financialSummary.avgSellingPrice > 0
                       ? ""
                       : "rgb(68, 68, 68)"
-                    }`,
+                  }`,
                   whiteSpace: "nowrap",
                   "@media only screen and (max-width: 1500px)": {
                     fontSize: "1.5rem",
@@ -777,7 +799,11 @@ const CoinDetails = (props) => {
                 }}
               >
                 {financialSummary.avgSellingPrice > 0
-                  ? `${convertPrice(financialSummary.avgSellingPrice, currency, rates)} ${currencySign[currency]}`
+                  ? `${convertPrice(
+                      financialSummary.avgSellingPrice,
+                      currency,
+                      rates
+                    )} ${currencySign[currency]}`
                   : `--,-- ${currencySign[currency]}`}
               </Typography>
               {financialSummary.avgSellingPricePercentage > 0 && (
@@ -838,7 +864,8 @@ const CoinDetails = (props) => {
                   },
                 }}
               >
-                {convertPrice(financialSummary.realizedProfit, currency, rates)},00 {currencySign[currency]}
+                {convertPrice(financialSummary.realizedProfit, currency, rates)}
+                ,00 {currencySign[currency]}
               </Typography>
               <Typography
                 sx={{
@@ -1178,7 +1205,7 @@ const CoinDetails = (props) => {
               <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />
               {t("newTransaction")}
             </Button>
-            <Button
+            {/* <Button
               sx={{
                 marginTop: "20px",
                 backgroundColor: "#00000033",
@@ -1220,7 +1247,7 @@ const CoinDetails = (props) => {
                 }}
                 color="gold"
               />
-            </Button>
+            </Button> */}
             <Button
               sx={{
                 marginTop: "20px",
@@ -1302,7 +1329,6 @@ const CoinDetails = (props) => {
       </Snackbar>
     </>
   );
-
 };
 
 export default CoinDetails;

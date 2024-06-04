@@ -26,7 +26,7 @@
     "missingHypeTheme": "Missing Hype Topic",
     "hypeDistribution": "Distribution of Chosen Hype Topics",
     "numberOfCoins": "Number of Coins",
-    "sicherheit": "Safety Ø",
+    "sicherheit": "Security Ø",
     "potential": "Potential Ø",
     "sicherheitTooltipText1": "This value is derived from the average safety of all assets in the portfolio. The information is based on the position in the graph.",
     "sicherheitTooltipText2": "Assets that are not included in the graph are not considered.",
@@ -43,7 +43,19 @@
   },
   "coinCard": {
     "potential": "Potential",
-    "sicherheit": "Safety"
+    "sicherheit": "Security"
+  },
+  "donutLegend": {
+    "AI": "AI",
+    "DEFI": "DeFi",
+    "WEB3": "Web3 / Anonymity",
+    "GREEN": "Green Coins",
+    "METAVERSE": "Gaming / Metaverse",
+    "BTC": "BTC - Context",
+    "NFT": "Tokenization / RWA",
+    "CBDC": "CBDC - Network",
+    "ECOMMERCE": "E - Commerce",
+    "KEIN HYPE-THEMA": "NO HYPE-THEMENO HYPE-THEME"
   },
   "donutChart": {
     "score": "Score",
@@ -120,7 +132,7 @@
     "pricingPlans": "Pricing Plans"
   },
   "scrollableKryptoTabs": {
-    "favourite": "Favoriten",
+    "favourite": "Favouriten",
     "ai": "AI",
     "web3Anonymity": "Web3/Anonymität",
     "defi": "DeFi",
@@ -202,5 +214,8 @@
     "assetAdded": "Asset added successfully!",
     "assetAddFailed": "Failed to add asset.",
     "fillAllFields": "Please fill in all required fields."
+  },
+  "Overview": {
+    "buttonText": "Request comment from BigDaddy now"
   }
 }

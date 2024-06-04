@@ -112,7 +112,8 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
             "& > .MuiTypography-root": {
               color: "white",
             },
-            backgroundColor: "#1d1d1d",
+            backgroundColor: "#202530",
+            filter: "brightness(0.8)",
           },
         }}
         placement="bottom-end"
