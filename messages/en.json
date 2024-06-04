@@ -59,7 +59,13 @@
   },
   "donutChart": {
     "score": "Score",
-    "veryGood": "Very good"
+    "veryGood": "Very good",
+    "Sehr gut": "Very Good",
+    "Gut": "Good",
+    "Befriedigend": "Satisfactory",
+    "Ausreichend": "Sufficient",
+    "Mangelhaft": "Inadequate",
+    "Schlecht": "Bad"
   },
   "kryptoFilter": {
     "chooseAssets": "Choose your Crypto Assets",
@@ -132,17 +138,17 @@
     "pricingPlans": "Pricing Plans"
   },
   "scrollableKryptoTabs": {
-    "favourite": "Favouriten",
+    "favourite": "Favorites",
     "ai": "AI",
-    "web3Anonymity": "Web3/Anonymität",
+    "web3Anonymity": "Web3/Anonymity",
     "defi": "DeFi",
-    "greenCoins": "Grüne Coins",
+    "greenCoins": "Green Coins",
     "gamingMetaverse": "Gaming/Metaverse",
-    "btcConnection": "BTC-Zusammenhang",
-    "cbdcNetworks": "CBDC-Netzwerke",
+    "btcConnection": "BTC Connection",
+    "cbdcNetworks": "CBDC Networks",
     "eCommerce": "E-Commerce",
-    "tokenizationRWA": "Tokenisierung/RWA",
-    "noHypeTopic": "Kein Hype-Thema",
+    "tokenizationRWA": "Tokenization/RWA",
+    "noHypeTopic": "No Hype Topic",
     "hideRiskCoins": "Hide Risk Coins",
     "showRiskCoins": "Show Risk Coins"
   },

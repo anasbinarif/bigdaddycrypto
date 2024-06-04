@@ -18,6 +18,8 @@ import { calculatePotential } from "../../../lib/action";
 function BewertungCard() {
   const [portfolio] = useAtom(portfolioAtom);
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
+  const [potentialAverage, setPotentialAverage] = useState(0);
+  const [potentialXAverage, setPotentialXAverage] = useState(0);
   const t = useTranslations("bewertungCard");
 
   useEffect(() => {
@@ -26,22 +28,33 @@ function BewertungCard() {
       portfolio.assetsCalculations &&
       portfolio.assetsCalculations.assets.length > 0
     ) {
-      console.log(portfolio);
-      const financialSummaries = calculateFinancialSummaryForAllAssets();
-      console.log(financialSummaries);
-      const sicherheitValues = financialSummaries
-        .filter((item) => item.Sicherheit)
-        .map((asset) => asset.Sicherheit || 0);
-      const totalGesamtwert = portfolio.assetsCalculations.assets
-        .reduce((acc, curr) => acc + curr.Holdings, 0)
-        .toFixed(2);
+      // const financialSummaries = calculateFinancialSummaryForAllAssets();
+      const sicherheitValues = portfolio?.assets.map(
+        (asset) => asset.Sicherheit || 0
+      );
+      const potentialValues = portfolio?.assets.map(
+        (asset) => asset.Potential || 0
+      );
+      const avgXFactorValue = portfolio?.assets.map(
+        (asset) => (1 / asset?.Bottom) * asset?.Price
+      );
+      console.log(
+        "testing avg Sicherheit ",
+        portfolio?.assets,
+        avgXFactorValue
+      );
       const avgSicherheit =
         sicherheitValues.reduce((acc, val) => acc + val, 0) /
         sicherheitValues.length;
-      // const avgSicherheit =
-      //   sicherheitValues.reduce((acc, val) => acc + val, 0) /
-      //   totalGesamtwert;
+      const avgPotential =
+        potentialValues.reduce((acc, val) => acc + val, 0) /
+        potentialValues.length;
+      const avgXfactor =
+        avgXFactorValue.reduce((acc, val) => acc + val, 0) /
+        avgXFactorValue.length;
+      setPotentialAverage(avgPotential.toFixed(0));
       setSicherheitAverage(avgSicherheit.toFixed(1));
+      setPotentialXAverage(avgXfactor.toFixed(0));
     }
   }, [portfolio]);
 
@@ -225,7 +238,7 @@ function BewertungCard() {
                   fontSize: "14px",
                 }}
               >
-                23-36x
+                {potentialAverage}-{potentialXAverage}x
               </span>
             </Typography>
           </Box>

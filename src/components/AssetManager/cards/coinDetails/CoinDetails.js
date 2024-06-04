@@ -8,29 +8,16 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
-  MenuItem,
-  Paper,
-  Select,
   Snackbar,
   Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Tabs,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { faCrown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styles from "./coinDetails.module.css";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AlertBar from "../../../customAllert/Alert";
 import {
   convertPrice,
@@ -39,27 +26,17 @@ import {
   getUserPortfolio,
 } from "../../../../lib/data";
 import Papa from "papaparse";
-import { parse } from "date-fns";
+import { addDays, parse } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-
-function addCommas(number) {
-  let numberString = number.toString();
-
-  let parts = numberString.split(".");
-
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  let tempStr = parts.join(".").replace(/[.,]/g, function (match) {
-    return match === "," ? "." : ",";
-  });
-
-  return tempStr;
-}
+import CoinDetailsTable from "./CoinDetailsTable";
+import CoinDetailsDisplay from "./CoinDetailsDisplay";
+import styles from "./coinDetails.module.css";
 
 const CoinDetails = (props) => {
   const t = useTranslations("coinDetails");
   const { coin, index } = props;
+  const [Loading, setLoading] = useState(false);
   const [width, setWidth] = useState(0);
   const [value, setValue] = useState(0);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -242,6 +219,7 @@ const CoinDetails = (props) => {
   console.log("testing adding rows to table", rowVals);
 
   const handleBuyAndSell = async () => {
+    setLoading(true);
     let error = "";
     for (const row of rowVals) {
       if (row.Date === "" || row.Date === "00/00/00") {
@@ -295,6 +273,7 @@ const CoinDetails = (props) => {
           });
           const userPortfolio = await getUserPortfolio(userID);
           setPortfolio(userPortfolio?.data);
+          setLoading(false);
         } else {
           // throw new Error("Failed to save data");
         }
@@ -314,24 +293,24 @@ const CoinDetails = (props) => {
     setRowVals(updatedRows);
   };
 
-  const computeDaysPast = (dateStr) => {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffTime = Math.abs(now - date);
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  };
+  // const computeDaysPast = (dateStr) => {
+  //   const date = new Date(dateStr);
+  //   const now = new Date();
+  //   const diffTime = Math.abs(now - date);
+  //   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  // };
 
   const formatDateForInput = (isoDateString) => {
     return isoDateString.split("T")[0]; // Splits the ISO string at 'T' and returns the date part
   };
 
-  const getTodayString = () => {
-    const today = new Date();
-    const day = `0${today.getDate()}`.slice(-2); // Ensuring two digits
-    const month = `0${today.getMonth() + 1}`.slice(-2); // Ensuring two digits, adding 1 because getMonth() is zero-indexed
-    const year = today.getFullYear();
-    return `${day} / ${month} / ${year}`; // Formats date as "YYYY-MM-DD"
-  };
+  // const getTodayString = () => {
+  //   const today = new Date();
+  //   const day = `0${today.getDate()}`.slice(-2); // Ensuring two digits
+  //   const month = `0${today.getMonth() + 1}`.slice(-2); // Ensuring two digits, adding 1 because getMonth() is zero-indexed
+  //   const year = today.getFullYear();
+  //   return `${day} / ${month} / ${year}`; // Formats date as "YYYY-MM-DD"
+  // };
 
   const handleExportCSV = () => {
     if (sessionJotai?.user?.subscriptionPlan === "free") {
@@ -351,8 +330,8 @@ const CoinDetails = (props) => {
         asset.buyAndSell.forEach((transaction) => {
           rows.push({
             Date: new Date(transaction.Date).toLocaleDateString("en-US"), // Format date to MM/DD/YYYY
-            Name: coin.Name, // Assuming all are Bitcoin, adjust if necessary
-            Symbol: coin.Ticker, // Assuming all are BTC, adjust if necessary
+            Name: coin.Name,
+            Symbol: coin.Ticker,
             Action: transaction.Type === "Kauf" ? "Buy" : "Sell",
             Coins: transaction.Coins,
             Amount: transaction.Betrag,
@@ -447,12 +426,17 @@ const CoinDetails = (props) => {
               }
             }
 
+            const amount = parseFloat(row.Amount);
+            const coins = parseFloat(row.Coins);
+
             return {
               Type: row.Action === "Buy" ? "Kauf" : "Verkauf",
-              Date: parsedDate ? parsedDate.toISOString().split("T")[0] : null,
-              PricePerCoin: row.Amount / row.Coins,
-              Betrag: row.Amount,
-              Coins: row.Coins,
+              Date: parsedDate
+                ? addDays(parsedDate, 1).toISOString().split("T")[0]
+                : null,
+              PricePerCoin: parseFloat((amount / coins).toFixed(2)),
+              Betrag: amount.toFixed(2),
+              Coins: coins.toFixed(2),
               Name: row.Name,
               Symbol: row.Symbol,
             };
@@ -546,375 +530,13 @@ const CoinDetails = (props) => {
           padding: "35px 30px",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: width < 1200 ? "column" : "row",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignSelf: "flex-start",
-              width: "25%",
-              marginRight: "1.5rem",
-              mb: width < 1200 ? "2rem" : 0,
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                mb: 1,
-                pl: 1,
-                mr: 2,
-              }}
-            >
-              <Avatar
-                src={coin?.cgImageURL}
-                sx={{
-                  width: 50,
-                  height: 50,
-                  marginRight: 1,
-                  alignSelf: "flex-start",
-                }}
-              />
-            </Box>
-            <Box sx={{ alignSelf: "center" }}>
-              <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
-                {coin?.Ticker}
-              </Typography>
-              <Typography noWrap>{coin?.CoinGeckoID}</Typography>
-              <Typography>
-                {addCommas(
-                  convertPrice(coin?.Price.toFixed(2), currency, rates)
-                )}{" "}
-                {currencySign[currency]}
-              </Typography>
-            </Box>
-          </Box>
-          <Box className={styles.grid}>
-            <Box className={styles.grid__item}>
-              <Typography
-                sx={{
-                  fontSize: "0.9rem",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                {t("duration")}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.8rem",
-                  fontWeight: "bold",
-                  whiteSpace: "nowrap",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "1.5rem",
-                  },
-                }}
-              >
-                {addCommas(
-                  convertPrice(
-                    financialSummary.totalHoldingsValue,
-                    currency,
-                    rates
-                  )
-                )}{" "}
-                {currencySign[currency]}
-              </Typography>
-              <Typography
-                sx={{
-                  color: "#ffffff88",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                {financialSummary.totalCoins} {coin?.Ticker}
-              </Typography>
-            </Box>
-            <Box className={styles.grid__item}>
-              <Typography
-                sx={{
-                  fontSize: "0.9rem",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                {t("totalInvestment")}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.8rem",
-                  fontWeight: "bold",
-                  whiteSpace: "nowrap",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "1.5rem",
-                  },
-                }}
-              >
-                {addCommas(
-                  convertPrice(financialSummary.totalInvested, currency, rates)
-                )}{" "}
-                {currencySign[currency]}
-              </Typography>
-              <Typography
-                sx={{
-                  color: "#ffffff88",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                Geplant: 0,00 {currencySign[currency]}
-              </Typography>
-            </Box>
-            <Box className={styles.grid__item}>
-              <Typography
-                sx={{
-                  fontSize: "0.9rem",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                {t("totalWinLoss")}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.8rem",
-                  fontWeight: "bold",
-                  whiteSpace: "nowrap",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "1.5rem",
-                  },
-                }}
-              >
-                {addCommas(
-                  convertPrice(financialSummary.totalWinLoss, currency, rates)
-                )}{" "}
-                {currencySign[currency]}
-              </Typography>
-              <Typography
-                className={
-                  financialSummary.avgPurchasePricePercentage < 0
-                    ? "down"
-                    : "up"
-                }
-                sx={{
-                  "&.down": {
-                    color: "red",
-                  },
-
-                  "&.up": {
-                    color: "green",
-                  },
-
-                  "&.down:before": {
-                    content: '"▼ "',
-                    fontSize: "80%",
-                    marginRight: "3px",
-                  },
-
-                  "&.up:before": {
-                    content: '"▲ "',
-                    fontSize: "80%",
-                    marginRight: "3px",
-                  },
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                {financialSummary.totalWinLossPercentage} %
-              </Typography>
-            </Box>
-            <Box className={styles.grid__item}>
-              <Typography
-                sx={{
-                  fontSize: "0.9rem",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                {t("avgPurchasePrice")}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.8rem",
-                  fontWeight: "bold",
-                  color: `${
-                    financialSummary.avgPurchasePrice > 0
-                      ? ""
-                      : "rgb(68, 68, 68)"
-                  }`,
-                  whiteSpace: "nowrap",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "1.5rem",
-                  },
-                }}
-              >
-                {financialSummary.avgPurchasePrice > 0
-                  ? `${addCommas(
-                      convertPrice(
-                        financialSummary.avgPurchasePrice,
-                        currency,
-                        rates
-                      )
-                    )} ${currencySign[currency]}`
-                  : `--,-- ${currencySign[currency]}`}
-              </Typography>
-              <Typography
-                className={
-                  financialSummary.avgPurchasePricePercentage < 0
-                    ? "down"
-                    : "up"
-                }
-                sx={{
-                  "&.down": {
-                    color: "red",
-                  },
-
-                  "&.up": {
-                    color: "green",
-                  },
-
-                  "&.down:before": {
-                    content: '"▼ "',
-                    fontSize: "80%",
-                    marginRight: "3px",
-                  },
-
-                  "&.up:before": {
-                    content: '"▲ "',
-                    fontSize: "80%",
-                    marginRight: "3px",
-                  },
-
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.9rem",
-                  },
-                }}
-              >
-                {financialSummary.avgPurchasePricePercentage} %
-              </Typography>
-            </Box>
-            <Box className={styles.grid__item}>
-              <Typography
-                sx={{
-                  fontSize: "0.9rem",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                {t("avgSellingPrice")}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.8rem",
-                  fontWeight: "bold",
-                  color: `${
-                    financialSummary.avgSellingPrice > 0
-                      ? ""
-                      : "rgb(68, 68, 68)"
-                  }`,
-                  whiteSpace: "nowrap",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "1.5rem",
-                  },
-                }}
-              >
-                {financialSummary.avgSellingPrice > 0
-                  ? `${addCommas(
-                      convertPrice(
-                        financialSummary.avgSellingPrice,
-                        currency,
-                        rates
-                      )
-                    )} ${currencySign[currency]}`
-                  : `--,-- ${currencySign[currency]}`}
-              </Typography>
-              {financialSummary.avgSellingPricePercentage > 0 && (
-                <Typography
-                  className={
-                    financialSummary.avgSellingPricePercentage < 0
-                      ? "up"
-                      : "down"
-                  }
-                  sx={{
-                    "&.down": {
-                      color: "red",
-                    },
-
-                    "&.up": {
-                      color: "green",
-                    },
-
-                    "&.down:before": {
-                      content: '"▼ "',
-                      fontSize: "80%",
-                      marginRight: "3px",
-                    },
-
-                    "&.up:before": {
-                      content: '"▲ "',
-                      fontSize: "80%",
-                      marginRight: "3px",
-                    },
-
-                    "@media only screen and (max-width: 1500px)": {
-                      fontSize: "0.8rem",
-                    },
-                  }}
-                >
-                  {financialSummary.avgSellingPricePercentage} %
-                </Typography>
-              )}
-            </Box>
-            <Box className={styles.grid__item}>
-              <Typography
-                sx={{
-                  fontSize: "0.9rem",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                {t("realizedProfit")}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.8rem",
-                  fontWeight: "bold",
-                  whiteSpace: "nowrap",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "1.5rem",
-                  },
-                }}
-              >
-                {addCommas(
-                  convertPrice(financialSummary.realizedProfit, currency, rates)
-                )}{" "}
-                {currencySign[currency]}
-              </Typography>
-              <Typography
-                sx={{
-                  color: "#ffffff88",
-                  "@media only screen and (max-width: 1500px)": {
-                    fontSize: "0.8rem",
-                  },
-                }}
-              >
-                % {t("ofInvestment")}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
+        <CoinDetailsDisplay
+          financialSummary={financialSummary}
+          coin={coin}
+          width={width}
+          currency={currency}
+          rates={rates}
+        />
         <Box sx={{ width: "100%", marginTop: "3rem" }}>
           <Tabs
             value={value}
@@ -968,256 +590,12 @@ const CoinDetails = (props) => {
           </Tabs>
           <Box>
             {value === 0 && (
-              <TableContainer
-                component={Paper}
-                sx={{
-                  backgroundColor: "#ffffff08",
-                  "& .MuiTableCell-head": {
-                    color: "#ffffff50",
-                    border: "none",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiTableBody-root .MuiTableRow-root": {
-                    backgroundColor: "#00000033",
-                    "&:hover": {
-                      backgroundColor: "#00000050",
-                    },
-                  },
-                  "& .MuiTableCell-body": {
-                    color: "white",
-                    border: "none",
-                  },
-                }}
-              >
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          "@media only screen and (max-width: 1500px)": {
-                            textWrap: "nowrap",
-                          },
-                        }}
-                      >
-                        {t("action")}
-                      </TableCell>
-                      <TableCell>{t("date")}</TableCell>
-                      <TableCell
-                        sx={{
-                          "@media only screen and (max-width: 1500px)": {
-                            textWrap: "nowrap",
-                          },
-                        }}
-                      >
-                        {t("pricePerCoin")}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          "@media only screen and (max-width: 1500px)": {
-                            textWrap: "nowrap",
-                          },
-                        }}
-                      >
-                        {t("amountInEUR")}
-                      </TableCell>
-                      <TableCell>{t("coins")}</TableCell>
-                      <TableCell>{t("holdingPeriod")}</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rowVals.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Select
-                            inputProps={{ "aria-label": "Without label" }}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={row.Type}
-                            label="Age"
-                            onChange={(e) =>
-                              handleRowData(e.target.value, index, "Type")
-                            }
-                            variant="outlined"
-                            sx={{
-                              color:
-                                row.Type === "Kauf"
-                                  ? "#4CAF50"
-                                  : row.Type === "Verkauf"
-                                  ? "#F44336"
-                                  : "white",
-                              fontSize: "0.8rem",
-                              border: "none",
-
-                              "& .MuiOutlinedInput-notchedOutline": {
-                                border: "1px solid #ffffff20",
-                              },
-                              "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                {
-                                  border: "1px solid #ffffff20",
-                                },
-
-                              "& .MuiFormHelperText-root": {
-                                color: "#ffffff",
-                              },
-                              "& .MuiFormLabel-root": {
-                                color: "#ffffff",
-                                "&.Mui-focused": {
-                                  color: "#ffffff",
-                                },
-                              },
-
-                              "& .MuiOutlinedInput-root": {
-                                "&:selected": {
-                                  border: "none",
-                                },
-                              },
-
-                              "& .MuiInputBase-root": {
-                                // border: "none",
-                              },
-                              "& .MuiSelect-select": {
-                                // border: "1px solid #ffffff20",
-                                // border: "none",
-                                padding: "5px",
-                                "&:focus-visible": {
-                                  outline: "none",
-                                },
-                              },
-                              "& .MuiSvgIcon-root": { color: "#ffffff" },
-                            }}
-                          >
-                            <MenuItem value="Kauf">Kauf</MenuItem>
-                            <MenuItem value="Verkauf">VerKauf</MenuItem>
-                          </Select>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            {/* <label htmlFor="datePicker">Select a date:</label> */}
-                            <input
-                              type="date"
-                              id="datePicker"
-                              value={row.Date}
-                              onChange={(e) =>
-                                handleRowData(e.target.value, index, "Date")
-                              }
-                              max={getTodayString()}
-                              className={styles["input--date"]}
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              border: "none",
-                              padding: "3px 5px",
-                              borderRadius: "4px",
-                              maxWidth: "100px",
-                            }}
-                          >
-                            {row.PricePerCoin} €
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              border: "1px solid #ffffff20",
-                              padding: "3px 5px",
-                              borderRadius: "4px",
-                              maxWidth: "100px",
-                            }}
-                          >
-                            <input
-                              type="text"
-                              id="betragInput"
-                              value={row.Betrag}
-                              onChange={(e) =>
-                                handleRowData(
-                                  parseFloat(e.target.value) || 0,
-                                  index,
-                                  "Betrag"
-                                )
-                              }
-                              style={{
-                                marginRight: "5px",
-                                width: "100px",
-                                backgroundColor: "transparent",
-                                border: "none",
-                              }}
-                            />
-                            €
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              border: "1px solid #ffffff20",
-                              padding: "3px 5px",
-                              borderRadius: "4px",
-                              maxWidth: "100px",
-                            }}
-                          >
-                            <input
-                              type="text"
-                              id="numberInput"
-                              value={row.Coins}
-                              onChange={(e) =>
-                                handleRowData(
-                                  parseFloat(e.target.value) || 0,
-                                  index,
-                                  "Coins"
-                                )
-                              }
-                              className={styles.input}
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Box sx={{ display: "flex", flexDirection: "row" }}>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                padding: "3px 5px",
-                                maxWidth: "100px",
-                              }}
-                            >
-                              {row.Date === "00/00/00"
-                                ? ""
-                                : `${computeDaysPast(row.Date)} ${t("days")}`}
-                            </div>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Tooltip
-                            title="Delete"
-                            onClick={() => handleDeleteRow(index)}
-                          >
-                            <IconButton
-                              sx={{
-                                color: "gray",
-                                "&:hover": { color: "red" },
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                {validationError && (
-                  <Typography color="error" sx={{ mt: 2 }}>
-                    {validationError}
-                  </Typography>
-                )}
-              </TableContainer>
+              <CoinDetailsTable
+                rowVals={rowVals}
+                handleRowData={handleRowData}
+                handleDeleteRow={handleDeleteRow}
+                validationError={validationError}
+              />
             )}
             {value === 1 && <div>{t("buyZonesContent")}</div>}
             {value === 2 && <div>{t("sellZonesContent")}</div>}
@@ -1294,16 +672,16 @@ const CoinDetails = (props) => {
               onClick={handleBuyAndSell}
               disabled={rowVals.length <= 0}
             >
-              {t("update")}
+              {Loading ? "Loading..." : `${t("update")}`}
             </Button>
           </Box>
         </Box>
-        <AlertBar
+        {/* <AlertBar
           open={showAlert}
           message={alertInfo.message}
           severity={alertInfo.severity}
           onClose={closeAlert}
-        />
+        /> */}
         <Dialog
           open={openDialog}
           onClose={handleCloseDialog}
@@ -1360,6 +738,16 @@ const CoinDetails = (props) => {
           sx={{ width: "100%" }}
         >
           {t("importExportInfo")}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={showAlert} autoHideDuration={6000} onClose={closeAlert}>
+        <Alert
+          onClose={closeAlert}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertInfo.message}
         </Alert>
       </Snackbar>
     </>

@@ -47,7 +47,13 @@
   },
   "donutChart": {
     "score": "Score",
-    "veryGood": "Sehr gut"
+    "veryGood": "Sehr gut",
+    "Sehr gut": "Sehr gut",
+    "Gut": "Gut",
+    "Befriedigend": "Befriedigend",
+    "Ausreichend": "Ausreichend",
+    "Mangelhaft": "Mangelhaft",
+    "Schlecht": "Schlecht"
   },
   "donutLegend": {
     "AI": "AI",
@@ -114,6 +120,17 @@
     "portfolioGenerator": "Portfolio Generator",
     "assetManager": "Asset Manager",
     "portfolioOverview": "Portfolio Übersicht"
+  },
+  "donutLegend": {
+    "AI": "AI",
+    "WEB3": "Web3/Anonymität",
+    "DEFI": "DeFi",
+    "GREEN": "Grüne Coins",
+    "METAVERSE": "Gaming/Metaverse",
+    "BTC": "BTC-Zusammenhang",
+    "CBDC": "CBDC-Netzwerke",
+    "ECOMMERCE": "E-Commerce",
+    "NFT": "Tokenisierung/RWA"
   },
   "scrollableKryptoTabs": {
     "favourite": "Favoriten",
