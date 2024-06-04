@@ -34,7 +34,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AlertBar from "../../../customAllert/Alert";
 import { convertPrice, currencySign, getCurrencyAndRates, getUserPortfolio } from "../../../../lib/data";
 import Papa from "papaparse";
-import { parse } from "date-fns";
+import { addDays, parse } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -328,8 +328,8 @@ const CoinDetails = (props) => {
         asset.buyAndSell.forEach((transaction) => {
           rows.push({
             Date: new Date(transaction.Date).toLocaleDateString("en-US"), // Format date to MM/DD/YYYY
-            Name: coin.Name, // Assuming all are Bitcoin, adjust if necessary
-            Symbol: coin.Ticker, // Assuming all are BTC, adjust if necessary
+            Name: coin.Name,
+            Symbol: coin.Ticker,
             Action: transaction.Type === "Kauf" ? "Buy" : "Sell",
             Coins: transaction.Coins,
             Amount: transaction.Betrag,
@@ -382,7 +382,7 @@ const CoinDetails = (props) => {
         header: true,
         complete: async (results) => {
           console.log("Parsed CSV Data:", results.data);
-
+  
           // Filter and map the parsed data to match portfolio coins
           const portfolioCoins = portfolio.assetsCalculations.assets
             .map((asset) => {
@@ -394,12 +394,12 @@ const CoinDetails = (props) => {
                 : null;
             })
             .filter((coin) => coin);
-
+  
           // Check if all symbols in the imported data match the current portfolio's tickers
           const validData = results.data.filter((row) => {
             return portfolioCoins.some((coin) => coin.Ticker === row.Symbol);
           });
-
+  
           if (validData.length === 0) {
             setAlertInfo({
               message: "No matching symbols found in the current portfolio.",
@@ -408,7 +408,7 @@ const CoinDetails = (props) => {
             setShowAlert(true);
             return;
           }
-
+  
           // Map imported data to the buy and sell structure
           const importedData = validData.map((row) => {
             let parsedDate = null;
@@ -423,18 +423,21 @@ const CoinDetails = (props) => {
                 parsedDate = null;
               }
             }
-
+  
+            const amount = parseFloat(row.Amount);
+            const coins = parseFloat(row.Coins);
+  
             return {
               Type: row.Action === "Buy" ? "Kauf" : "Verkauf",
-              Date: parsedDate ? parsedDate.toISOString().split("T")[0] : null,
-              PricePerCoin: row.Amount / row.Coins,
-              Betrag: row.Amount,
-              Coins: row.Coins,
+              Date: parsedDate ? addDays(parsedDate, 1).toISOString().split("T")[0] : null,
+              PricePerCoin: parseFloat((amount / coins).toFixed(2)),
+              Betrag: amount.toFixed(2),
+              Coins: coins.toFixed(2),
               Name: row.Name,
               Symbol: row.Symbol,
             };
           });
-
+  
           // Group data by coin symbol
           const groupedData = portfolioCoins.reduce((acc, coin) => {
             const coinData = importedData.filter(
@@ -445,7 +448,7 @@ const CoinDetails = (props) => {
             }
             return acc;
           }, {});
-
+  
           // Prepare data for API call
           const apiData = Object.keys(groupedData).map((symbol) => {
             const coin = portfolioCoins.find((coin) => coin.Ticker === symbol);
@@ -454,7 +457,7 @@ const CoinDetails = (props) => {
               buyAndSell: groupedData[symbol],
             };
           });
-
+  
           try {
             console.log("/api/importBuyAndSell", apiData);
             // Call the API to store the data
@@ -468,7 +471,7 @@ const CoinDetails = (props) => {
                 data: apiData,
               }),
             });
-
+  
             if (response.ok) {
               const userPortfolio = await getUserPortfolio(
                 sessionJotai?.user.id
@@ -1073,7 +1076,7 @@ const CoinDetails = (props) => {
                             }}
                           >
                             <input
-                              type="text"
+                              type="number"
                               id="betragInput"
                               value={row.Betrag}
                               onChange={(e) =>
@@ -1105,7 +1108,7 @@ const CoinDetails = (props) => {
                             }}
                           >
                             <input
-                              type="text"
+                              type="number"
                               id="numberInput"
                               value={row.Coins}
                               onChange={(e) =>
