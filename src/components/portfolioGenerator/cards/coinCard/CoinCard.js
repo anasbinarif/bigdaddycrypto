@@ -193,7 +193,7 @@ const CoinCard = ({
 
   async function handleFavouriteClick() {
     setLoading(true);
-    console.log("handleFavouriteClick", coin);
+    // console.log("handleFavouriteClick", coin);
     if (sessionJotai?.user?.subscriptionPlan === "free") {
       setAlertOpen(true);
       setLoading(false); // Reset loading state here
@@ -246,10 +246,10 @@ const CoinCard = ({
   const [xfactorText, setXfactorText] = useState("");
 
   useEffect(() => {
-    console.log(
-      "1 / coin?.Bottom * coin?.Price",
-      (1 / coin?.Bottom) * coin?.Price
-    );
+    // console.log(
+    //   "1 / coin?.Bottom * coin?.Price",
+    //   (1 / coin?.Bottom) * coin?.Price
+    // );
     const xfactorText1 = ((1 / coin?.Bottom) * coin?.Price).toFixed(1);
     setXfactorText(`${xfactorText1}x in diesem Zyklus`);
   }, [coin]);

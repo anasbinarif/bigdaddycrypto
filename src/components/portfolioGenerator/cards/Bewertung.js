@@ -28,10 +28,17 @@ function BewertungCard() {
     ) {
       console.log(portfolio);
       const financialSummaries = calculateFinancialSummaryForAllAssets();
+<<<<<<< HEAD
       console.log(financialSummaries);
       const sicherheitValues = financialSummaries
         .filter((item) => item.Sicherheit)
         .map((asset) => asset.Sicherheit || 0);
+=======
+      const sicherheitValues = portfolio?.assets.map(
+        (asset) => asset.Sicherheit || 0
+      );
+      console.log("testing avg Sicherheit ", portfolio?.assets, sicherheitValues, sicherheitValues.reduce((acc, val) => acc + val, 0));
+>>>>>>> origin/master
       const totalGesamtwert = portfolio.assetsCalculations.assets
         .reduce((acc, curr) => acc + curr.Holdings, 0)
         .toFixed(2);
