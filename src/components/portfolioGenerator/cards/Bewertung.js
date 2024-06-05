@@ -29,12 +29,12 @@ function BewertungCard() {
       portfolio.assetsCalculations.assets.length > 0
     ) {
       // const financialSummaries = calculateFinancialSummaryForAllAssets();
-      const sicherheitValues = portfolio?.assets.map(
-        (asset) => asset.Sicherheit || 0
-      );
-      const potentialValues = portfolio?.assets.map(
-        (asset) => asset.Potential || 0
-      );
+      const sicherheitValues = portfolio?.assets
+        .filter((asset) => asset.Sicherheit)
+        .map((asset) => asset.Sicherheit || 0);
+      const potentialValues = portfolio?.assets
+        .filter((asset) => asset.Sicherheit)
+        .map((asset) => asset.Potential || 0);
       const avgXFactorValue = portfolio?.assets.map(
         (asset) => (1 / asset?.Bottom) * asset?.Price
       );
