@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import HomeIcon from "../../../../public/assets/svg/bdc.svg";
 import { nanoid } from "nanoid";
+import Link from "next/link";
 
 const RegisterPage = () => {
   const [pending, setPending] = useState(false);
@@ -226,6 +227,16 @@ const RegisterPage = () => {
                 "&.Mui-disabled": {
                   color: "#ffffff80",
                 },
+                "&.MuiInputLabel-root.Mui-focused": {
+                  color: "var(--color-secondary)",
+                },
+              },
+              "& .MuiInputBase-root": {
+                "&.MuiFilledInput-root": {
+                  "&::after": {
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                },
               },
               "& .MuiFilledInput-root": {
                 borderRadius: "8px",
@@ -264,11 +275,21 @@ const RegisterPage = () => {
                   color: "#fff",
                 },
               },
+              "& .MuiInputBase-root": {
+                "&.MuiFilledInput-root": {
+                  "&::after": {
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                },
+              },
               "& .MuiInputBase-input": {
                 height: "1.6em",
               },
               "& .MuiFormLabel-root": {
                 color: "#ffffff80",
+                "&.MuiInputLabel-root.Mui-focused": {
+                  color: "var(--color-secondary)",
+                },
               },
               "& .MuiFilledInput-root": {
                 borderRadius: "8px",
@@ -317,11 +338,21 @@ const RegisterPage = () => {
                   color: "#fff",
                 },
               },
+              "& .MuiInputBase-root": {
+                "&.MuiFilledInput-root": {
+                  "&::after": {
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                },
+              },
               "& .MuiInputBase-input": {
                 height: "1.6em",
               },
               "& .MuiFormLabel-root": {
                 color: "#ffffff80",
+                "&.MuiInputLabel-root.Mui-focused": {
+                  color: "var(--color-secondary)",
+                },
               },
               "& .MuiFilledInput-root": {
                 borderRadius: "8px",
@@ -351,6 +382,16 @@ const RegisterPage = () => {
               <Checkbox
                 checked={disclaimerAccepted}
                 onChange={(e) => setDisclaimerAccepted(e.target.checked)}
+                sx={{
+                  "&.MuiCheckbox-root": {
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
+                    "&.Mui-checked": {
+                      color: "var(--color-secondary)",
+                    },
+                  },
+                }}
               />
             }
             label="Ich habe den Disclaimer gelesen und bin damit einverstanden."
@@ -389,6 +430,18 @@ const RegisterPage = () => {
           >
             {pending ? "Loading..." : "to register"}
           </Button>
+          <Typography
+            variant="caption"
+            sx={{ mt: 4, maxWidth: "400px", color: "#ffffff80" }}
+          >
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Login
+            </Link>
+          </Typography>
         </Box>
         <Typography
           variant="caption"

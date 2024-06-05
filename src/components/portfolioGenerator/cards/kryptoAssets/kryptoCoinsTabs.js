@@ -362,7 +362,7 @@ const ScrollableKryptoTabs = ({
                     checkCoinRisk(coin)
                   );
                   // console.log(label);
-                  if (label === "Favoriten") {
+                  if (label === "Favorites") {
                     // console.log("hellooooooo", categorizedData[label]);
                     return categorizedData[label].map((coin, index) => (
                       <CoinCard
@@ -408,7 +408,7 @@ const ScrollableKryptoTabs = ({
                 })()}
           </Box>
           {categorizedData[label]?.some(checkCoinRisk) &&
-            label !== "Favoriten" && (
+            label !== "Favorites" && (
               <Button
                 onClick={() => handleToggleRiskCoins(label)}
                 sx={{

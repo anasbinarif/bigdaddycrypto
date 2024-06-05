@@ -232,6 +232,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             assetsLeangth={assetsLeangth}
             selectedCoin={selectedCoin}
             setSelectedCoin={setSelectedCoin}
+            setTabSelector={setValue}
           />
         </TabPanel>
         <TabPanel value={value} index="three">

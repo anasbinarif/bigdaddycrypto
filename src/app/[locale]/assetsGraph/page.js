@@ -96,12 +96,15 @@ const Testing = () => {
       y: assetY,
     });
   };
+  console.log(selectedItem);
 
   const filteredAssets = assets.map((asset) => {
-    const filter =
+    const filter1 =
       asset?.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (asset?.Ticker?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedItem === "" || asset.Category.includes(selectedItem)));
+      asset?.Ticker?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const filter2 =
+      selectedItem === "" || asset.Category.includes(selectedItem);
 
     return (
       <Box
@@ -115,8 +118,8 @@ const Testing = () => {
             asset.Sicherheit,
             symbolSize / 2
           )})`,
-          opacity: filter ? "1" : "0.3",
-          zIndex: filter ? "1000" : "500",
+          opacity: filter1 && filter2 ? "1" : "0.3",
+          zIndex: filter1 && filter2 ? "1000" : "500",
           transform: "translate(-50%, -50%)",
           transition: "all 0.3s ease-in-out",
           cursor: "pointer",
@@ -135,8 +138,8 @@ const Testing = () => {
         <Image
           src={asset.cgImageURL}
           alt={asset.Name}
-          width={filter ? symbolSize : symbolSize * 0.8}
-          height={filter ? symbolSize : symbolSize * 0.8}
+          width={filter1 && filter2 ? symbolSize : symbolSize * 0.8}
+          height={filter1 && filter2 ? symbolSize : symbolSize * 0.8}
           style={{
             borderRadius: "50%",
             boxShadow: "3px 3px 12px rgba(0,0,0,.1)",
@@ -145,6 +148,7 @@ const Testing = () => {
       </Box>
     );
   });
+  // console.log(filteredAssets);
 
   return (
     <>

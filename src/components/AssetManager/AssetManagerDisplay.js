@@ -21,6 +21,7 @@ const AssetManagerDisplay = ({
   setSelectedCoin,
   loadingPortfolio,
   assetsLeangth,
+  setTabSelector,
 }) => {
   const theme = useTheme();
   const [width, setWidth] = useState(0);
@@ -60,6 +61,7 @@ const AssetManagerDisplay = ({
           loadingPortfolio={loadingPortfolio}
           assetsLeangth={assetsLeangth}
           setSelectedCoin={setSelectedCoin}
+          setTabSelector={setTabSelector}
         />
       </Grid>
       {isSmallScreen ? (

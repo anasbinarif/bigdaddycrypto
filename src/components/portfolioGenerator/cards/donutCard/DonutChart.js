@@ -213,6 +213,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
   useEffect(() => {
     const fetchScore = async () => {
       if (portfolio?.assets) {
+        console.log(portfolio.assets);
         try {
           const calculatedScore = await calculateScore(portfolio.assets);
           setScore(calculatedScore); // Update the state with the resolved value
