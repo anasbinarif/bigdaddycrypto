@@ -32,6 +32,11 @@ export const calculateScore = (portfolioData) => {
     });
 
     let score = 0;
+    let scoreFactor_Category = 0;
+    let scoreFactor_CategoryTwice = 0;
+    let scoreFactor_Allocation = 0;
+    let scoreFactor_CoinCount = 0;
+    let scoreFactor_CategoryMissing = 0;
     let maxCategoryPercentage = 0;
     let totalCategoryPercentage = 0;
 
@@ -46,12 +51,16 @@ export const calculateScore = (portfolioData) => {
 
         if (assetCount >= 2) {
             score += (100 / totalCategories) * 0.9;
+            scoreFactor_CategoryTwice += (100 / totalCategories) * 0.1;
+            scoreFactor_Category += (100 / totalCategories) * 0.1;
         } else {
             score += (100 / totalCategories) * 0.8;
+            scoreFactor_Category += (100 / totalCategories) * 0.1;
         }
     });
 
     score += Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
+    scoreFactor_CoinCount = Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
 
     let averageCategoryAllocation = 100 / Object.keys(categoryCounts).length;
     let maxCategoryAllocation = 0;
@@ -75,17 +84,42 @@ export const calculateScore = (portfolioData) => {
     let minCategoryAllocationDiff = 100 / averageCategoryAllocation * (averageCategoryAllocation - minCategoryAllocation);
     let minSF = Math.min(1, Math.max(0.8945, 1 - (minCategoryAllocationDiff - 50) / (75 - 50) * 0.1));
 
-    let scoreFactor_Allocation = (minSF * maxSF) * 50 - 40;
+    scoreFactor_Allocation = (minSF * maxSF) * 50 - 40;
+
+    // BTC FIX
+    let totalAmount = 0;
+    portfolioData.forEach((item) => {
+        let value = parseFloat(item.amount);
+        if (!isNaN(value)) {
+            totalAmount += value;
+        }
+    });
+
+    let btcAmount = portfolioData.find(item => item.coin === 'BTC')?.amount || 0;
+    let btcAllo = 100 / totalAmount * btcAmount;
+
+    if (btcAllo >= maxCategoryAllocation * 0.8) {
+        maxSF = (maxSF + 1.5) / 2.5;
+        minSF = (minSF + 1.5) / 2.5;
+    }
 
     score = score * maxSF * minSF;
     score = Math.min(100, score);
 
     if (totalCategories > Object.keys(categoryCounts).length) {
         score = score * 0.9;
+        scoreFactor_CategoryMissing = 0;
+    } else {
+        scoreFactor_CategoryMissing = 10;
+    }
+
+    if (isNaN(score)) {
+        score = 0;
     }
 
     return score.toFixed(1);
 };
+
 
 export const saveSubscriptionDetails = async (data, userId, plan, planId, billingCycle) => {
     try {
