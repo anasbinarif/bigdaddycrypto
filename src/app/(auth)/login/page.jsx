@@ -241,11 +241,21 @@ const LoginPage = () => {
                   color: "#fff",
                 },
               },
+              "& .MuiInputBase-root": {
+                "&.MuiFilledInput-root": {
+                  "&::after": {
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                },
+              },
               "& .MuiInputBase-input": {
                 height: "1.6em",
               },
               "& .MuiFormLabel-root": {
                 color: "#ffffff80",
+                "&.MuiInputLabel-root.Mui-focused": {
+                  color: "var(--color-secondary)",
+                },
               },
               "& .MuiFilledInput-root": {
                 borderRadius: "8px",
@@ -291,6 +301,16 @@ const LoginPage = () => {
               },
               "& .MuiFormLabel-root": {
                 color: "#ffffff80",
+                "&.MuiInputLabel-root.Mui-focused": {
+                  color: "var(--color-secondary)",
+                },
+              },
+              "& .MuiInputBase-root": {
+                "&.MuiFilledInput-root": {
+                  "&::after": {
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                },
               },
               "& .MuiFilledInput-root": {
                 borderRadius: "8px",
