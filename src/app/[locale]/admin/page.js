@@ -39,7 +39,27 @@ export default function CenteredTabs() {
   return (
     <>
       <Navbar />
-      <Box sx={{ width: "100%", bgcolor: "#111826", marginTop: "5%" }}>
+      <Box
+        sx={{
+          width: "100%",
+          bgcolor: "#111826",
+          marginTop: "5%",
+          "@media only screen and (max-width: 1300px)": {
+            marginTop: "12%",
+          },
+          "@media only screen and (max-width: 600px)": {
+            marginTop: "15%",
+          },
+          "@media only screen and (max-width: 500px)": {
+            marginTop: "20%",
+          },
+          "& > #simple-tabpanel-0 > .MuiBox-root": {
+            "@media only screen and (max-width: 600px)": {
+              padding: "10px",
+            },
+          },
+        }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
