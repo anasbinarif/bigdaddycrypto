@@ -297,7 +297,8 @@ const PricingPlans = () => {
                     : plan.priceYearly}
                   {plan.title !== "Free" && (
                     <Typography variant="body1" component="span">
-                      /{billingCycle === "monthly" ? "month" : "year"}
+                      {/* /{billingCycle === "monthly" ? "month" : "year"} */}
+                      /month
                     </Typography>
                   )}
                 </Typography>

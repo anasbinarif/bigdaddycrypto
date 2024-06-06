@@ -160,7 +160,14 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
                     key={index}
                     hover
                     onClick={() => handleUserClicked(user)}
-                    sx={{ cursor: "pointer" }}
+                    sx={{
+                      cursor: "pointer",
+                      backgroundColor: blurEmail
+                        ? "transparent"
+                        : user.oneTimePayment.status === "Paid"
+                        ? "#00aa6655"
+                        : "#de0b0b55",
+                    }}
                   >
                     <TableCell>
                       <Typography variant="body2">{user.username}</Typography>
