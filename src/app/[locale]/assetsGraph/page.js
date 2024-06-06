@@ -42,7 +42,7 @@ const Testing = () => {
     x: 0,
     y: 0,
   });
-  const [symbolSize, setSymbolSize] = useState(40);
+  const [symbolSize, setSymbolSize] = useState(35);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedItem, setSelectedItem] = useState({
     ai: true,
@@ -257,9 +257,9 @@ const Testing = () => {
             Symbol Size:
           </Typography>
           <Slider
-            defaultValue={40}
-            min={30}
-            max={75}
+            defaultValue={symbolSize}
+            min={20}
+            max={50}
             aria-label="Default"
             valueLabelDisplay="auto"
             onChange={(e, newValue) => setSymbolSize(newValue)}
@@ -416,7 +416,7 @@ const Testing = () => {
               Hype Topic:
             </Typography>
             <Typography sx={{ color: "#000", marginBottom: "8px" }}>
-              {tooltip.data.Category[0] || "No hype topic"}
+              {reverseMapping[tooltip.data.Category[0]] || "No hype topic"}
             </Typography>
             <Typography sx={{ color: "gray" }}>Evaluation:</Typography>
             <Typography

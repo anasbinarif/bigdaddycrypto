@@ -445,8 +445,7 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
           variant="filled"
           sx={{ width: "100%" }}
         >
-          Um Zugriff auf dieses Feature zu erhalten ist eine Premium
-          Mitgliedschaft notwendig.
+          {t("alert")}
         </Alert>
       </Snackbar>
     </>

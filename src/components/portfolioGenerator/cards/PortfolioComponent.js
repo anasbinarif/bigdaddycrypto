@@ -38,6 +38,7 @@ import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { faCrown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import addCommas from "../../../lib/currencyFormatter";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -590,7 +591,9 @@ const PortfolioComponent = ({
                               textAlign: "right",
                             }}
                           >
-                            {convertPrice(asset?.Price || 0, currency, rates)}{" "}
+                            {addCommas(
+                              convertPrice(asset?.Price || 0, currency, rates)
+                            )}{" "}
                             {currencySign[currency]}
                           </Typography>
                           <Box

@@ -88,7 +88,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   }, [sessionJotai?.user.id]);
 
   useEffect(() => {
-    if (portfolio?.assets && portfolio?.assets.length > 0) {
+    if (portfolio?.assets) {
       setLoadingPortfolio(true);
       const len = portfolio?.assets.length;
       setAssetsLeangth(len);

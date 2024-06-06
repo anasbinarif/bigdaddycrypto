@@ -25,6 +25,7 @@ import {
   getUserPortfolio,
 } from "../../../lib/data";
 import { useSearchParams } from "next/navigation";
+import addCommas from "../../../lib/currencyFormatter";
 
 const valueMap = {
   1: "Scam?",
@@ -127,6 +128,7 @@ const EnhancedTable = () => {
 
   useEffect(() => {
     if (portfolio.assetsCalculations && portfolio.assets) {
+      console.log(portfolio, "meeeeee");
       const totalInvestment = portfolio.assetsCalculations.assets.reduce(
         (acc, curr) => acc + curr.totalInvest,
         0
@@ -462,9 +464,9 @@ const EnhancedTable = () => {
                       >
                         <StyledTypography sx={{ fontSize: "14px" }}>
                           {row.bestand > 0
-                            ? `${convertPrice(row.bestand, currency, rates)} ${
-                                currencySign[currency]
-                              }`
+                            ? `${addCommas(
+                                convertPrice(row.bestand, currency, rates)
+                              )} ${currencySign[currency]}`
                             : 0}
                         </StyledTypography>
                         <StyledTypography
@@ -489,10 +491,8 @@ const EnhancedTable = () => {
                       >
                         <StyledTypography>
                           {row.preisChange !== 0
-                            ? `${convertPrice(
-                                row.preisChange,
-                                currency,
-                                rates
+                            ? `${addCommas(
+                                convertPrice(row.preisChange, currency, rates)
                               )} ${currencySign[currency]}`
                             : 0}
                         </StyledTypography>
@@ -519,10 +519,12 @@ const EnhancedTable = () => {
                             }}
                           >
                             {row.pricePercentage !== 0
-                              ? `${convertPrice(
-                                  row.pricePercentage,
-                                  currency,
-                                  rates
+                              ? `${addCommas(
+                                  convertPrice(
+                                    row.pricePercentage,
+                                    currency,
+                                    rates
+                                  )
                                 )} ${currencySign[currency]}`
                               : 0}
                           </Typography>
@@ -532,19 +534,17 @@ const EnhancedTable = () => {
                     <TableCell sx={{ padding: "5px" }}>
                       <StyledTypography>
                         {row.dcaPrice > 0
-                          ? `${convertPrice(row.dcaPrice, currency, rates)} ${
-                              currencySign[currency]
-                            }`
+                          ? `${addCommas(
+                              convertPrice(row.dcaPrice, currency, rates)
+                            )} ${currencySign[currency]}`
                           : 0}
                       </StyledTypography>
                     </TableCell>
                     <TableCell sx={{ padding: "5px" }}>
                       <StyledTypography>
                         {row.investition !== 0
-                          ? `${convertPrice(
-                              row.investition,
-                              currency,
-                              rates
+                          ? `${addCommas(
+                              convertPrice(row.investition, currency, rates)
                             )} ${currencySign[currency]}`
                           : 0}
                       </StyledTypography>
