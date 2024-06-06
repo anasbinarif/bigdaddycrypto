@@ -231,8 +231,12 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
               value={priceIndicator}
               label="Price Indicator"
               onChange={handleChange}
-              variant="outlined"
+              // variant="outlined"
               sx={{
+                "*": {
+                  outline: "none",
+                  border: "none",
+                },
                 color: "white",
                 fontSize: "0.8rem",
                 border: "1px solid #ffffff80",
@@ -241,6 +245,9 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
                 },
                 "&:hover": {
                   border: "1px solid #ffffff",
+                },
+                "&:focus": {
+                  outline: "none",
                 },
                 // marginRight: isSmallScreen ? "0" : "2rem",
                 "& .MuiPaper-rounded": {
@@ -348,6 +355,10 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
               // event.preventDefault();
             }}
             sx={{
+              "*": {
+                outline: "none",
+                border: "none",
+              },
               // color: "white",
               "@media only screen and (min-width:1100px)": {
                 minWidth: "180px",

@@ -60,6 +60,7 @@ const CoinDetails = (props) => {
   const [changeTableValue, setChangeTableValue] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [alertInfo, setAlertInfo] = useState({ message: "", severity: "info" });
+  const [delInfo, setDelInfo] = useState(false);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [file, setFile] = useState(null);
@@ -241,7 +242,6 @@ const CoinDetails = (props) => {
     }
     setValidationError(error);
     if (!error) {
-      // Perform the save operation here
       const userID = sessionJotai?.user.id;
       const CoinGeckoID = coin?.CoinGeckoID;
       console.log("Saving data", rowVals, CoinGeckoID, userID);
@@ -291,7 +291,54 @@ const CoinDetails = (props) => {
   const handleDeleteRow = (index) => {
     const updatedRows = rowVals.filter((_, idx) => idx !== index);
     setRowVals(updatedRows);
+    setDelInfo(true);
   };
+
+  useEffect(() => {
+    const del = async () => {
+      const userID = sessionJotai?.user.id;
+      const CoinGeckoID = coin?.CoinGeckoID;
+      console.log("Saving data", rowVals, CoinGeckoID, userID);
+      const Portfolio_Assets = {
+        totalInvest: financialSummary.totalInvested || 0,
+        totalSold: financialSummary.realizedProfit || 0,
+        totalCoins: financialSummary.totalCoins || 0,
+        Holdings: financialSummary.totalHoldingsValue || 0,
+        DCA: financialSummary.avgPurchasePrice || 0,
+      };
+      try {
+        const response = await fetch("/api/addBuyAndSell", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID,
+            CoinGeckoID,
+            rowVals,
+            Portfolio_Assets,
+          }),
+        });
+        if (response.ok) {
+          console.log("hbhbhbhbhbhbhbhbhbhbhbh");
+          setAlertInfo({
+            message: "Transaktion erfolgreich gespeichert!",
+            severity: "success",
+          });
+          const userPortfolio = await getUserPortfolio(userID);
+          setPortfolio(userPortfolio?.data);
+          setLoading(false);
+        } else {
+          // throw new Error("Failed to save data");
+        }
+      } catch (error) {
+        setAlertInfo({ message: error.message, severity: "error" });
+      }
+      setShowAlert(true);
+    };
+
+    delInfo && del() && setDelInfo(false);
+  }, [delInfo]);
 
   // const computeDaysPast = (dateStr) => {
   //   const date = new Date(dateStr);

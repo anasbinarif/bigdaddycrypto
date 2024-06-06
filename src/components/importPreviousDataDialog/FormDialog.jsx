@@ -122,11 +122,53 @@ const FormDialog = () => {
           sx: {
             width: { xs: "100%", sm: "90%", md: "70%" },
             maxWidth: "600px",
+            backgroundColor: "#111826",
+            color: "white",
           },
         }}
       >
         <DialogTitle>{t("importUserData")}</DialogTitle>
-        <DialogContent>
+        <DialogContent
+          sx={{
+            "& .MuiTypography-root": { color: "white" },
+            "& .MuiFormControl-root": {
+              "& .MuiInputBase-root": {
+                "&.MuiInput-root": {
+                  borderRadius: "8px",
+                  padding: "5px 10px",
+                  backgroundColor: "#202530",
+                  border: "1px solid #ffffff80",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#ffffff",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    // borderColor: "#ffffff",
+                  },
+                  "&::after": {
+                    borderBottom: "none",
+                  },
+                },
+              },
+            },
+            "& .MuiFormLabel-root": {
+              zIndex: "100",
+              top: "5px",
+              left: "10px",
+              color: "#ffffff80",
+              "&.MuiInputLabel-root.Mui-focused": {
+                transform: "translate(0, -10px) scale(0.75)",
+                color: "var(--color-secondary)",
+              },
+            },
+          }}
+        >
           <DialogContentText>{t("importInstructions")}</DialogContentText>
           <TextField
             autoFocus
@@ -150,17 +192,79 @@ const FormDialog = () => {
             variant="standard"
           />
         </DialogContent>
-        <DialogActions>
+        <DialogActions
+          sx={{
+            "& .MuiButtonBase-root": {
+              color: "var(--color-secondary)",
+            },
+          }}
+        >
           <Button onClick={handleClose}>{t("cancel")}</Button>
           <Button type="submit">{t("import")}</Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={confirmClose} onClose={handleCancelClose} fullScreen={fullScreen}>
+      <Dialog
+        open={confirmClose}
+        onClose={handleCancelClose}
+        fullScreen={fullScreen}
+        sx={{
+          "& .MuiPaper-root": {
+            backgroundColor: "#111826",
+            color: "white",
+          },
+        }}
+      >
         <DialogTitle>{t("confirmAction")}</DialogTitle>
-        <DialogContent>
+        <DialogContent
+          sx={{
+            "& .MuiTypography-root": { color: "white" },
+            "& .MuiFormControl-root": {
+              "& .MuiInputBase-root": {
+                "&.MuiInput-root": {
+                  borderRadius: "8px",
+                  padding: "5px 10px",
+                  backgroundColor: "#202530",
+                  border: "1px solid #ffffff80",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#ffffff",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    // borderColor: "#ffffff",
+                  },
+                  "&::after": {
+                    borderBottom: "none",
+                  },
+                },
+              },
+            },
+            "& .MuiFormLabel-root": {
+              zIndex: "100",
+              top: "5px",
+              left: "10px",
+              color: "#ffffff80",
+              "&.MuiInputLabel-root.Mui-focused": {
+                transform: "translate(0, -10px) scale(0.75)",
+                color: "var(--color-secondary)",
+              },
+            },
+          }}
+        >
           <DialogContentText>{t("confirmCloseMessage")}</DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions
+          sx={{
+            "& .MuiButtonBase-root": {
+              color: "var(--color-secondary)",
+            },
+          }}
+        >
           <Button onClick={handleConfirmClose}>{t("yes")}</Button>
           <Button onClick={handleCancelClose}>{t("no")}</Button>
         </DialogActions>

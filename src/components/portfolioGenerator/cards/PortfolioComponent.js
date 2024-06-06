@@ -12,6 +12,10 @@ import {
   Alert,
   Snackbar,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -557,7 +561,12 @@ const PortfolioComponent = ({
                               colors={getCategoryColors(asset.Category)}
                             />
                           )}
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
                             <Avatar
                               src={asset.cgImageURL}
                               sx={{ width: 28, height: 28, mr: 1 }}
@@ -571,7 +580,16 @@ const PortfolioComponent = ({
                               </Typography>
                             </Box>
                           </Box>
-                          <Typography variant="body2" sx={{ color: "#fff" }}>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: "#fff",
+                              // flexGrow: 1,
+                              flexBasis: "33%",
+                              marginLeft: "auto",
+                              textAlign: "right",
+                            }}
+                          >
                             {convertPrice(asset?.Price || 0, currency, rates)}{" "}
                             {currencySign[currency]}
                           </Typography>
@@ -580,12 +598,14 @@ const PortfolioComponent = ({
                               display: "flex",
                               alignItems: "center",
                               flexDirection: "row",
+                              flexBasis: "40%",
+                              justifyContent: "flex-end",
                             }}
                           >
                             <Box
                               sx={{
                                 display: "flex",
-                                alignItems: "center",
+                                alignItems: "flex-end",
                                 flexDirection: "column",
                               }}
                             >
@@ -696,6 +716,51 @@ const PortfolioComponent = ({
                       color="gold"
                     />
                   </Button>
+                  <Dialog
+                    open={openDialog}
+                    onClose={handleCloseDialog}
+                    maxWidth="sm"
+                    fullWidth
+                  >
+                    <DialogTitle>{t("importCSVTitle")}</DialogTitle>
+                    <DialogContent sx={{ maxWidth: "600px", width: "100%" }}>
+                      <Box
+                        sx={{
+                          border: "2px dashed #ccc",
+                          padding: "20px",
+                          borderRadius: "8px",
+                          textAlign: "center",
+                          cursor: "pointer",
+                        }}
+                        onDrop={handleFileDrop}
+                        onDragOver={(e) => e.preventDefault()}
+                        onClick={() =>
+                          document.getElementById("fileInput").click()
+                        }
+                      >
+                        {file ? (
+                          <Typography>{file.name}</Typography>
+                        ) : (
+                          <Typography>{t("dragAndDrop")}</Typography>
+                        )}
+                        <input
+                          type="file"
+                          accept=".csv"
+                          onChange={handleFileChange}
+                          style={{ display: "none" }}
+                          id="fileInput"
+                        />
+                      </Box>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseImpDialog} color="primary">
+                        {t("cancel")}
+                      </Button>
+                      <Button onClick={handleFileUpload} color="primary">
+                        {t("upload")}
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </Box>
               </Grid>
             ) : (

@@ -17,7 +17,8 @@
     "graph": "Graph",
     "admin": "Admin",
     "portfolioId": "Portfolio-ID",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "pricing": "Member werden"
   },
   "bewertungCard": {
     "title": "Bewertung",
@@ -120,17 +121,6 @@
     "portfolioGenerator": "Portfolio Generator",
     "assetManager": "Asset Manager",
     "portfolioOverview": "Portfolio Übersicht"
-  },
-  "donutLegend": {
-    "AI": "AI",
-    "WEB3": "Web3/Anonymität",
-    "DEFI": "DeFi",
-    "GREEN": "Grüne Coins",
-    "METAVERSE": "Gaming/Metaverse",
-    "BTC": "BTC-Zusammenhang",
-    "CBDC": "CBDC-Netzwerke",
-    "ECOMMERCE": "E-Commerce",
-    "NFT": "Tokenisierung/RWA"
   },
   "scrollableKryptoTabs": {
     "favourite": "Favoriten",

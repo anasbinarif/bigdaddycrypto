@@ -1,5 +1,11 @@
 "use client";
-import {Box, IconButton, Typography, MenuItem, CircularProgress} from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  MenuItem,
+  CircularProgress,
+} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { signOut, useSession } from "next-auth/react";
 import { useAtom } from "jotai";
@@ -53,9 +59,9 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   }, [status, session]);
 
   const handleLogoutFun = async () => {
-    setLoading(true)
+    setLoading(true);
     await signOut({ redirect: true, callbackUrl: "/login" });
-    setLoading(false)
+    setLoading(false);
     // handleClose();
   };
 
@@ -130,7 +136,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                 color: "black",
               }}
             >
-              Member werden
+              {t("pricing")}
             </Link>
             <IconButton
               onClick={handleLogoutFun}
@@ -164,22 +170,22 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         )}
       </Box>
       {loading && (
-          <Box
-              sx={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                zIndex: 9999,
-              }}
-          >
-            <CircularProgress color="inherit" />
-          </Box>
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
+          }}
+        >
+          <CircularProgress color="inherit" />
+        </Box>
       )}
     </>
   );

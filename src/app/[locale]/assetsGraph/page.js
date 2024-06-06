@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   CircularProgress,
@@ -11,6 +11,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Checkbox,
 } from "@mui/material";
 import Image from "next/image";
 import Graph from "../../../../public/assets/svg/BDC-Graph.svg";
@@ -43,7 +44,22 @@ const Testing = () => {
   });
   const [symbolSize, setSymbolSize] = useState(40);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedItem, setSelectedItem] = useState("");
+  const [selectedItem, setSelectedItem] = useState({
+    ai: true,
+    web3: true,
+    defi: true,
+    green: true,
+    metaverse: true,
+    btc: true,
+    cbdc: true,
+    ecommerce: true,
+    nft: true,
+    none: true,
+  });
+
+  function areAllTrue(obj) {
+    return Object.values(obj).every((value) => value === true);
+  }
 
   useEffect(() => {
     getAssetTest()
@@ -96,59 +112,114 @@ const Testing = () => {
       y: assetY,
     });
   };
-  console.log(selectedItem);
+  // console.log(selectedItem);
 
-  const filteredAssets = assets.map((asset) => {
-    const filter1 =
-      asset?.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      asset?.Ticker?.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredAssets = useMemo(() => {
+    return assets
+      .filter((asset) => {
+        if (areAllTrue(selectedItem)) return asset;
 
-    const filter2 =
-      selectedItem === "" || asset.Category.includes(selectedItem);
+        if (asset?.Category.some((cat) => selectedItem[cat])) return asset;
+      })
+      .map((asset) => {
+        const filter =
+          asset?.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset?.Ticker?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return (
-      <Box
-        className="coinBtn"
-        key={asset._id}
-        component="div"
-        sx={{
-          position: "absolute",
-          left: calculatePosition(asset.Potential, symbolSize / 2),
-          top: `calc(100% - ${calculatePosition(
-            asset.Sicherheit,
-            symbolSize / 2
-          )})`,
-          opacity: filter1 && filter2 ? "1" : "0.3",
-          zIndex: filter1 && filter2 ? "1000" : "500",
-          transform: "translate(-50%, -50%)",
-          transition: "all 0.3s ease-in-out",
-          cursor: "pointer",
-          background: "#fff",
-          display: "flex",
-          boxShadow: "3px 3px 12px rgba(0, 0, 0, .1)",
-          borderRadius: "100px",
-          padding: "2px",
-          "&:hover": {
-            transform: "scale(1.5) translate(-50%, -50%)",
-            zIndex: "21000",
-          },
-        }}
-        onClick={(event) => handleCoinClick(event, asset)}
-      >
-        <Image
-          src={asset.cgImageURL}
-          alt={asset.Name}
-          width={filter1 && filter2 ? symbolSize : symbolSize * 0.8}
-          height={filter1 && filter2 ? symbolSize : symbolSize * 0.8}
-          style={{
-            borderRadius: "50%",
-            boxShadow: "3px 3px 12px rgba(0,0,0,.1)",
-          }}
-        />
-      </Box>
-    );
-  });
+        if (!asset.Name) return <></>;
+        return (
+          <Box
+            className="coinBtn"
+            data-sicherheit={asset.Sicherheit}
+            data-potential={asset.Potential}
+            data-filter={filter}
+            key={asset._id}
+            component="div"
+            sx={{
+              position: "absolute",
+              left: calculatePosition(asset.Potential, symbolSize / 10),
+              top: `calc(100% - ${calculatePosition(
+                asset.Sicherheit,
+                symbolSize / 10
+              )})`,
+              opacity: filter ? "1" : "0.3",
+              zIndex: filter ? "1000" : "500",
+              transform: "translate(-50%, -50%)",
+              transition: "all 0.3s ease-in-out",
+              cursor: "pointer",
+              background: "#fff",
+              display: "flex",
+              boxShadow: "3px 3px 12px rgba(0, 0, 0, .1)",
+              borderRadius: "100px",
+              padding: "2px",
+              "&:hover": {
+                transform: "scale(1.5) translate(-50%, -50%)",
+                zIndex: "21000",
+              },
+            }}
+            onMouseEnter={(event) => handleCoinClick(event, asset)}
+          >
+            <Image
+              src={asset.cgImageURL}
+              alt={asset.Name}
+              width={filter ? symbolSize : symbolSize * 0.8}
+              height={filter ? symbolSize : symbolSize * 0.8}
+              style={{
+                borderRadius: "50%",
+                boxShadow: "3px 3px 12px rgba(0,0,0,.1)",
+              }}
+            />
+          </Box>
+        );
+      });
+  }, [assets, selectedItem, searchTerm]);
   // console.log(filteredAssets);
+
+  useEffect(() => {
+    const coins = document.querySelectorAll(".coinBtn");
+    // console.log(coins);
+
+    if (coins) {
+      coins.forEach((button) => {
+        const sicherheit = button.getAttribute("data-sicherheit");
+        const potential = button.getAttribute("data-potential");
+
+        button.style.left = calculatePosition(potential, symbolSize / 10);
+        button.style.top = `calc(100% - ${calculatePosition(
+          sicherheit,
+          symbolSize / 10
+        )})`;
+
+        const image = button.querySelector("img");
+        if (image) {
+          image.style.width = `${symbolSize}px`;
+          image.style.height = `${symbolSize}px`;
+        }
+      });
+    }
+  }, [symbolSize]);
+
+  const handleCheckboxChange = (event) => {
+    setSelectedItem(
+      event.target.name === "all"
+        ? {
+            ai: true,
+            web3: true,
+            defi: true,
+            green: true,
+            metaverse: true,
+            btc: true,
+            cbdc: true,
+            ecommerce: true,
+            nft: true,
+            none: true,
+          }
+        : {
+            ...selectedItem,
+            [event.target.name]: event.target.checked,
+          }
+    );
+  };
 
   return (
     <>
@@ -192,6 +263,9 @@ const Testing = () => {
             aria-label="Default"
             valueLabelDisplay="auto"
             onChange={(e, newValue) => setSymbolSize(newValue)}
+            sx={{
+              color: "var(--color-secondary)",
+            }}
           />
         </Box>
         <Box sx={{ width: "20%" }}>
@@ -264,28 +338,41 @@ const Testing = () => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={selectedItem}
             label="All Categories"
-            onChange={(e) => setSelectedItem(e.target.value)}
+            // onChange={(e) => setSelectedItem(e.target.value)}
           >
-            <MenuItem value="">All</MenuItem>
+            <MenuItem value="">
+              <Checkbox
+                checked={areAllTrue(selectedItem)}
+                onChange={handleCheckboxChange}
+                name="all"
+              />
+              All Categories
+            </MenuItem>
             {Object.entries(reverseMapping).map(([key, value]) => (
-              <MenuItem key={key} value={key}>
+              <MenuItem>
+                <Checkbox
+                  checked={selectedItem[key]}
+                  onChange={handleCheckboxChange}
+                  name={key}
+                />
                 {value}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
       </Box>
-      <Container
+      <Box
         sx={{
           position: "relative",
-          maxWidth: "100%",
+          // maxWidth: "100%",
+          maxWidth: "1200px",
           height: "1200px",
           marginTop: "1rem",
           backgroundColor: "#111826",
           overflow: "hidden",
           padding: "0px",
+          margin: "0 auto",
         }}
       >
         <Box
@@ -302,8 +389,8 @@ const Testing = () => {
           <Box
             sx={{
               position: "absolute",
-              top: `calc(${tooltip.y} + 20px)`,
-              left: `calc(${tooltip.x} + 20px)`,
+              top: `calc(${tooltip.y} + 10px)`,
+              left: `calc(${tooltip.x} + 10px)`,
               backgroundColor: "#fff",
               color: "#000",
               padding: "1rem",
@@ -340,7 +427,7 @@ const Testing = () => {
             </Typography>
           </Box>
         )}
-      </Container>
+      </Box>
       <Footer />
       {loading && (
         <Box

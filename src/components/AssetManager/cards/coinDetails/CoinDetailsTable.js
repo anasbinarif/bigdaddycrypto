@@ -201,7 +201,7 @@ const CoinDetailsTable = ({
                   <input
                     type="number"
                     id="betragInput"
-                    value={row.Betrag}
+                    value={row.Betrag || ""}
                     onChange={(e) =>
                       handleRowData(
                         parseFloat(e.target.value) || 0,
@@ -209,12 +209,7 @@ const CoinDetailsTable = ({
                         "Betrag"
                       )
                     }
-                    style={{
-                      marginRight: "5px",
-                      width: "100px",
-                      backgroundColor: "transparent",
-                      border: "none",
-                    }}
+                    className={styles.input}
                   />
                   €
                 </div>
@@ -233,7 +228,7 @@ const CoinDetailsTable = ({
                   <input
                     type="number"
                     id="numberInput"
-                    value={row.Coins}
+                    value={row.Coins || ""}
                     onChange={(e) =>
                       handleRowData(
                         parseFloat(e.target.value) || 0,
