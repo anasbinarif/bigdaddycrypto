@@ -174,7 +174,11 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
             textAlign: isSmallScreen ? "center" : "left",
           }}
         >
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ fontWeight: "bold", fontSize: "1.6rem" }}
+          >
             {t("chooseAssets")}
           </Typography>
           {/* {(width > 1400 || width < 1100) && ( */}
