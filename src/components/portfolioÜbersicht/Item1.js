@@ -9,6 +9,7 @@ import { useAtom } from "jotai/index";
 import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { Chart } from "react-google-charts";
 import { useTranslations } from "next-intl";
+import addCommas from "../../lib/currencyFormatter";
 
 const options = {
   pieHole: 0.8,
@@ -154,7 +155,7 @@ export default function Item1({ loadingPortfolio }) {
                 whiteSpace: "nowrap",
               }}
             >
-              {totalGesamtwert} €
+              {addCommas(totalGesamtwert)} €
             </Typography>
             <Typography
               className={gesamtwertPercentage < 0 ? "down" : "up"}
@@ -195,7 +196,7 @@ export default function Item1({ loadingPortfolio }) {
                 {t("totalInvestment")}
               </Typography>
               <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
-                {totalInvestment} €
+                {addCommas(totalInvestment)} €
               </Typography>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -203,7 +204,7 @@ export default function Item1({ loadingPortfolio }) {
                 {t("currentProfit")}
               </Typography>
               <Typography sx={{ fontSize: "0.8rem", fontWeight: "bold" }}>
-                {aktuellerProfit},00 €
+                {addCommas(aktuellerProfit)} €
               </Typography>
             </Box>
           </Box>
