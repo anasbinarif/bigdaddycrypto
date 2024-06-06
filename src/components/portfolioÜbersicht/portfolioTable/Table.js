@@ -74,8 +74,22 @@ const darkTheme = createTheme({
 });
 
 function descendingComparator(a, b, orderBy) {
+  const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
   let aValue = a[orderBy];
   let bValue = b[orderBy];
+
+  if (nums.includes(aValue[0]) && nums.includes(bValue[0])) {
+    aValue = parseFloat(aValue);
+    bValue = parseFloat(bValue);
+  }
+
+  if (typeof aValue === "string" && typeof bValue === "string") {
+    aValue = aValue.toUpperCase();
+    bValue = bValue.toUpperCase();
+    if (bValue < aValue) return -1;
+    if (bValue > aValue) return 1;
+    return 0;
+  }
 
   // Convert percentage strings to numbers for comparison
   if (typeof aValue === "string" && aValue.includes("%")) {
@@ -98,6 +112,8 @@ function descendingComparator(a, b, orderBy) {
     bValue === "n/a"
   )
     bValue = -Infinity;
+
+  // console.log(aValue, bValue);
 
   if (bValue < aValue) return -1;
   if (bValue > aValue) return 1;
@@ -128,7 +144,7 @@ const EnhancedTable = () => {
 
   useEffect(() => {
     if (portfolio.assetsCalculations && portfolio.assets) {
-      console.log(portfolio, "meeeeee");
+      // console.log(portfolio, "meeeeee");
       const totalInvestment = portfolio.assetsCalculations.assets.reduce(
         (acc, curr) => acc + curr.totalInvest,
         0

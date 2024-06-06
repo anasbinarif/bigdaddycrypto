@@ -411,9 +411,9 @@ const ScrollableKryptoTabs = ({
                   ];
                 })()}
           </Box>
-          {(categorizedData[label]?.some(checkCoinRisk) &&
-            label !== "Favorites") ||
-            (label === "Favoriten" && (
+          {categorizedData[label]?.some(checkCoinRisk) &&
+            label !== "Favorites" &&
+            label !== "Favoriten" && (
               <Button
                 onClick={() => handleToggleRiskCoins(label)}
                 sx={{
@@ -428,7 +428,7 @@ const ScrollableKryptoTabs = ({
               >
                 {showRiskCoins[label] ? t("hideRiskCoins") : t("showRiskCoins")}
               </Button>
-            ))}
+            )}
         </TabPanel>
       ))}
       {/*{loading && (*/}
