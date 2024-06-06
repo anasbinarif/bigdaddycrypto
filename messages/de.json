@@ -102,8 +102,8 @@
   "formDialog": {
     "importUserData": "Benutzerdaten importieren",
     "importInstructions": "Um Ihre Daten aus unserer vorherigen Anwendung zu importieren, geben Sie bitte Ihren Benutzernamen und Ihr Passwort ein.",
-    "name": "Name",
-    "pin": "Pin",
+    "name": "ID",
+    "pin": "Passwort",
     "cancel": "Abbrechen",
     "import": "Importieren",
     "confirmAction": "Aktion bestätigen",
@@ -166,7 +166,8 @@
     "cancel": "Abbrechen",
     "upload": "Hochladen",
     "importCSVTitle": "Import CSV",
-    "importExportInfo": "Um auf Import/Export zuzugreifen, abonnieren Sie bitte einen unserer Pläne."
+    "importExportInfo": "Um auf Import/Export zuzugreifen, abonnieren Sie bitte einen unserer Pläne.",
+    "successAlert": "Transaktion erfolgreich gespeichert!"
   },
   "bubbleChart": {
     "symbolSize": "Symbol-Größe",
@@ -209,5 +210,17 @@
   },
   "Overview": {
     "buttonText": "Jetzt Kommentar von BigDaddy anfragen"
+  },
+  "graph": {
+    "ai": "AI",
+    "web3": "Web3/Anonymität",
+    "defi": "DeFi",
+    "green": "Grüne Coins",
+    "metaverse": "Gaming/Metaverse",
+    "btc": "BTC-Zusammenhang",
+    "cbdc": "CBDC-Netzwerke",
+    "ecommerce": "ECommerce",
+    "nft": "Tokenisierung/RWA",
+    "none": "Kein Hype-Thema"
   }
 }

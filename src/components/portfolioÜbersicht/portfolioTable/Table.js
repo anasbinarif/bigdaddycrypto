@@ -91,6 +91,7 @@ function descendingComparator(a, b, orderBy) {
     return 0;
   }
 
+  console.log(aValue, bValue);
   // Convert percentage strings to numbers for comparison
   if (typeof aValue === "string" && aValue.includes("%")) {
     aValue = parseFloat(aValue.replace("%", ""));
@@ -104,14 +105,14 @@ function descendingComparator(a, b, orderBy) {
     aValue === "Infinity" ||
     aValue === "n/a"
   )
-    aValue = -Infinity;
+    aValue = 0;
   if (
     isNaN(bValue) ||
     bValue === "NaN" ||
     bValue === "Infinity" ||
     bValue === "n/a"
   )
-    bValue = -Infinity;
+    bValue = 0;
 
   // console.log(aValue, bValue);
 
@@ -443,21 +444,22 @@ const EnhancedTable = () => {
                         component={Typography}
                         sx={{
                           ml: 1,
-                          bgcolor: `${getRandomColor(index)}75`,
+                          bgcolor: `${getRandomColor(index)}`,
                           fontWeight: "bold",
                           display: "flex",
                           justifyContent: "center",
                           alignItems: "center",
-                          maxWidth: "75%",
+                          maxWidth: "50%",
                           // lineHeight: "25px",
                           padding: "3px 12px",
                           borderRadius: "32px",
                           fontSize: "12px",
+                          marginLeft: "auto",
                         }}
                       >
                         <Typography
                           sx={{
-                            fontSize: "13px",
+                            fontSize: "12px",
                             fontWeight: "bold",
                             transform: "translateY(1px)",
                           }}
@@ -494,7 +496,7 @@ const EnhancedTable = () => {
                     </TableCell>
                     <TableCell sx={{ padding: "5px 0 5px 5px" }}>
                       <StyledTypography>
-                        {row.X ? row.X : "0,00"}x
+                        {row.X && !isNaN(row.X) ? row.X : "0"}x
                       </StyledTypography>
                     </TableCell>
                     <TableCell sx={{ padding: "5px" }}>

@@ -142,7 +142,7 @@ const Third = () => {
               fontWeight: "bold",
             }}
           >
-            {convertPrice(totalInvestment, currency, rates)},00{" "}
+            {addCommas(convertPrice(totalInvestment, currency, rates))}{" "}
             {currencySign[currency]}
           </Typography>
         </Box>
@@ -161,7 +161,7 @@ const Third = () => {
               fontWeight: "bold",
             }}
           >
-            {convertPrice(aktuellerProfit, currency, rates)},00{" "}
+            {addCommas(convertPrice(aktuellerProfit, currency, rates))}{" "}
             {currencySign[currency]}
           </Typography>
         </Box>

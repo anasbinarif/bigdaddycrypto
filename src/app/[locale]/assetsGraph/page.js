@@ -18,6 +18,7 @@ import Graph from "../../../../public/assets/svg/BDC-Graph.svg";
 import { getAssetTest } from "../../../lib/data";
 import Navbar from "../../../components/navbar/Navbar";
 import Footer from "../../../components/footer/Footer";
+import { useTranslations } from "next-intl";
 import { symbol } from "prop-types";
 
 const reverseMapping = {
@@ -34,6 +35,7 @@ const reverseMapping = {
 };
 
 const Testing = () => {
+  const t = useTranslations("");
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tooltip, setTooltip] = useState({
@@ -56,6 +58,8 @@ const Testing = () => {
     nft: true,
     none: true,
   });
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   function areAllTrue(obj) {
     return Object.values(obj).every((value) => value === true);
@@ -137,12 +141,12 @@ const Testing = () => {
             component="div"
             sx={{
               position: "absolute",
-              left: calculatePosition(asset.Potential, symbolSize / 10),
+              left: calculatePosition(asset.Potential, symbolSize / 100),
               top: `calc(100% - ${calculatePosition(
                 asset.Sicherheit,
-                symbolSize / 10
+                symbolSize / 100
               )})`,
-              opacity: filter ? "1" : "0.3",
+              opacity: filter ? "1" : "0.15",
               zIndex: filter ? "1000" : "500",
               transform: "translate(-50%, -50%)",
               transition: "all 0.3s ease-in-out",
@@ -153,7 +157,8 @@ const Testing = () => {
               borderRadius: "100px",
               padding: "2px",
               "&:hover": {
-                transform: "scale(1.5) translate(-50%, -50%)",
+                transformOrigin: "center",
+                transform: "scale(1.5) translate(-30%, -30%)",
                 zIndex: "21000",
               },
             }}
@@ -162,8 +167,8 @@ const Testing = () => {
             <Image
               src={asset.cgImageURL}
               alt={asset.Name}
-              width={filter ? symbolSize : symbolSize * 0.8}
-              height={filter ? symbolSize : symbolSize * 0.8}
+              width={filter ? symbolSize : symbolSize * 0.5}
+              height={filter ? symbolSize : symbolSize * 0.5}
               style={{
                 borderRadius: "50%",
                 boxShadow: "3px 3px 12px rgba(0,0,0,.1)",
@@ -184,10 +189,10 @@ const Testing = () => {
         const sicherheit = button.getAttribute("data-sicherheit");
         const potential = button.getAttribute("data-potential");
 
-        button.style.left = calculatePosition(potential, symbolSize / 10);
+        button.style.left = calculatePosition(potential, symbolSize / 100);
         button.style.top = `calc(100% - ${calculatePosition(
           sicherheit,
-          symbolSize / 10
+          symbolSize / 100
         )})`;
 
         const image = button.querySelector("img");
@@ -201,7 +206,7 @@ const Testing = () => {
 
   const handleCheckboxChange = (event) => {
     setSelectedItem(
-      event.target.name === "all"
+      event.target.name === "all" && event.target.checked
         ? {
             ai: true,
             web3: true,
@@ -213,6 +218,19 @@ const Testing = () => {
             ecommerce: true,
             nft: true,
             none: true,
+          }
+        : event.target.name === "all"
+        ? {
+            ai: false,
+            web3: false,
+            defi: false,
+            green: false,
+            metaverse: false,
+            btc: false,
+            cbdc: false,
+            ecommerce: false,
+            nft: false,
+            none: false,
           }
         : {
             ...selectedItem,
@@ -339,6 +357,17 @@ const Testing = () => {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             label="All Categories"
+            open={menuOpen}
+            onOpen={() => setMenuOpen(true)}
+            onClose={(event) => {
+              if (event.target.tagName === "DIV") setMenuOpen(false);
+            }}
+            MenuProps={{
+              disableAutoFocusItem: true,
+              MenuListProps: {
+                disableListWrap: true,
+              },
+            }}
             // onChange={(e) => setSelectedItem(e.target.value)}
           >
             <MenuItem value="">

@@ -268,7 +268,7 @@ const CoinDetails = (props) => {
         if (response.ok) {
           console.log("hbhbhbhbhbhbhbhbhbhbhbh");
           setAlertInfo({
-            message: "Transaktion erfolgreich gespeichert!",
+            message: t("successAlert"),
             severity: "success",
           });
           const userPortfolio = await getUserPortfolio(userID);
@@ -322,7 +322,7 @@ const CoinDetails = (props) => {
         if (response.ok) {
           console.log("hbhbhbhbhbhbhbhbhbhbhbh");
           setAlertInfo({
-            message: "Transaktion erfolgreich gespeichert!",
+            message: t("successAlert"),
             severity: "success",
           });
           const userPortfolio = await getUserPortfolio(userID);

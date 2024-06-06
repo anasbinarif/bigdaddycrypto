@@ -39,7 +39,7 @@
     "subtitle": "Adjust the weighting of the assets to better reflect their actual share in the portfolio.",
     "loading": "No entries",
     "coinRemovedSuccess": "Coin removed successfully",
-    "delete": "Delete",
+    "delete": "Delete", 
     "favourite": "Favourite"
   },
   "coinCard": {
@@ -102,8 +102,8 @@
   "formDialog": {
     "importUserData": "Import User Data",
     "importInstructions": "To import your data from our previous application, please enter your username and password.",
-    "name": "Name",
-    "pin": "Pin",
+    "name": "ID",
+    "pin": "Passwort",
     "cancel": "Cancel",
     "import": "Import",
     "confirmAction": "Confirm Action",
@@ -146,8 +146,8 @@
     "defi": "DeFi",
     "greenCoins": "Green Coins",
     "gamingMetaverse": "Gaming/Metaverse",
-    "btcConnection": "BTC Connection",
-    "cbdcNetworks": "CBDC Networks",
+    "btcConnection": "BTC Context",
+    "cbdcNetworks": "CBDC Network",
     "eCommerce": "E-Commerce",
     "tokenizationRWA": "Tokenization/RWA",
     "noHypeTopic": "No Hype Topic",
@@ -182,7 +182,8 @@
     "cancel": "Cancel",
     "upload": "Upload",
     "importCSVTitle": "Import CSV",
-    "importExportInfo": "To access the Import/Export, please subscribe to one of our plans."
+    "importExportInfo": "To access the Import/Export, please subscribe to one of our plans.",
+    "successAlert": "Transaction saved successfully!"
   },
   "bubbleChart": {
     "symbolSize": "Symbol Size",
