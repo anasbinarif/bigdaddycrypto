@@ -211,6 +211,10 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
             "@media only screen and (max-width: 1100px)": {
               pt: "16px",
             },
+            "*, *::after, *::before": {
+              outline: "none",
+              border: "none",
+            },
           }}
         >
           <Box
@@ -229,11 +233,11 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={priceIndicator}
-              label="Price Indicator"
+              // label="Price Indicator"
               onChange={handleChange}
               // variant="outlined"
               sx={{
-                "*": {
+                "*, *::after, *::before": {
                   outline: "none",
                   border: "none",
                 },
@@ -254,10 +258,10 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
                   backgroundColor: "#1d1d1d",
                 },
                 "& .MuiOutlinedInput-notchedOutline": {
-                  // border: "1px solid #ffffff80",
+                  border: "1px solid #ffffff80",
                 },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  // border: "1px solid #ffffff80",
+                  border: "1px solid #ffffff80",
                 },
                 "& .MuiFormHelperText-root": {
                   color: "#ffffff",
@@ -355,7 +359,7 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
               // event.preventDefault();
             }}
             sx={{
-              "*": {
+              "*, *::after, *::before": {
                 outline: "none",
                 border: "none",
               },
@@ -366,47 +370,48 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
               // minWidth: "180px",
               width: "100%",
               alignSelf: isSmallScreen ? "stretch" : "flex-start",
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                border: "1px solid #ffffff20",
-              },
-              "& .MuiFormControl-root": {
-                wordWrap: "nowrap",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              "&.Mui-focused .MuiFormControl-root .MuiInputBase-root MuiInputBase-input":
+                {
+                  border: "1px solid #ffffff20",
+                },
+              // "& .MuiFormControl-root": {
+              //   wordWrap: "nowrap",
+              //   display: "flex",
+              //   alignItems: "center",
+              //   justifyContent: "center",
+              // },
               "& .MuiOutlinedInput-root.MuiInputBase-root": {
-                border: "none",
+                border: "1px solid #ffffff80",
                 borderRadius: "4px",
                 padding: "0",
               },
-              "& .MuiOutlinedInput-root": {
-                border: "1px solid #ffffff80",
-                padding: "0",
-                color: "white",
-                "&:selected": {
-                  border: "none",
-                },
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "1px solid #ffffff80",
-                padding: "0",
-              },
-              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                {
-                  border: "1px solid #ffffff",
-                },
-              "& .MuiOutlinedInput-root:selected .MuiOutlinedInput-notchedOutline":
-                {
-                  border: "1px solid #ffffff80",
-                },
-              "& .MuiFormLabel-root": {
-                color: "#ffffff",
-                "&.Mui-focused": {
-                  border: "1px solid #ffffff80",
-                  color: "#ffffff",
-                },
-              },
+              // "& .MuiOutlinedInput-root": {
+              //   border: "1px solid #ffffff80",
+              //   padding: "0",
+              //   color: "white",
+              //   "&:selected": {
+              //     border: "none",
+              //   },
+              // },
+              // "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              //   border: "1px solid #ffffff80",
+              //   padding: "0",
+              // },
+              // "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+              //   {
+              //     border: "1px solid #ffffff",
+              //   },
+              // "& .MuiOutlinedInput-root.Mui-selected .MuiOutlinedInput-notchedOutline":
+              //   {
+              //     border: "1px solid #ffffff80",
+              //   },
+              // "& .MuiFormLabel-root": {
+              //   color: "#ffffff",
+              //   "&.Mui-focused": {
+              //     border: "1px solid #ffffff80",
+              //     color: "#ffffff",
+              //   },
+              // },
               "& .MuiSvgIcon-root": {
                 color: "#ffffff",
                 paddingRight: 0,

@@ -286,7 +286,7 @@ const LoginPage = () => {
             name="pin"
             label="PIN code"
             variant="filled"
-            placeholder="4-8 numbers"
+            // placeholder="4-8 numbers"
             type="password"
             value={user.pin}
             onChange={handleUserChange}
