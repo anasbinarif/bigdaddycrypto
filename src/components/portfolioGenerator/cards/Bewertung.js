@@ -13,28 +13,125 @@ import { useAtom } from "jotai";
 import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { calculatePotential } from "../../../lib/action";
+
+const calculatePotential = (portfolio) => {
+  let totalPotential = 0;
+  let totalAssets = 0;
+  let totalSecurity = 0;
+  let pMinX = 0;
+  let pMaxX = 0;
+  let pMinXClean = 0;
+  let pMaxXClean = 0;
+  let totalAssetsAmount = 0;
+
+  portfolio.forEach(asset => {
+    const { Potential, Sicherheit, Bottom, Price } = asset;
+    const dataPotential = parseFloat(Potential);
+    const dataSecurity = parseFloat(Sicherheit);
+    const dataBottom = parseFloat(Bottom);
+    const dataEK = parseFloat(Price) || dataBottom;
+    const assetAmount = 1;
+
+    if (dataPotential) {
+      totalPotential += dataPotential;
+      totalSecurity += (dataSecurity * assetAmount);
+      totalAssets += 1;
+      totalAssetsAmount += parseFloat(assetAmount);
+
+      if (isNaN(dataSecurity) || isNaN(dataPotential)) {
+        pMinX += (1 * assetAmount);
+        pMaxX += (10 * assetAmount);
+        pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
+      } else if (dataPotential >= 9) {
+        pMinX += (100 * assetAmount);
+        pMaxX += (200 * assetAmount);
+        pMinXClean += (100 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (200 * assetAmount) / dataEK * dataBottom;
+      } else if (dataPotential > 8.5) {
+        pMinX += (75 * assetAmount);
+        pMaxX += (100 * assetAmount);
+        pMinXClean += (75 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (100 * assetAmount) / dataEK * dataBottom;
+      } else if (dataPotential > 8) {
+        pMinX += (50 * assetAmount);
+        pMaxX += (75 * assetAmount);
+        pMinXClean += (50 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (75 * assetAmount) / dataEK * dataBottom;
+      } else if (dataPotential > 7.5) {
+        pMinX += (30 * assetAmount);
+        pMaxX += (50 * assetAmount);
+        pMinXClean += (30 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (50 * assetAmount) / dataEK * dataBottom;
+      } else if (dataPotential > 7) {
+        pMinX += (15 * assetAmount);
+        pMaxX += (30 * assetAmount);
+        pMinXClean += (15 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (30 * assetAmount) / dataEK * dataBottom;
+      } else if (dataPotential > 6.7) {
+        pMinX += (10 * assetAmount);
+        pMaxX += (15 * assetAmount);
+        pMinXClean += (10 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (15 * assetAmount) / dataEK * dataBottom;
+      } else {
+        pMinX += (1 * assetAmount);
+        pMaxX += (10 * assetAmount);
+        pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
+      }
+    }
+  });
+
+  // const avgMin = (pMinXClean / totalAssetsAmount).toFixed(0);
+  // const avgMax = (pMaxXClean / totalAssetsAmount).toFixed(0);
+
+
+  const avgMin = (pMinX / totalAssetsAmount).toFixed(0);
+  const avgMax = (pMaxX / totalAssetsAmount).toFixed(0);
+
+  return { avgMin, avgMax };
+};
+
+const setColorPot = (dataPotential) => {
+  let backgroundColor;
+
+  if (isNaN(dataPotential)) {
+    // Invalid or non-numeric data-security or data-potential, use a default color
+    backgroundColor = 'rgba(220,220,220,.1)';
+  } else if (dataPotential >= 30) {
+    backgroundColor = '#41b431';
+  } else if (dataPotential >= 20) {
+    backgroundColor = '#8ece10';
+  } else if (dataPotential >= 15) {
+    backgroundColor = '#E0c000';
+  } else if (dataPotential >= 8) {
+    backgroundColor = '#ff9600';
+  } else if (dataPotential > 0) {
+    backgroundColor = '#E31612';
+  } else {
+    backgroundColor = 'rgba(220,220,220,.1)';
+  }
+
+  return backgroundColor;
+}
 
 function BewertungCard() {
   const [portfolio] = useAtom(portfolioAtom);
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
-  const [potentialAverage, setPotentialAverage] = useState(0);
-  const [potentialXAverage, setPotentialXAverage] = useState(0);
+  const [potential, setPotential] = useState({
+    avgMin: 0,
+    avgMax: 0
+  })
   const t = useTranslations("bewertungCard");
 
   useEffect(() => {
     if (
       portfolio &&
       portfolio.assetsCalculations
-      // portfolio.assetsCalculations.assets.length > 0
     ) {
-      // const financialSummaries = calculateFinancialSummaryForAllAssets();
       const sicherheitValues = portfolio?.assets
         .filter((asset) => asset.Sicherheit)
         .map((asset) => asset.Sicherheit || 0);
-      const potentialValues = portfolio?.assets
-        .filter((asset) => asset.Sicherheit)
-        .map((asset) => asset.Potential || 0);
       const avgXFactorValue = portfolio?.assets.map(
         (asset) => (1 / asset?.Bottom) * asset?.Price
       );
@@ -46,51 +143,11 @@ function BewertungCard() {
       const avgSicherheit =
         sicherheitValues.length > 0
           ? sicherheitValues.reduce((acc, val) => acc + val, 0) /
-            sicherheitValues.length
+          sicherheitValues.length
           : 0;
-      const avgPotential =
-        potentialValues.length > 0
-          ? potentialValues.reduce((acc, val) => acc + val, 0) /
-            potentialValues.length
-          : 0;
-      const avgXfactor =
-        avgXFactorValue.length > 0
-          ? avgXFactorValue.reduce((acc, val) => acc + val, 0) /
-            avgXFactorValue.length
-          : 0;
-      setPotentialAverage(avgPotential.toFixed(0));
       setSicherheitAverage(avgSicherheit.toFixed(1));
-      setPotentialXAverage(avgXfactor.toFixed(0));
     }
   }, [portfolio]);
-
-  const calculateFinancialSummaryForAllAssets = () => {
-    return portfolio.assetsCalculations.assets.map((asset) => {
-      const assetDetails =
-        portfolio.assets?.find((a) => a.CoinGeckoID === asset.CoinGeckoID) ||
-        {};
-      const price = assetDetails.Price || 0;
-      const Potential = assetDetails.Potential || 0;
-      const Sicherheit = assetDetails.Sicherheit || 0;
-      const totalCoins = asset.buyAndSell.reduce((acc, row) => {
-        const coinsValue = parseFloat(row.Coins);
-        return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
-      }, 0);
-      const totalHoldingsValue = (totalCoins * parseFloat(price)).toFixed(2);
-      const totalInvested = asset.buyAndSell
-        .reduce((acc, row) => acc + parseFloat(row.Betrag), 0)
-        .toFixed(2);
-
-      return {
-        CoinGeckoID: asset.CoinGeckoID,
-        totalCoins,
-        totalHoldingsValue,
-        totalInvested,
-        Potential,
-        Sicherheit,
-      };
-    });
-  };
 
   const getBackgroundColor = (sicherheitAverage) => {
     if (sicherheitAverage >= 0 && sicherheitAverage < 5.5) {
@@ -108,8 +165,13 @@ function BewertungCard() {
     const testFunctionAnything = async () => {
       if (portfolio?.assets) {
         const portfolio1 = portfolio?.assets;
+        console.log("portfolio1portfolio1", portfolio1);
         const potentialPromise = await calculatePotential(portfolio1);
         console.log("calculatePotential", potentialPromise);
+        setPotential({
+          avgMax: potentialPromise.avgMax,
+          avgMin: potentialPromise.avgMin
+        })
       }
     };
     testFunctionAnything();
@@ -237,14 +299,14 @@ function BewertungCard() {
               <span
                 style={{
                   color: "white",
-                  backgroundColor: "rgb(142, 206, 16)",
+                  backgroundColor: setColorPot(potential.avgMin),
                   padding: "4px 8px 2px",
                   textShadow: "1px 1px 5px rgba(0,0,0,.4)",
                   borderRadius: "6px",
                   fontSize: "14px",
                 }}
               >
-                {potentialAverage}-{potentialXAverage}x
+                {potential.avgMin}-{potential.avgMax}x
               </span>
             </Typography>
           </Box>
