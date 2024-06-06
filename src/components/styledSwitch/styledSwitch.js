@@ -10,13 +10,13 @@ export const MySwitch = styled(Switch)(({ theme }) => ({
       color: "#ffffff",
       "& + .MuiSwitch-track": {
         opacity: 1,
-        backgroundColor: "var(--color-secondary-2)",
+        backgroundColor: "var(--color-secondary)",
       },
     },
   },
   "& .MuiSwitch-track": {
+    backgroundColor: "var(--color-secondary-2)",
     borderRadius: 50,
-    backgroundColor: "var(--color-secondary)",
     opacity: 1,
     "&::before, &::after": {
       content: '""',

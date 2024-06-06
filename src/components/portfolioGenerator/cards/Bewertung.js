@@ -161,6 +161,7 @@ function BewertungCard() {
           <Box
             sx={{
               display: "flex",
+              alignItems: "center",
               justifyContent: "space-between",
               "@media (max-width:1400px)": {
                 flexDirection: "column",
@@ -179,12 +180,12 @@ function BewertungCard() {
             <Typography
               component="div"
               sx={{
+                display: "flex",
                 alignItems: "center",
                 gap: "8px",
                 backgroundColor: "#00000033",
                 padding: "10px 16px",
                 borderRadius: "8px",
-                display: "flex",
                 fontSize: "14px",
                 "@media (max-width:1400px)": {
                   mb: "20px",
@@ -192,7 +193,12 @@ function BewertungCard() {
               }}
             >
               <span
-                style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}
+                style={{
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  gap: "4px",
+                  alignItems: "center",
+                }}
               >
                 {t("sicherheit")}
                 <CustomizedTooltips
@@ -226,7 +232,12 @@ function BewertungCard() {
               }}
             >
               <span
-                style={{ whiteSpace: "nowrap", display: "flex", gap: "4px" }}
+                style={{
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  gap: "4px",
+                  alignItems: "center",
+                }}
               >
                 {t("potential")}
                 <CustomizedTooltips

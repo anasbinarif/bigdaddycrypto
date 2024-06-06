@@ -95,9 +95,17 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
           <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
             <FormControlLabel
               control={
-                <MySwitch checked={blurEmail} onChange={handleToggleChange} />
+                <MySwitch
+                  sx={{
+                    "& .MuiSwitch-track": {
+                      backgroundColor: "grey",
+                    },
+                  }}
+                  checked={blurEmail}
+                  onChange={handleToggleChange}
+                />
               }
-              label="Blur User Email"
+              // label="Blur User Email"
             />
           </Box>
           <TableContainer component={Paper} sx={{ maxHeight: "600px" }}>

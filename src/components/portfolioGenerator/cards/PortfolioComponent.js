@@ -500,10 +500,23 @@ const PortfolioComponent = ({
           }}
         >
           <Box sx={{ p: 3, width: "100%" }}>
-            <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                fontWeight: 700,
+                fontSize: "1.6rem",
+                marginBottom: "1rem",
+                mt: "8px",
+              }}
+            >
               {t("title")} ({assetsLeangth})
             </Typography>
-            <Typography variant="subtitle1" gutterBottom>
+            <Typography
+              variant="subtitle1"
+              gutterBottom
+              sx={{ color: "#ffffff80", fontSize: "0.9rem", mb: "2rem" }}
+            >
               {t("subtitle")}
             </Typography>
             {loadingPortfolio ? (

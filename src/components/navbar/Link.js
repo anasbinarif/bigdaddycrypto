@@ -64,6 +64,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
     setLoading(false);
     // handleClose();
   };
+  // console.log(sessionJotai.user);
 
   return (
     <>

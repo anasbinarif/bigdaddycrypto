@@ -67,7 +67,7 @@ const DonutLegend = ({ portfolioCalculations }) => {
             sx={{
               flexGrow: 1,
               color: "#fff",
-              fontSize: "11px",
+              fontSize: "14px",
               whiteSpace: "nowrap",
             }}
           >
