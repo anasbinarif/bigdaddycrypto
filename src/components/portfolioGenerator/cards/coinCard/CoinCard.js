@@ -14,7 +14,7 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteIcon from "@mui/icons-material/Star";
 import {
   bewerteAssetExtremPessimistisch,
   bewerteAssetSpaeteinsteiger,
@@ -380,7 +380,7 @@ const CoinCard = ({
                         coin.CoinGeckoID,
                         portfolio.assetsCalculations
                       )
-                        ? "red"
+                        ? "yellow"
                         : "gray",
                     }}
                   >
@@ -568,7 +568,7 @@ const CoinCard = ({
                           coin.CoinGeckoID,
                           portfolio?.assetsCalculations
                         )
-                          ? "red"
+                          ? "yellow"
                           : "gray",
                       }}
                     >

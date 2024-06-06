@@ -77,7 +77,8 @@
     "optimistic": "Preis-Indikator: Optimistisch",
     "latecomer": "Preis-Indikator: Spätseinsteiger",
     "latecomerII": "Preis-Indikator: Spätseinsteiger II",
-    "search": "Suche..."
+    "search": "Suche...",
+    "alert": "Um Zugriff auf dieses Feature zu erhalten ist eine Premium Mitgliedschaft notwendig."
   },
   "third": {
     "portfolioOverview": "Portfolio-Überblick",
@@ -130,7 +131,7 @@
     "greenCoins": "Grüne Coins",
     "gamingMetaverse": "Gaming/Metaverse",
     "btcConnection": "BTC-Zusammenhang",
-    "cbdcNetworks": "CBDC-Netzwerke",
+    "cbdcNetworks": "CBDC-Netzwerk",
     "eCommerce": "E-Commerce",
     "tokenizationRWA": "Tokenisierung/RWA",
     "noHypeTopic": "Kein Hype-Thema",

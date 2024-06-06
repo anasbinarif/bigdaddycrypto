@@ -18,7 +18,7 @@
     "admin": "Admin",
     "portfolioId": "Portfolio-ID",
     "logout": "Logout",
-    "pricing": "Pricing Plan"
+    "pricing": "Get Started"
   },
   "bewertungCard": {
     "title": "Evaluation",
@@ -77,7 +77,8 @@
     "optimistic": "Price Indicator: Optimistic",
     "latecomer": "Price Indicator: Latecomer",
     "latecomerII": "Price Indicator: Latecomer II",
-    "search": "Search..."
+    "search": "Search...",
+    "alert": "To access the Filters. please subscribe to Premium Plan"
   },
   "third": {
     "portfolioOverview": "Portfolio Overview",

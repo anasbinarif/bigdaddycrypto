@@ -25,8 +25,8 @@ function BewertungCard() {
   useEffect(() => {
     if (
       portfolio &&
-      portfolio.assetsCalculations &&
-      portfolio.assetsCalculations.assets.length > 0
+      portfolio.assetsCalculations
+      // portfolio.assetsCalculations.assets.length > 0
     ) {
       // const financialSummaries = calculateFinancialSummaryForAllAssets();
       const sicherheitValues = portfolio?.assets
@@ -44,14 +44,20 @@ function BewertungCard() {
         avgXFactorValue
       );
       const avgSicherheit =
-        sicherheitValues.reduce((acc, val) => acc + val, 0) /
-        sicherheitValues.length;
+        sicherheitValues.length > 0
+          ? sicherheitValues.reduce((acc, val) => acc + val, 0) /
+            sicherheitValues.length
+          : 0;
       const avgPotential =
-        potentialValues.reduce((acc, val) => acc + val, 0) /
-        potentialValues.length;
+        potentialValues.length > 0
+          ? potentialValues.reduce((acc, val) => acc + val, 0) /
+            potentialValues.length
+          : 0;
       const avgXfactor =
-        avgXFactorValue.reduce((acc, val) => acc + val, 0) /
-        avgXFactorValue.length;
+        avgXFactorValue.length > 0
+          ? avgXFactorValue.reduce((acc, val) => acc + val, 0) /
+            avgXFactorValue.length
+          : 0;
       setPotentialAverage(avgPotential.toFixed(0));
       setSicherheitAverage(avgSicherheit.toFixed(1));
       setPotentialXAverage(avgXfactor.toFixed(0));

@@ -1,13 +1,24 @@
 "use client";
-import { Box, Divider, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { faCrown, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai/index";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { portfolioAtom } from "../../../../src/app/stores/portfolioStore";
-import {convertPrice, currencySign, getCurrencyAndRates} from "../../../lib/data";
-import {useSearchParams} from "next/navigation";
+import {
+  convertPrice,
+  currencySign,
+  getCurrencyAndRates,
+} from "../../../lib/data";
+import { useSearchParams } from "next/navigation";
+import addCommas from "../../../lib/currencyFormatter";
 
 const Third = () => {
   const t = useTranslations("third");
@@ -26,20 +37,19 @@ const Third = () => {
     (aktuellerProfit / totalInvestment) *
     100
   ).toFixed(2);
-    const [currency, setCurrency] = useState("EUR");
-    const [rates, setRates] = useState(null);
-    const searchParams = useSearchParams();
-    const currentCurrency = searchParams.get('currency') || "EUR";
+  const [currency, setCurrency] = useState("EUR");
+  const [rates, setRates] = useState(null);
+  const searchParams = useSearchParams();
+  const currentCurrency = searchParams.get("currency") || "EUR";
 
-
-    useEffect(() => {
-        const fetchCurrencyAndRates = async () => {
-            const { rates } = await getCurrencyAndRates();
-            setCurrency(currentCurrency);
-            setRates(rates);
-        };
-        fetchCurrencyAndRates();
-    }, [currentCurrency]);
+  useEffect(() => {
+    const fetchCurrencyAndRates = async () => {
+      const { rates } = await getCurrencyAndRates();
+      setCurrency(currentCurrency);
+      setRates(rates);
+    };
+    fetchCurrencyAndRates();
+  }, [currentCurrency]);
 
   return (
     <Box
@@ -51,7 +61,9 @@ const Third = () => {
         padding: isSmallScreen ? "15px" : "25px",
       }}
     >
-      <Box sx={{ fontSize: isSmallScreen ? "100%" : "120%", fontWeight: "bold" }}>
+      <Box
+        sx={{ fontSize: isSmallScreen ? "100%" : "120%", fontWeight: "bold" }}
+      >
         {t("portfolioOverview")}
         <FontAwesomeIcon
           icon={faCrown}
@@ -72,8 +84,14 @@ const Third = () => {
         <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem" }}>
           {t("totalValue")}
         </Typography>
-        <Typography sx={{ fontSize: isSmallScreen ? "1.5rem" : "2rem", fontWeight: "bold" }}>
-          {convertPrice(totalGesamtwert, currency, rates)},00 {currencySign[currency]}
+        <Typography
+          sx={{
+            fontSize: isSmallScreen ? "1.5rem" : "2rem",
+            fontWeight: "bold",
+          }}
+        >
+          {addCommas(convertPrice(totalGesamtwert, currency, rates))}{" "}
+          {currencySign[currency]}
         </Typography>
         <Typography
           className={gesamtwertPercentage < 0 ? "down" : "up"}
@@ -110,38 +128,80 @@ const Third = () => {
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", opacity: "0.5" }}>
+          <Typography
+            sx={{
+              fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
+              opacity: "0.5",
+            }}
+          >
             {t("totalInvestment")}
           </Typography>
-          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
-            {convertPrice(totalInvestment, currency, rates)},00 {currencySign[currency]}
+          <Typography
+            sx={{
+              fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
+              fontWeight: "bold",
+            }}
+          >
+            {convertPrice(totalInvestment, currency, rates)},00{" "}
+            {currencySign[currency]}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", opacity: "0.5" }}>
+          <Typography
+            sx={{
+              fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
+              opacity: "0.5",
+            }}
+          >
             {t("currentProfit")}
           </Typography>
-          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
-            {convertPrice(aktuellerProfit, currency, rates)},00 {currencySign[currency]}
+          <Typography
+            sx={{
+              fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
+              fontWeight: "bold",
+            }}
+          >
+            {convertPrice(aktuellerProfit, currency, rates)},00{" "}
+            {currencySign[currency]}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", opacity: "0.5" }}>
+          <Typography
+            sx={{
+              fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
+              opacity: "0.5",
+            }}
+          >
             {t("realizedSoFar")}
           </Typography>
-          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
+          <Typography
+            sx={{
+              fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
+              fontWeight: "bold",
+            }}
+          >
             0,00 {currencySign[currency]}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", opacity: "0.5" }}>
+          <Typography
+            sx={{
+              fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
+              opacity: "0.5",
+            }}
+          >
             {t("totalPotential")}
             <FontAwesomeIcon
               icon={faQuestionCircle}
               style={{ opacity: "0.5", marginLeft: "0.5rem" }}
             />
           </Typography>
-          <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", fontWeight: "bold" }}>
+          <Typography
+            sx={{
+              fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
+              fontWeight: "bold",
+            }}
+          >
             0,00 {currencySign[currency]}
           </Typography>
         </Box>

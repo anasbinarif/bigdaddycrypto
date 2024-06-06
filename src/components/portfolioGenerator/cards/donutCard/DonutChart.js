@@ -323,7 +323,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
             },
           }}
         >
-          {score}
+          {portfolio?.assets?.length > 0 && score}
         </Typography>
         <Typography variant="caption" style={{ color: "#FFFFFF" }}>
           {t(`${calculateNote(score)}`)}

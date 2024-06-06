@@ -2,20 +2,7 @@ import { Avatar, Box, Typography } from "@mui/material";
 import styles from "./coinDetails.module.css";
 import { convertPrice, currencySign } from "../../../../lib/data";
 import { useTranslations } from "next-intl";
-
-function addCommas(number) {
-  let numberString = number.toString();
-
-  let parts = numberString.split(".");
-
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  let tempStr = parts.join(".").replace(/[.,]/g, function (match) {
-    return match === "," ? "." : ",";
-  });
-
-  return tempStr;
-}
+import addCommas from "../../../../lib/currencyFormatter";
 
 const CoinDetailsDisplay = ({
   financialSummary,

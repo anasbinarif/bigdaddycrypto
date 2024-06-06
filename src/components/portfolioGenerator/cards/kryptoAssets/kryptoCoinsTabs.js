@@ -17,7 +17,7 @@ import {
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
 import CoinCardSkeleton from "../coinCard/CoinCardSkeleton";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteIcon from "@mui/icons-material/Star";
 import { useTranslations } from "next-intl";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { useAtom } from "jotai";
@@ -240,9 +240,9 @@ const ScrollableKryptoTabs = ({
           }}
         >
           <Tab
-            icon={<FavoriteIcon sx={{ color: "red" }} />}
+            icon={<FavoriteIcon sx={{ color: "yellow" }} />}
             iconPosition="start"
-            label="favourite"
+            label={t("favourite")}
             sx={{
               display: "flex",
               color: "white",
@@ -251,6 +251,9 @@ const ScrollableKryptoTabs = ({
               whiteSpace: "nowrap",
               backgroundColor: "rgba(0, 0, 0, 0.2)",
               margin: "4px 6px",
+              minHeight: "55px",
+              // "& .MuiButtonBase-root.MuiTab-root": {
+              // },
               "&.Mui-selected": {
                 // borderBottomColor: "var(--color-secondary)",
                 color: "var(--color-secondary)",
@@ -326,6 +329,7 @@ const ScrollableKryptoTabs = ({
                   whiteSpace: "nowrap",
                   backgroundColor: "rgba(0, 0, 0, 0.2)",
                   margin: "4px 6px",
+                  minHeight: "55px",
                   "&:not(:last-child)": {},
                   "&.Mui-selected": {
                     // borderBottomColor: "var(--color-secondary)",
@@ -362,7 +366,7 @@ const ScrollableKryptoTabs = ({
                     checkCoinRisk(coin)
                   );
                   // console.log(label);
-                  if (label === "Favorites") {
+                  if (label === "Favorites" || label === "Favoriten") {
                     // console.log("hellooooooo", categorizedData[label]);
                     return categorizedData[label].map((coin, index) => (
                       <CoinCard
@@ -407,8 +411,9 @@ const ScrollableKryptoTabs = ({
                   ];
                 })()}
           </Box>
-          {categorizedData[label]?.some(checkCoinRisk) &&
-            label !== "Favorites" && (
+          {(categorizedData[label]?.some(checkCoinRisk) &&
+            label !== "Favorites") ||
+            (label === "Favoriten" && (
               <Button
                 onClick={() => handleToggleRiskCoins(label)}
                 sx={{
@@ -423,7 +428,7 @@ const ScrollableKryptoTabs = ({
               >
                 {showRiskCoins[label] ? t("hideRiskCoins") : t("showRiskCoins")}
               </Button>
-            )}
+            ))}
         </TabPanel>
       ))}
       {/*{loading && (*/}

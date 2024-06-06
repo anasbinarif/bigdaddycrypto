@@ -284,9 +284,9 @@ const LoginPage = () => {
 
           <TextField
             name="pin"
-            label="PIN code"
+            label="Passwort"
             variant="filled"
-            placeholder="4-8 numbers"
+            // placeholder="4-8 numbers"
             type="password"
             value={user.pin}
             onChange={handleUserChange}

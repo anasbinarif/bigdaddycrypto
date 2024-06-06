@@ -95,7 +95,6 @@ const CoinDetails = (props) => {
   }, [coin?.CoinGeckoID, portfolio?.assetsCalculations.assets]);
 
   useEffect(() => {
-    setChangeTableValue(1);
     const totalCoins = rowVals.reduce((acc, row) => {
       const coinsValue = parseFloat(row.Coins);
       return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
@@ -187,6 +186,7 @@ const CoinDetails = (props) => {
       totalWinLossPercentage: checkNaN(totalWinLossPercentage),
       X: checkNaN(X),
     });
+    changeTableValue === 1 && setChangeTableValue(2);
   }, [rowVals, coin?.Price]);
 
   const checkNaN = (value) => (isNaN(value) ? 0 : value);
@@ -291,7 +291,7 @@ const CoinDetails = (props) => {
   const handleDeleteRow = (index) => {
     const updatedRows = rowVals.filter((_, idx) => idx !== index);
     setRowVals(updatedRows);
-    setDelInfo(true);
+    setChangeTableValue(1);
   };
 
   useEffect(() => {
@@ -337,8 +337,8 @@ const CoinDetails = (props) => {
       setShowAlert(true);
     };
 
-    delInfo && del() && setDelInfo(false);
-  }, [delInfo]);
+    changeTableValue === 2 && del() && setChangeTableValue(0);
+  }, [changeTableValue]);
 
   // const computeDaysPast = (dateStr) => {
   //   const date = new Date(dateStr);
