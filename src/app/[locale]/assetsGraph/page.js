@@ -350,7 +350,7 @@ const Testing = () => {
               All Categories
             </MenuItem>
             {Object.entries(reverseMapping).map(([key, value]) => (
-              <MenuItem>
+              <MenuItem key={key}>
                 <Checkbox
                   checked={selectedItem[key]}
                   onChange={handleCheckboxChange}
