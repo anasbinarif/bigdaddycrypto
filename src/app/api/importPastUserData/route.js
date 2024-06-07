@@ -69,17 +69,22 @@ export async function POST(req) {
                 ...transaction,
                 Type: transaction.Type === "buy" ? "Kauf" : (transaction.Type === "sell" ? "Verkauf" : transaction.Type)
             }));
+
+            const adjustedDCA = portfolio.DCA !== "" ? Number(portfolio.DCA) + 1 : 0;
+            const adjustedGewichtung = portfolio.Gewichtung !== "" ? Number(portfolio.Gewichtung) + 1 : 0;
+            const adjustedRelevanz = portfolio.Relevanz !== "" ? Number(portfolio.Relevanz) + 1 : 0;
         
             const assets = [{
                 CoinGeckoID: assetMap[portfolio.AssetID] ? assetMap[portfolio.AssetID].CoinGeckoID : null,
                 Holdings: portfolio.Holdings,
-                DCA: portfolio.DCA,
-                Gewichtung: portfolio.Gewichtung,
-                Relevanz: portfolio.Relevanz,
+                DCA: portfolio.avgPrice,
+                DCA_0: adjustedDCA,
+                Gewichtung: adjustedGewichtung,
+                Relevanz: adjustedRelevanz,
                 totalInvest: portfolio.totalInvest,
                 totalSold: portfolio.totalSold,
                 totalCoins: totalCoins,
-                buyAndSell: adjustedTransactions  // Use adjusted transaction data
+                buyAndSell: adjustedTransactions
             }];
         
             return assets.every(asset => asset.CoinGeckoID !== null) ? {
