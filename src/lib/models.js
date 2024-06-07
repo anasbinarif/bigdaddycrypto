@@ -193,6 +193,16 @@ const portfolioSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    Notizen: {
+        test1: {
+            type: String,
+            default: ""
+        },
+        test2: {
+            type: String,
+            default: ""
+        }
+    },
     assets: [{
         CoinGeckoID: {
             type: String,

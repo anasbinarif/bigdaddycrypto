@@ -11,6 +11,31 @@ import { Chart } from "react-google-charts";
 import { useTranslations } from "next-intl";
 import addCommas from "../../lib/currencyFormatter";
 
+const hashString = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return hash;
+};
+
+const getRandomColor = (ticker) => {
+  let color = "#";
+  const letters = "0123456789ABCDEF";
+  const hash = hashString(ticker);
+  for (let i = 0; i < 6; i++) {
+    color += letters[(hash >> (i * 4)) & 0x0f];
+  }
+  return color;
+};
+
+const getSlices = (data) => {
+  return data.slice(1).reduce((acc, item, index) => {
+    acc[index] = { color: getRandomColor(item[0]) };
+    return acc;
+  }, {});
+};
+
 const options = {
   pieHole: 0.8,
   pieSliceText: "none",
@@ -225,7 +250,7 @@ export default function Item1({ loadingPortfolio }) {
               width="100%"
               height="300px"
               data={graphData}
-              options={options}
+              options={{ ...options, slices: getSlices(graphData) }}
             />
             <Box
               sx={{
