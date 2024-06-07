@@ -200,14 +200,21 @@ const EnhancedTable = () => {
     );
   };
 
-  const getRandomColor = (index) => {
+  const hashString = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+  };
+  
+  const getRandomColor = (ticker) => {
     let color = "#";
     const letters = "0123456789ABCDEF";
+    const hash = hashString(ticker);
     for (let i = 0; i < 6; i++) {
-      // Use the index and bitwise operations to determine the color
-      color += letters[(index * (i + 1) * 7) % 16];
+      color += letters[(hash >> (i * 4)) & 0x0f];
     }
-    // console.log(color);
     return color;
   };
 
@@ -444,7 +451,7 @@ const EnhancedTable = () => {
                         component={Typography}
                         sx={{
                           ml: 1,
-                          bgcolor: `${getRandomColor(index)}`,
+                          bgcolor: `${getRandomColor(row.ticker)}`,
                           fontWeight: "bold",
                           display: "flex",
                           justifyContent: "center",
