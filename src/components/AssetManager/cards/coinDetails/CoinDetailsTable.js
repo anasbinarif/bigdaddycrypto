@@ -101,7 +101,7 @@ const CoinDetailsTable = ({
               <TableCell>
                 <Select
                   inputProps={{ "aria-label": "Without label" }}
-                  labelId="demo-simple-select-label"
+                  labelId="demo-simple-selectTrans-label"
                   id="demo-simple-select"
                   value={row.Type}
                   label="Age"
@@ -154,8 +154,8 @@ const CoinDetailsTable = ({
                     "& .MuiSvgIcon-root": { color: "#ffffff" },
                   }}
                 >
-                  <MenuItem value="Kauf">Kauf</MenuItem>
-                  <MenuItem value="Verkauf">VerKauf</MenuItem>
+                  <MenuItem value="Kauf">{t("buy")}</MenuItem>
+                  <MenuItem value="Verkauf">{t("sell")}</MenuItem>
                 </Select>
               </TableCell>
               <TableCell>
@@ -201,13 +201,9 @@ const CoinDetailsTable = ({
                   <input
                     type="number"
                     id="betragInput"
-                    value={row.Betrag || ""}
+                    value={row.Betrag}
                     onChange={(e) =>
-                      handleRowData(
-                        parseFloat(e.target.value) || 0,
-                        index,
-                        "Betrag"
-                      )
+                      handleRowData(parseFloat(e.target.value), index, "Betrag")
                     }
                     className={styles.input}
                   />
@@ -228,13 +224,9 @@ const CoinDetailsTable = ({
                   <input
                     type="number"
                     id="numberInput"
-                    value={row.Coins || ""}
+                    value={row.Coins}
                     onChange={(e) =>
-                      handleRowData(
-                        parseFloat(e.target.value) || 0,
-                        index,
-                        "Coins"
-                      )
+                      handleRowData(parseFloat(e.target.value), index, "Coins")
                     }
                     className={styles.input}
                   />

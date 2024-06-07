@@ -35,9 +35,9 @@ export const categoryColors = {
   "Green Coins": "#00aa66", // Green
   "Gaming/Metaverse": "#00BFFF", // Deep Sky Blue
   "BTC-Zusammenhang": "#FF9900", // Orange
-  "BTC Connection": "#FF9900", // Orange
-  "CBDC-Netzwerke": "#667788", // Dark Gray
-  "CBDC Networks": "#667788", // Dark Gray
+  "BTC-Context": "#FF9900", // Orange
+  "CBDC-Netzwerk": "#667788", // Dark Gray
+  "CBDC Network": "#667788", // Dark Gray
   ECommerce: "#8833bb", // Dark Magenta
   "E-Commerce": "#8833bb", // Dark Magenta
   "Tokenisierung/RWA": "#ff5aac", // Pink
