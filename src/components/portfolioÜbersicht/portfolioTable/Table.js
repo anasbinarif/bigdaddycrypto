@@ -86,6 +86,7 @@ function descendingComparator(a, b, orderBy) {
   if (typeof aValue === "string" && typeof bValue === "string") {
     aValue = aValue.toUpperCase();
     bValue = bValue.toUpperCase();
+    console.log(aValue, bValue);
     if (bValue < aValue) return -1;
     if (bValue > aValue) return 1;
     return 0;
@@ -166,7 +167,7 @@ const EnhancedTable = () => {
           ? (((asset.Price - calc.DCA) / calc.DCA) * 100).toFixed(2)
           : "Infinity";
         return {
-          asset: asset.Name,
+          asset: asset.Ticker,
           ticker: asset.Ticker,
           imageUrl: asset.cgImageURL,
           bestand: calc.Holdings || 0,
@@ -207,7 +208,7 @@ const EnhancedTable = () => {
     }
     return hash;
   };
-  
+
   const getRandomColor = (ticker) => {
     let color = "#";
     const letters = "0123456789ABCDEF";

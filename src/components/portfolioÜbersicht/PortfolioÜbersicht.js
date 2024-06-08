@@ -22,8 +22,19 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function PortfolioUbersicht({ loadingPortfolio }) {
-  const [width, setWidth] = useState(0);
   const t = useTranslations("Overview");
+  const [width, setWidth] = useState(0);
+  const [msg, setMsg] = useState(`Hallo Big Daddy
+
+Könntest du dir das mal bitte ansehen.
+verfolge dich schon länger auf deinen Youtube Kanal .
+würdest du hier das Portfolio ändern oder so lassen.
+ich halte meine Coins schon länger aber so richtig in Schwung bin ich noch nicht gekommen.
+Im November war ich auf 19.000€  
+wäre cool wenn du mir da hälfen könntest 
+dank dir.
+Beste Grüße Jens  
+        `);
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,7 +90,7 @@ export default function PortfolioUbersicht({ loadingPortfolio }) {
               <BewertungCard />
             </Grid>
             <Grid item xs={12}>
-              <Item4 />
+              <Item4 msg={msg} setMsg={setMsg} />
             </Grid>
           </Grid>
         </Grid>
