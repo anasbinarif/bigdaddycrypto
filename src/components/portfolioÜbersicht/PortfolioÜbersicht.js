@@ -58,7 +58,7 @@ Beste Grüße Jens
         <Grid item xs={12} md={width > 1100 ? 4 : 12}>
           <Card
             sx={{
-              padding: "15px",
+              // padding: "15px",
               backgroundColor: "#1188ff",
               cursor: "pointer",
               display: "flex",
@@ -70,12 +70,11 @@ Beste Grüße Jens
             <Link
               // target="_blank"
               // rel="noopener noreferrer"
-              href="/portfolioOverview"
+              href={`/portfolioOverview?msg=${msg}`}
+              style={{ width: "100%", textAlign: "center", padding: "15px 0" }}
             >
               <Typography sx={{ backgroundColor: "#1188ff", color: "white" }}>
                 {t("buttonText")}
-                {/* Jetzt Kommentar von BigDaddy anfragen */}
-                {/* Request comment from BigDaddy now */}
               </Typography>
             </Link>
           </Card>

@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import HomeIcon from "../../../../public/assets/svg/bdc.svg";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
 import Link from "next/link";
 
 const RegisterPage = () => {
@@ -43,14 +43,17 @@ const RegisterPage = () => {
     return emailPattern.test(email);
   };
 
-  const generateUserName = () => {
-    return nanoid(6); // Generates a unique 6-character ID with numbers and alphabets
+  const generateUserName = (length) => {
+    const alphabet =
+      "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    const name = customAlphabet(alphabet);
+    return name(length); // Generates a unique 6-character ID with numbers and alphabets
   };
 
   useEffect(() => {
     setUser((prevUser) => ({
       ...prevUser,
-      userName: generateUserName(),
+      userName: generateUserName(6),
     }));
   }, []);
 

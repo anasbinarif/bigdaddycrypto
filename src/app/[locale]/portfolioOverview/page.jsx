@@ -21,7 +21,7 @@ import Check from "../../../../public/assets/images/Check.webp";
 import Image from "next/image";
 import Checkout from "../../../components/oneTimePayment/OneTimePaymentCheckout";
 import CustomizedSteppers from "./CustomizedSteppers";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Footer from "../../../components/footer/Footer";
 import Navbar from "../../../components/navbar/Navbar";
 import { calculatePrice } from "../../../lib/action";
@@ -55,6 +55,17 @@ const transitionStyles = (activeNum) => {
   return styles;
 };
 
+function sanitizeQueryParam(param) {
+  const allowedCharsPattern = /[a-zA-Z0-9_\- ]/;
+
+  const sanitizedParam = param
+    .split("")
+    .filter((char) => allowedCharsPattern.test(char))
+    .join("");
+
+  return sanitizedParam;
+}
+
 const PortfolioForm = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [visitorString, setVisitorString] = useState("dummyVisitorString");
@@ -77,15 +88,41 @@ const PortfolioForm = () => {
     target: "",
   });
   const [showNext, setShowNext] = useState(false);
+  const [msg, setMsg] = useState("");
 
   const router = useRouter();
+  // const { query } = router;
   const pathname = usePathname();
 
+  console.log(msg);
+
   useEffect(() => {
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const queryParams = {};
+
+    for (const [key, value] of params.entries()) {
+      // const sanitizedValue = sanitizeQueryParam(value);
+      queryParams[key] = value;
+    }
+
+    if (queryParams.msg) {
+      const disallowedCharsPattern = /[<>&"'\/\\:;|`~\x00-\x1F]/;
+      console.log(query, queryParams);
+
+      if (!disallowedCharsPattern.test(queryParams.msg)) {
+        const decodedMsg = decodeURIComponent(queryParams.msg);
+        const sanitizedMsg = decodedMsg.split("+").join(" ");
+
+        setMsg(sanitizedMsg);
+      }
+    }
+
     setLoading(false);
   }, []);
 
   useEffect(() => {
+    console.log(router);
     if (sliderRef.current) {
       const children = sliderRef.current.childNodes;
       let height = "auto";
@@ -596,7 +633,10 @@ const PortfolioForm = () => {
                         id="portfolioID"
                         label="Portfolio-ID"
                         variant="outlined"
-                        value={visitorString}
+                        value={msg}
+                        onChange={(e) => {
+                          setMsg(e.target.value);
+                        }}
                         // disabled
                         margin="normal"
                         InputLabelProps={{

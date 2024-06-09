@@ -211,7 +211,7 @@ const CoinDetails = (props) => {
     if (col === "Betrag" || col === "Coins") {
       const coins = parseFloat(row["Coins"]);
       const betrag = parseFloat(row["Betrag"]);
-      row["PricePerCoin"] = coins ? (betrag / coins).toFixed(2) : 0;
+      row["PricePerCoin"] = coins ? betrag / coins : 0;
     }
 
     setRowVals(updatedRows);
@@ -275,9 +275,10 @@ const CoinDetails = (props) => {
           setPortfolio(userPortfolio?.data);
           setLoading(false);
         } else {
-          // throw new Error("Failed to save data");
+          throw new Error("Failed to save data");
         }
       } catch (error) {
+        setLoading(false);
         setAlertInfo({ message: error.message, severity: "error" });
       }
       setShowAlert(true);

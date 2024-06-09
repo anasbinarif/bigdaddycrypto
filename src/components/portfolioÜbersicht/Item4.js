@@ -29,7 +29,14 @@ export default function Item4({ msg, setMsg }) {
         defaultValue={msg}
         maxRows={7}
         onChange={(e) => {
-          setMsg(e.target.value);
+          const disallowedRegex = /[<>&"'\/\\:;|`~\x00-\x1F]/g;
+          const sanitizedString = e.target.value.replace(
+            disallowedRegex,
+            function (match) {
+              return "%" + match.charCodeAt(0).toString(16).toUpperCase();
+            }
+          );
+          setMsg(sanitizedString);
         }}
         style={{
           width: "100%",

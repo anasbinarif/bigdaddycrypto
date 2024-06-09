@@ -1,10 +1,9 @@
-import {connectToDb} from "../lib/utils";
-import {User} from "../lib/models";
+import { connectToDb } from "../lib/utils";
+import { User } from "../lib/models";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import jwt from 'jsonwebtoken';
-import {NextResponse} from "next/server";
-
+import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
 
 const login = async (credentials) => {
   try {
@@ -38,18 +37,20 @@ export const authOptions = {
       async authorize(credentials) {
         try {
           const user = await login(credentials);
-          // console.log("user found: ", user)
           if (user) {
-            const accessToken = jwt.sign(
+            console.log("user found 1: ", user);
+            const accessToken = await jwt.sign(
               { userId: user._id, email: user.email, isAdmin: user.isAdmin },
               process.env.JWT_SECRET,
-              { expiresIn: '2h' }
+              { expiresIn: "2h" }
             );
+            console.log("user found 2: ", user);
 
             return { ...user, accessToken };
           }
           return null;
         } catch (err) {
+          console.log(err);
           throw new Error("Failed to Login");
         }
       },
@@ -92,19 +93,23 @@ export const authOptions = {
   },
 };
 
-
 export const verifyToken = async (req) => {
-  const authHeader = req.headers.get('authorization');
-  const token = authHeader && authHeader.split(' ')[1];
+  const authHeader = req.headers.get("authorization");
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    return new NextResponse(JSON.stringify({ message: 'Access Token Required' }), { status: 401 });
+    return new NextResponse(
+      JSON.stringify({ message: "Access Token Required" }),
+      { status: 401 }
+    );
   }
 
   try {
     req.user = jwt.verify(token, process.env.JWT_SECRET);
     return null;
   } catch (err) {
-    return new NextResponse(JSON.stringify({ message: 'Invalid Token' }), { status: 403 });
+    return new NextResponse(JSON.stringify({ message: "Invalid Token" }), {
+      status: 403,
+    });
   }
 };

@@ -127,8 +127,9 @@ const Testing = () => {
       })
       .map((asset) => {
         const filter =
-          asset?.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          asset?.Ticker?.toLowerCase().includes(searchTerm.toLowerCase());
+          (asset?.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            asset?.Ticker?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          searchTerm;
 
         if (!asset.Name) return <></>;
         return (
@@ -146,8 +147,13 @@ const Testing = () => {
                 asset.Sicherheit,
                 symbolSize / 100
               )})`,
-              opacity: filter ? "1" : "0.15",
-              zIndex: filter ? "1000" : "500",
+              opacity: !searchTerm ? "1" : filter ? "1" : "0.15",
+              zIndex: !searchTerm ? "1000" : filter ? "1000" : "500",
+              border: !searchTerm
+                ? "none"
+                : filter
+                ? "2px solid var(--color-secondary)"
+                : "none",
               transform: "translate(-50%, -50%)",
               transition: "all 0.3s ease-in-out",
               cursor: "pointer",
@@ -167,8 +173,20 @@ const Testing = () => {
             <Image
               src={asset.cgImageURL}
               alt={asset.Name}
-              width={filter ? symbolSize : symbolSize * 0.5}
-              height={filter ? symbolSize : symbolSize * 0.5}
+              width={
+                !searchTerm
+                  ? symbolSize
+                  : filter
+                  ? symbolSize * 1.1
+                  : symbolSize * 0.6
+              }
+              height={
+                !searchTerm
+                  ? symbolSize
+                  : filter
+                  ? symbolSize * 1.1
+                  : symbolSize * 0.6
+              }
               style={{
                 borderRadius: "50%",
                 boxShadow: "3px 3px 12px rgba(0,0,0,.1)",
