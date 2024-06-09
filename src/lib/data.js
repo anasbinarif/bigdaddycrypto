@@ -240,16 +240,16 @@ export const getAssets = async (category, userId) => {
   }
 };
 
-export const storeUserPortfolioCoin = async (userId, coin) => {
+export const storeUserPortfolioCoin = async (userId, coin, token) => {
   // const coinData = setCoinObject(coin);
   const newCoin = {
     CoinGeckoID: coin.CoinGeckoID,
   };
-  console.log("ya raha coin", newCoin);
   return fetch("/api/addToPortfolio", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
     body: JSON.stringify({ userId, coin: newCoin }),
   });

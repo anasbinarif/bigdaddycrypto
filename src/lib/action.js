@@ -270,14 +270,6 @@ export async function updateCoinDetails(coinGeckoID) {
 }
 
 
-export const generateShortId = async (id) => {
-    const intId = parseInt(id.slice(0, 8), 16);
-    const shortId = hashids.encode(intId);
-
-    return shortId;
-}
-
-
 
 
 

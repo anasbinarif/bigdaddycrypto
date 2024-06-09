@@ -141,7 +141,8 @@ const CoinCard = ({
     setLoading(true);
 
     const userId = sessionJotai?.user.id;
-    const res = await storeUserPortfolioCoin(userId, coin);
+    const token = sessionJotai?.user.accessToken;
+    const res = await storeUserPortfolioCoin(userId, coin, token);
 
     if (res.ok) {
       const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
@@ -156,6 +157,7 @@ const CoinCard = ({
     setLoading(false); // Set loading to false
     setOpen(false);
   };
+  
 
   useEffect(() => {
     const rank = BottomRanking;

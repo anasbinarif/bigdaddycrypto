@@ -28,11 +28,6 @@ const darkTheme = createTheme({
   },
 });
 
-const generateShortId = (id) => {
-  const intId = parseInt(id.slice(0, 8), 16);
-  return hashids.encode(intId);
-};
-
 const UserList = ({ users, setSelectedUserPortfolio }) => {
   const [loading, setLoading] = useState(false);
   const [blurEmail, setBlurEmail] = useState(true);
@@ -80,13 +75,6 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
       return 0;
     });
   }, [users, order, orderBy]);
-
-  const usersWithShortId = useMemo(() => {
-    return users.map((user) => ({
-      ...user,
-      shortId: generateShortId(user.userId),
-    }));
-  }, [users]);
 
   return (
     <Box>

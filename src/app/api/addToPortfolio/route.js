@@ -1,39 +1,37 @@
 import { UserPortfolio } from "../../../lib/models";
 import { NextResponse } from "next/server";
-import {updateCoinDetails} from "../../../lib/action";
+import { updateCoinDetails } from "../../../lib/action";
+import { verifyToken } from "../../../lib/auth";
 
 export async function POST(req) {
+    const tokenVerificationResponse = await verifyToken(req);
+    if (tokenVerificationResponse) {
+        return tokenVerificationResponse;
+    }
+
     const { userId, coin } = await req.json();
 
     try {
-        await updateCoinDetails(coin.CoinGeckoID)
-        const userPortfolio = await UserPortfolio.findOne({ userId: userId });
-        // console.log("debug userPortfolio", userPortfolio);
+        await updateCoinDetails(coin.CoinGeckoID);
+        const userPortfolio = await UserPortfolio.findOne({ userId });
 
         if (!userPortfolio) {
-            try {
-                const newPortfolio = new UserPortfolio({
-                    userId: userId,
-                    assets: [coin]
-                });
-                await newPortfolio.save();
-                return NextResponse.json({ message: "Portfolio created and coin added." }, { status: 201 });
-            }catch (e) {
-                console.log(e)
-            }
+            const newPortfolio = new UserPortfolio({
+                userId,
+                assets: [coin],
+            });
+            await newPortfolio.save();
+            return NextResponse.json({ message: "Portfolio created and coin added." }, { status: 201 });
         } else {
-            // Check if the coin already exists
             const index = userPortfolio.assets.findIndex(c => c.CoinGeckoID === coin.CoinGeckoID);
             if (index > -1) {
-                // Coin exists, remove it
                 userPortfolio.assets.splice(index, 1);
             } else {
-                // Coin does not exist, add it
                 userPortfolio.assets.push(coin);
             }
             await userPortfolio.save();
             return NextResponse.json({
-                message: index > -1 ? "Coin removed from portfolioGenerator." : "Coin added to portfolioGenerator."
+                message: index > -1 ? "Coin removed from portfolio." : "Coin added to portfolio."
             }, { status: 200 });
         }
     } catch (error) {

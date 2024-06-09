@@ -2,6 +2,8 @@ import {connectToDb} from "../lib/utils";
 import {User} from "../lib/models";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken';
+import {NextResponse} from "next/server";
 
 
 const login = async (credentials) => {
@@ -35,7 +37,18 @@ export const authOptions = {
       credentials: {},
       async authorize(credentials) {
         try {
-            return await login(credentials);
+          const user = await login(credentials);
+          // console.log("user found: ", user)
+          if (user) {
+            const accessToken = jwt.sign(
+              { userId: user._id, email: user.email, isAdmin: user.isAdmin },
+              process.env.JWT_SECRET,
+              { expiresIn: '2h' }
+            );
+
+            return { ...user, accessToken };
+          }
+          return null;
         } catch (err) {
           throw new Error("Failed to Login");
         }
@@ -47,18 +60,20 @@ export const authOptions = {
     maxAge: 2 * 60 * 60, // 2 hours in seconds
   },
   jwt: {
-    secret: "jnjcndajcndicncsdjn8ncdncdc=", // Ensure you have a JWT_SECRET in your environment variables!
+    secret: process.env.NEXTAUTH_SECRET,
     maxAge: 2 * 60 * 60, // 2 hours in seconds
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.isAdmin = user.isAdmin;
-        token.username = user.username;
-        token.email = user.email;
-        token.pastUserCheck = user.pastUserCheck;
-        token.subscribed = user.subscribed;
+        const user_0 = user._doc;
+        token.id = user_0._id;
+        token.isAdmin = user_0.isAdmin;
+        token.username = user_0.username;
+        token.email = user_0.email;
+        token.pastUserCheck = user_0.pastUserCheck;
+        token.subscribed = user_0.subscribed;
+        token.accessToken = user.accessToken;
       }
       return token;
     },
@@ -70,8 +85,26 @@ export const authOptions = {
         session.user.email = token.email;
         session.user.pastUserCheck = token.pastUserCheck;
         session.user.subscribed = token.subscribed;
+        session.user.accessToken = token.accessToken;
       }
       return session;
     },
   },
+};
+
+
+export const verifyToken = async (req) => {
+  const authHeader = req.headers.get('authorization');
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return new NextResponse(JSON.stringify({ message: 'Access Token Required' }), { status: 401 });
+  }
+
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    return null;
+  } catch (err) {
+    return new NextResponse(JSON.stringify({ message: 'Invalid Token' }), { status: 403 });
+  }
 };

@@ -17,25 +17,21 @@ import { useTranslations } from "next-intl";
 import { fetchUserSubscriptionPlan } from "../../lib/data";
 import styles from "./navbar.module.css";
 import CurrencySwitcher from "../../app/currency/CurrencySwitcher";
-import { generateShortId } from "../../lib/action";
 
 const NavbarLink = ({ mobileView, handleClose }) => {
   const { data: session, status } = useSession();
   const [sessionJotai, setSession] = useAtom(sessionAtom);
   const t = useTranslations("navbar");
-  const [randonUserId, setRandonUserId] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const updateSessionWithSubscription = async () => {
       try {
         if (session) {
-          const id = await generateShortId(session.user.id);
-          setRandonUserId(id);
           const subscriptionData = await fetchUserSubscriptionPlan(
             session.user?.id
           );
-          console.log("subscriptionData", subscriptionData);
+          console.log("subscriptionData", subscriptionData, session);
           setSession({
             ...session,
             user: {
