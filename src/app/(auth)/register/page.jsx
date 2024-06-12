@@ -13,9 +13,13 @@ import Image from "next/image";
 import HomeIcon from "../../../../public/assets/svg/bdc.svg";
 import { customAlphabet } from "nanoid";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 const RegisterPage = () => {
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
 
   const [alert, setAlert] = useState({
     open: false,
@@ -58,6 +62,7 @@ const RegisterPage = () => {
   }, []);
 
   async function handleRegister() {
+    setLoading(true);
     let hasErrors = false;
 
     // Validate Email
@@ -109,6 +114,16 @@ const RegisterPage = () => {
         body: JSON.stringify(user),
       });
       if (res.ok) {
+        const verificationToken = customAlphabet(user.userEmail, 24)();
+        const email = user.userEmail;
+        const result = await signIn("email", { redirect: false, email, verificationToken });
+        if (result.error) {
+          setError(result.error);
+        } else {
+          // router.push("/check-email");
+          // alert("check Your Email");
+          console.log("check Your Email");
+        }
         setUser({
           userName: generateUserName(),
           userEmail: "",
@@ -116,7 +131,8 @@ const RegisterPage = () => {
         });
         console.log("user register");
         setAlert({ open: true, message: "User Register", severity: "success" });
-        router.push("/login");
+        // router.push("/login");
+        // router.push("/checkEmail");
         setPending(false);
       } else {
         setPending(false);
@@ -127,6 +143,7 @@ const RegisterPage = () => {
         });
       }
     }
+    setLoading(false);
   }
 
   const handleUserChange = (event) => {

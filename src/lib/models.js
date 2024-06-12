@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Payments',
         default: null
+    },
+    activated: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true }
 );
