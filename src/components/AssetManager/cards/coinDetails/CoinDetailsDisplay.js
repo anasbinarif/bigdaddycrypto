@@ -255,7 +255,7 @@ const CoinDetailsDisplay = ({
               },
             }}
           >
-            {financialSummary.avgPurchasePricePercentage} %
+            {addCommas(financialSummary.avgPurchasePricePercentage)} %
           </Typography>
         </Box>
         <Box className={styles.grid__item}>
@@ -323,7 +323,7 @@ const CoinDetailsDisplay = ({
                 },
               }}
             >
-              {financialSummary.avgSellingPricePercentage} %
+              {addCommas(financialSummary.avgSellingPricePercentage)} %
             </Typography>
           )}
         </Box>

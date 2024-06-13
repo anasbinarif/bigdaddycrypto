@@ -86,13 +86,13 @@ function descendingComparator(a, b, orderBy) {
   if (typeof aValue === "string" && typeof bValue === "string") {
     aValue = aValue.toUpperCase();
     bValue = bValue.toUpperCase();
-    console.log(aValue, bValue);
+    // console.log(aValue, bValue);
     if (bValue < aValue) return -1;
     if (bValue > aValue) return 1;
     return 0;
   }
 
-  console.log(aValue, bValue);
+  // console.log(aValue, bValue);
   // Convert percentage strings to numbers for comparison
   if (typeof aValue === "string" && aValue.includes("%")) {
     aValue = parseFloat(aValue.replace("%", ""));
@@ -519,7 +519,7 @@ const EnhancedTable = () => {
                           {row.preisChange !== 0
                             ? `${addCommas(
                                 convertPrice(row.preisChange, currency, rates)
-                              )} ${currencySign[currency]}`
+                              )}%`
                             : 0}
                         </StyledTypography>
                         {row.pricePercentage !== "Infinity" && (
