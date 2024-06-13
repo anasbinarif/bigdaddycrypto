@@ -6,14 +6,10 @@ import {
   TextField,
   Button,
   Typography,
-  FormControlLabel,
-  IconButton,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-// import AlertBar from "../../../components/customAllert/Alert";
 import { useAtom } from "jotai/index";
-// import { sessionAtom } from "../../../app/stores/sessionStore";
 import Image from "next/image";
 import HomeIcon from "../../../../public/assets/svg/bdc.svg";
 import AlertBar from "../../../components/customAllert/Alert";
@@ -100,9 +96,9 @@ const LoginPage = () => {
           redirect: false,
         });
         if (res.error) {
-          console.log(res.error);
           setPending(false);
-          setAlert({ open: true, message: "Login Failed", severity: "error" });
+          console.log("res.error=", res);
+          setAlert({ open: true, message: res.error, severity: "error" });
         } else {
           setUser({
             userEmail: "",
@@ -137,7 +133,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Box sx={{ overflew: "no-wrap", position: "relative" }}>
+    <Box sx={{ overflow: "no-wrap", position: "relative" }}>
       <AlertBar
         open={alert.open}
         message={alert.message}
@@ -172,11 +168,6 @@ const LoginPage = () => {
           <Box
             sx={{
               margin: "-58px 0 0 0",
-              // mb: 2,
-              // bottom: "85%",
-              // left: "50%",
-              // position: "absolute",
-              // transform: "translateX(-50%)",
               width: "70px",
               height: "70px",
             }}
@@ -184,9 +175,7 @@ const LoginPage = () => {
             <Box
               color="inherit"
               sx={{
-                // display: "inline-block",
                 borderRadius: "50%",
-                // overflow: "hidden",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -202,7 +191,6 @@ const LoginPage = () => {
                   cursor: "pointer",
                   backgroundColor: "white",
                   borderRadius: "50%",
-                  // margin: "2px",
                   objectFit: "cover",
                 }}
               />
@@ -275,18 +263,15 @@ const LoginPage = () => {
                 },
               },
             }}
-            // helperText={
-            //   errors.userEmail ? errors.userEmailMessage : "Your email address."
-            // }
             required
             error={errors.userEmail}
+            helperText={errors.userEmail ? errors.userEmailMessage : ""}
           />
 
           <TextField
             name="pin"
             label="Passwort"
             variant="filled"
-            // placeholder="4-8 numbers"
             type="password"
             value={user.pin}
             onChange={handleUserChange}
@@ -357,7 +342,6 @@ const LoginPage = () => {
               "&.Mui-disabled": {
                 color: "white",
               },
-              // backgroundColor: "red",
             }}
           >
             {pending ? "Logging in..." : "Anmelden"}
@@ -365,7 +349,19 @@ const LoginPage = () => {
 
           <Typography
             variant="caption"
-            sx={{ mt: 4, maxWidth: "400px", color: "#ffffff80" }}
+            sx={{ mt: 2, maxWidth: "400px", color: "#ffffff80" }}
+          >
+            <Link
+              href="/forgotPassword"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Passwort vergessen?
+            </Link>
+          </Typography>
+
+          <Typography
+            variant="caption"
+            sx={{ mt: 2, maxWidth: "400px", color: "#ffffff80" }}
           >
             Noch keinen Account?{" "}
             <Link

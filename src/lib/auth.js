@@ -24,10 +24,12 @@ const login = async (credentials) => {
 
     if (!isPasswordCorrect) throw new Error("Wrong password!");
 
+    if(!user.activated) throw new Error("Kindly Verify Your Account from the your email!");
+
     return user;
   } catch (err) {
     console.log(err);
-    throw new Error("Failed to login!");
+    throw err;
   }
 };
 
@@ -81,7 +83,8 @@ export const authOptions = {
           return null;
         } catch (err) {
           console.log(err);
-          throw new Error("Failed to Login");
+          // throw new Error("Failed to Login");s
+          throw new Error(err.message);
         }
       },
     }),
