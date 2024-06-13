@@ -1,7 +1,7 @@
 "use client";
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Box, Container, Typography, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, CircularProgress, Alert, Button } from '@mui/material';
 
 const VerifyPage = () => {
     const router = useRouter();
@@ -36,6 +36,10 @@ const VerifyPage = () => {
         }
     }, [token]);
 
+    const handleLoginRedirect = () => {
+        router.push('/login');  // Adjust this path according to your application's login route
+    };
+
     return (
         <Container maxWidth="sm">
             <Box sx={{ textAlign: 'center', mt: 4 }}>
@@ -45,9 +49,18 @@ const VerifyPage = () => {
                 {loading ? (
                     <CircularProgress />
                 ) : (
-                    <Alert severity={message === 'Email verified successfully!' ? 'success' : 'error'}>
-                        {message}
-                    </Alert>
+                    <>
+                        <Alert severity={message === 'Email verified successfully!' ? 'success' : 'error'}>
+                            {message}
+                        </Alert>
+                        {message === 'Email verified successfully!' && (
+                            <Box mt={2}>
+                                <Button variant="contained" color="primary" onClick={handleLoginRedirect}>
+                                    Proceed to Login
+                                </Button>
+                            </Box>
+                        )}
+                    </>
                 )}
             </Box>
         </Container>
