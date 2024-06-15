@@ -7,84 +7,74 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { green, yellow } from "@mui/material/colors";
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import CustomizedTooltips from "../../toolTip/CustomizedTooltip";
 import { useAtom } from "jotai";
 import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { calculateScore } from "../../../lib/data";
+
+const hypeCoinColor = {
+  0: "#DC143C",
+  1: "#E32612",
+  2: "#E84612",
+  3: "#ef6600",
+  4: "#ff9600",
+  5: "#ffa600",
+  6: "#ffc400",
+  7: "#ffe400",
+  8: "#dfe800",
+  9: "#9fdf20",
+  10: "#41b431",
+};
 
 const calculatePotential = (portfolio) => {
   let totalPotential = 0;
   let totalAssets = 0;
-  let totalSecurity = 0;
   let pMinX = 0;
   let pMaxX = 0;
-  let pMinXClean = 0;
-  let pMaxXClean = 0;
   let totalAssetsAmount = 0;
 
-  portfolio.forEach(asset => {
+  portfolio.forEach((asset) => {
     const { Potential, Sicherheit, Bottom, Price } = asset;
     const dataPotential = parseFloat(Potential);
-    const dataSecurity = parseFloat(Sicherheit);
     const dataBottom = parseFloat(Bottom);
     const dataEK = parseFloat(Price) || dataBottom;
     const assetAmount = 1;
 
     if (dataPotential) {
       totalPotential += dataPotential;
-      totalSecurity += (dataSecurity * assetAmount);
       totalAssets += 1;
       totalAssetsAmount += parseFloat(assetAmount);
 
-      if (isNaN(dataSecurity) || isNaN(dataPotential)) {
-        pMinX += (1 * assetAmount);
-        pMaxX += (10 * assetAmount);
-        pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
+      if (isNaN(dataPotential)) {
+        pMinX += 1 * assetAmount;
+        pMaxX += 10 * assetAmount;
       } else if (dataPotential >= 9) {
-        pMinX += (100 * assetAmount);
-        pMaxX += (200 * assetAmount);
-        pMinXClean += (100 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (200 * assetAmount) / dataEK * dataBottom;
+        pMinX += 100 * assetAmount;
+        pMaxX += 200 * assetAmount;
       } else if (dataPotential > 8.5) {
-        pMinX += (75 * assetAmount);
-        pMaxX += (100 * assetAmount);
-        pMinXClean += (75 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (100 * assetAmount) / dataEK * dataBottom;
+        pMinX += 75 * assetAmount;
+        pMaxX += 100 * assetAmount;
       } else if (dataPotential > 8) {
-        pMinX += (50 * assetAmount);
-        pMaxX += (75 * assetAmount);
-        pMinXClean += (50 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (75 * assetAmount) / dataEK * dataBottom;
+        pMinX += 50 * assetAmount;
+        pMaxX += 75 * assetAmount;
       } else if (dataPotential > 7.5) {
-        pMinX += (30 * assetAmount);
-        pMaxX += (50 * assetAmount);
-        pMinXClean += (30 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (50 * assetAmount) / dataEK * dataBottom;
+        pMinX += 30 * assetAmount;
+        pMaxX += 50 * assetAmount;
       } else if (dataPotential > 7) {
-        pMinX += (15 * assetAmount);
-        pMaxX += (30 * assetAmount);
-        pMinXClean += (15 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (30 * assetAmount) / dataEK * dataBottom;
+        pMinX += 15 * assetAmount;
+        pMaxX += 30 * assetAmount;
       } else if (dataPotential > 6.7) {
-        pMinX += (10 * assetAmount);
-        pMaxX += (15 * assetAmount);
-        pMinXClean += (10 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (15 * assetAmount) / dataEK * dataBottom;
+        pMinX += 10 * assetAmount;
+        pMaxX += 15 * assetAmount;
       } else {
-        pMinX += (1 * assetAmount);
-        pMaxX += (10 * assetAmount);
-        pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
+        pMinX += 1 * assetAmount;
+        pMaxX += 10 * assetAmount;
       }
     }
   });
-
-  // const avgMin = (pMinXClean / totalAssetsAmount).toFixed(0);
-  // const avgMax = (pMaxXClean / totalAssetsAmount).toFixed(0);
-
 
   const avgMin = (pMinX / totalAssetsAmount).toFixed(0);
   const avgMax = (pMaxX / totalAssetsAmount).toFixed(0);
@@ -93,60 +83,69 @@ const calculatePotential = (portfolio) => {
 };
 
 const setColorPot = (dataPotential) => {
-  let backgroundColor;
-
   if (isNaN(dataPotential)) {
-    // Invalid or non-numeric data-security or data-potential, use a default color
-    backgroundColor = 'rgba(220,220,220,.1)';
+    return 'rgba(220,220,220,.1)';
   } else if (dataPotential >= 30) {
-    backgroundColor = '#41b431';
+    return '#41b431';
   } else if (dataPotential >= 20) {
-    backgroundColor = '#8ece10';
+    return '#8ece10';
   } else if (dataPotential >= 15) {
-    backgroundColor = '#E0c000';
+    return '#E0c000';
   } else if (dataPotential >= 8) {
-    backgroundColor = '#ff9600';
+    return '#ff9600';
   } else if (dataPotential > 0) {
-    backgroundColor = '#E31612';
+    return '#E31612';
   } else {
-    backgroundColor = 'rgba(220,220,220,.1)';
+    return 'rgba(220,220,220,.1)';
   }
-
-  return backgroundColor;
-}
+};
 
 function BewertungCard() {
   const [portfolio] = useAtom(portfolioAtom);
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
-  const [potential, setPotential] = useState({
-    avgMin: 0,
-    avgMax: 0
-  })
+  const [potential, setPotential] = useState({ avgMin: 0, avgMax: 0 });
+  const [hypeColorScore, setHypeColorScore] = useState({
+    scoreFactor_Category: 0,
+    scoreFactor_CategoryTwice: 0,
+    scoreFactor_CategoryMissing: 0,
+    scoreFactor_Allocation: 0,
+    scoreFactor_CoinCount: 0,
+  });
   const t = useTranslations("bewertungCard");
 
   useEffect(() => {
-    if (
-      portfolio &&
-      portfolio.assetsCalculations
-    ) {
-      const sicherheitValues = portfolio?.assets
-        .filter((asset) => asset.Sicherheit)
-        .map((asset) => asset.Sicherheit || 0);
-      const avgXFactorValue = portfolio?.assets.map(
-        (asset) => (1 / asset?.Bottom) * asset?.Price
-      );
-      console.log(
-        "testing avg Sicherheit ",
-        portfolio?.assets,
-        avgXFactorValue
-      );
-      const avgSicherheit =
-        sicherheitValues.length > 0
-          ? sicherheitValues.reduce((acc, val) => acc + val, 0) /
-          sicherheitValues.length
+    const calculateMetrics = async () => {
+      if (portfolio?.assets) {
+        const assets = portfolio.assets;
+
+        // Calculate Sicherheit Average
+        const sicherheitValues = assets.filter(asset => asset.Sicherheit).map(asset => asset.Sicherheit || 0);
+        const avgSicherheit = sicherheitValues.length > 0
+          ? sicherheitValues.reduce((acc, val) => acc + val, 0) / sicherheitValues.length
           : 0;
-      setSicherheitAverage(avgSicherheit.toFixed(1));
-    }
+        setSicherheitAverage(avgSicherheit.toFixed(1));
+
+        // Calculate Potential
+        const potentialResult = calculatePotential(assets);
+        setPotential(potentialResult);
+
+        // Calculate Hype Color Score
+        try {
+          const calculatedScore = await calculateScore(assets);
+          setHypeColorScore({
+            scoreFactor_Category: Math.min(Number(calculatedScore.scoreFactor_Category), 10),
+            scoreFactor_CategoryTwice: Math.min(Number(calculatedScore.scoreFactor_CategoryTwice), 10),
+            scoreFactor_CategoryMissing: Math.min(Number(calculatedScore.scoreFactor_CategoryMissing), 10),
+            scoreFactor_Allocation: Math.min(Number(calculatedScore.scoreFactor_Allocation), 10),
+            scoreFactor_CoinCount: Math.min(Number(calculatedScore.scoreFactor_CoinCount), 10),
+          });
+        } catch (error) {
+          console.error("Error calculating score:", error);
+        }
+      }
+    };
+
+    calculateMetrics();
   }, [portfolio]);
 
   const getBackgroundColor = (sicherheitAverage) => {
@@ -161,61 +160,28 @@ function BewertungCard() {
     }
   };
 
-  useEffect(() => {
-    const testFunctionAnything = async () => {
-      if (portfolio?.assets) {
-        const portfolio1 = portfolio?.assets;
-        console.log("portfolio1portfolio1", portfolio1);
-        const potentialPromise = await calculatePotential(portfolio1);
-        console.log("calculatePotential", potentialPromise);
-        setPotential({
-          avgMax: potentialPromise.avgMax,
-          avgMin: potentialPromise.avgMin
-        })
-      }
-    };
-    testFunctionAnything();
-    // console.log("portfolio from bewertung", portfolio?.assets)
-  }, [portfolio]);
-
   return (
-    <Card
-      sx={{
-        bgcolor: "#202530",
-        color: "white",
-        height: "100%",
-        borderRadius: 2,
-      }}
-    >
+    <Card sx={{ bgcolor: "#202530", color: "white", height: "100%", borderRadius: 2 }}>
       <CardContent sx={{ padding: "25px" }}>
-        <Typography
-          sx={{ fontSize: "1.2rem", fontWeight: "bold", mb: "1.25rem" }}
-          gutterBottom
-        >
+        <Typography sx={{ fontSize: "1.2rem", fontWeight: "bold", mb: "1.25rem" }} gutterBottom>
           {t("title")}
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <List sx={{ bgcolor: "#00000033", borderRadius: "8px" }}>
             {[
-              { text: t("hypeCoverage"), color: green[500] },
-              { text: t("doubleHypeCoverage"), color: green[500] },
-              { text: t("missingHypeTheme"), color: green[500] },
-              { text: t("hypeDistribution"), color: yellow[800] },
-              { text: t("numberOfCoins"), color: green[500] },
+              { text: t("hypeCoverage"), color: green[500], name: "scoreFactor_Category" },
+              { text: t("doubleHypeCoverage"), color: green[500], name: "scoreFactor_CategoryTwice" },
+              { text: t("missingHypeTheme"), color: green[500], name: "scoreFactor_CategoryMissing" },
+              { text: t("hypeDistribution"), color: yellow[800], name: "scoreFactor_Allocation" },
+              { text: t("numberOfCoins"), color: green[500], name: "scoreFactor_CoinCount" },
             ].map((item) => (
               <ListItem key={item.text} sx={{ py: 0 }}>
                 <ListItemIcon sx={{ minWidth: "30px" }}>
-                  <FiberManualRecordIcon sx={{ color: item.color }} />
+                  <FiberManualRecordIcon sx={{ color: hypeCoinColor[hypeColorScore[item.name]] || "grey" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary={item.text}
-                  sx={{
-                    "& .MuiTypography-root": {
-                      fontSize: "14px",
-                      // "@media only screen and (max-width: 400px)": {
-                      // },
-                    },
-                  }}
+                  sx={{ "& .MuiTypography-root": { fontSize: "14px" } }}
                 />
               </ListItem>
             ))}
@@ -231,11 +197,9 @@ function BewertungCard() {
               },
               "@media (max-width:768px)": {
                 flexDirection: "row",
-                // alignItems: "flex-start",
               },
               "@media (max-width:500px)": {
                 flexDirection: "column",
-                // alignItems: "flex-start",
               },
             }}
           >
