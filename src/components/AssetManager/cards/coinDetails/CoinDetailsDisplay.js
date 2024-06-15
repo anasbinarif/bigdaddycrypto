@@ -4,16 +4,7 @@ import { convertPrice, currencySign } from "../../../../lib/data";
 import { useTranslations } from "next-intl";
 import addCommas from "../../../../lib/currencyFormatter";
 import { Artifika } from "next/font/google";
-
-const maxLenCrop = (str) => {
-  if (str.length <= 12) return str;
-
-  let newStr = "";
-  for (let i = 0; i < 9; i++) newStr += str[i];
-  newStr += "...";
-
-  return newStr;
-};
+import maxLenCrop from "../../../../lib/checkString";
 
 const CoinDetailsDisplay = ({
   financialSummary,

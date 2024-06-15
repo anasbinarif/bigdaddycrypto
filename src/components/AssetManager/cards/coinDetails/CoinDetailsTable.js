@@ -38,6 +38,8 @@ const CoinDetailsTable = ({
     const diffTime = Math.abs(now - date);
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
+
+  const today = new Date().toISOString().split("T")[0];
   return (
     <TableContainer
       component={Paper}
@@ -168,7 +170,7 @@ const CoinDetailsTable = ({
                     onChange={(e) =>
                       handleRowData(e.target.value, index, "Date")
                     }
-                    max={getTodayString()}
+                    max={today}
                     className={styles["input--date"]}
                   />
                 </div>
