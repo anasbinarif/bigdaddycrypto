@@ -10,6 +10,7 @@ import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { Chart } from "react-google-charts";
 import { useTranslations } from "next-intl";
 import addCommas from "../../lib/currencyFormatter";
+import maxLenCrop from "../../lib/checkString";
 
 const hashString = (str) => {
   let hash = 0;
@@ -175,12 +176,36 @@ export default function Item1({ loadingPortfolio }) {
             </Typography>
             <Typography
               sx={{
+                position: "relative",
                 fontSize: "2rem",
                 fontWeight: "bold",
                 whiteSpace: "nowrap",
+
+                "& > div": {
+                  display: "none",
+                },
+
+                "&:hover > div": {
+                  display: "block",
+                },
               }}
             >
-              {addCommas(totalGesamtwert)} €
+              {maxLenCrop(addCommas(totalGesamtwert))} €
+              {addCommas(totalGesamtwert).length > 12 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 10,
+                    left: 10,
+                    backgroundColor: "#818181ef",
+                    borderRadius: "4px",
+                    padding: "2px",
+                    fontSize: "14px",
+                  }}
+                >
+                  {addCommas(totalGesamtwert)}
+                </div>
+              )}
             </Typography>
             <Typography
               className={gesamtwertPercentage < 0 ? "down" : "up"}

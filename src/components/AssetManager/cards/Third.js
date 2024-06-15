@@ -19,6 +19,7 @@ import {
 } from "../../../lib/data";
 import { useSearchParams } from "next/navigation";
 import addCommas from "../../../lib/currencyFormatter";
+import maxLenCrop from "../../../lib/checkString";
 
 const Third = () => {
   const t = useTranslations("third");
@@ -86,12 +87,39 @@ const Third = () => {
         </Typography>
         <Typography
           sx={{
+            position: "relative",
             fontSize: isSmallScreen ? "1.5rem" : "2rem",
             fontWeight: "bold",
+
+            "& > div": {
+              display: "none",
+            },
+
+            "&:hover > div": {
+              display: "block",
+            },
           }}
         >
-          {addCommas(convertPrice(totalGesamtwert, currency, rates))}{" "}
+          {maxLenCrop(
+            addCommas(convertPrice(totalGesamtwert, currency, rates))
+          )}{" "}
           {currencySign[currency]}
+          {addCommas(convertPrice(totalGesamtwert, currency, rates)).length >
+            12 && (
+            <div
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 10,
+                backgroundColor: "#818181ef",
+                borderRadius: "4px",
+                padding: "2px",
+                fontSize: "14px",
+              }}
+            >
+              {addCommas(convertPrice(totalGesamtwert, currency, rates))}
+            </div>
+          )}
         </Typography>
         <Typography
           className={gesamtwertPercentage < 0 ? "down" : "up"}
