@@ -2,6 +2,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Box, Container, Typography, CircularProgress, Alert, Button } from '@mui/material';
+import SuspenseWrapper from '../../components/SuspenseWrapper';
 
 const VerifyPage = () => {
     const router = useRouter();
@@ -67,4 +68,10 @@ const VerifyPage = () => {
     );
 };
 
-export default VerifyPage;
+const VerifyPageWithSuspense = () => (
+    <SuspenseWrapper>
+        <VerifyPage />
+    </SuspenseWrapper>
+);
+
+export default VerifyPageWithSuspense;

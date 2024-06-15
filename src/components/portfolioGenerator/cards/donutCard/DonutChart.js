@@ -7,7 +7,7 @@ import {
 import { useAtom } from "jotai/index";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
-import { calculateScore } from "../../../../lib/action";
+import { calculateScore } from "../../../../lib/data";
 
 const categoryColors = {
   AI: "#FFD700",
@@ -216,7 +216,7 @@ const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
         console.log(portfolio.assets);
         try {
           const calculatedScore = await calculateScore(portfolio.assets);
-          setScore(calculatedScore); // Update the state with the resolved value
+          setScore(calculatedScore?.score);
           console.log("Calculated Score:", calculatedScore);
         } catch (error) {
           console.error("Error calculating score:", error);

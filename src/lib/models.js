@@ -198,11 +198,11 @@ const portfolioSchema = new mongoose.Schema({
         required: true
     },
     Notizen: {
-        test1: {
+        UserComment: {
             type: String,
             default: ""
         },
-        test2: {
+        MissingCoins: {
             type: String,
             default: ""
         }

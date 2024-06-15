@@ -24,7 +24,7 @@ const calculatePotential = (portfolio) => {
   let pMaxXClean = 0;
   let totalAssetsAmount = 0;
 
-  portfolio.forEach((asset) => {
+  portfolio.forEach(asset => {
     const { Potential, Sicherheit, Bottom, Price } = asset;
     const dataPotential = parseFloat(Potential);
     const dataSecurity = parseFloat(Sicherheit);
@@ -34,56 +34,57 @@ const calculatePotential = (portfolio) => {
 
     if (dataPotential) {
       totalPotential += dataPotential;
-      totalSecurity += dataSecurity * assetAmount;
+      totalSecurity += (dataSecurity * assetAmount);
       totalAssets += 1;
       totalAssetsAmount += parseFloat(assetAmount);
 
       if (isNaN(dataSecurity) || isNaN(dataPotential)) {
-        pMinX += 1 * assetAmount;
-        pMaxX += 10 * assetAmount;
-        pMinXClean += ((1 * assetAmount) / dataEK) * dataBottom;
-        pMaxXClean += ((10 * assetAmount) / dataEK) * dataBottom;
+        pMinX += (1 * assetAmount);
+        pMaxX += (10 * assetAmount);
+        pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
       } else if (dataPotential >= 9) {
-        pMinX += 100 * assetAmount;
-        pMaxX += 200 * assetAmount;
-        pMinXClean += ((100 * assetAmount) / dataEK) * dataBottom;
-        pMaxXClean += ((200 * assetAmount) / dataEK) * dataBottom;
+        pMinX += (100 * assetAmount);
+        pMaxX += (200 * assetAmount);
+        pMinXClean += (100 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (200 * assetAmount) / dataEK * dataBottom;
       } else if (dataPotential > 8.5) {
-        pMinX += 75 * assetAmount;
-        pMaxX += 100 * assetAmount;
-        pMinXClean += ((75 * assetAmount) / dataEK) * dataBottom;
-        pMaxXClean += ((100 * assetAmount) / dataEK) * dataBottom;
+        pMinX += (75 * assetAmount);
+        pMaxX += (100 * assetAmount);
+        pMinXClean += (75 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (100 * assetAmount) / dataEK * dataBottom;
       } else if (dataPotential > 8) {
-        pMinX += 50 * assetAmount;
-        pMaxX += 75 * assetAmount;
-        pMinXClean += ((50 * assetAmount) / dataEK) * dataBottom;
-        pMaxXClean += ((75 * assetAmount) / dataEK) * dataBottom;
+        pMinX += (50 * assetAmount);
+        pMaxX += (75 * assetAmount);
+        pMinXClean += (50 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (75 * assetAmount) / dataEK * dataBottom;
       } else if (dataPotential > 7.5) {
-        pMinX += 30 * assetAmount;
-        pMaxX += 50 * assetAmount;
-        pMinXClean += ((30 * assetAmount) / dataEK) * dataBottom;
-        pMaxXClean += ((50 * assetAmount) / dataEK) * dataBottom;
+        pMinX += (30 * assetAmount);
+        pMaxX += (50 * assetAmount);
+        pMinXClean += (30 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (50 * assetAmount) / dataEK * dataBottom;
       } else if (dataPotential > 7) {
-        pMinX += 15 * assetAmount;
-        pMaxX += 30 * assetAmount;
-        pMinXClean += ((15 * assetAmount) / dataEK) * dataBottom;
-        pMaxXClean += ((30 * assetAmount) / dataEK) * dataBottom;
+        pMinX += (15 * assetAmount);
+        pMaxX += (30 * assetAmount);
+        pMinXClean += (15 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (30 * assetAmount) / dataEK * dataBottom;
       } else if (dataPotential > 6.7) {
-        pMinX += 10 * assetAmount;
-        pMaxX += 15 * assetAmount;
-        pMinXClean += ((10 * assetAmount) / dataEK) * dataBottom;
-        pMaxXClean += ((15 * assetAmount) / dataEK) * dataBottom;
+        pMinX += (10 * assetAmount);
+        pMaxX += (15 * assetAmount);
+        pMinXClean += (10 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (15 * assetAmount) / dataEK * dataBottom;
       } else {
-        pMinX += 1 * assetAmount;
-        pMaxX += 10 * assetAmount;
-        pMinXClean += ((1 * assetAmount) / dataEK) * dataBottom;
-        pMaxXClean += ((10 * assetAmount) / dataEK) * dataBottom;
+        pMinX += (1 * assetAmount);
+        pMaxX += (10 * assetAmount);
+        pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
+        pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
       }
     }
   });
 
   // const avgMin = (pMinXClean / totalAssetsAmount).toFixed(0);
   // const avgMax = (pMaxXClean / totalAssetsAmount).toFixed(0);
+
 
   const avgMin = (pMinX / totalAssetsAmount).toFixed(0);
   const avgMax = (pMaxX / totalAssetsAmount).toFixed(0);
@@ -96,35 +97,38 @@ const setColorPot = (dataPotential) => {
 
   if (isNaN(dataPotential)) {
     // Invalid or non-numeric data-security or data-potential, use a default color
-    backgroundColor = "rgba(220,220,220,.1)";
+    backgroundColor = 'rgba(220,220,220,.1)';
   } else if (dataPotential >= 30) {
-    backgroundColor = "#41b431";
+    backgroundColor = '#41b431';
   } else if (dataPotential >= 20) {
-    backgroundColor = "#8ece10";
+    backgroundColor = '#8ece10';
   } else if (dataPotential >= 15) {
-    backgroundColor = "#E0c000";
+    backgroundColor = '#E0c000';
   } else if (dataPotential >= 8) {
-    backgroundColor = "#ff9600";
+    backgroundColor = '#ff9600';
   } else if (dataPotential > 0) {
-    backgroundColor = "#E31612";
+    backgroundColor = '#E31612';
   } else {
-    backgroundColor = "rgba(220,220,220,.1)";
+    backgroundColor = 'rgba(220,220,220,.1)';
   }
 
   return backgroundColor;
-};
+}
 
 function BewertungCard() {
   const [portfolio] = useAtom(portfolioAtom);
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
   const [potential, setPotential] = useState({
     avgMin: 0,
-    avgMax: 0,
-  });
+    avgMax: 0
+  })
   const t = useTranslations("bewertungCard");
 
   useEffect(() => {
-    if (portfolio && portfolio.assetsCalculations) {
+    if (
+      portfolio &&
+      portfolio.assetsCalculations
+    ) {
       const sicherheitValues = portfolio?.assets
         .filter((asset) => asset.Sicherheit)
         .map((asset) => asset.Sicherheit || 0);
@@ -139,7 +143,7 @@ function BewertungCard() {
       const avgSicherheit =
         sicherheitValues.length > 0
           ? sicherheitValues.reduce((acc, val) => acc + val, 0) /
-            sicherheitValues.length
+          sicherheitValues.length
           : 0;
       setSicherheitAverage(avgSicherheit.toFixed(1));
     }
@@ -166,8 +170,8 @@ function BewertungCard() {
         console.log("calculatePotential", potentialPromise);
         setPotential({
           avgMax: potentialPromise.avgMax,
-          avgMin: potentialPromise.avgMin,
-        });
+          avgMin: potentialPromise.avgMin
+        })
       }
     };
     testFunctionAnything();
@@ -313,8 +317,7 @@ function BewertungCard() {
                   fontSize: "14px",
                 }}
               >
-                {isNaN(potential.avgMin) ? 0 : potential.avgMin}-
-                {isNaN(potential.avgMax) ? 0 : potential.avgMax}x
+                {potential.avgMin}-{potential.avgMax}x
               </span>
             </Typography>
           </Box>
