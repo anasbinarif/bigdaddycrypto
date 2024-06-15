@@ -16,279 +16,280 @@ import { useTranslations } from "next-intl";
 import { calculateScore } from "../../../lib/data";
 
 const hypeCoinColor = {
-  0: "#DC143C",
-  1: "#E32612",
-  2: "#E84612",
-  3: "#ef6600",
-  4: "#ff9600",
-  5: "#ffa600",
-  6: "#ffc400",
-  7: "#ffe400",
-  8: "#dfe800",
-  9: "#9fdf20",
-  10: "#41b431",
+    0: "#DC143C",
+    1: "#E32612",
+    2: "#E84612",
+    3: "#ef6600",
+    4: "#ff9600",
+    5: "#ffa600",
+    6: "#ffc400",
+    7: "#ffe400",
+    8: "#dfe800",
+    9: "#9fdf20",
+    10: "#41b431",
 };
 
 const calculatePotential = (portfolio) => {
-  let totalPotential = 0;
-  let totalAssets = 0;
-  let pMinX = 0;
-  let pMaxX = 0;
-  let totalAssetsAmount = 0;
+    let totalPotential = 0;
+    let totalAssets = 0;
+    let pMinX = 0;
+    let pMaxX = 0;
+    let totalAssetsAmount = 0;
 
-  portfolio.forEach((asset) => {
-    const { Potential, Sicherheit, Bottom, Price } = asset;
-    const dataPotential = parseFloat(Potential);
-    const dataBottom = parseFloat(Bottom);
-    const dataEK = parseFloat(Price) || dataBottom;
-    const assetAmount = 1;
+    portfolio.forEach((asset) => {
+        const { Potential, Sicherheit, Bottom, Price } = asset;
+        const dataPotential = parseFloat(Potential);
+        const dataBottom = parseFloat(Bottom);
+        const dataEK = parseFloat(Price) || dataBottom;
+        const assetAmount = 1;
 
-    if (dataPotential) {
-      totalPotential += dataPotential;
-      totalAssets += 1;
-      totalAssetsAmount += parseFloat(assetAmount);
+        if (dataPotential) {
+            totalPotential += dataPotential;
+            totalAssets += 1;
+            totalAssetsAmount += parseFloat(assetAmount);
 
-      if (isNaN(dataPotential)) {
-        pMinX += 1 * assetAmount;
-        pMaxX += 10 * assetAmount;
-      } else if (dataPotential >= 9) {
-        pMinX += 100 * assetAmount;
-        pMaxX += 200 * assetAmount;
-      } else if (dataPotential > 8.5) {
-        pMinX += 75 * assetAmount;
-        pMaxX += 100 * assetAmount;
-      } else if (dataPotential > 8) {
-        pMinX += 50 * assetAmount;
-        pMaxX += 75 * assetAmount;
-      } else if (dataPotential > 7.5) {
-        pMinX += 30 * assetAmount;
-        pMaxX += 50 * assetAmount;
-      } else if (dataPotential > 7) {
-        pMinX += 15 * assetAmount;
-        pMaxX += 30 * assetAmount;
-      } else if (dataPotential > 6.7) {
-        pMinX += 10 * assetAmount;
-        pMaxX += 15 * assetAmount;
-      } else {
-        pMinX += 1 * assetAmount;
-        pMaxX += 10 * assetAmount;
-      }
-    }
-  });
+            if (isNaN(dataPotential)) {
+                pMinX += 1 * assetAmount;
+                pMaxX += 10 * assetAmount;
+            } else if (dataPotential >= 9) {
+                pMinX += 100 * assetAmount;
+                pMaxX += 200 * assetAmount;
+            } else if (dataPotential > 8.5) {
+                pMinX += 75 * assetAmount;
+                pMaxX += 100 * assetAmount;
+            } else if (dataPotential > 8) {
+                pMinX += 50 * assetAmount;
+                pMaxX += 75 * assetAmount;
+            } else if (dataPotential > 7.5) {
+                pMinX += 30 * assetAmount;
+                pMaxX += 50 * assetAmount;
+            } else if (dataPotential > 7) {
+                pMinX += 15 * assetAmount;
+                pMaxX += 30 * assetAmount;
+            } else if (dataPotential > 6.7) {
+                pMinX += 10 * assetAmount;
+                pMaxX += 15 * assetAmount;
+            } else {
+                pMinX += 1 * assetAmount;
+                pMaxX += 10 * assetAmount;
+            }
+        }
+    });
 
-  const avgMin = (pMinX / totalAssetsAmount).toFixed(0);
-  const avgMax = (pMaxX / totalAssetsAmount).toFixed(0);
+    const avgMin = (pMinX / totalAssetsAmount).toFixed(0);
+    const avgMax = (pMaxX / totalAssetsAmount).toFixed(0);
 
-  return { avgMin, avgMax };
+    return { avgMin, avgMax };
 };
 
 const setColorPot = (dataPotential) => {
-  if (isNaN(dataPotential)) {
-    return 'rgba(220,220,220,.1)';
-  } else if (dataPotential >= 30) {
-    return '#41b431';
-  } else if (dataPotential >= 20) {
-    return '#8ece10';
-  } else if (dataPotential >= 15) {
-    return '#E0c000';
-  } else if (dataPotential >= 8) {
-    return '#ff9600';
-  } else if (dataPotential > 0) {
-    return '#E31612';
-  } else {
-    return 'rgba(220,220,220,.1)';
-  }
+    if (isNaN(dataPotential)) {
+        return 'rgba(220,220,220,.1)';
+    } else if (dataPotential >= 30) {
+        return '#41b431';
+    } else if (dataPotential >= 20) {
+        return '#8ece10';
+    } else if (dataPotential >= 15) {
+        return '#E0c000';
+    } else if (dataPotential >= 8) {
+        return '#ff9600';
+    } else if (dataPotential > 0) {
+        return '#E31612';
+    } else {
+        return 'rgba(220,220,220,.1)';
+    }
 };
 
 function BewertungCard() {
-  const [portfolio] = useAtom(portfolioAtom);
-  const [sicherheitAverage, setSicherheitAverage] = useState(0);
-  const [potential, setPotential] = useState({ avgMin: 0, avgMax: 0 });
-  const [hypeColorScore, setHypeColorScore] = useState({
-    scoreFactor_Category: 0,
-    scoreFactor_CategoryTwice: 0,
-    scoreFactor_CategoryMissing: 0,
-    scoreFactor_Allocation: 0,
-    scoreFactor_CoinCount: 0,
-  });
-  const t = useTranslations("bewertungCard");
+    const [portfolio] = useAtom(portfolioAtom);
+    const [sicherheitAverage, setSicherheitAverage] = useState(0);
+    const [potential, setPotential] = useState({ avgMin: 0, avgMax: 0 });
+    const [hypeColorScore, setHypeColorScore] = useState({
+        scoreFactor_Category: 0,
+        scoreFactor_CategoryTwice: 0,
+        scoreFactor_CategoryMissing: 0,
+        scoreFactor_Allocation: 0,
+        scoreFactor_CoinCount: 0,
+    });
+    const t = useTranslations("bewertungCard");
 
-  useEffect(() => {
-    const calculateMetrics = async () => {
-      if (portfolio?.assets) {
-        const assets = portfolio.assets;
+    useEffect(() => {
+        const calculateMetrics = async () => {
+            if (portfolio?.assets) {
+                const assets = portfolio.assets;
 
-        // Calculate Sicherheit Average
-        const sicherheitValues = assets.filter(asset => asset.Sicherheit).map(asset => asset.Sicherheit || 0);
-        const avgSicherheit = sicherheitValues.length > 0
-          ? sicherheitValues.reduce((acc, val) => acc + val, 0) / sicherheitValues.length
-          : 0;
-        setSicherheitAverage(avgSicherheit.toFixed(1));
+                // Calculate Sicherheit Average
+                const sicherheitValues = assets.filter(asset => asset.Sicherheit).map(asset => asset.Sicherheit || 0);
+                const avgSicherheit = sicherheitValues.length > 0
+                    ? sicherheitValues.reduce((acc, val) => acc + val, 0) / sicherheitValues.length
+                    : 0;
+                setSicherheitAverage(avgSicherheit.toFixed(1));
 
-        // Calculate Potential
-        const potentialResult = calculatePotential(assets);
-        setPotential(potentialResult);
+                // Calculate Potential
+                const potentialResult = calculatePotential(assets);
+                setPotential(potentialResult);
 
-        // Calculate Hype Color Score
-        try {
-          const calculatedScore = await calculateScore(assets);
-          setHypeColorScore({
-            scoreFactor_Category: Math.min(Number(calculatedScore.scoreFactor_Category), 10),
-            scoreFactor_CategoryTwice: Math.min(Number(calculatedScore.scoreFactor_CategoryTwice), 10),
-            scoreFactor_CategoryMissing: Math.min(Number(calculatedScore.scoreFactor_CategoryMissing), 10),
-            scoreFactor_Allocation: Math.min(Number(calculatedScore.scoreFactor_Allocation), 10),
-            scoreFactor_CoinCount: Math.min(Number(calculatedScore.scoreFactor_CoinCount), 10),
-          });
-        } catch (error) {
-          console.error("Error calculating score:", error);
+                // Calculate Hype Color Score
+                try {
+                    const calculatedScore = await calculateScore(assets);
+                    setHypeColorScore({
+                        scoreFactor_Category: Math.min(Number(calculatedScore.scoreFactor_Category), 10),
+                        scoreFactor_CategoryTwice: Math.min(Number(calculatedScore.scoreFactor_CategoryTwice), 10),
+                        scoreFactor_CategoryMissing: Math.min(Number(calculatedScore.scoreFactor_CategoryMissing), 10),
+                        scoreFactor_Allocation: Math.min(Number(calculatedScore.scoreFactor_Allocation), 10),
+                        scoreFactor_CoinCount: Math.min(Number(calculatedScore.scoreFactor_CoinCount), 10),
+                    });
+                } catch (error) {
+                    console.error("Error calculating score:", error);
+                }
+            }
+        };
+
+        calculateMetrics();
+    }, [portfolio]);
+
+    const getBackgroundColor = (sicherheitAverage) => {
+        if (sicherheitAverage >= 0 && sicherheitAverage < 5.5) {
+            return "red";
+        } else if (sicherheitAverage >= 5.5 && sicherheitAverage < 7) {
+            return "lightgreen"; // or another shade for "light faded green"
+        } else if (sicherheitAverage >= 7 && sicherheitAverage <= 10) {
+            return "green";
+        } else {
+            return "gray"; // default color if the value is out of expected range
         }
-      }
     };
 
-    calculateMetrics();
-  }, [portfolio]);
-
-  const getBackgroundColor = (sicherheitAverage) => {
-    if (sicherheitAverage >= 0 && sicherheitAverage < 5.5) {
-      return "red";
-    } else if (sicherheitAverage >= 5.5 && sicherheitAverage < 7) {
-      return "lightgreen"; // or another shade for "light faded green"
-    } else if (sicherheitAverage >= 7 && sicherheitAverage <= 10) {
-      return "green";
-    } else {
-      return "gray"; // default color if the value is out of expected range
-    }
-  };
-
-  return (
-    <Card sx={{ bgcolor: "#202530", color: "white", height: "100%", borderRadius: 2 }}>
-      <CardContent sx={{ padding: "25px" }}>
-        <Typography sx={{ fontSize: "1.2rem", fontWeight: "bold", mb: "1.25rem" }} gutterBottom>
-          {t("title")}
-        </Typography>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          <List sx={{ bgcolor: "#00000033", borderRadius: "8px" }}>
-            {[
-              { text: t("hypeCoverage"), color: green[500], name: "scoreFactor_Category" },
-              { text: t("doubleHypeCoverage"), color: green[500], name: "scoreFactor_CategoryTwice" },
-              { text: t("missingHypeTheme"), color: green[500], name: "scoreFactor_CategoryMissing" },
-              { text: t("hypeDistribution"), color: yellow[800], name: "scoreFactor_Allocation" },
-              { text: t("numberOfCoins"), color: green[500], name: "scoreFactor_CoinCount" },
-            ].map((item) => (
-              <ListItem key={item.text} sx={{ py: 0 }}>
-                <ListItemIcon sx={{ minWidth: "30px" }}>
-                  <FiberManualRecordIcon sx={{ color: hypeCoinColor[hypeColorScore[item.name]] || "grey" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.text}
-                  sx={{ "& .MuiTypography-root": { fontSize: "14px" } }}
-                />
-              </ListItem>
-            ))}
-          </List>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              "@media (max-width:1400px)": {
-                flexDirection: "column",
-                alignItems: "flex-start",
-              },
-              "@media (max-width:768px)": {
-                flexDirection: "row",
-              },
-              "@media (max-width:500px)": {
-                flexDirection: "column",
-              },
-            }}
-          >
-            <Typography
-              component="div"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                backgroundColor: "#00000033",
-                padding: "10px 16px",
-                borderRadius: "8px",
-                fontSize: "14px",
-                "@media (max-width:1400px)": {
-                  mb: "20px",
-                },
-              }}
-            >
+    return (
+        <Card sx={{ bgcolor: "#202530", color: "white", height: "100%", borderRadius: 2 }}>
+            <CardContent sx={{ padding: "25px" }}>
+                <Typography sx={{ fontSize: "1.2rem", fontWeight: "bold", mb: "1.25rem" }} gutterBottom>
+                    {t("title")}
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                    <List sx={{ bgcolor: "#00000033", borderRadius: "8px" }}>
+                        {[
+                            { text: t("hypeCoverage"), color: green[500], name: "scoreFactor_Category" },
+                            { text: t("doubleHypeCoverage"), color: green[500], name: "scoreFactor_CategoryTwice" },
+                            { text: t("missingHypeTheme"), color: green[500], name: "scoreFactor_CategoryMissing" },
+                            { text: t("hypeDistribution"), color: yellow[800], name: "scoreFactor_Allocation" },
+                            { text: t("numberOfCoins"), color: green[500], name: "scoreFactor_CoinCount" },
+                        ].map((item) => (
+                            <ListItem key={item.text} sx={{ py: 0 }}>
+                                <ListItemIcon sx={{ minWidth: "30px" }}>
+                                    <FiberManualRecordIcon sx={{ color: hypeCoinColor[hypeColorScore[item.name]] || "grey" }} />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={item.text}
+                                    sx={{ "& .MuiTypography-root": { fontSize: "14px" } }}
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            "@media (max-width:1400px)": {
+                                flexDirection: "column",
+                                alignItems: "flex-start",
+                            },
+                            "@media (max-width:768px)": {
+                                flexDirection: "row",
+                            },
+                            "@media (max-width:500px)": {
+                                flexDirection: "column",
+                            },
+                        }}
+                    >
+                        <Typography
+                            component="div"
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                backgroundColor: "#00000033",
+                                padding: "10px 16px",
+                                borderRadius: "8px",
+                                fontSize: "14px",
+                                "@media (max-width:1400px)": {
+                                    mb: "20px",
+                                },
+                            }}
+                        >
               <span
-                style={{
-                  whiteSpace: "nowrap",
-                  display: "flex",
-                  gap: "4px",
-                  alignItems: "center",
-                }}
+                  style={{
+                      whiteSpace: "nowrap",
+                      display: "flex",
+                      gap: "4px",
+                      alignItems: "center",
+                  }}
               >
                 {t("sicherheit")}
-                <CustomizedTooltips
-                  text1={t("sicherheitTooltipText1")}
-                  text2={t("sicherheitTooltipText2")}
-                />
+                  <CustomizedTooltips
+                      text1={t("sicherheitTooltipText1")}
+                      text2={t("sicherheitTooltipText2")}
+                  />
               </span>{" "}
-              <span
-                style={{
-                  color: "white",
-                  backgroundColor: getBackgroundColor(sicherheitAverage),
-                  padding: "4px 8px 2px",
-                  textShadow: "1px 1px 5px rgba(0,0,0,.4)",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                }}
-              >
+                            <span
+                                style={{
+                                    color: "white",
+                                    backgroundColor: getBackgroundColor(sicherheitAverage),
+                                    padding: "4px 8px 2px",
+                                    textShadow: "1px 1px 5px rgba(0,0,0,.4)",
+                                    borderRadius: "6px",
+                                    fontSize: "14px",
+                                }}
+                            >
                 {sicherheitAverage}
               </span>
-            </Typography>
-            <Typography
-              component="div"
-              sx={{
-                alignItems: "center",
-                gap: "8px",
-                backgroundColor: "#00000033",
-                padding: "10px 16px",
-                borderRadius: "8px",
-                display: "flex",
-                fontSize: "14px",
-              }}
-            >
+                        </Typography>
+                        <Typography
+                            component="div"
+                            sx={{
+                                alignItems: "center",
+                                gap: "8px",
+                                backgroundColor: "#00000033",
+                                padding: "10px 16px",
+                                borderRadius: "8px",
+                                display: "flex",
+                                fontSize: "14px",
+                            }}
+                        >
               <span
-                style={{
-                  whiteSpace: "nowrap",
-                  display: "flex",
-                  gap: "4px",
-                  alignItems: "center",
-                }}
+                  style={{
+                      whiteSpace: "nowrap",
+                      display: "flex",
+                      gap: "4px",
+                      alignItems: "center",
+                  }}
               >
                 {t("potential")}
-                <CustomizedTooltips
-                  text1={t("potentialTooltipText1")}
-                  text2={t("potentialTooltipText2")}
-                />
+                  <CustomizedTooltips
+                      text1={t("potentialTooltipText1")}
+                      text2={t("potentialTooltipText2")}
+                  />
               </span>{" "}
-              <span
-                style={{
-                  color: "white",
-                  backgroundColor: setColorPot(potential.avgMin),
-                  padding: "4px 8px 2px",
-                  textShadow: "1px 1px 5px rgba(0,0,0,.4)",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                }}
-              >
-                {potential.avgMin}-{potential.avgMax}x
+                            <span
+                                style={{
+                                    color: "white",
+                                    backgroundColor: setColorPot(potential.avgMin),
+                                    padding: "4px 8px 2px",
+                                    textShadow: "1px 1px 5px rgba(0,0,0,.4)",
+                                    borderRadius: "6px",
+                                    fontSize: "14px",
+                                }}
+                            >
+                {isNaN(potential.avgMin) ? 0 : potential.avgMin}-
+                {isNaN(potential.avgMax) ? 0 : potential.avgMax}x
               </span>
-            </Typography>
-          </Box>
-        </Box>
-      </CardContent>
-    </Card>
-  );
+                        </Typography>
+                    </Box>
+                </Box>
+            </CardContent>
+        </Card>
+    );
 }
 
 export default BewertungCard;

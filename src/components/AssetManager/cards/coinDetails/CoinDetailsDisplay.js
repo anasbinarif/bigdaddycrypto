@@ -3,6 +3,17 @@ import styles from "./coinDetails.module.css";
 import { convertPrice, currencySign } from "../../../../lib/data";
 import { useTranslations } from "next-intl";
 import addCommas from "../../../../lib/currencyFormatter";
+import { Artifika } from "next/font/google";
+
+const maxLenCrop = (str) => {
+  if (str.length <= 12) return str;
+
+  let newStr = "";
+  for (let i = 0; i < 9; i++) newStr += str[i];
+  newStr += "...";
+
+  return newStr;
+};
 
 const CoinDetailsDisplay = ({
   financialSummary,
@@ -72,19 +83,58 @@ const CoinDetailsDisplay = ({
           </Typography>
           <Typography
             sx={{
+              position: "relative",
               fontSize: "1.8rem",
               fontWeight: "bold",
               whiteSpace: "nowrap",
               "@media only screen and (max-width: 1500px)": {
                 fontSize: "1.5rem",
               },
+
+              "& > div": {
+                display: "none",
+              },
+
+              "&:hover > div": {
+                display: "block",
+              },
             }}
           >
-            {addCommas(
-              convertPrice(financialSummary.totalHoldingsValue, currency, rates)
+            {maxLenCrop(
+              addCommas(
+                convertPrice(
+                  financialSummary.totalHoldingsValue,
+                  currency,
+                  rates
+                )
+              )
             )}{" "}
             {currencySign[currency]}
+            {addCommas(
+              convertPrice(financialSummary.totalHoldingsValue, currency, rates)
+            ).length > 12 && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 10,
+                  backgroundColor: "#818181ef",
+                  borderRadius: "4px",
+                  padding: "2px",
+                  fontSize: "14px",
+                }}
+              >
+                {addCommas(
+                  convertPrice(
+                    financialSummary.totalHoldingsValue,
+                    currency,
+                    rates
+                  )
+                )}
+              </div>
+            )}
           </Typography>
+
           <Typography
             sx={{
               color: "#ffffff88",
@@ -146,18 +196,52 @@ const CoinDetailsDisplay = ({
           </Typography>
           <Typography
             sx={{
+              position: "relative",
               fontSize: "1.8rem",
               fontWeight: "bold",
               whiteSpace: "nowrap",
               "@media only screen and (max-width: 1500px)": {
                 fontSize: "1.5rem",
               },
+
+              "& > div": {
+                display: "none",
+              },
+
+              "&:hover > div": {
+                display: "block",
+              },
             }}
           >
-            {addCommas(
-              convertPrice(financialSummary.totalWinLoss, currency, rates)
+            {maxLenCrop(
+              addCommas(
+                convertPrice(financialSummary.totalWinLoss, currency, rates)
+              )
             )}{" "}
             {currencySign[currency]}
+            {addCommas(
+              convertPrice(financialSummary.totalHoldingsValue, currency, rates)
+            ).length > 12 && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 10,
+                  backgroundColor: "#818181ef",
+                  borderRadius: "4px",
+                  padding: "2px",
+                  fontSize: "14px",
+                }}
+              >
+                {addCommas(
+                  convertPrice(
+                    financialSummary.totalHoldingsValue,
+                    currency,
+                    rates
+                  )
+                )}
+              </div>
+            )}
           </Typography>
           <Typography
             className={
@@ -255,7 +339,7 @@ const CoinDetailsDisplay = ({
               },
             }}
           >
-            {financialSummary.avgPurchasePricePercentage} %
+            {addCommas(financialSummary.avgPurchasePricePercentage)} %
           </Typography>
         </Box>
         <Box className={styles.grid__item}>
@@ -323,7 +407,7 @@ const CoinDetailsDisplay = ({
                 },
               }}
             >
-              {financialSummary.avgSellingPricePercentage} %
+              {addCommas(financialSummary.avgSellingPricePercentage)} %
             </Typography>
           )}
         </Box>
