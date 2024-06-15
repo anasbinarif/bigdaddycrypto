@@ -1,13 +1,27 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { TextareaAutosize } from "@mui/base";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
+import { useAtom } from "jotai";
+import { portfolioAtom } from "../../app/stores/portfolioStore";
 
 export default function Item4({ msg, setMsg }) {
   const t = useTranslations("item4");
+  const [portfolio] = useAtom(portfolioAtom);
 
-  console.log(msg);
+  const handleNotesSave = async () => {
+    const userId = portfolio?.assetsCalculations.userId;
+    const res = await fetch("/api/savePortfolioNotes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId, msg }),
+    });
+
+  }
+
   return (
     <Box
       sx={{
@@ -26,7 +40,7 @@ export default function Item4({ msg, setMsg }) {
       <TextareaAutosize
         aria-label="empty textarea"
         placeholder={t("placeholder")}
-        defaultValue={msg}
+        defaultValue={msg?.UserComment}
         maxRows={7}
         onChange={(e) => {
           const disallowedRegex = /[<>&"'\/\\:;|`~\x00-\x1F]/g;
@@ -53,9 +67,7 @@ export default function Item4({ msg, setMsg }) {
       <TextareaAutosize
         aria-label="empty textarea"
         placeholder={t("placeholder")}
-        defaultValue={`Pullix (PLX) : 18312 coin gekauft um 1000€
-        Loop: 66984 coin  
-        `}
+        defaultValue={msg?.MissingCoins}
         minRows={7}
         style={{
           width: "100%",
@@ -69,6 +81,16 @@ export default function Item4({ msg, setMsg }) {
           outline: "none",
         }}
       />
+      <Button sx={{
+        marginTop: "20px",
+        backgroundColor: "#1188ff",
+        color: "white",
+        fontSize: "0.8rem",
+        "&:hover": { backgroundColor: "#0a549f" },
+      }}
+        onClick={handleNotesSave}>
+        Save
+      </Button>
     </Box>
   );
 }

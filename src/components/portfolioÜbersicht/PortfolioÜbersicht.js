@@ -13,6 +13,8 @@ import { Typography } from "@mui/material";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useAtom } from "jotai";
+import { portfolioAtom } from "../../app/stores/portfolioStore";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -22,19 +24,13 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function PortfolioUbersicht({ loadingPortfolio }) {
+  const [portfolio] = useAtom(portfolioAtom);
+  const [msg, setMsg] = useState({});
+  useEffect(() => {
+    if (portfolio?.assetsCalculations) setMsg(portfolio?.assetsCalculations.Notizen)
+  }, [portfolio])
   const t = useTranslations("Overview");
   const [width, setWidth] = useState(0);
-  const [msg, setMsg] = useState(`Hallo Big Daddy
-
-Könntest du dir das mal bitte ansehen.
-verfolge dich schon länger auf deinen Youtube Kanal .
-würdest du hier das Portfolio ändern oder so lassen.
-ich halte meine Coins schon länger aber so richtig in Schwung bin ich noch nicht gekommen.
-Im November war ich auf 19.000€  
-wäre cool wenn du mir da hälfen könntest 
-dank dir.
-Beste Grüße Jens  
-        `);
 
   useEffect(() => {
     const handleResize = () => {

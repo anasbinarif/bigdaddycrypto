@@ -325,11 +325,11 @@ const pastUserSchema = new mongoose.Schema({
     },
     UserComment: {
         type: String,
-        maxlength: 65535 // Approximate character limit for a TEXT field in SQL
+        maxlength: 65535
     },
     MissingCoins: {
         type: String,
-        maxlength: 65535 // Using the TEXT type approximation
+        maxlength: 65535
     },
     Expectation: {
         type: String,
