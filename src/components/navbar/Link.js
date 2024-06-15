@@ -17,12 +17,15 @@ import { useTranslations } from "next-intl";
 import { fetchUserSubscriptionPlan } from "../../lib/data";
 import styles from "./navbar.module.css";
 import CurrencySwitcher from "../../app/currency/CurrencySwitcher";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const NavbarLink = ({ mobileView, handleClose }) => {
   const { data: session, status } = useSession();
   const [sessionJotai, setSession] = useAtom(sessionAtom);
   const t = useTranslations("navbar");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const updateSessionWithSubscription = async () => {
@@ -91,29 +94,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               </Typography>
             </Link>
           ))}
-        {!mobileView && (
-          <>
-            <Typography
-              variant="body1"
-              sx={{
-                fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
-              }}
-            >
-              {t("portfolioId")}: {session?.user?.username}
-            </Typography>
-            <Typography
-              sx={{
-                color: "var(--color-secondary)",
-                textTransform: "uppercase",
-                ml: "10px",
-              }}
-            >
-              {sessionJotai?.user?.subscriptionPlan}
-            </Typography>
-            <LanguageSwitcher />
-            <CurrencySwitcher />
-          </>
-        )}
+
         {mobileView ? (
           <MenuItem onClick={handleLogoutFun}>
             <LogoutIcon />
@@ -135,7 +116,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             >
               {t("pricing")}
             </Link>
-            <IconButton
+            {/* <IconButton
               onClick={handleLogoutFun}
               color="inherit"
               sx={{ ml: 2 }}
@@ -162,8 +143,98 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                 <LogoutIcon />
                 <Typography>{t("logout")}</Typography>
               </Box>
-            </IconButton>
+            </IconButton> */}
           </>
+        )}
+        {!mobileView && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              position: "relative",
+              ml: "1rem",
+            }}
+          >
+            <Box
+              sx={{
+                border: "1px solid white",
+                padding: "0.75rem 0.9rem",
+                borderRadius: "50px",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "var(--color-secondary-2)",
+                },
+              }}
+              onClick={() => setOpen(!open)}
+            >
+              <FontAwesomeIcon icon={faUser} />
+            </Box>
+            {open && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "110%",
+                  right: 0,
+                  backgroundColor: "#00000033",
+                  padding: "10px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  minWidth: "150px",
+                  transition: "all 0.2s ease-in-out",
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                  }}
+                >
+                  {t("portfolioId")}: {session?.user?.username}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "var(--color-secondary)",
+                    textTransform: "uppercase",
+                    // ml: "10px",
+                  }}
+                >
+                  {sessionJotai?.user?.subscriptionPlan}
+                </Typography>
+                <LanguageSwitcher />
+                <CurrencySwitcher />
+                <IconButton
+                  onClick={handleLogoutFun}
+                  color="inherit"
+                  sx={{ p: 0, justifyContent: "flex-start" }}
+                >
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      bgcolor: "#202530",
+                      p: "0.25em 0.7em",
+                      borderRadius: "50px",
+                      border: "1px solid var(--color-secondary)",
+                      "&:hover": {
+                        backgroundColor: "var(--color-secondary-2)",
+                        "& .MuiTypography-root, & .MuiSvgIcon-root": {
+                          color: "#000000",
+                        },
+                      },
+
+                      "& .MuiTypography-root, & .MuiSvgIcon-root": {
+                        color: "var(--color-secondary)",
+                      },
+                    }}
+                  >
+                    <LogoutIcon />
+                    <Typography>{t("logout")}</Typography>
+                  </Box>
+                </IconButton>
+              </Box>
+            )}
+          </Box>
         )}
       </Box>
       {loading && (

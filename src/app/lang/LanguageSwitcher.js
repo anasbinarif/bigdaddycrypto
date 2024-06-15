@@ -35,7 +35,14 @@ const LanguageSwitcher = () => {
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
-        sx={{ color: "var(--color-secondary)", ml: 2, fontSize: "15px" }}
+        sx={{
+          color: "var(--color-secondary)",
+          fontSize: "15px",
+          width: "100%",
+          padding: 0,
+          justifyContent: "flex-start",
+          // ml: 2,
+        }}
       >
         {t("selectLanguage")}
       </Button>
@@ -47,7 +54,7 @@ const LanguageSwitcher = () => {
         onClose={handleClose}
         sx={{
           "& .MuiPaper-root": {
-            backgroundColor: "rgb(32, 37, 48)",
+            backgroundColor: "#111826",
             color: "#ffffff",
           },
         }}
