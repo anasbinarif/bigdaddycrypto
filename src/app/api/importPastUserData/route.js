@@ -1,5 +1,5 @@
 import { connectToDb } from "../../../lib/utils";
-import {PastUsers, PastPortfolio, Assets, PastBuyAndSell, User, UserPortfolio} from "../../../lib/models";
+import { PastUsers, PastPortfolio, Assets, PastBuyAndSell, User, UserPortfolio } from "../../../lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -30,7 +30,7 @@ export async function POST(req) {
 
         const userPortfolio = await UserPortfolio.findOne({ userId: userID });
         if (userPortfolio) {
-            return NextResponse.json({ message: "user already have portfolios " }, { status: 404 });
+            return NextResponse.json({ message: "User already has portfolios" }, { status: 404 });
         }
 
         const portfolios = await PastPortfolio.find({ PortfolioID: pastUser.Name }).exec();
@@ -54,17 +54,15 @@ export async function POST(req) {
 
         const userPortfolios = portfolios.map(portfolio => {
             const transactions = buyAndSellMap[portfolio.ID] || [];
-            // Adjust the transaction types for the totalCoins calculation
             const totalCoins = transactions.reduce((acc, curr) => {
                 if (curr.Type === "buy") {
-                    return acc + curr.Coins;  // "buy" transactions increase the total coins
+                    return acc + curr.Coins;
                 } else if (curr.Type === "sell") {
-                    return acc - curr.Coins;  // "sell" transactions decrease the total coins
+                    return acc - curr.Coins;
                 }
                 return acc;
             }, 0);
-        
-            // Optionally adjust the labels in the transactions data
+
             const adjustedTransactions = transactions.map(transaction => ({
                 ...transaction,
                 Type: transaction.Type === "buy" ? "Kauf" : (transaction.Type === "sell" ? "Verkauf" : transaction.Type)
@@ -73,7 +71,7 @@ export async function POST(req) {
             const adjustedDCA = portfolio.DCA !== "" ? Number(portfolio.DCA) + 1 : 0;
             const adjustedGewichtung = portfolio.Gewichtung !== "" ? Number(portfolio.Gewichtung) + 1 : 0;
             const adjustedRelevanz = portfolio.Relevanz !== "" ? Number(portfolio.Relevanz) + 1 : 0;
-        
+
             const assets = [{
                 CoinGeckoID: assetMap[portfolio.AssetID] ? assetMap[portfolio.AssetID].CoinGeckoID : null,
                 Holdings: portfolio.Holdings,
@@ -86,16 +84,19 @@ export async function POST(req) {
                 totalCoins: totalCoins,
                 buyAndSell: adjustedTransactions
             }];
-        
+
             return assets.every(asset => asset.CoinGeckoID !== null) ? {
                 userId: user._id,
                 assets: assets
             } : null;
         }).filter(portfolio => portfolio !== null);
-        // return NextResponse.json({ userPortfolios }, { status: 200 });
 
         const newUserPortfolio = new UserPortfolio({
             userId: user._id,
+            Notizen: {
+                UserComment: pastUser.UserComment,
+                MissingCoins: pastUser.MissingCoins
+            },
             assets: userPortfolios.map(portfolio => portfolio.assets).flat()
         });
 

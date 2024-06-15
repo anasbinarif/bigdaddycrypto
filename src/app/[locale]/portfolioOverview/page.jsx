@@ -30,6 +30,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import styled from "@emotion/styled";
 import { sessionAtom } from "../../stores/sessionStore";
 import { useAtom } from "jotai";
+import { portfolioAtom } from "../../stores/portfolioStore";
 
 const steps = [
   "Wieviele Assets hast du in deinem Portfolio?",
@@ -88,13 +89,22 @@ const PortfolioForm = () => {
     target: "",
   });
   const [showNext, setShowNext] = useState(false);
+  const [portfolio] = useAtom(portfolioAtom);
   const [msg, setMsg] = useState("");
+  const [notes, setNotes] = useState("")
+  const [id, setid] = useState("");
+  useEffect(() => {
+    if (portfolio?.assetsCalculations){
+      setNotes(portfolio?.assetsCalculations.Notizen)
+      setid(portfolio?.assetsCalculations.userId)
+    }
+  }, [portfolio])
+
 
   const router = useRouter();
   // const { query } = router;
   const pathname = usePathname();
 
-  console.log(msg);
 
   useEffect(() => {
     const query = window.location.search;
@@ -633,10 +643,10 @@ const PortfolioForm = () => {
                         id="portfolioID"
                         label="Portfolio-ID"
                         variant="outlined"
-                        value={msg}
-                        onChange={(e) => {
-                          setMsg(e.target.value);
-                        }}
+                        value={id}
+                        // onChange={(e) => {
+                        //   setMsg(e.target.value);
+                        // }}
                         // disabled
                         margin="normal"
                         InputLabelProps={{
@@ -667,8 +677,8 @@ const PortfolioForm = () => {
                         variant="outlined"
                         multiline
                         rows={4}
-                        value={userComment}
-                        onChange={(e) => setUserComment(e.target.value)}
+                        value={notes?.UserComment}
+                        // onChange={(e) => setUserComment(e.target.value)}
                         margin="normal"
                         required
                         InputLabelProps={{
@@ -698,8 +708,8 @@ const PortfolioForm = () => {
                         variant="outlined"
                         multiline
                         rows={4}
-                        value={missingCoins}
-                        onChange={(e) => setMissingCoins(e.target.value)}
+                        value={notes?.MissingCoins}
+                        // onChange={(e) => setMissingCoins(e.target.value)}
                         margin="normal"
                         InputLabelProps={{
                           style: { color: "white" },

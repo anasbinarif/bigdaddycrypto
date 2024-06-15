@@ -20,7 +20,7 @@ export async function POST(req, res) {
             expiresIn: "1h",
         });
 
-        const resetUrl = `http://localhost:3000/resetPassword?token=${token}&email=${email}`;
+        const resetUrl = `${process.env.NEXT_PUBLIC_URI}/resetPassword?token=${token}&email=${email}`;
 
         const transporter = nodemailer.createTransport({
             service: "gmail",
