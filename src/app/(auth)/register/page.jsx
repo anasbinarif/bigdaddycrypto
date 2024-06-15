@@ -114,11 +114,18 @@ const RegisterPage = () => {
         body: JSON.stringify(user),
       });
       if (res.ok) {
-        const verificationToken = customAlphabet(user.userEmail, 24)();
-        const email = user.userEmail;
-        const result = await signIn("email", { redirect: false, email, verificationToken });
-        if (result.error) {
-          setError(result.error);
+        // const verificationToken = customAlphabet(user.userEmail, 24)();
+        const email = {email: user.userEmail};
+        // const result = await signIn("email", { redirect: false, email, verificationToken });
+        const res = await fetch("/api/sendEmailVarification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(email),
+        });
+        if (res.error) {
+          setError(res.error);
         } else {
           // router.push("/check-email");
           // alert("check Your Email");
