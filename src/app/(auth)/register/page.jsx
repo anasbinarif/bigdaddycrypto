@@ -14,12 +14,12 @@ import HomeIcon from "../../../../public/assets/svg/bdc.svg";
 import { customAlphabet } from "nanoid";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import AlertBar from "../../../components/customAllert/Alert";
 
 const RegisterPage = () => {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
 
   const [alert, setAlert] = useState({
     open: false,
@@ -89,11 +89,21 @@ const RegisterPage = () => {
     }
 
     // Validate PIN
-    if (user.pin.trim() === "" || user.pin.length < 4) {
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+    if (user.pin.trim() === "" || user.pin.length < 8) {
       setErrors((prev) => ({
         ...prev,
         pin: true,
-        pinMessage: "PIN must be at least 4 digits.",
+        pinMessage: "Passwort must be at least 4 digits.",
+      }));
+      hasErrors = true;
+    } else if (!passwordRegex.test(user.pin)) {
+      setErrors((prev) => ({
+        ...prev,
+        pin: true,
+        pinMessage:
+          "Passwort must be at least 8 letters. Atleast 1 capital letter, number and special character",
       }));
       hasErrors = true;
     } else {
@@ -115,7 +125,7 @@ const RegisterPage = () => {
       });
       if (res.ok) {
         // const verificationToken = customAlphabet(user.userEmail, 24)();
-        const email = {email: user.userEmail};
+        const email = { email: user.userEmail };
         // const result = await signIn("email", { redirect: false, email, verificationToken });
         const res = await fetch("/api/sendEmailVarification", {
           method: "POST",
@@ -142,12 +152,13 @@ const RegisterPage = () => {
         // router.push("/checkEmail");
         setPending(false);
       } else {
-        setPending(false);
+        const error = await res.json();
         setAlert({
           open: true,
-          message: "Error registering user",
+          message: error.error ? error.error : "Error registering user",
           severity: "error",
         });
+        setPending(false);
       }
     }
     setLoading(false);
@@ -401,7 +412,11 @@ const RegisterPage = () => {
             }}
             required
             error={errors.pin}
-            helperText={errors.pin ? errors.pinMessage : ""}
+            helperText={
+              errors.pin
+                ? errors.pinMessage
+                : "*Passwort should be 8 characters long, have a capital letter, atleast 1 number and a special character"
+            }
           />
 
           <FormControlLabel
@@ -479,6 +494,12 @@ const RegisterPage = () => {
           persönliche Zwecke und stellen keine Finanzberatung dar.
         </Typography>
       </Box>
+      <AlertBar
+        open={alert.open}
+        message={alert.message}
+        severity={alert.severity}
+        onClose={() => setAlert({ ...alert, open: false })}
+      />
     </>
   );
 };

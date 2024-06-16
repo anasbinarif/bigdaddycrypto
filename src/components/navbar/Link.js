@@ -18,7 +18,12 @@ import { fetchUserSubscriptionPlan } from "../../lib/data";
 import styles from "./navbar.module.css";
 import CurrencySwitcher from "../../app/currency/CurrencySwitcher";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faShareAlt,
+  faShareSquare,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import { faShare } from "@fortawesome/free-solid-svg-icons";
 
 const NavbarLink = ({ mobileView, handleClose }) => {
   const { data: session, status } = useSession();
@@ -116,6 +121,20 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             >
               {t("pricing")}
             </Link>
+            <Box
+              sx={{
+                border: "1px solid white",
+                padding: "0.75rem 0.9rem",
+                borderRadius: "50px",
+                cursor: "pointer",
+                ml: "1rem",
+                "&:hover": {
+                  backgroundColor: "var(--color-secondary-2)",
+                },
+              }}
+            >
+              <FontAwesomeIcon icon={faShareAlt} />
+            </Box>
             {/* <IconButton
               onClick={handleLogoutFun}
               color="inherit"
