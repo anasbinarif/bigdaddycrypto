@@ -129,8 +129,20 @@ const CoinCard = ({
     }
   };
 
+
   const handleDoubleClick = async () => {
+    const userId = sessionJotai?.user.id;
+    const timeCheck = await fetch("/api/checkPastUserTime", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userID: userId }),
+      cache: "no-store",
+    }); 
+    const timeCheckRes = await timeCheck.json()
     if (
+      !timeCheckRes.hoursRemaining &&
       sessionJotai?.user?.subscriptionPlan === "free" &&
       assetsLeangth >= 10 &&
       !selected
@@ -141,8 +153,6 @@ const CoinCard = ({
     }
 
     setLoading(true);
-
-    const userId = sessionJotai?.user.id;
     const token = sessionJotai?.user.accessToken;
     const res = await storeUserPortfolioCoin(userId, coin, token);
 

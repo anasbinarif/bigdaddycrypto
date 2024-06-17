@@ -33,6 +33,14 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    pastUserAccessTime: {
+        type: Date,
+        default: null
+    },
+    pastUserAccess: {
+        type: Boolean,
+        default: false
+    },
     subscribed: {
         type: Boolean,
         default: false
