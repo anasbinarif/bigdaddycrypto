@@ -95,6 +95,7 @@ const CoinCard = ({
   const [filterTag, setFilterTag] = useState("");
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+  const [error, setError] = useState("")
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -134,6 +135,7 @@ const CoinCard = ({
       assetsLeangth >= 10 &&
       !selected
     ) {
+      setError("If you want to add more coins to your portfolio, please subscribe to one of our plans.")
       setAlertOpen(true);
       return;
     }
@@ -197,6 +199,7 @@ const CoinCard = ({
     setLoading(true);
     // console.log("handleFavouriteClick", coin);
     if (sessionJotai?.user?.subscriptionPlan === "free") {
+      setError("If you want to add coins to Fav, please subscribe to one of our plans.")
       setAlertOpen(true);
       setLoading(false); // Reset loading state here
       return;
@@ -646,8 +649,7 @@ const CoinCard = ({
           variant="filled"
           sx={{ width: "100%" }}
         >
-          If you want to add more coins to your portfolio, please subscribe to
-          one of our plans.
+          {error}
         </Alert>
       </Snackbar>
     </>
