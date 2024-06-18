@@ -53,6 +53,8 @@ export async function POST(req) {
         }, {});
 
         const userPortfolios = portfolios.map(portfolio => {
+
+            // getting past data from past buy&sell
             const transactions = buyAndSellMap[portfolio.ID] || [];
             const totalCoins = transactions.reduce((acc, curr) => {
                 if (curr.Type === "buy") {
@@ -62,6 +64,26 @@ export async function POST(req) {
                 }
                 return acc;
             }, 0);
+            const totalInvested = transactions
+                .reduce((acc, row) => {
+                    if (row.Type === "buy") {
+                        return acc + parseFloat(row.Betrag);
+                    }
+                    return acc;
+                }, 0)
+                .toFixed(2);
+
+            const realizedProfit = transactions
+                .reduce((acc, row) => {
+                    if (row.Type === "sell") {
+                        return acc + parseFloat(row.Betrag);
+                    }
+                    return acc;
+                }, 0)
+                .toFixed(2);
+            // const totalHoldingsValue = (totalCoins * parseFloat(coin?.Price)).toFixed(
+            //     2
+            // );
 
             const adjustedTransactions = transactions.map(transaction => ({
                 ...transaction,
@@ -72,6 +94,8 @@ export async function POST(req) {
             const adjustedGewichtung = portfolio.Gewichtung !== "" ? Number(portfolio.Gewichtung) + 1 : 0;
             const adjustedRelevanz = portfolio.Relevanz !== "" ? Number(portfolio.Relevanz) + 1 : 0;
 
+
+
             const assets = [{
                 CoinGeckoID: assetMap[portfolio.AssetID] ? assetMap[portfolio.AssetID].CoinGeckoID : null,
                 Holdings: portfolio.Holdings,
@@ -79,8 +103,8 @@ export async function POST(req) {
                 DCA_0: adjustedDCA,
                 Gewichtung: adjustedGewichtung,
                 Relevanz: adjustedRelevanz,
-                totalInvest: portfolio.totalInvest,
-                totalSold: portfolio.totalSold,
+                totalInvest: totalInvested,
+                totalSold: realizedProfit,
                 totalCoins: totalCoins,
                 buyAndSell: adjustedTransactions
             }];
@@ -104,6 +128,8 @@ export async function POST(req) {
             await newUserPortfolio.save();
             user.pastUser = pastUser.Name;
             user.pastUserCheck = true;
+            user.pastUserCheckTime = new Date();
+            user.pastUserAccess = true;
             await user.save();
             return NextResponse.json({ userPortfolios }, { status: 200 });
         } catch (e) {
