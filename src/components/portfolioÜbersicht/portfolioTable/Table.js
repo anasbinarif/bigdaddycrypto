@@ -636,7 +636,7 @@ const EnhancedTable = () => {
                           {row.preisChange !== 0
                             ? `${addCommas(
                                 convertPrice(row.preisChange, currency, rates)
-                              )}%`
+                              )} ${currencySign[currency]}`
                             : 0}
                         </StyledTypography>
                         {row.pricePercentage !== "Infinity" && (
@@ -668,7 +668,7 @@ const EnhancedTable = () => {
                                     currency,
                                     rates
                                   )
-                                )} ${currencySign[currency]}`
+                                )} %`
                               : 0}
                           </Typography>
                         )}
