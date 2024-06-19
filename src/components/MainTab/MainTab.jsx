@@ -52,6 +52,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     setValue(newValue);
     setTabSelector(newValue);
   };
+  const [hoursRemaining, setHoursRemaining] = useState(null);
 
   const { data: session, status } = useSession();
   const [sessionJotai, setSession] = useAtom(sessionAtom);
@@ -73,9 +74,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   }, []);
 
   useEffect(() => {
-    // if (session) {
-    //   setSession(session);
-    // }
     setLoading(true);
     const fetchData = async () => {
       if (sessionJotai?.user) {
@@ -87,13 +85,40 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     fetchData();
   }, [sessionJotai?.user.id]);
 
+
   useEffect(() => {
+    const fetchPastUserTime = async () => {
+      if (sessionJotai?.user) {
+        const timeCheck = await fetch("/api/checkPastUserTime", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userID: sessionJotai?.user.id }),
+          cache: "no-store",
+        });
+        const timeCheckRes = await timeCheck.json()
+        console.log("timeCheckRestimeCheckRestimeCheckRes", timeCheckRes);
+        setHoursRemaining(timeCheckRes.hoursRemaining);
+      }
+    }
+    fetchPastUserTime();
     if (portfolio?.assets) {
       setLoadingPortfolio(true);
       const len = portfolio?.assets.length;
       setAssetsLeangth(len);
     }
   }, [portfolio]);
+
+  useEffect(() => {
+    if (hoursRemaining !== null) {
+      const intervalId = setInterval(() => {
+        setHoursRemaining(prev => Math.max(prev - (1 / 3600), 0));
+      }, 1000); // Update every second
+
+      return () => clearInterval(intervalId);
+    }
+  }, [hoursRemaining]);
 
   return (
     <>
@@ -116,6 +141,11 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           },
         }}
       >
+        {hoursRemaining !== null && (
+          <Box sx={{ paddingLeft: width < 500 ? 0 : "24px", paddingBottom: "24px", float: "right" }}>
+            {`You have ${hoursRemaining.toFixed(2)} hours remaining`}
+          </Box>
+        )}
         <Tabs
           value={value}
           // indicatorColor={"white"}

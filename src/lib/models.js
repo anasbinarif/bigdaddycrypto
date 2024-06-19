@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     },
     pastUserAccessTime: {
         type: Date,
-        default: null
+        default: new Date()
     },
     pastUserAccess: {
         type: Boolean,
