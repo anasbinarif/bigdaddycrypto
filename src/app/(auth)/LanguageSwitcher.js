@@ -6,8 +6,6 @@ const LanguageSwitcher = () => {
   const { currentLanguage, switchLanguage, languageData } = useLanguage();
   const [open, setOpen] = useState(false);
 
-  console.log(languageData);
-
   return (
     <Box
       sx={{

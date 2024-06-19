@@ -383,12 +383,4 @@ const LoginPage = () => {
   );
 };
 
-const Login = () => {
-  return (
-    <LanguageProvider>
-      <LoginPage />
-    </LanguageProvider>
-  );
-};
-
-export default Login;
+export default LoginPage;

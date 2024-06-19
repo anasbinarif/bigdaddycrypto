@@ -508,12 +508,4 @@ const RegisterPage = () => {
   );
 };
 
-const Register = () => {
-  return (
-    <LanguageProvider>
-      <RegisterPage />
-    </LanguageProvider>
-  );
-};
-
-export default Register;
+export default RegisterPage;
