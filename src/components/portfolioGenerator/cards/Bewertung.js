@@ -97,9 +97,6 @@ const calculatePotential = (portfolio) => {
     }
   });
 
-  // const avgMin = (pMinXClean / totalAssetsAmount).toFixed(0);
-  // const avgMax = (pMaxXClean / totalAssetsAmount).toFixed(0);
-
   const avgMin = (pMinX / totalAssetsAmount).toFixed(0);
   const avgMax = (pMaxX / totalAssetsAmount).toFixed(0);
 
@@ -121,6 +118,35 @@ const setColorPot = (dataPotential) => {
     return "#E31612";
   } else {
     return "rgba(220,220,220,.1)";
+  }
+};
+
+const calculateDotColor = (name, score, portfolio) => {
+  switch (name) {
+    case "scoreFactor_Category":
+      if (score > 10) return green[500];
+      if (score >= 7) return "orange";
+      if (score >= 5) return "lightcoral";
+      return "darkred";
+    case "scoreFactor_CategoryTwice":
+      if (score >= 2) return green[500];
+      if (score > 0) return "orange";
+      return "red";
+    case "scoreFactor_CategoryMissing":
+      if (score === 0) return green[500];
+      if (score === 1) return "orange";
+      return "red";
+    case "scoreFactor_Allocation":
+      if (score < 5) return green[500];
+      if (score < 8) return "orange";
+      return "red";
+    case "scoreFactor_CoinCount":
+      if (score >= 20 && score <= 40) return green[500];
+      if (score >= 15 && score < 20) return yellow[800];
+      if (score >= 10 && score < 15) return "orange";
+      return "red";
+    default:
+      return "grey";
   }
 };
 
@@ -224,27 +250,22 @@ function BewertungCard() {
             {[
               {
                 text: t("hypeCoverage"),
-                color: green[500],
                 name: "scoreFactor_Category",
               },
               {
                 text: t("doubleHypeCoverage"),
-                color: green[500],
                 name: "scoreFactor_CategoryTwice",
               },
               {
                 text: t("missingHypeTheme"),
-                color: green[500],
                 name: "scoreFactor_CategoryMissing",
               },
               {
                 text: t("hypeDistribution"),
-                color: yellow[800],
                 name: "scoreFactor_Allocation",
               },
               {
                 text: t("numberOfCoins"),
-                color: green[500],
                 name: "scoreFactor_CoinCount",
               },
             ].map((item) => (
@@ -252,7 +273,11 @@ function BewertungCard() {
                 <ListItemIcon sx={{ minWidth: "30px" }}>
                   <FiberManualRecordIcon
                     sx={{
-                      color: hypeCoinColor[hypeColorScore[item.name]] || "grey",
+                      color: calculateDotColor(
+                        item.name,
+                        hypeColorScore[item.name],
+                        portfolio
+                      ),
                     }}
                   />
                 </ListItemIcon>

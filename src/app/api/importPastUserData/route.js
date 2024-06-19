@@ -128,7 +128,7 @@ export async function POST(req) {
             await newUserPortfolio.save();
             user.pastUser = pastUser.Name;
             user.pastUserCheck = true;
-            user.pastUserCheckTime = new Date();
+            user.pastUserAccessTime = new Date();
             user.pastUserAccess = true;
             await user.save();
             return NextResponse.json({ userPortfolios }, { status: 200 });
