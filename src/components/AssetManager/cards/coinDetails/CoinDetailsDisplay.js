@@ -53,11 +53,15 @@ const CoinDetailsDisplay = ({
           <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
             {coin?.Ticker}
           </Typography>
-          <Typography noWrap>{coin?.CoinGeckoID}</Typography>
-          <Typography>
-            {addCommas(convertPrice(coin?.Price.toFixed(2), currency, rates))}{" "}
-            {currencySign[currency]}
+          <Typography noWrap>
+            {coin?.CoinGeckoID || "Choose a coin.."}
           </Typography>
+          {coin?.Price && (
+            <Typography>
+              {addCommas(convertPrice(coin?.Price.toFixed(2), currency, rates))}{" "}
+              {currencySign[currency]}
+            </Typography>
+          )}
         </Box>
       </Box>
       <Box className={styles.grid}>
@@ -436,7 +440,14 @@ const CoinDetailsDisplay = ({
               },
             }}
           >
-            % {t("ofInvestment")}
+            {isNaN(
+              financialSummary.realizedProfit / financialSummary.totalInvested
+            )
+              ? ""
+              : `${(
+                  financialSummary.realizedProfit /
+                  financialSummary.totalInvested
+                ).toFixed(2)} % ${t("ofInvestment")}`}{" "}
           </Typography>
         </Box>
       </Box>

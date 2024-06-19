@@ -39,7 +39,7 @@ const calculatePotential = (portfolio) => {
   let pMaxXClean = 0;
   let totalAssetsAmount = 0;
 
-  portfolio.forEach(asset => {
+  portfolio.forEach((asset) => {
     const { Potential, Sicherheit, Bottom, Price } = asset;
     const dataPotential = parseFloat(Potential);
     const dataSecurity = parseFloat(Sicherheit);
@@ -49,57 +49,56 @@ const calculatePotential = (portfolio) => {
 
     if (dataPotential) {
       totalPotential += dataPotential;
-      totalSecurity += (dataSecurity * assetAmount);
+      totalSecurity += dataSecurity * assetAmount;
       totalAssets += 1;
       totalAssetsAmount += parseFloat(assetAmount);
 
       if (isNaN(dataSecurity) || isNaN(dataPotential)) {
-        pMinX += (1 * assetAmount);
-        pMaxX += (10 * assetAmount);
-        pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
+        pMinX += 1 * assetAmount;
+        pMaxX += 10 * assetAmount;
+        pMinXClean += ((1 * assetAmount) / dataEK) * dataBottom;
+        pMaxXClean += ((10 * assetAmount) / dataEK) * dataBottom;
       } else if (dataPotential >= 9) {
-        pMinX += (100 * assetAmount);
-        pMaxX += (200 * assetAmount);
-        pMinXClean += (100 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (200 * assetAmount) / dataEK * dataBottom;
+        pMinX += 100 * assetAmount;
+        pMaxX += 200 * assetAmount;
+        pMinXClean += ((100 * assetAmount) / dataEK) * dataBottom;
+        pMaxXClean += ((200 * assetAmount) / dataEK) * dataBottom;
       } else if (dataPotential > 8.5) {
-        pMinX += (75 * assetAmount);
-        pMaxX += (100 * assetAmount);
-        pMinXClean += (75 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (100 * assetAmount) / dataEK * dataBottom;
+        pMinX += 75 * assetAmount;
+        pMaxX += 100 * assetAmount;
+        pMinXClean += ((75 * assetAmount) / dataEK) * dataBottom;
+        pMaxXClean += ((100 * assetAmount) / dataEK) * dataBottom;
       } else if (dataPotential > 8) {
-        pMinX += (50 * assetAmount);
-        pMaxX += (75 * assetAmount);
-        pMinXClean += (50 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (75 * assetAmount) / dataEK * dataBottom;
+        pMinX += 50 * assetAmount;
+        pMaxX += 75 * assetAmount;
+        pMinXClean += ((50 * assetAmount) / dataEK) * dataBottom;
+        pMaxXClean += ((75 * assetAmount) / dataEK) * dataBottom;
       } else if (dataPotential > 7.5) {
-        pMinX += (30 * assetAmount);
-        pMaxX += (50 * assetAmount);
-        pMinXClean += (30 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (50 * assetAmount) / dataEK * dataBottom;
+        pMinX += 30 * assetAmount;
+        pMaxX += 50 * assetAmount;
+        pMinXClean += ((30 * assetAmount) / dataEK) * dataBottom;
+        pMaxXClean += ((50 * assetAmount) / dataEK) * dataBottom;
       } else if (dataPotential > 7) {
-        pMinX += (15 * assetAmount);
-        pMaxX += (30 * assetAmount);
-        pMinXClean += (15 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (30 * assetAmount) / dataEK * dataBottom;
+        pMinX += 15 * assetAmount;
+        pMaxX += 30 * assetAmount;
+        pMinXClean += ((15 * assetAmount) / dataEK) * dataBottom;
+        pMaxXClean += ((30 * assetAmount) / dataEK) * dataBottom;
       } else if (dataPotential > 6.7) {
-        pMinX += (10 * assetAmount);
-        pMaxX += (15 * assetAmount);
-        pMinXClean += (10 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (15 * assetAmount) / dataEK * dataBottom;
+        pMinX += 10 * assetAmount;
+        pMaxX += 15 * assetAmount;
+        pMinXClean += ((10 * assetAmount) / dataEK) * dataBottom;
+        pMaxXClean += ((15 * assetAmount) / dataEK) * dataBottom;
       } else {
-        pMinX += (1 * assetAmount);
-        pMaxX += (10 * assetAmount);
-        pMinXClean += (1 * assetAmount) / dataEK * dataBottom;
-        pMaxXClean += (10 * assetAmount) / dataEK * dataBottom;
+        pMinX += 1 * assetAmount;
+        pMaxX += 10 * assetAmount;
+        pMinXClean += ((1 * assetAmount) / dataEK) * dataBottom;
+        pMaxXClean += ((10 * assetAmount) / dataEK) * dataBottom;
       }
     }
   });
 
   // const avgMin = (pMinXClean / totalAssetsAmount).toFixed(0);
   // const avgMax = (pMaxXClean / totalAssetsAmount).toFixed(0);
-
 
   const avgMin = (pMinX / totalAssetsAmount).toFixed(0);
   const avgMax = (pMaxX / totalAssetsAmount).toFixed(0);
@@ -109,19 +108,19 @@ const calculatePotential = (portfolio) => {
 
 const setColorPot = (dataPotential) => {
   if (isNaN(dataPotential)) {
-    return 'rgba(220,220,220,.1)';
+    return "rgba(220,220,220,.1)";
   } else if (dataPotential >= 30) {
-    return '#41b431';
+    return "#41b431";
   } else if (dataPotential >= 20) {
-    return '#8ece10';
+    return "#8ece10";
   } else if (dataPotential >= 15) {
-    return '#E0c000';
+    return "#E0c000";
   } else if (dataPotential >= 8) {
-    return '#ff9600';
+    return "#ff9600";
   } else if (dataPotential > 0) {
-    return '#E31612';
+    return "#E31612";
   } else {
-    return 'rgba(220,220,220,.1)';
+    return "rgba(220,220,220,.1)";
   }
 };
 
@@ -144,10 +143,14 @@ function BewertungCard() {
         const assets = portfolio.assets;
 
         // Calculate Sicherheit Average
-        const sicherheitValues = assets.filter(asset => asset.Sicherheit).map(asset => asset.Sicherheit || 0);
-        const avgSicherheit = sicherheitValues.length > 0
-          ? sicherheitValues.reduce((acc, val) => acc + val, 0) / sicherheitValues.length
-          : 0;
+        const sicherheitValues = assets
+          .filter((asset) => asset.Sicherheit)
+          .map((asset) => asset.Sicherheit || 0);
+        const avgSicherheit =
+          sicherheitValues.length > 0
+            ? sicherheitValues.reduce((acc, val) => acc + val, 0) /
+              sicherheitValues.length
+            : 0;
         setSicherheitAverage(avgSicherheit.toFixed(1));
 
         // Calculate Potential
@@ -158,11 +161,26 @@ function BewertungCard() {
         try {
           const calculatedScore = await calculateScore(assets);
           setHypeColorScore({
-            scoreFactor_Category: Math.min(Number(calculatedScore.scoreFactor_Category), 10),
-            scoreFactor_CategoryTwice: Math.min(Number(calculatedScore.scoreFactor_CategoryTwice), 10),
-            scoreFactor_CategoryMissing: Math.min(Number(calculatedScore.scoreFactor_CategoryMissing), 10),
-            scoreFactor_Allocation: Math.min(Number(calculatedScore.scoreFactor_Allocation), 10),
-            scoreFactor_CoinCount: Math.min(Number(calculatedScore.scoreFactor_CoinCount), 10),
+            scoreFactor_Category: Math.min(
+              Number(calculatedScore.scoreFactor_Category),
+              10
+            ),
+            scoreFactor_CategoryTwice: Math.min(
+              Number(calculatedScore.scoreFactor_CategoryTwice),
+              10
+            ),
+            scoreFactor_CategoryMissing: Math.min(
+              Number(calculatedScore.scoreFactor_CategoryMissing),
+              10
+            ),
+            scoreFactor_Allocation: Math.min(
+              Number(calculatedScore.scoreFactor_Allocation),
+              10
+            ),
+            scoreFactor_CoinCount: Math.min(
+              Number(calculatedScore.scoreFactor_CoinCount),
+              10
+            ),
           });
         } catch (error) {
           console.error("Error calculating score:", error);
@@ -186,23 +204,57 @@ function BewertungCard() {
   };
 
   return (
-    <Card sx={{ bgcolor: "#202530", color: "white", height: "100%", borderRadius: 2 }}>
+    <Card
+      sx={{
+        bgcolor: "#202530",
+        color: "white",
+        height: "100%",
+        borderRadius: 2,
+      }}
+    >
       <CardContent sx={{ padding: "25px" }}>
-        <Typography sx={{ fontSize: "1.2rem", fontWeight: "bold", mb: "1.25rem" }} gutterBottom>
+        <Typography
+          sx={{ fontSize: "1.2rem", fontWeight: "bold", mb: "1.25rem" }}
+          gutterBottom
+        >
           {t("title")}
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <List sx={{ bgcolor: "#00000033", borderRadius: "8px" }}>
             {[
-              { text: t("hypeCoverage"), color: green[500], name: "scoreFactor_Category" },
-              { text: t("doubleHypeCoverage"), color: green[500], name: "scoreFactor_CategoryTwice" },
-              { text: t("missingHypeTheme"), color: green[500], name: "scoreFactor_CategoryMissing" },
-              { text: t("hypeDistribution"), color: yellow[800], name: "scoreFactor_Allocation" },
-              { text: t("numberOfCoins"), color: green[500], name: "scoreFactor_CoinCount" },
+              {
+                text: t("hypeCoverage"),
+                color: green[500],
+                name: "scoreFactor_Category",
+              },
+              {
+                text: t("doubleHypeCoverage"),
+                color: green[500],
+                name: "scoreFactor_CategoryTwice",
+              },
+              {
+                text: t("missingHypeTheme"),
+                color: green[500],
+                name: "scoreFactor_CategoryMissing",
+              },
+              {
+                text: t("hypeDistribution"),
+                color: yellow[800],
+                name: "scoreFactor_Allocation",
+              },
+              {
+                text: t("numberOfCoins"),
+                color: green[500],
+                name: "scoreFactor_CoinCount",
+              },
             ].map((item) => (
               <ListItem key={item.text} sx={{ py: 0 }}>
                 <ListItemIcon sx={{ minWidth: "30px" }}>
-                  <FiberManualRecordIcon sx={{ color: hypeCoinColor[hypeColorScore[item.name]] || "grey" }} />
+                  <FiberManualRecordIcon
+                    sx={{
+                      color: hypeCoinColor[hypeColorScore[item.name]] || "grey",
+                    }}
+                  />
                 </ListItemIcon>
                 <ListItemText
                   primary={item.text}
@@ -306,7 +358,8 @@ function BewertungCard() {
                   fontSize: "14px",
                 }}
               >
-                {potential.avgMin}-{potential.avgMax}x
+                {isNaN(potential.avgMin) ? 0 : potential.avgMin}-
+                {isNaN(potential.avgMax) ? 0 : potential.avgMax}x
               </span>
             </Typography>
           </Box>

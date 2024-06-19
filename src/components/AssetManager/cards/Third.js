@@ -142,7 +142,7 @@ const Third = () => {
             },
           }}
         >
-          {gesamtwertPercentage}%
+          {isNaN(gesamtwertPercentage) ? 0 : gesamtwertPercentage}%
         </Typography>
       </Box>
       <Box

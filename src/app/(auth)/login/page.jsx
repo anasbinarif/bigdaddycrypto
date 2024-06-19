@@ -1,12 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-} from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useAtom } from "jotai/index";
@@ -132,8 +127,17 @@ const LoginPage = () => {
     }));
   };
 
+  // Language Switch logic
+  const [open, setOpen] = useState(false);
+  const [lang, setLang] = useState("english");
+
   return (
-    <Box sx={{ overflow: "no-wrap", position: "relative" }}>
+    <Box
+      sx={{
+        overflow: "no-wrap",
+        position: "relative",
+      }}
+    >
       <AlertBar
         open={alert.open}
         message={alert.message}
@@ -142,11 +146,70 @@ const LoginPage = () => {
       />
       <Box
         sx={{
+          margin: "1rem",
+          padding: "0 1rem",
+          height: "4rem",
+          width: "fit-content",
+          backgroundColor: "#00000030",
+          border: "2px solid var(--color-secondary-2)",
+          borderRadius: "8px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textTransform: "uppercase",
+          position: "relative",
+          color: "white",
+          cursor: "pointer",
+        }}
+        onClick={() => setOpen(!open)}
+      >
+        {lang}
+        <Box
+          sx={{
+            display: open ? "flex" : "none",
+            flexDirection: "column",
+            alignItems: "center",
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            textTransform: "uppercase",
+            borderRadius: "4px",
+            overflow: "hidden",
+            backgroundColor: "#00000030",
+          }}
+        >
+          <Button
+            sx={{
+              padding: "10px",
+              color: "white",
+              width: "100%",
+              borderRadius: "0",
+            }}
+            onClick={() => lang !== "english" && setLang("english")}
+          >
+            english
+          </Button>
+          <Button
+            sx={{
+              padding: "10px",
+              backgroundColor: "#00000030",
+              color: "white",
+              width: "100%",
+              borderRadius: "none",
+            }}
+            onClick={() => lang !== "deutsh" && setLang("deutsh")}
+          >
+            Deutsh
+          </Button>
+        </Box>
+      </Box>
+      <Box
+        sx={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
+          height: "calc(100vh - 6rem)",
           backgroundColor: "#111826",
         }}
       >
