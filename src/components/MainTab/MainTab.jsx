@@ -99,7 +99,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         });
         const timeCheckRes = await timeCheck.json()
         console.log("timeCheckRestimeCheckRestimeCheckRes", timeCheckRes);
-        setHoursRemaining(timeCheckRes.hoursRemaining);
+        setHoursRemaining(timeCheckRes.hoursRemaining || null);
       }
     }
     fetchPastUserTime();
@@ -143,7 +143,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
       >
         {hoursRemaining !== null && (
           <Box sx={{ paddingLeft: width < 500 ? 0 : "24px", paddingBottom: "24px", float: "right" }}>
-            {`You have ${hoursRemaining.toFixed(2)} hours remaining`}
+            {`You have ${hoursRemaining?.toFixed(2)} hours remaining`}
           </Box>
         )}
         <Tabs

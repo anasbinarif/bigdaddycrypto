@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
     const { userID } = await req.json();
+    const baseURL = process.env.NEXT_PUBLIC_URI;
 
     try {
         await connectToDb();
@@ -26,9 +27,21 @@ export async function POST(req) {
             // user.pastUserCheck = false;
             // user.pastUserCheckTime = null;
             // await user.save();
-            return NextResponse.json({ message: "Past user access has expired" }, { status: 200 });
+            const response = await fetch(`${baseURL}/api/getUserSubscriptionPlan`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ userId: userID }),
+            });
+            const userPlan = await response.json();
+            console.log("what scene g", userPlan);
+            if (userPlan?.plan == "free") {
+                
+            }
+            return NextResponse.json({ message: "Past user access has expired", hoursRemaining: 0 }, { status: 200 });
         } else {
-            return NextResponse.json({ message: "Past user access is still valid", hoursRemaining: 24 - hoursPassed }, { status: 200 });
+            return NextResponse.json({ message: "Past user access is still valid", hoursRemaining: 48 - hoursPassed }, { status: 200 });
         }
     } catch (e) {
         console.log("Error during time check:", e);
