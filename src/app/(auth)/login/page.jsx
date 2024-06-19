@@ -9,6 +9,8 @@ import Image from "next/image";
 import HomeIcon from "../../../../public/assets/svg/bdc.svg";
 import AlertBar from "../../../components/customAllert/Alert";
 import { sessionAtom } from "../../../app/stores/sessionStore";
+import { LanguageProvider, useLanguage } from "../LanguageContext";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 const LoginPage = () => {
   const [sessionJotai] = useAtom(sessionAtom);
@@ -52,14 +54,14 @@ const LoginPage = () => {
       setErrors((prev) => ({
         ...prev,
         userEmail: true,
-        userEmailMessage: "Email is required.",
+        userEmailMessage: languageData["reqEmail"],
       }));
       hasErrors = true;
     } else if (!isValidEmail(user.userEmail)) {
       setErrors((prev) => ({
         ...prev,
         userEmail: true,
-        userEmailMessage: "Invalid email format.",
+        userEmailMessage: languageData["invalidFormat"],
       }));
       hasErrors = true;
     } else {
@@ -75,7 +77,7 @@ const LoginPage = () => {
       setErrors((prev) => ({
         ...prev,
         pin: true,
-        pinMessage: "PIN must be at least 4 digits.",
+        pinMessage: languageData["pinLenMsg"],
       }));
       hasErrors = true;
     } else {
@@ -102,7 +104,7 @@ const LoginPage = () => {
           setPending(false);
           setAlert({
             open: true,
-            message: "Login erfolgreich",
+            message: languageData["loginSuccess"],
             severity: "success",
           });
           router.push("/");
@@ -128,8 +130,7 @@ const LoginPage = () => {
   };
 
   // Language Switch logic
-  const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState("english");
+  const { languageData } = useLanguage();
 
   return (
     <Box
@@ -144,65 +145,7 @@ const LoginPage = () => {
         severity={alert.severity}
         onClose={() => setAlert({ ...alert, open: false })}
       />
-      <Box
-        sx={{
-          margin: "1rem",
-          padding: "0 1rem",
-          height: "4rem",
-          width: "fit-content",
-          backgroundColor: "#00000030",
-          border: "2px solid var(--color-secondary-2)",
-          borderRadius: "8px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          textTransform: "uppercase",
-          position: "relative",
-          color: "white",
-          cursor: "pointer",
-        }}
-        onClick={() => setOpen(!open)}
-      >
-        {lang}
-        <Box
-          sx={{
-            display: open ? "flex" : "none",
-            flexDirection: "column",
-            alignItems: "center",
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            textTransform: "uppercase",
-            borderRadius: "4px",
-            overflow: "hidden",
-            backgroundColor: "#00000030",
-          }}
-        >
-          <Button
-            sx={{
-              padding: "10px",
-              color: "white",
-              width: "100%",
-              borderRadius: "0",
-            }}
-            onClick={() => lang !== "english" && setLang("english")}
-          >
-            english
-          </Button>
-          <Button
-            sx={{
-              padding: "10px",
-              backgroundColor: "#00000030",
-              color: "white",
-              width: "100%",
-              borderRadius: "none",
-            }}
-            onClick={() => lang !== "deutsh" && setLang("deutsh")}
-          >
-            Deutsh
-          </Button>
-        </Box>
-      </Box>
+      <LanguageSwitcher />
       <Box
         sx={{
           display: "flex",
@@ -271,12 +214,12 @@ const LoginPage = () => {
               textAlign: "center",
             }}
           >
-            Login
+            {languageData["label"]}
           </Typography>
 
           <TextField
             name="userEmail"
-            label="Email"
+            label={languageData["email"]}
             variant="filled"
             value={user.userEmail}
             onChange={handleUserChange}
@@ -333,7 +276,7 @@ const LoginPage = () => {
 
           <TextField
             name="pin"
-            label="Passwort"
+            label={languageData["password"]}
             variant="filled"
             type="password"
             value={user.pin}
@@ -407,7 +350,7 @@ const LoginPage = () => {
               },
             }}
           >
-            {pending ? "Logging in..." : "Anmelden"}
+            {pending ? "Logging in..." : languageData["login"]}
           </Button>
 
           <Typography
@@ -418,7 +361,7 @@ const LoginPage = () => {
               href="/forgotPassword"
               style={{ color: "white", textDecoration: "underline" }}
             >
-              Passwort vergessen?
+              {languageData["forgotPassword"]}
             </Link>
           </Typography>
 
@@ -426,12 +369,12 @@ const LoginPage = () => {
             variant="caption"
             sx={{ mt: 2, maxWidth: "400px", color: "#ffffff80" }}
           >
-            Noch keinen Account?{" "}
+            {languageData["loginLabel"]}{" "}
             <Link
               href="/register"
               style={{ color: "white", textDecoration: "underline" }}
             >
-              Registrieren
+              {languageData["register"]}
             </Link>
           </Typography>
         </Box>
@@ -440,4 +383,12 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+const Login = () => {
+  return (
+    <LanguageProvider>
+      <LoginPage />
+    </LanguageProvider>
+  );
+};
+
+export default Login;

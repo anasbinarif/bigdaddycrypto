@@ -15,6 +15,8 @@ import { customAlphabet } from "nanoid";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import AlertBar from "../../../components/customAllert/Alert";
+import { LanguageProvider, useLanguage } from "../LanguageContext";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 const RegisterPage = () => {
   const [pending, setPending] = useState(false);
@@ -172,15 +174,20 @@ const RegisterPage = () => {
     }));
   };
 
+  // Language switch logic
+  const { languageData } = useLanguage();
+  // console.log(languageData);
+
   return (
     <>
+      <LanguageSwitcher />
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
+          height: "calc(100vh - 6rem)",
           backgroundColor: "#111826",
         }}
       >
@@ -241,7 +248,7 @@ const RegisterPage = () => {
               textAlign: "center",
             }}
           >
-            Create an account
+            {languageData["createAccount"]}
           </Typography>
 
           <TextField
@@ -352,13 +359,13 @@ const RegisterPage = () => {
             helperText={
               errors.userEmail
                 ? errors.userEmailMessage
-                : "Deine E-Mail-Adresse."
+                : languageData["emailLabel"]
             }
           />
 
           <TextField
             name="pin"
-            label="Passwort"
+            label={languageData["password"]}
             variant="filled"
             // placeholder="4-8 numbers"
             type="password"
@@ -413,9 +420,7 @@ const RegisterPage = () => {
             required
             error={errors.pin}
             helperText={
-              errors.pin
-                ? errors.pinMessage
-                : "*Passwort should be 8 characters long, have a capital letter, atleast 1 number and a special character"
+              errors.pin ? errors.pinMessage : languageData["passwordLabel"]
             }
           />
 
@@ -436,7 +441,7 @@ const RegisterPage = () => {
                 }}
               />
             }
-            label="Ich habe den Disclaimer gelesen und bin damit einverstanden."
+            label={languageData["disclaimer"]}
             sx={{
               alignItems: "flex-start",
               mb: "1rem",
@@ -470,13 +475,13 @@ const RegisterPage = () => {
               },
             }}
           >
-            {pending ? "Loading..." : "to register"}
+            {pending ? "Loading..." : languageData["register"]}
           </Button>
           <Typography
             variant="caption"
             sx={{ mt: 4, maxWidth: "400px", color: "#ffffff80" }}
           >
-            Already have an account?{" "}
+            {languageData["registerLabel"]}{" "}
             <Link
               href="/login"
               style={{ color: "white", textDecoration: "underline" }}
@@ -490,8 +495,7 @@ const RegisterPage = () => {
           sx={{ mt: 2, maxWidth: "400px", fontSize: "12px" }}
         >
           Disclaimer:
-          <br /> Die hier dargestellten Informationen dienen ausschließlich für
-          persönliche Zwecke und stellen keine Finanzberatung dar.
+          <br /> {languageData["registerDisclaimer"]}
         </Typography>
       </Box>
       <AlertBar
@@ -504,4 +508,12 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+const Register = () => {
+  return (
+    <LanguageProvider>
+      <RegisterPage />
+    </LanguageProvider>
+  );
+};
+
+export default Register;
