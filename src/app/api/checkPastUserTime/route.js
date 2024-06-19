@@ -14,7 +14,7 @@ export async function POST(req) {
         }
 
         if (!user.pastUserAccessTime || !user.pastUser) {
-            return NextResponse.json({ message: "User does not have past user" }, { status: 400 });
+            return NextResponse.json({ message: "User does not have past user" }, { status: 200 });
         }
 
         const now = new Date();
