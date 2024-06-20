@@ -34,6 +34,7 @@ const LanguageSwitcher = () => {
           position: "absolute",
           top: "100%",
           left: 0,
+          zIndex: 10,
           textTransform: "uppercase",
           borderRadius: "4px",
           overflow: "hidden",
