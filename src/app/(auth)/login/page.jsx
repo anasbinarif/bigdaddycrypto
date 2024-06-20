@@ -40,6 +40,9 @@ const LoginPage = () => {
     return emailPattern.test(email);
   };
 
+  // Language Switch logic
+  const { languageData, currentLanguage } = useLanguage();
+
   useEffect(() => {
     if (sessionJotai?.user) {
       router.push("/");
@@ -107,7 +110,7 @@ const LoginPage = () => {
             message: languageData["loginSuccess"],
             severity: "success",
           });
-          router.push("/");
+          router.push(`/${currentLanguage === "english" ? "en" : "de"}`);
         }
       } catch (error) {
         console.log(error);
@@ -128,9 +131,6 @@ const LoginPage = () => {
       [name]: false, // Reset the error state when a field is changed
     }));
   };
-
-  // Language Switch logic
-  const { languageData } = useLanguage();
 
   return (
     <Box

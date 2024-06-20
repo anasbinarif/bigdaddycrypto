@@ -3,7 +3,7 @@ import { Box, TextField, Button, Typography } from "@mui/material";
 import { useLanguage } from "./LanguageContext";
 
 const LanguageSwitcher = () => {
-  const { currentLanguage, switchLanguage, languageData } = useLanguage();
+  const { currentLanguage, switchLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
 
   return (
