@@ -85,48 +85,7 @@ export const importCryptoData = async (cryptoData) => {
   }
 };
 
-const isValidDate = (dateStr) => {
-  const date = new Date(dateStr);
-  return !isNaN(date.getTime());
-};
-
 const BATCH_SIZE = 5000; // Adjust batch size based on performance and timeout constraints
-
-export const importPortfolio = async () => {
-  try {
-    console.log("starting.............");
-    const dataBuffer = await fs.readFile(
-      "C:/Users/anasb/OneDrive/Desktop/upwork/bigdaddycrypto/src/v1_sql/Portfolio_Assets_Transfer.json"
-    );
-    const dataString = dataBuffer.toString();
-    const jsonData = JSON.parse(dataString);
-    console.log("jsonData length:", jsonData[2].data.length);
-
-    let index = 0;
-    while (index < jsonData[2].data.length) {
-      const batchData = jsonData[2].data
-        .slice(index, index + BATCH_SIZE)
-        .map((item) => ({
-          ID: parseInt(item.ID, 10),
-          PortfolioAssetID: parseFloat(item.PortfolioAssetID),
-          Type: item.Type,
-          Date: isValidDate(item.Date) ? new Date(item.Date) : new Date(),
-          PricePerCoin: parseFloat(item.PricePerCoin),
-          Betrag: parseFloat(item.Betrag),
-          Coins: parseFloat(item.Coins),
-        }));
-
-      const results = await PastBuyAndSell.insertMany(batchData);
-      console.log(`Batch ${index / BATCH_SIZE + 1} imported successfully`);
-      index += BATCH_SIZE;
-    }
-
-    console.log("Data import complete.");
-  } catch (e) {
-    console.log("Error importing data:", e);
-    throw e;
-  }
-};
 
 export const getAllTickers = async () => {
   try {

@@ -1,7 +1,7 @@
 "use server";
 
 import { connectToDb } from "../lib/utils";
-import { Assets, Payments, User } from "../lib/models";
+import { Assets, Payments, User, PastUsers, PastPortfolio, PastBuyAndSell } from "../lib/models";
 import Hashids from 'hashids';
 const hashids = new Hashids('this is my salt', 6);
 
@@ -13,9 +13,6 @@ export const getUsers = async () => {
         console.log(e);
     }
 };
-
-
-
 
 export const saveSubscriptionDetails = async (data, userId, plan, planId, billingCycle) => {
     try {
@@ -168,48 +165,159 @@ export async function updateCoinDetails(coinGeckoID) {
 
 
 
+import { promises as fs } from 'fs';
 
-//
-// import { promises as fs } from 'fs';
-// import {Assets} from "../lib/models";
-//
-// const BATCH_SIZE = 50;
-//
-// export const importAssetsRisk = async () => {
-//     try {
-//         console.log("starting.............");
-//         const dataBuffer = await fs.readFile(
-//             "C:/Users/anasb/OneDrive/Desktop/upwork/bigdaddycrypto/src/v1_sql/Assets.json"
-//         );
-//         const dataString = dataBuffer.toString();
-//         const jsonData = JSON.parse(dataString);
-//         console.log("jsonData length:", jsonData[2].data.length);
-//
-//         let index = 0;
-//         while (index < jsonData[2].data.length) {
-//             const batchData = jsonData[2].data
-//                 .slice(index, index + BATCH_SIZE)
-//                 .map((item) => ({
-//                     ID: item.ID,
-//                     Risk: item.Risk || "",
-//                 }));
-//
-//             for (const asset of batchData) {
-//                 await Assets.updateOne(
-//                     { ID: asset.ID },
-//                     { $set: { Risk: asset.Risk } },
-//                     { upsert: true }
-//                 );
-//             }
-//
-//             console.log(`Batch ${index / BATCH_SIZE + 1} imported successfully`);
-//             index += BATCH_SIZE;
-//         }
-//
-//         console.log("Data import complete.");
-//     } catch (e) {
-//         console.log("Error importing data:", e);
-//         throw e;
-//     }
-// };
-//
+const BATCH_SIZE = 500;
+
+export const importPortfolios = async () => {
+    try {
+        console.log("starting.............");
+        await connectToDb();
+
+        const dataBuffer = await fs.readFile(
+            "C:/Users/anasb/OneDrive/Desktop/upwork/bigdaddycrypto/src/v1_sql/Portfolios.json"
+        );
+        const dataString = dataBuffer.toString();
+        const jsonData = JSON.parse(dataString);
+
+        const portfolios = jsonData.find(item => item.type === "table" && item.name === "Portfolios").data;
+
+        console.log("Total portfolios:", portfolios.length);
+
+        for (let i = 0; i < portfolios.length; i += BATCH_SIZE) {
+            const batch = portfolios.slice(i, i + BATCH_SIZE);
+            await processBatch(batch);
+            console.log(`Processed batch ${i / BATCH_SIZE + 1}`);
+        }
+
+        console.log("Data import complete.");
+    } catch (e) {
+        console.log("Error importing data:", e);
+        throw e;
+    }
+};
+
+const processBatch = async (batch) => {
+    const operations = batch.map(async (portfolio) => {
+        const existingUser = await PastUsers.findOne({ Name: portfolio.Name }).exec();
+        if (!existingUser) {
+            await PastUsers.create({
+                EditPIN: portfolio.EditPIN,
+                Name: portfolio.Name,
+                Email: portfolio.Email,
+                PremiumUntil: portfolio.PremiumUntil,
+                Created: portfolio.Created,
+                LastUpdate: portfolio.LastUpdate,
+                UserComment: portfolio.UserComment,
+                MissingCoins: portfolio.MissingCoins,
+                Expectation: portfolio.Expectation,
+                CommentRequested: portfolio.CommentRequested,
+                RequestDate: portfolio.RequestDate
+            });
+        }
+    });
+
+    await Promise.all(operations);
+};
+
+export const importPortfolioAssets = async () => {
+    try {
+        console.log("Starting data import...");
+        await connectToDb();
+
+        const dataBuffer = await fs.readFile(
+            "C:/Users/anasb/OneDrive/Desktop/upwork/bigdaddycrypto/src/v1_sql/Portfolio_Assets.json"
+        );
+        const dataString = dataBuffer.toString();
+        const jsonData = JSON.parse(dataString);
+
+        const portfolios = jsonData.find(item => item.type === "table" && item.name === "Portfolio_Assets").data;
+
+        console.log("Total portfolios:", portfolios.length);
+
+        for (let i = 0; i < portfolios.length; i += BATCH_SIZE) {
+            const batch = portfolios.slice(i, i + BATCH_SIZE);
+            await processBatch2(batch);
+            console.log(`Processed batch ${i / BATCH_SIZE + 1}`);
+        }
+
+        console.log("Data import complete.");
+    } catch (e) {
+        console.log("Error importing data:", e);
+        throw e;
+    }
+};
+
+const processBatch2 = async (batch) => {
+    const operations = batch.map(async (portfolio) => {
+        if (portfolio.PortfolioID && portfolio.ID && portfolio.AssetID) {
+            const existingPortfolio = await PastPortfolio.findOne({ ID: portfolio.ID }).exec();
+            if (!existingPortfolio) {
+                await PastPortfolio.create({
+                    ID: portfolio.ID,
+                    PortfolioID: portfolio.PortfolioID,
+                    AssetID: portfolio.AssetID,
+                    Holdings: portfolio.Holdings || 0.0,
+                    avgPrice: portfolio.avgPrice || 0.0,
+                    totalInvest: portfolio.totalInvest || 0.0,
+                    totalSold: portfolio.totalSold || 0.0,
+                    Relevanz: portfolio.Relevanz || "",
+                    RelevanzComment: portfolio.RelevanzComment || "",
+                    DCA: portfolio.DCA || "",
+                    DCAComment: portfolio.DCAComment || "",
+                    Gewichtung: portfolio.Gewichtung || "",
+                    GewichtungComment: portfolio.GewichtungComment || ""
+                });
+            }
+        }
+    });
+
+    await Promise.all(operations);
+};
+
+const isValidDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return !isNaN(date.getTime());
+};
+
+export const importPortfolioTransfer = async () => {
+    try {
+        console.log("starting.............transfer122");
+        await connectToDb();
+
+        const dataBuffer = await fs.readFile(
+            "C:/Users/anasb/OneDrive/Desktop/upwork/bigdaddycrypto/src/v1_sql/Portfolio_Assets_Transfer.json"
+        );
+        const dataString = dataBuffer.toString();
+        const jsonData = JSON.parse(dataString);
+        console.log("jsonData length:", jsonData[2].data.length);
+
+        let index = 0;
+        while (index < jsonData[2].data.length) {
+            const batchData = jsonData[2].data
+                .slice(index, index + BATCH_SIZE)
+                .map((item) => ({
+                    ID: parseInt(item.ID, 10),
+                    PortfolioAssetID: parseFloat(item.PortfolioAssetID),
+                    Type: item.Type,
+                    Date: isValidDate(item.Date) ? new Date(item.Date) : new Date(),
+                    PricePerCoin: isNaN(parseFloat(item.PricePerCoin)) ? 0 : parseFloat(item.PricePerCoin),
+                    Betrag: isNaN(parseFloat(item.Betrag)) ? 0 : parseFloat(item.Betrag),
+                    Coins: isNaN(parseFloat(item.Coins)) ? 0 : parseFloat(item.Coins),
+                }))
+                .filter(item => item.Type !== null && item.Type !== '');
+
+            const results = await PastBuyAndSell.insertMany(batchData);
+            console.log(`Batch ${index / BATCH_SIZE + 1} imported successfully`);
+            index += BATCH_SIZE;
+        }
+
+        console.log("Data import complete.");
+    } catch (e) {
+        console.log("Error importing data:", e);
+        throw e;
+    }
+};
+
+
+
