@@ -409,7 +409,8 @@ const pastPortfolioSchema = new mongoose.Schema({
 const pastBuyAndSellSchema = new mongoose.Schema({
     ID: {
         type: Number,
-        required: true
+        required: true,
+        unique: true,
     },
     PortfolioAssetID: {
         type: Number,

@@ -99,7 +99,11 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         });
         const timeCheckRes = await timeCheck.json()
         console.log("timeCheckRestimeCheckRestimeCheckRes", timeCheckRes);
-        setHoursRemaining(timeCheckRes.hoursRemaining || null);
+        if (timeCheckRes?.userPlan) {
+          setHoursRemaining(null);
+        } else {
+          setHoursRemaining(timeCheckRes.hoursRemaining || null);
+        }
       }
     }
     fetchPastUserTime();

@@ -1,5 +1,5 @@
 import { connectToDb } from "../../../lib/utils";
-import { User } from "../../../lib/models";
+import { User, UserPortfolio } from "../../../lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -36,10 +36,14 @@ export async function POST(req) {
             });
             const userPlan = await response.json();
             console.log("what scene g", userPlan);
-            if (userPlan?.plan == "free") {
-                
+            if (userPlan?.plan != "free") {
+                return NextResponse.json({ message: `User have got the ${userPlan?.plan} plan`, userPlan: userPlan?.plan }, { status: 200 });
             }
-            return NextResponse.json({ message: "Past user access has expired", hoursRemaining: 0 }, { status: 200 });
+            else{
+                await UserPortfolio.updateOne({ userId: userID }, { $set: { assets: [] } }).exec();
+                return NextResponse.json({ message: "Past user access has expired and portfolio assets have been deleted" }, { status: 200 });
+            }
+            return NextResponse.json({ message: "Past user access has expired" }, { status: 200 });
         } else {
             return NextResponse.json({ message: "Past user access is still valid", hoursRemaining: 48 - hoursPassed }, { status: 200 });
         }
