@@ -18,7 +18,11 @@
     "admin": "Admin",
     "portfolioId": "ID",
     "logout": "Logout",
-    "pricing": "Get Started"
+    "pricing": "Get Started",
+    "changePassword": "Change Password",
+    "changeText": "Confirm old password and new password",
+    "confirm": "Confirm old password",
+    "new": "New password"
   },
   "bewertungCard": {
     "title": "Evaluation",

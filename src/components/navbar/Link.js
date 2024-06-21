@@ -5,6 +5,13 @@ import {
   Typography,
   MenuItem,
   CircularProgress,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  TextField,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { signOut, useSession } from "next-auth/react";
@@ -69,6 +76,17 @@ const NavbarLink = ({ mobileView, handleClose }) => {
     // handleClose();
   };
   // console.log(sessionJotai.user);
+
+  // Change Password logic
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   return (
     <>
@@ -222,6 +240,15 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                 </Typography>
                 <LanguageSwitcher />
                 <CurrencySwitcher />
+                <Button
+                  onClick={handleOpenDialog}
+                  sx={{
+                    whiteSpace: "nowrap",
+                    color: "var(--color-secondary)",
+                  }}
+                >
+                  {t("changePassword")}
+                </Button>
                 <IconButton
                   onClick={handleLogoutFun}
                   color="inherit"
@@ -274,6 +301,98 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           <CircularProgress color="inherit" />
         </Box>
       )}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullScreen={fullScreen}
+        PaperProps={{
+          component: "form",
+          sx: {
+            width: { xs: "100%", sm: "90%", md: "70%" },
+            maxWidth: "600px",
+            backgroundColor: "#111826",
+            color: "white",
+            // padding: "1rem",
+          },
+        }}
+      >
+        <DialogTitle>{t("changePassword")}</DialogTitle>
+        <DialogContent
+          sx={{
+            "& .MuiTypography-root": { color: "white" },
+            "& .MuiFormControl-root": {
+              "& .MuiInputBase-root": {
+                "&.MuiInput-root": {
+                  borderRadius: "8px",
+                  padding: "5px 10px",
+                  backgroundColor: "#202530",
+                  border: "1px solid #ffffff80",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#ffffff",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    // borderColor: "#ffffff",
+                  },
+                  "&::after": {
+                    borderBottom: "none",
+                  },
+                },
+              },
+            },
+            "& .MuiFormLabel-root": {
+              zIndex: "100",
+              top: "5px",
+              left: "10px",
+              color: "#ffffff80",
+              "&.MuiInputLabel-root.Mui-focused": {
+                transform: "translate(0, -10px) scale(0.75)",
+                color: "var(--color-secondary)",
+              },
+            },
+          }}
+        >
+          <DialogContentText>{t("changeText")}</DialogContentText>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="Name"
+            name="Name"
+            label={t("confirm")}
+            type="text"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            required
+            margin="dense"
+            id="EditPIN"
+            name="EditPIN"
+            label={t("new")}
+            type="password"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions
+          sx={{
+            "& .MuiButtonBase-root": {
+              backgroundColor: "var(--color-secondary-2)",
+              color: "#111826",
+              margin: "1rem",
+            },
+          }}
+        >
+          <Button>{t("changePassword")}</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

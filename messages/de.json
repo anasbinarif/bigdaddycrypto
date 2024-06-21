@@ -18,7 +18,11 @@
     "admin": "Admin",
     "portfolioId": "ID",
     "logout": "Abmelden",
-    "pricing": "Member werden"
+    "pricing": "Member werden",
+    "changePassword": "Passwort ändern",
+    "changeText": "Altes Passwort und neues Passwort bestätigen",
+    "confirm": "Altes Passwort bestätigen",
+    "new": "Neues Passwort"
   },
   "bewertungCard": {
     "title": "Bewertung",
