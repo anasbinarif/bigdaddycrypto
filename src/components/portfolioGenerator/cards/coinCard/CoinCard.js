@@ -95,7 +95,7 @@ const CoinCard = ({
   const [filterTag, setFilterTag] = useState("");
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -129,7 +129,6 @@ const CoinCard = ({
     }
   };
 
-
   const handleDoubleClick = async () => {
     const userId = sessionJotai?.user.id;
     const timeCheck = await fetch("/api/checkPastUserTime", {
@@ -139,15 +138,17 @@ const CoinCard = ({
       },
       body: JSON.stringify({ userID: userId }),
       cache: "no-store",
-    }); 
-    const timeCheckRes = await timeCheck.json()
+    });
+    const timeCheckRes = await timeCheck.json();
     if (
       !timeCheckRes.hoursRemaining &&
       sessionJotai?.user?.subscriptionPlan === "free" &&
       assetsLeangth >= 10 &&
       !selected
     ) {
-      setError("If you want to add more coins to your portfolio, please subscribe to one of our plans.")
+      setError(
+        "If you want to add more coins to your portfolio, please subscribe to one of our plans."
+      );
       setAlertOpen(true);
       return;
     }
@@ -169,7 +170,6 @@ const CoinCard = ({
     setLoading(false); // Set loading to false
     setOpen(false);
   };
-  
 
   useEffect(() => {
     const rank = BottomRanking;
@@ -209,17 +209,22 @@ const CoinCard = ({
     setLoading(true);
     // console.log("handleFavouriteClick", coin);
     if (sessionJotai?.user?.subscriptionPlan === "free") {
-      setError("If you want to add coins to Fav, please subscribe to one of our plans.")
+      setError(
+        "If you want to add coins to Fav, please subscribe to one of our plans."
+      );
       setAlertOpen(true);
       setLoading(false); // Reset loading state here
       return;
     }
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = coin?.CoinGeckoID;
+    const token = sessionJotai?.user.accessToken;
+
     const response = await fetch("/api/addCoinToFavorites", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ userId, CoinGeckoID }),
     });

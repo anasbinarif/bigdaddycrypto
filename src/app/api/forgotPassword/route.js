@@ -6,47 +6,50 @@ import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 export async function POST(req, res) {
-    const { email } = await req.json();
+  const { email } = await req.json();
 
-    try {
-        await connectToDb();
-        const user = await User.findOne({ email });
+  try {
+    await connectToDb();
+    const user = await User.findOne({ email });
 
-        if (!user) {
-            return NextResponse.json({ error: 'User not found' }, { status: 404 })
-        }
-
-        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-        });
-
-        const resetUrl = `${process.env.NEXT_PUBLIC_URI}/resetPassword?token=${token}&email=${email}`;
-
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_SERVER_USER,
-                pass: process.env.EMAIL_SERVER_PASSWORD,
-            },
-        });
-
-        await transporter.sendMail({
-            from: process.env.EMAIL_FROM,
-            to: email,
-            subject: "Password Reset Request",
-            text: `Please use the following link to reset your password: ${resetUrl}`,
-            html: html(resetUrl),
-        });
-
-        return NextResponse.json({ message: 'Reset link sent' }, { status: 200 })
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-};
+
+    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    const resetUrl = `${process.env.NEXT_PUBLIC_URI}/resetPassword?token=${token}&email=${email}`;
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_SERVER_USER,
+        pass: process.env.EMAIL_SERVER_PASSWORD,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: "Password Reset Request",
+      text: `Please use the following link to reset your password: ${resetUrl}`,
+      html: html(resetUrl),
+    });
+
+    return NextResponse.json({ message: "Reset link sent" }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
 
 function html(resetUrl) {
-    return `
+  return `
         <body style="background: #f9f9f9;">
             <table width="100%" border="0" cellspacing="20" cellpadding="0"
                 style="background: #fff; max-width: 600px; margin: auto; border-radius: 10px;">

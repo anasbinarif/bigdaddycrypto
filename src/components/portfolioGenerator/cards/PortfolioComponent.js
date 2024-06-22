@@ -127,6 +127,7 @@ const PortfolioComponent = ({
     // const portfolioId = portfolio._id;
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = selectedAsset.CoinGeckoID;
+    const token = sessionJotai?.user.accessToken;
     console.log("testing delete", CoinGeckoID, userId);
 
     try {
@@ -136,6 +137,7 @@ const PortfolioComponent = ({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userId, CoinGeckoID }),
       });
@@ -247,10 +249,12 @@ const PortfolioComponent = ({
     console.log("FavouriteClick", asset);
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = asset?.CoinGeckoID;
+    const token = sessionJotai?.user.accessToken;
     const response = await fetch("/api/addCoinToFavorites", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ userId, CoinGeckoID }),
     });
@@ -313,7 +317,7 @@ const PortfolioComponent = ({
       }
     });
 
-    console.log("portfolio-rows", rows);
+    // console.log("portfolio-rows", rows);
 
     const csvContent = [
       headers.join(","),

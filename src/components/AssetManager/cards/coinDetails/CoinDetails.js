@@ -259,10 +259,12 @@ const CoinDetails = (props) => {
         DCA: financialSummary.avgPurchasePrice || 0,
       };
       try {
+        const token = sessionJotai?.user.accessToken;
         const response = await fetch("/api/addBuyAndSell", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             userID,
@@ -313,10 +315,12 @@ const CoinDetails = (props) => {
         DCA: financialSummary.avgPurchasePrice || 0,
       };
       try {
+        const token = sessionJotai?.user.accessToken;
         const response = await fetch("/api/addBuyAndSell", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             userID,
