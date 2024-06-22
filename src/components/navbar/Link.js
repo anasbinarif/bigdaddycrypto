@@ -12,6 +12,8 @@ import {
   DialogContentText,
   DialogActions,
   TextField,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { signOut, useSession } from "next-auth/react";
@@ -38,6 +40,8 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   const t = useTranslations("navbar");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     const updateSessionWithSubscription = async () => {
