@@ -123,10 +123,77 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           ))}
 
         {mobileView ? (
-          <MenuItem onClick={handleLogoutFun}>
-            <LogoutIcon />
-            <Typography>{t("logout")}</Typography>
-          </MenuItem>
+          <>
+            <Box
+              sx={{
+                padding: "10px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                minWidth: "150px",
+                transition: "all 0.2s ease-in-out",
+              }}
+            >
+              <Typography variant="body1">
+                {t("portfolioId")}: {session?.user?.username}
+              </Typography>
+              <Typography
+                sx={{
+                  color: "var(--color-secondary)",
+                  textTransform: "uppercase",
+                  // ml: "10px",
+                }}
+              >
+                {sessionJotai?.user?.subscriptionPlan}
+              </Typography>
+              <LanguageSwitcher />
+              <CurrencySwitcher />
+              <Button
+                onClick={handleOpenDialog}
+                sx={{
+                  whiteSpace: "nowrap",
+                  color: "var(--color-secondary)",
+                }}
+              >
+                {t("changePassword")}
+              </Button>
+              <IconButton
+                onClick={handleLogoutFun}
+                color="inherit"
+                sx={{
+                  p: 0,
+                  justifyContent: "flex-start",
+                  "& .MuiBox-root": {
+                    flexDirection: "row !important",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    bgcolor: "#202530",
+                    p: "0.25em 0.7em",
+                    borderRadius: "50px",
+                    border: "1px solid var(--color-secondary)",
+                    "&:hover": {
+                      backgroundColor: "var(--color-secondary-2)",
+                      "& .MuiTypography-root, & .MuiSvgIcon-root": {
+                        color: "#000000",
+                      },
+                    },
+
+                    "& .MuiTypography-root, & .MuiSvgIcon-root": {
+                      color: "var(--color-secondary)",
+                    },
+                  }}
+                >
+                  <LogoutIcon />
+                  <Typography>{t("logout")}</Typography>
+                </Box>
+              </IconButton>
+            </Box>
+          </>
         ) : (
           <>
             <Link

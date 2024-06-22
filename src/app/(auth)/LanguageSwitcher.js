@@ -47,6 +47,7 @@ const LanguageSwitcher = () => {
             color: "white",
             width: "100%",
             borderRadius: "0",
+            fontSize: "inherit",
           }}
           onClick={() =>
             currentLanguage !== "english" && switchLanguage("english")
@@ -61,6 +62,7 @@ const LanguageSwitcher = () => {
             color: "white",
             width: "100%",
             borderRadius: "none",
+            fontSize: "inherit",
           }}
           onClick={() =>
             currentLanguage !== "deutsch" && switchLanguage("deutsch")
