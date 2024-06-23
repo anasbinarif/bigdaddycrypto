@@ -269,6 +269,14 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               >
                 {t("media")}
               </Link>
+              <Link
+                style={{ marginRight: "15px", fontFamily: "inherit" }}
+                href="/dashboard"
+                className={styles.nav__link}
+              >
+                Dashboard
+              </Link>
+
               <Box>
                 <Link
                   style={{ marginRight: "0px", fontFamily: "inherit" }}

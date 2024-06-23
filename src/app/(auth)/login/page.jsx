@@ -157,6 +157,7 @@ const LoginPage = () => {
         }}
       >
         <Box
+          component="form"
           sx={{
             padding: "30px",
             maxWidth: "400px",
@@ -336,6 +337,7 @@ const LoginPage = () => {
             variant="contained"
             color="primary"
             fullWidth
+            type="submit"
             onClick={handleLogin}
             disabled={pending}
             sx={{

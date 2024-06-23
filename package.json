@@ -31,6 +31,11 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.3",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-chart-financial": "^0.2.1",
+    "chartjs-plugin-annotation": "^3.0.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "chartjs-plugin-zoom": "^2.0.1",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
@@ -57,9 +62,12 @@
     "react-dom": "^18",
     "react-google-charts": "^4.0.1",
     "react-select": "^5.8.0",
+    "react-to-pdf": "^1.0.1",
+    "react-window": "^1.8.10",
     "resend": "^3.3.0",
     "sass": "^1.75.0",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
