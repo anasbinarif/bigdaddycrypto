@@ -26,7 +26,7 @@ import ThemeSettings from "../ThemeSettingsButton";
 import FullScreenModal from "../FullScreenModal";
 import { StyledText } from "../StyledElements";
 
-function MainPage() {
+function MainPage({ expanded }) {
   const [filteredMcGroup, setFilteredMCGroup] = useState([]);
   const [filteredHaupt, setFilteredHaupt] = useState([]);
   const [filteredRanges, setFilteredRanges] = useState([]);
@@ -575,7 +575,9 @@ function MainPage() {
     );
   }, [avgData]);
 
-  return (
+  return !expanded ? (
+    <div>Click to expand</div>
+  ) : (
     <div
       style={{
         background: theme.colors.mainBackgroundColor,

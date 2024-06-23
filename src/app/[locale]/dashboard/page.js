@@ -61,7 +61,12 @@ const Dashboard = () => {
       <LayoutWrapper>
         <SessionProvider>
           <Box
-            sx={{ display: "flex", padding: "8rem 3rem", position: "relative" }}
+            sx={{
+              display: "flex",
+              padding: "8rem 3rem",
+              position: "relative",
+              height: "calc(100vh - 4rem)",
+            }}
           >
             <Box
               sx={{
@@ -127,7 +132,7 @@ const Dashboard = () => {
                     },
                   }}
                 ></Box>
-                <Dash1 />
+                <Dash1 expanded={expandDropdown[1]} />
               </Box>
             </Box>
             <Box
@@ -194,7 +199,7 @@ const Dashboard = () => {
                     },
                   }}
                 ></Box>
-                <Dash2 />
+                <Dash2 expanded={expandDropdown[2]} />
               </Box>
             </Box>
           </Box>

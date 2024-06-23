@@ -32,7 +32,7 @@ import ThemeSettings from "../ThemeSettingsButton";
 import FullScreenModal from "../FullScreenModal";
 import { StyledText } from "../StyledElements";
 
-function MainPage() {
+function MainPage({ expanded }) {
   const [filteredMcGroup, setFilteredMCGroup] = useState([]);
   const [filteredHaupt, setFilteredHaupt] = useState([]);
   const [filteredCoins, setFilteredCoins] = useState([]);
@@ -561,7 +561,9 @@ function MainPage() {
     // }
   }, [filteredData]);
 
-  return (
+  return !expanded ? (
+    <div>Click to Expand</div>
+  ) : (
     <div
       style={{
         background: "#111826",
