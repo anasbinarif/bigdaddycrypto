@@ -274,7 +274,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 href="/dashboard"
                 className={styles.nav__link}
               >
-                Dashboard
+                Dashboards
               </Link>
 
               <Box>

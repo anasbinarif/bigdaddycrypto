@@ -21,9 +21,13 @@ const categoryColors = {
   "Tokenisierung/ RWA": "#ff5aac",
 };
 
-const DonutChart = ({ portfolioCalculations, loadingPortfolio }) => {
+const DonutChart = ({
+  preCalcPort,
+  portfolioCalculations,
+  loadingPortfolio,
+}) => {
   const canvasRef = useRef(null);
-  const [portfolio] = useAtom(portfolioAtom, { assets: [] });
+  const [portfolio] = preCalcPort || useAtom(portfolioAtom, { assets: [] });
   const [securityScore, setSecurityScore] = useState(0);
   const [tooltip, setTooltip] = useState({
     visible: false,

@@ -208,7 +208,7 @@ export const storeUserPortfolioCoin = async (userId, coin, token) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ userId, coin: newCoin }),
   });
@@ -235,6 +235,8 @@ export const getUserPortfolio = async (userId) => {
     cache: "no-store",
   });
 
+  // const msg = await res.json();
+  // console.log(userId, msg);
   if (!res.ok) {
     console.log("Failed to fetch data");
     return null;
@@ -768,7 +770,6 @@ export const reverseCategoriesDisplay = {
   "Tokenisierung/ RWA": "nft",
 };
 
-
 export const calculateScore = (portfolioData) => {
   const totalCategories = 9;
   const maxAssetsCount = 20;
@@ -777,13 +778,13 @@ export const calculateScore = (portfolioData) => {
 
   // Count the occurrences of each category in the portfolio
   portfolioData.forEach((item) => {
-      item.Category.forEach((category) => {
-          if (!categoryCounts[category]) {
-              categoryCounts[category] = 0;
-          }
-          categoryCounts[category]++;
-      });
-      selectedAssetsCount++;
+    item.Category.forEach((category) => {
+      if (!categoryCounts[category]) {
+        categoryCounts[category] = 0;
+      }
+      categoryCounts[category]++;
+    });
+    selectedAssetsCount++;
   });
 
   let score = 0;
@@ -797,68 +798,86 @@ export const calculateScore = (portfolioData) => {
 
   // Calculate the score based on category distribution
   Object.keys(categoryCounts).forEach((category) => {
-      let assetCount = categoryCounts[category];
-      let categoryPercentage = (assetCount / selectedAssetsCount) * 100;
-      totalCategoryPercentage += categoryPercentage;
+    let assetCount = categoryCounts[category];
+    let categoryPercentage = (assetCount / selectedAssetsCount) * 100;
+    totalCategoryPercentage += categoryPercentage;
 
-      if (categoryPercentage > maxCategoryPercentage) {
-          maxCategoryPercentage = categoryPercentage;
-      }
+    if (categoryPercentage > maxCategoryPercentage) {
+      maxCategoryPercentage = categoryPercentage;
+    }
 
-      if (assetCount >= 2) {
-          score += (100 / totalCategories) * 0.9;
-          scoreFactor_CategoryTwice += (100 / totalCategories) * 0.1;
-          scoreFactor_Category += (100 / totalCategories) * 0.1;
-      } else {
-          score += (100 / totalCategories) * 0.8;
-          scoreFactor_Category += (100 / totalCategories) * 0.1;
-      }
+    if (assetCount >= 2) {
+      score += (100 / totalCategories) * 0.9;
+      scoreFactor_CategoryTwice += (100 / totalCategories) * 0.1;
+      scoreFactor_Category += (100 / totalCategories) * 0.1;
+    } else {
+      score += (100 / totalCategories) * 0.8;
+      scoreFactor_Category += (100 / totalCategories) * 0.1;
+    }
   });
 
   // Calculate the score based on the number of selected assets
-  score += Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
-  scoreFactor_CoinCount = Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
+  score +=
+    Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
+  scoreFactor_CoinCount =
+    Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
 
   let averageCategoryAllocation = 100 / Object.keys(categoryCounts).length;
   let maxCategoryAllocation = 0;
   let minCategoryAllocation = 100;
 
   for (let category in categoryCounts) {
-      let allocation = (categoryCounts[category] / selectedAssetsCount) * 100;
-      if (allocation > maxCategoryAllocation) {
-          maxCategoryAllocation = allocation;
-      }
-      if (allocation < minCategoryAllocation) {
-          minCategoryAllocation = allocation;
-      }
+    let allocation = (categoryCounts[category] / selectedAssetsCount) * 100;
+    if (allocation > maxCategoryAllocation) {
+      maxCategoryAllocation = allocation;
+    }
+    if (allocation < minCategoryAllocation) {
+      minCategoryAllocation = allocation;
+    }
   }
 
   // Calculate allocation score
-  let alloScore = Math.min(10, Math.max(0, 15 - (maxCategoryAllocation - averageCategoryAllocation) / 2.5));
-  let alloFactor = ((80 + (alloScore * 2)) / 100);
+  let alloScore = Math.min(
+    10,
+    Math.max(0, 15 - (maxCategoryAllocation - averageCategoryAllocation) / 2.5)
+  );
+  let alloFactor = (80 + alloScore * 2) / 100;
 
-  let maxCategoryAllocationDiff = 100 / averageCategoryAllocation * maxCategoryAllocation;
-  let maxSF = Math.min(1, Math.max(0.8945, 1 - (maxCategoryAllocationDiff - 200) / (600 - 200) * 0.1));
-  let minCategoryAllocationDiff = 100 / averageCategoryAllocation * (averageCategoryAllocation - minCategoryAllocation);
-  let minSF = Math.min(1, Math.max(0.8945, 1 - (minCategoryAllocationDiff - 50) / (75 - 50) * 0.1));
+  let maxCategoryAllocationDiff =
+    (100 / averageCategoryAllocation) * maxCategoryAllocation;
+  let maxSF = Math.min(
+    1,
+    Math.max(
+      0.8945,
+      1 - ((maxCategoryAllocationDiff - 200) / (600 - 200)) * 0.1
+    )
+  );
+  let minCategoryAllocationDiff =
+    (100 / averageCategoryAllocation) *
+    (averageCategoryAllocation - minCategoryAllocation);
+  let minSF = Math.min(
+    1,
+    Math.max(0.8945, 1 - ((minCategoryAllocationDiff - 50) / (75 - 50)) * 0.1)
+  );
 
-  scoreFactor_Allocation = (minSF * maxSF) * 50 - 40;
+  scoreFactor_Allocation = minSF * maxSF * 50 - 40;
 
   // Calculate BTC allocation fix
   let totalAmount = 0;
   portfolioData.forEach((item) => {
-      let value = parseFloat(item.amount);
-      if (!isNaN(value)) {
-          totalAmount += value;
-      }
+    let value = parseFloat(item.amount);
+    if (!isNaN(value)) {
+      totalAmount += value;
+    }
   });
 
-  let btcAmount = portfolioData.find(item => item.coin === 'BTC')?.amount || 0;
-  let btcAllo = 100 / totalAmount * btcAmount;
+  let btcAmount =
+    portfolioData.find((item) => item.coin === "BTC")?.amount || 0;
+  let btcAllo = (100 / totalAmount) * btcAmount;
 
   if (btcAllo >= maxCategoryAllocation * 0.8) {
-      maxSF = (maxSF + 1.5) / 2.5;
-      minSF = (minSF + 1.5) / 2.5;
+    maxSF = (maxSF + 1.5) / 2.5;
+    minSF = (minSF + 1.5) / 2.5;
   }
 
   // Final score calculation
@@ -866,22 +885,22 @@ export const calculateScore = (portfolioData) => {
   score = Math.min(100, score);
 
   if (totalCategories > Object.keys(categoryCounts).length) {
-      score = score * 0.9;
-      scoreFactor_CategoryMissing = 0;
+    score = score * 0.9;
+    scoreFactor_CategoryMissing = 0;
   } else {
-      scoreFactor_CategoryMissing = 10;
+    scoreFactor_CategoryMissing = 10;
   }
 
   if (isNaN(score)) {
-      score = 0;
+    score = 0;
   }
 
   return {
-      score: score.toFixed(1),
-      scoreFactor_Category: scoreFactor_Category.toFixed(0),
-      scoreFactor_CategoryTwice: scoreFactor_CategoryTwice.toFixed(0),
-      scoreFactor_CategoryMissing: scoreFactor_CategoryMissing.toFixed(0),
-      scoreFactor_Allocation: scoreFactor_Allocation.toFixed(0),
-      scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0)
+    score: score.toFixed(1),
+    scoreFactor_Category: scoreFactor_Category.toFixed(0),
+    scoreFactor_CategoryTwice: scoreFactor_CategoryTwice.toFixed(0),
+    scoreFactor_CategoryMissing: scoreFactor_CategoryMissing.toFixed(0),
+    scoreFactor_Allocation: scoreFactor_Allocation.toFixed(0),
+    scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0),
   };
 };

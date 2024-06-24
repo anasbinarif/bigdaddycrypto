@@ -284,8 +284,8 @@ const Dashboard = () => {
                       transition: "all 300ms ease-in-out",
                       // cursor: "pointer",
                       display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      justifyContent: "flex-start",
+                      alignItems: "flex-end",
                       padding: "2rem",
                       position: "relative",
 
@@ -306,7 +306,7 @@ const Dashboard = () => {
                         fontSize: "1rem",
                         fontWeight: "bold",
                         // opacity: "0",
-                        transition: "all 300ms ease-in-out",
+                        transition: "all 700ms ease-in-out",
                         // position: "absolute",
                         // top: "90%",
                         left: 20,
@@ -324,6 +324,9 @@ const Dashboard = () => {
 
                       "&:hover": {
                         backgroundColor: "#000000ee",
+
+                        justifyContent: "center",
+                        alignItems: "center",
 
                         "& > .MuiButton-root": {
                           opacity: 1,

@@ -150,8 +150,8 @@ const calculateDotColor = (name, score, portfolio) => {
   }
 };
 
-function BewertungCard() {
-  const [portfolio] = useAtom(portfolioAtom);
+function BewertungCard({ preCalcPort }) {
+  const [portfolio] = preCalcPort || useAtom(portfolioAtom);
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
   const [potential, setPotential] = useState({ avgMin: 0, avgMax: 0 });
   const [hypeColorScore, setHypeColorScore] = useState({

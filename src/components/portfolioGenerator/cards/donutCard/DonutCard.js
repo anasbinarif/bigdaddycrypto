@@ -8,23 +8,31 @@ import { getUserPortfolio } from "../../../../lib/data";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import DonutLegendSkeleton from "../../../portfolioGenerator/cards/donutCard/DonutLegendSkeleton";
 
-export const DonutCard = () => {
-  const [portfolio] = useAtom(portfolioAtom);
+export const DonutCard = ({ preCalcPort, preCalcCalculations }) => {
+  const [portfolio] = preCalcPort || useAtom(portfolioAtom);
   const [loadingPortfolio, setLoadingPortfolio] = useState(false);
   const [portfolioCalculations, setPortfolioCalculations] = useState({});
   const [sessionJotai] = useAtom(sessionAtom);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (sessionJotai?.user) {
-        const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+      if (sessionJotai?.user && !preCalcPort) {
+        const userPortfolio = await getUserPortfolio(
+          sessionJotai?.user.id || id
+        );
         setPortfolioCalculations(userPortfolio?.calculation);
         console.log("userPortfoliouserPortfoliouserPortfolio", userPortfolio);
+        setLoadingPortfolio(true);
+      } else {
+        setPortfolioCalculations(preCalcCalculations);
         setLoadingPortfolio(true);
       }
     };
     fetchData();
   }, [sessionJotai?.user.id, portfolio]);
+
+  // console.log(preCalcCalculations);
+
   return (
     <Box
       sx={{
@@ -65,6 +73,7 @@ export const DonutCard = () => {
             <DonutLegendSkeleton />
           )}
           <DonutChart
+            preCalcPort={preCalcPort}
             portfolioCalculations={portfolioCalculations}
             loadingPortfolio={loadingPortfolio}
           />

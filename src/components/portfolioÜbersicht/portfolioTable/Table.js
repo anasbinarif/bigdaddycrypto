@@ -245,8 +245,8 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const EnhancedTable = () => {
-  const [portfolio] = useAtom(portfolioAtom);
+const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
+  const [portfolio] = preCalcPort || useAtom(portfolioAtom);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("asset");
   const [sortedData, setSortedData] = useState([]);

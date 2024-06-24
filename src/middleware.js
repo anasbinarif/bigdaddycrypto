@@ -23,7 +23,8 @@ export const config = {
     "/pricingPlans",
     "/portfolioOverview",
     "/verifyPage",
-    "/dashboard"
+    "/dashboard",
+    "/shared",
     // "/((?!api|_next/static|_next/image|favicon.ico|apple-touch-icon.png|favicon.svg|images/books|icons|manifest).*)",
   ],
 };

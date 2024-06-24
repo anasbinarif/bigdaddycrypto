@@ -33,8 +33,11 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
+import { useRouter, usePathname } from "next/navigation";
 
 const NavbarLink = ({ mobileView, handleClose }) => {
+  const router = useRouter();
+  const path = usePathname();
   const { data: session, status } = useSession();
   const [sessionJotai, setSession] = useAtom(sessionAtom);
   const t = useTranslations("navbar");
@@ -90,6 +93,29 @@ const NavbarLink = ({ mobileView, handleClose }) => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const generateLink = async () => {
+    try {
+      const res = await fetch("/api/makeShareLink", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: sessionJotai?.user.id }),
+      });
+
+      const resData = await res.json();
+      console.log(resData, window.location.hostname);
+      const str = `${window.location.hostname}${
+        window.location.hostname === "localhost" ? ":3000" : ""
+      }/en/shared?id=${sessionJotai?.user.id}&key=${resData.data}`;
+
+      console.log(str);
+      await navigator.clipboard.writeText(str);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -221,6 +247,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   backgroundColor: "var(--color-secondary-2)",
                 },
               }}
+              onClick={generateLink}
             >
               <FontAwesomeIcon icon={faShareAlt} />
             </Box>

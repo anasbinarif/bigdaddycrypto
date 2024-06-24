@@ -1,11 +1,15 @@
 import { UserPortfolio, Assets } from "../../../lib/models";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 export async function POST(req) {
   const { userId } = await req.json();
+  const objectUserId = new mongoose.Types.ObjectId(userId);
+  console.log(userId);
 
   try {
-    const portfolio = await UserPortfolio.findOne({ userId: userId });
+    const portfolio = await UserPortfolio.findOne({ userId: objectUserId });
+    // console.log(portfolio);
     if (!portfolio) {
       console.log("No portfolio found");
       return NextResponse.json(
