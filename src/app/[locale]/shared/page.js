@@ -31,7 +31,7 @@ import {
 } from "../../../lib/data";
 import { useTheme } from "@mui/material/styles";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { DonutCard } from "../../../components/portfolioGenerator/cards/donutCard/DonutCard";
@@ -43,20 +43,28 @@ import GridExample from "../../../components/portfolioÜbersicht/portfolioTable/
 const SharedPage = () => {
   const t = useTranslations("Overview");
   const theme = useTheme();
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const path = usePathname();
 
   const id = searchParams.get("id");
   const secretStr = searchParams.get("key");
   console.log(id, secretStr);
 
   const [width, setWidth] = useState(0);
+  const [currentLanguage, setCurrentLanguage] = useState("");
+  const [open, setOpen] = useState(false);
   const [portfolio, setPortfolio] = useState({});
   const [portfolioCalculations, setPortfolioCalculations] = useState({});
   //   const [order, setOrder] = useState("asc");
   //   const [orderBy, setOrderBy] = useState("asset");
   const [sortedData, setSortedData] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
+    if (path.split("/")[1] === "en") setCurrentLanguage("english");
+    else setCurrentLanguage("deutsch");
+
     const handleResize = () => {
       setWidth(window.innerWidth);
     };
@@ -88,12 +96,13 @@ const SharedPage = () => {
         setPortfolioCalculations(dataResp?.calculation);
       } catch (err) {
         console.log(err);
+        setError("Unauthorized Access");
       }
     };
 
     if (id && secretStr) {
       validateIdAndKey(id, secretStr);
-    }
+    } else setError("No user found");
   }, [id, secretStr]);
 
   useEffect(() => {
@@ -140,65 +149,156 @@ const SharedPage = () => {
       setSortedData(mergedData);
     }
   }, [portfolio]);
-  const assetsLeangth = portfolio?.assets?.length;
-
   console.log(sortedData);
+
+  const switchLanguage = (lang) => {
+    if (lang === "english") {
+      router.push(`/en/shared?id=${id}&key=${secretStr}`);
+    } else {
+      router.push(`/de/shared?id=${id}&key=${secretStr}`);
+    }
+  };
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, mt: "5rem", mb: "5rem" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={width > 1100 ? 8 : 12}>
-            <GridExample preCalcPort={[portfolio]} />
-          </Grid>
-          <Grid item xs={12} md={width > 1100 ? 4 : 12}>
-            <Card
+      {error ? (
+        <>
+          <Box sx={{ height: "100vh", padding: "5rem" }}>
+            <Typography
+              component="h2"
+              sx={{ fontSize: "4rem", fontWeight: "bold" }}
+            >
+              {error}
+            </Typography>
+            <Typography sx={{ fontSize: "2rem" }}>
+              It looks like we ran into an issue :({" "}
+            </Typography>
+          </Box>
+        </>
+      ) : (
+        <>
+          <Box
+            sx={{
+              margin: "1rem",
+              padding: "0.75rem 1rem",
+              width: "fit-content",
+              backgroundColor: "#00000030",
+              border: "2px solid var(--color-secondary-2)",
+              borderRadius: "8px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              textTransform: "uppercase",
+              position: "relative",
+              color: "white",
+              cursor: "pointer",
+            }}
+            onClick={() => setOpen(!open)}
+          >
+            {currentLanguage}
+            <Box
               sx={{
-                // padding: "15px",
-                backgroundColor: "#1188ff",
-                cursor: "pointer",
-                display: "flex",
+                display: open ? "flex" : "none",
+                flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 2,
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                zIndex: 10,
+                textTransform: "uppercase",
+                borderRadius: "4px",
+                overflow: "hidden",
+                backgroundColor: "#00000030",
               }}
             >
-              {/* <Link
-                // target="_blank"
-                // rel="noopener noreferrer"
-                href={`/portfolioOverview?msg=${msg}`}
-                style={{
+              <Button
+                sx={{
+                  padding: "10px",
+                  color: "white",
                   width: "100%",
-                  textAlign: "center",
-                  padding: "15px 0",
+                  borderRadius: "0",
+                  fontSize: "inherit",
                 }}
+                onClick={() =>
+                  currentLanguage !== "english" && switchLanguage("english")
+                }
               >
-                <Typography sx={{ backgroundColor: "#1188ff", color: "white" }}>
-                  {t("buttonText")}
-                </Typography>
-              </Link> */}
-            </Card>
+                english
+              </Button>
+              <Button
+                sx={{
+                  padding: "10px",
+                  backgroundColor: "#00000030",
+                  color: "white",
+                  width: "100%",
+                  borderRadius: "none",
+                  fontSize: "inherit",
+                }}
+                onClick={() =>
+                  currentLanguage !== "deutsch" && switchLanguage("deutsch")
+                }
+              >
+                Deutsch
+              </Button>
+            </Box>
+          </Box>
+          <Box sx={{ flexGrow: 1, mt: "5rem", mb: "5rem" }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                {/* <Item1 /> */}
+              <Grid item xs={12} md={width > 1100 ? 8 : 12}>
+                <GridExample preCalcPort={[portfolio]} />
               </Grid>
-              <Grid item xs={12}>
-                <DonutCard
-                  preCalcPort={[portfolio]}
-                  preCalcCalculations={portfolioCalculations}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <BewertungCard preCalcPort={[portfolio]} />
-              </Grid>
-              <Grid item xs={12}>
-                {/* <Item4 msg={msg} setMsg={setMsg} /> */}
+              <Grid item xs={12} md={width > 1100 ? 4 : 12}>
+                {/* <Card
+                  sx={{
+                    // padding: "15px",
+                    backgroundColor: "#1188ff",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 2,
+                  }}
+                >
+                  <Link
+                    // target="_blank"
+                    // rel="noopener noreferrer"
+                    href={`/portfolioOverview?msg=${msg}`}
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                      padding: "15px 0",
+                    }}
+                  >
+                    <Typography
+                      sx={{ backgroundColor: "#1188ff", color: "white" }}
+                    >
+                      {t("buttonText")}
+                    </Typography>
+                  </Link>
+                </Card> */}
+                <Grid container spacing={2}>
+                  {/* <Grid item xs={12}>
+                    <Item1 />
+                  </Grid> */}
+                  <Grid item xs={12}>
+                    <DonutCard
+                      preCalcPort={[portfolio]}
+                      preCalcCalculations={portfolioCalculations}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <BewertungCard preCalcPort={[portfolio]} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    {/* <Item4 msg={msg} setMsg={setMsg} /> */}
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-      </Box>
-      <Footer />
+          </Box>
+          <Footer />
+        </>
+      )}
     </>
   );
 };

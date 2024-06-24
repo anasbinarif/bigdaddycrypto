@@ -44,6 +44,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const theme = useTheme();
+  const [alert, setAlert] = useState("");
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
@@ -113,6 +114,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
 
       console.log(str);
       await navigator.clipboard.writeText(str);
+      // setAlert("link copied");
     } catch (err) {
       console.log(err);
     }
@@ -120,7 +122,19 @@ const NavbarLink = ({ mobileView, handleClose }) => {
 
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", position: "relative" }}>
+        {/* {alert && (
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              backgroundColor: "red",
+            }}
+          >
+            {alert}
+          </Box>
+        )} */}
         {session &&
           session.user?.isAdmin &&
           (mobileView ? (
