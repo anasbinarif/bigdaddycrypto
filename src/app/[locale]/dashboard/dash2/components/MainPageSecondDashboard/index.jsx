@@ -25,6 +25,7 @@ import {
 import ThemeSettings from "../ThemeSettingsButton";
 import FullScreenModal from "../FullScreenModal";
 import { StyledText } from "../StyledElements";
+import LoadingCircle from "../../../../../../components/loading/Loading";
 
 function MainPage({ expanded }) {
   const [filteredMcGroup, setFilteredMCGroup] = useState([]);
@@ -71,10 +72,14 @@ function MainPage({ expanded }) {
 
   const [btcCsvData, setBtcCsvData] = useState([]);
 
+  const [loading, setLoading] = useState(true);
   const formatter = useFormatter();
 
   useEffect(() => {
+    setLoading(true);
     handleOptionSelect();
+
+    setLoading(false);
   }, [hauptOptions, mcOptions, rangeOptions, data]);
 
   const t = useTranslations();
@@ -280,6 +285,7 @@ function MainPage({ expanded }) {
       setFilteredData(jsonData);
     };
     fetchData();
+    setLoading(false);
   }, []);
 
   function calculateDaysDifference(range) {
@@ -297,6 +303,7 @@ function MainPage({ expanded }) {
 
   useEffect(() => {
     let coinData = {};
+    setLoading(true);
 
     // Iterate through each object in the array
     filteredData.forEach((obj) => {
@@ -533,9 +540,11 @@ function MainPage({ expanded }) {
     //       0
     //     )
     // );
+    setLoading(false);
   }, [filteredData]);
 
   useEffect(() => {
+    setLoading(true);
     setHighAbfalle(
       avgData
         .filter(
@@ -573,10 +582,15 @@ function MainPage({ expanded }) {
           0
         )
     );
+    setLoading(false);
   }, [avgData]);
 
   return !expanded ? (
     <div>Click to expand</div>
+  ) : loading ? (
+    <div style={{ height: "100vh", backgroundColor: "#111826" }}>
+      <LoadingCircle />
+    </div>
   ) : (
     <div
       style={{

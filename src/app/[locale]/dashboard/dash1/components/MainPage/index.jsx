@@ -31,6 +31,7 @@ import {
 import ThemeSettings from "../ThemeSettingsButton";
 import FullScreenModal from "../FullScreenModal";
 import { StyledText } from "../StyledElements";
+import LoadingCircle from "../../../../../../components/loading/Loading";
 
 function MainPage({ expanded }) {
   const [filteredMcGroup, setFilteredMCGroup] = useState([]);
@@ -79,10 +80,14 @@ function MainPage({ expanded }) {
 
   const [currentComponent, setCurrentComponent] = useState(<></>);
 
+  const [loading, setLoading] = useState(false);
+
   const formatter = useFormatter();
 
   useEffect(() => {
+    setLoading(true);
     handleOptionSelect();
+    setLoading(false);
   }, [hauptOptions, mcOptions, coinOptions, data]);
 
   const t = useTranslations("dash1");
@@ -316,6 +321,7 @@ function MainPage({ expanded }) {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       const jsonData = await fetchCsvData();
 
@@ -333,9 +339,11 @@ function MainPage({ expanded }) {
       }
     };
     fetchData();
+    setLoading(false);
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     setAvgXAnstiege(
       (
         filteredData
@@ -559,10 +567,15 @@ function MainPage({ expanded }) {
       setFilteredCoins(uniqueCoins);
     }
     // }
+    setLoading(false);
   }, [filteredData]);
 
   return !expanded ? (
     <div>Click to Expand</div>
+  ) : loading ? (
+    <div style={{ backgroundColor: "#111826", height: "100vh" }}>
+      <LoadingCircle />
+    </div>
   ) : (
     <div
       style={{
