@@ -76,20 +76,20 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
   }, [userID]);
   // console.log(searchData);
 
-  useEffect(() => {
-    setLoading(true);
-    getAllAssets()
-      .then((data) => {
-        setData(data.data);
-        // setSearchData(data.data.slice(0, 5));
-        // console.log("getAllAssets", data.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
-  }, [userID]);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   getAllAssets()
+  //     .then((data) => {
+  //       setData(data.data);
+  //       // setSearchData(data.data.slice(0, 5));
+  //       // console.log("getAllAssets", data.data);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //       setLoading(false);
+  //     });
+  // }, [userID]);
 
   const PopperMy = useCallback((props) => {
     const anchorEl = document.getElementById("filters");

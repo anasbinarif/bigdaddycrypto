@@ -145,7 +145,7 @@ const SharedPage = () => {
   console.log(sortedData);
 
   return (
-    <LayoutWrapper>
+    <>
       <Box sx={{ flexGrow: 1, mt: "5rem", mb: "5rem" }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={width > 1100 ? 8 : 12}>
@@ -198,7 +198,8 @@ const SharedPage = () => {
           </Grid>
         </Grid>
       </Box>
-    </LayoutWrapper>
+      <Footer />
+    </>
   );
 };
 

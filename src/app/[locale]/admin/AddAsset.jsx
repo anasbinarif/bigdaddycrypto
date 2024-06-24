@@ -29,7 +29,7 @@ import { useTranslations } from "next-intl";
 import { Close as CloseIcon } from "@mui/icons-material";
 import getCoins from "./coins.js";
 import { styled } from "@mui/material/styles";
-import { categoriesDisplay1, categoryColors } from "../../../lib/data";
+import { categoriesDisplay1, categoryColors, getAllAssets } from "../../../lib/data";
 import { pink } from "@mui/material/colors";
 
 const StyledTextField = (props) => {
@@ -97,6 +97,8 @@ const AddAsset = () => {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [allAssets, setAllAssets] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -108,9 +110,22 @@ const AddAsset = () => {
         console.error("Error fetching data:", error);
       }
     };
+    setLoading(true);
+    getAllAssets()
+      .then((data) => {
+        // console.log(data);
+        setAllAssets(data.data);
+        // setSearchData(data.data.slice(0, 5));
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
 
     fetchAllData();
   }, []);
+  console.log("setAllAssets:", allAssets);
 
   const searchCoin = (event) => {
     const searchText = event.target.value.toLowerCase();
@@ -176,6 +191,18 @@ const AddAsset = () => {
     }));
   };
 
+  const menuItemDisplayMap = {
+    "ai": "AI",
+    "web3": "Web3/Anonymität",
+    "defi": "DeFi",
+    "green": "Grüne Coins",
+    "metaverse": "Gaming/Metaverse",
+    "btc": "BTC-Zusammenhang",
+    "cbdc": "CBDC-Netzwerke",
+    "ecommerce": "eCommerce",
+    "nft": "Tokenisierung/RWA"
+  };
+  
   const handleCoinClicked = async (row) => {
     setFormData({
       name: "",
@@ -190,12 +217,37 @@ const AddAsset = () => {
       sicherheit: "",
       categories: [],
     });
-    setFormData((prevState) => ({
-      ...prevState,
-      name: row.name,
-      ticker: row.symbol.toUpperCase(),
-      coinGeckoID: row.id,
-    }));
+    if (checkAssetInDB(row.id)) {
+      const response = await fetch(`/api/getAssetById?id=${row.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await response.json();
+      const asset = data?.asset[0]
+      console.log("coindetainsfromdb", data);
+      setFormData((prevState) => ({
+        ...prevState,
+        name: row.name,
+        ticker: row.symbol.toUpperCase(),
+        coinGeckoID: row.id,
+        potential: asset.Potential,
+        sicherheit: asset.Sicherheit,
+        categories: asset.Category.map(category => menuItemDisplayMap[category]),
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        name: row.name,
+        ticker: row.symbol.toUpperCase(),
+        coinGeckoID: row.id,
+      }));
+    }
     try {
       const response = await fetch(
         `/api/getAssetDetailFromCoingecko?id=${row.id}`
@@ -283,6 +335,12 @@ const AddAsset = () => {
     setOpen(false);
   };
 
+  const checkAssetInDB = (id) => {
+    const val = allAssets.some(asset => asset.CoinGeckoID === id);
+    console.log("yoooo", val, id);
+    return val;
+  }
+
   return (
     <Box>
       <Container
@@ -341,9 +399,9 @@ const AddAsset = () => {
                   fontWeight: "bold",
                 },
                 "& .MuiTableBody-root .MuiTableRow-root": {
-                  backgroundColor: "#00000033",
+                  // backgroundColor: "#00000033",
                   "&:hover": {
-                    backgroundColor: "#00000050",
+                    // backgroundColor: "#00000050",
                   },
                 },
                 "& .MuiTableCell-body": {
@@ -365,7 +423,13 @@ const AddAsset = () => {
                     <TableRow
                       key={index}
                       onClick={() => handleCoinClicked(row)}
-                      sx={{ cursor: "pointer" }}
+                      sx={{
+                        cursor: "pointer",
+                        backgroundColor: checkAssetInDB(row.id) ? "#32a7e1" : "#00000033",
+                        "&:hover": {
+                          backgroundColor: checkAssetInDB(row.id) ? "#064665" : "#00000050",
+                        },
+                      }}
                     >
                       <TableCell>
                         <Typography>{row.id}</Typography>
@@ -578,7 +642,7 @@ const AddAsset = () => {
               {formData.categories.map((category, index) => (
                 <ListItem key={index}>
                   <Chip
-                    label={t(category)}
+                    label={category}
                     onDelete={handleDeleteCategory(category)}
                     sx={{
                       color: "white",
