@@ -27,7 +27,7 @@ const DonutChart = ({
   loadingPortfolio,
 }) => {
   const canvasRef = useRef(null);
-  const [portfolio] = preCalcPort || useAtom(portfolioAtom, { assets: [] });
+  const [portfolio] = useAtom(portfolioAtom, { assets: [] });
   const [securityScore, setSecurityScore] = useState(0);
   const [tooltip, setTooltip] = useState({
     visible: false,
@@ -45,16 +45,19 @@ const DonutChart = ({
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
+    const portData = preCalcPort || portfolio;
+    console.log(portfolio);
     const calculateSecurityScore = () => {
       let totalInvestment = 0;
       let weightedScore = 0;
 
-      portfolio.assetsCalculations.assets.forEach((asset) => {
+      portData.assetsCalculations.assets.forEach((asset) => {
         totalInvestment += asset.totalInvest;
       });
+      console.log(totalInvestment);
 
-      portfolio.assetsCalculations.assets.forEach((asset) => {
-        const assetDetails = portfolio.assets.find(
+      portData.assetsCalculations.assets.forEach((asset) => {
+        const assetDetails = portData.assets.find(
           (a) => a.CoinGeckoID === asset.CoinGeckoID
         );
         if (assetDetails && assetDetails.Sicherheit) {
@@ -66,10 +69,12 @@ const DonutChart = ({
       setSecurityScore(weightedScore.toFixed(1));
     };
 
-    if (portfolio?.assetsCalculations && portfolio.assets) {
+    if (portData?.assetsCalculations && portData.assets) {
+      console.log(portData);
       calculateSecurityScore();
     }
-  }, [portfolio]);
+  }, [portfolio, preCalcPort]);
+  console.log(securityScore);
 
   useEffect(() => {
     const drawChart = () => {
@@ -132,7 +137,7 @@ const DonutChart = ({
     return () => {
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [portfolioCalculations, loadingPortfolio]);
+  }, [portfolioCalculations, preCalcPort]);
 
   const handleMouseMove = (event) => {
     const canvas = canvasRef.current;
@@ -216,10 +221,11 @@ const DonutChart = ({
 
   useEffect(() => {
     const fetchScore = async () => {
-      if (portfolio?.assets) {
-        console.log(portfolio.assets);
+      const portData = preCalcPort || portfolio;
+      if (portData?.assets) {
+        console.log(portData.assets);
         try {
-          const calculatedScore = await calculateScore(portfolio.assets);
+          const calculatedScore = await calculateScore(portData.assets);
           setScore(calculatedScore?.score);
           console.log("Calculated Score:", calculatedScore);
         } catch (error) {
@@ -228,7 +234,7 @@ const DonutChart = ({
       }
     };
     fetchScore();
-  }, [portfolio]);
+  }, [portfolio, preCalcPort]);
   useEffect(() => {
     console.log("Calculated Score2:", score);
   }, [score]);
@@ -327,10 +333,12 @@ const DonutChart = ({
             },
           }}
         >
-          {portfolio?.assets?.length > 0 && score}
+          {(portfolio?.assets?.length > 0 || preCalcPort?.assets?.length > 0) &&
+            score}
         </Typography>
         <Typography variant="caption" style={{ color: "#FFFFFF" }}>
-          {portfolio?.assets?.length > 0 && t(`${calculateNote(score)}`)}
+          {(portfolio?.assets?.length > 0 || preCalcPort?.assets?.length > 0) &&
+            t(`${calculateNote(score)}`)}
         </Typography>
       </Box>
       {tooltip.visible && (

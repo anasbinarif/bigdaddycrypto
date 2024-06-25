@@ -246,13 +246,15 @@ function stableSort(array, comparator) {
 }
 
 const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
-  const [portfolio] = preCalcPort || useAtom(portfolioAtom);
+  const [portfolio] = useAtom(portfolioAtom);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("asset");
   const [sortedData, setSortedData] = useState([]);
 
+  // console.log(sortedData);
   useEffect(() => {
-    if (portfolio.assetsCalculations && portfolio.assets) {
+    if (preCalcPort?.length > 0) setSortedData(preCalcPort);
+    else if (portfolio?.assetsCalculations && portfolio?.assets) {
       // console.log(portfolio, "meeeeee");
       const totalInvestment = portfolio.assetsCalculations.assets.reduce(
         (acc, curr) => acc + curr.totalInvest,
@@ -294,7 +296,7 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
       // console.log(mergedData);
       setSortedData(mergedData);
     }
-  }, [portfolio]);
+  }, [portfolio, preCalcPort]);
   const assetsLeangth = portfolio?.assets?.length;
 
   const handleRequestSort = (event, property) => {
