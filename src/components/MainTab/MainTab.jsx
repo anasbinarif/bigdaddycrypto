@@ -20,7 +20,7 @@ import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { getUserPortfolio } from "../../lib/data";
 import { useTranslations } from "next-intl";
 import PricingPlans from "../../components/PricingPlans/PricingPlans";
-import theme from "../../app/[locale]/theme";
+// import theme from "../../app/[locale]/theme";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,6 +60,8 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   const [loadingPortfolio, setLoadingPortfolio] = useState(false);
   const [assetsLeangth, setAssetsLeangth] = useState(0);
 
+  // const theme = useTheme();
+
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
@@ -85,7 +87,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     fetchData();
   }, [sessionJotai?.user.id]);
 
-
   useEffect(() => {
     const fetchPastUserTime = async () => {
       if (sessionJotai?.user) {
@@ -97,7 +98,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           body: JSON.stringify({ userID: sessionJotai?.user.id }),
           cache: "no-store",
         });
-        const timeCheckRes = await timeCheck.json()
+        const timeCheckRes = await timeCheck.json();
         console.log("timeCheckRestimeCheckRestimeCheckRes", timeCheckRes);
         if (timeCheckRes?.userPlan) {
           setHoursRemaining(null);
@@ -105,7 +106,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           setHoursRemaining(timeCheckRes.hoursRemaining || null);
         }
       }
-    }
+    };
     fetchPastUserTime();
     if (portfolio?.assets) {
       setLoadingPortfolio(true);
@@ -117,7 +118,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   useEffect(() => {
     if (hoursRemaining !== null) {
       const intervalId = setInterval(() => {
-        setHoursRemaining(prev => Math.max(prev - (1 / 3600), 0));
+        setHoursRemaining((prev) => Math.max(prev - 1 / 3600, 0));
       }, 1000); // Update every second
 
       return () => clearInterval(intervalId);
@@ -146,7 +147,13 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         }}
       >
         {hoursRemaining !== null && (
-          <Box sx={{ paddingLeft: width < 500 ? 0 : "24px", paddingBottom: "24px", float: "right" }}>
+          <Box
+            sx={{
+              paddingLeft: width < 500 ? 0 : "24px",
+              paddingBottom: "24px",
+              float: "right",
+            }}
+          >
             {`You have ${hoursRemaining?.toFixed(2)} hours remaining`}
           </Box>
         )}

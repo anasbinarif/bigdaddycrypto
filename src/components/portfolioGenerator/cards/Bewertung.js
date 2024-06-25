@@ -151,7 +151,7 @@ const calculateDotColor = (name, score, portfolio) => {
 };
 
 function BewertungCard({ preCalcPort }) {
-  const [portfolio] = preCalcPort || useAtom(portfolioAtom);
+  const [portfolio] = useAtom(portfolioAtom);
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
   const [potential, setPotential] = useState({ avgMin: 0, avgMax: 0 });
   const [hypeColorScore, setHypeColorScore] = useState({
@@ -165,8 +165,11 @@ function BewertungCard({ preCalcPort }) {
 
   useEffect(() => {
     const calculateMetrics = async () => {
-      if (portfolio?.assets) {
-        const assets = portfolio.assets;
+      const portData = portfolio?.assets ? portfolio : preCalcPort;
+      // console.log(portData);
+      if (portData?.assets) {
+        // console.log(portData);
+        const assets = portData.assets;
 
         // Calculate Sicherheit Average
         const sicherheitValues = assets
@@ -215,7 +218,7 @@ function BewertungCard({ preCalcPort }) {
     };
 
     calculateMetrics();
-  }, [portfolio]);
+  }, [portfolio, preCalcPort]);
 
   const getBackgroundColor = (sicherheitAverage) => {
     if (sicherheitAverage >= 0 && sicherheitAverage < 5.5) {

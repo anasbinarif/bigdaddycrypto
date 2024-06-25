@@ -5,6 +5,7 @@ import { useState } from "react";
 import ColorTabs from "../../components/MainTab/MainTab";
 import LayoutWrapper from "../../components/LayoutWrapper";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@emotion/react";
 
 export default function Home() {
   const [tabSelector, setTabSelector] = useState("one");

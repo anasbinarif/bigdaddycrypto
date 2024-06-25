@@ -149,7 +149,7 @@ const SharedPage = () => {
       setSortedData(mergedData);
     }
   }, [portfolio]);
-  console.log(sortedData);
+  // console.log(portfolioCalculations);
 
   const switchLanguage = (lang) => {
     if (lang === "english") {
@@ -245,7 +245,7 @@ const SharedPage = () => {
           <Box sx={{ flexGrow: 1, mt: "5rem", mb: "5rem" }}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={width > 1100 ? 8 : 12}>
-                <GridExample preCalcPort={[portfolio]} />
+                <GridExample preCalcPort={sortedData} />
               </Grid>
               <Grid item xs={12} md={width > 1100 ? 4 : 12}>
                 {/* <Card
@@ -282,12 +282,12 @@ const SharedPage = () => {
                   </Grid> */}
                   <Grid item xs={12}>
                     <DonutCard
-                      preCalcPort={[portfolio]}
+                      preCalcPort={portfolio}
                       preCalcCalculations={portfolioCalculations}
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <BewertungCard preCalcPort={[portfolio]} />
+                    <BewertungCard preCalcPort={portfolio} />
                   </Grid>
                   <Grid item xs={12}>
                     {/* <Item4 msg={msg} setMsg={setMsg} /> */}

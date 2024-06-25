@@ -22,6 +22,7 @@ import { SessionProvider } from "next-auth/react";
 import Navbar from "../../../components/navbar/Navbar";
 import Footer from "../../../components/footer/Footer";
 import { useTheme } from "@mui/material/styles";
+import { theme1, theme2 } from "../theme";
 import { useTranslations } from "next-intl";
 import { symbol } from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,6 +31,7 @@ import Dash1 from "./dash1/components/MainPage";
 import dash1 from "../../../../public/assets/images/dash1.png";
 import Dash2 from "./dash2/components/MainPageSecondDashboard";
 import dash2 from "../../../../public/assets/images/dash2.png";
+import ThemeProviderWrapper from "./theme/ThemeProvider";
 
 const Dashboard = () => {
   const [width, setWidth] = useState(0);
@@ -95,19 +97,44 @@ const Dashboard = () => {
           <Box
             sx={{
               display: "flex",
+              flexWrap: "wrap",
               padding: "8rem 3rem 4rem",
               position: "relative",
+              gap: "1rem",
+              "@media only screen and (max-width: 900px)": {
+                flexDirection: "column",
+                columnGap: 0,
+              },
             }}
           >
             <Box
               sx={{
                 // position: "relative",
-                width: "100%",
+                width: "calc(50% - 0.5rem)",
+                "@media only screen and (max-width: 900px)": {
+                  width: "100%",
+                },
               }}
             >
               <Typography
                 component="h3"
-                sx={{ fontWeight: "bold", fontSize: "2.5rem", mb: "1rem" }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "2.5rem",
+                  mb: "1rem",
+                  "@media only screen and (max-width: 1200px)": {
+                    fontSize: "2rem",
+                  },
+                  "@media only screen and (max-width: 1000px)": {
+                    fontSize: "1.5rem",
+                  },
+                  "@media only screen and (max-width: 900px)": {
+                    fontSize: "2rem",
+                  },
+                  "@media only screen and (max-width: 600px)": {
+                    fontSize: "1.5rem",
+                  },
+                }}
               >
                 Rise and Fall dashboard
               </Typography>
@@ -180,12 +207,31 @@ const Dashboard = () => {
             <Box
               sx={{
                 // position: "relative",
-                width: "100%",
+                width: "calc(50% - 0.5rem)",
+                "@media only screen and (max-width: 900px)": {
+                  width: "100%",
+                },
               }}
             >
               <Typography
                 component="h3"
-                sx={{ fontWeight: "bold", fontSize: "2.5rem", mb: "1rem" }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "2.5rem",
+                  mb: "1rem",
+                  "@media only screen and (max-width: 1200px)": {
+                    fontSize: "2rem",
+                  },
+                  "@media only screen and (max-width: 1000px)": {
+                    fontSize: "1.5rem",
+                  },
+                  "@media only screen and (max-width: 900px)": {
+                    fontSize: "2rem",
+                  },
+                  "@media only screen and (max-width: 600px)": {
+                    fontSize: "1.5rem",
+                  },
+                }}
               >
                 Dashboard 2
               </Typography>
@@ -399,4 +445,12 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+const DashBoardsPage = () => {
+  return (
+    <ThemeProviderWrapper>
+      <Dashboard />
+    </ThemeProviderWrapper>
+  );
+};
+
+export default DashBoardsPage;

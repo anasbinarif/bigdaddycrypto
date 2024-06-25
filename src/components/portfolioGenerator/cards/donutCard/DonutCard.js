@@ -9,7 +9,7 @@ import { sessionAtom } from "../../../../app/stores/sessionStore";
 import DonutLegendSkeleton from "../../../portfolioGenerator/cards/donutCard/DonutLegendSkeleton";
 
 export const DonutCard = ({ preCalcPort, preCalcCalculations }) => {
-  const [portfolio] = preCalcPort || useAtom(portfolioAtom);
+  const [portfolio] = useAtom(portfolioAtom);
   const [loadingPortfolio, setLoadingPortfolio] = useState(false);
   const [portfolioCalculations, setPortfolioCalculations] = useState({});
   const [sessionJotai] = useAtom(sessionAtom);
@@ -29,9 +29,11 @@ export const DonutCard = ({ preCalcPort, preCalcCalculations }) => {
       }
     };
     fetchData();
-  }, [sessionJotai?.user.id, portfolio]);
+  }, [sessionJotai?.user.id, portfolio, preCalcCalculations]);
 
   // console.log(preCalcCalculations);
+  // console.log(loadingPortfolio);
+  // console.log(portfolioCalculations);
 
   return (
     <Box
