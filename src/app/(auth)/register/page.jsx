@@ -144,7 +144,7 @@ const RegisterPage = () => {
           console.log("check Your Email");
         }
         setUser({
-          userName: generateUserName(),
+          userName: generateUserName(6),
           userEmail: "",
           pin: "",
         });

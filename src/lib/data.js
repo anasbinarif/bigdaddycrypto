@@ -182,7 +182,7 @@ export const getAssets = async (category, userId) => {
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "force-cache",
+        cache: "no-store",
       });
     }
 

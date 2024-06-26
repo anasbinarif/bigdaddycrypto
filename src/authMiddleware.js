@@ -29,7 +29,6 @@ function withAuthMiddleware(middleware) {
       callbacks: {
         authorized: ({ token, req }) => {
           const path = req.nextUrl.pathname;
-          console.log("hello my name is khan", path);
           if (path === "/en/shared" || path === "/de/shared") {
             return true;
           }

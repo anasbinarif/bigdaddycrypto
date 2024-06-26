@@ -125,6 +125,7 @@ export async function updateCoinDetails(coinGeckoID) {
                     (min, p) => (p[1] < min[1] ? p : min),
                     prices[0]
                 );
+                const lowestPrice = Math.min(...prices.map(price => price[1]));
                 const highestHigh = prices.reduce(
                     (max, p) => (p[1] > max[1] ? p : max),
                     prices[0]
@@ -148,6 +149,7 @@ export async function updateCoinDetails(coinGeckoID) {
                             Price: currentPrice,
                             cgPrice: currentPrice,
                             LastPriceUpdate: new Date(),
+                            Bottom: lowestPrice,
                         },
                     }
                 );

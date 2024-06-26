@@ -32,7 +32,7 @@ const DonutLegend = ({ portfolioCalculations }) => {
     // console.log("whatdata", categories, portfolioCalculations)
   }, [categories]);
 
-  console.log(categories);
+  // console.log(categories);
 
   return (
     <Box
