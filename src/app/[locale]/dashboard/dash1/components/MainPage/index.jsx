@@ -90,7 +90,7 @@ function MainPage({ expanded }) {
     setLoading(false);
   }, [hauptOptions, mcOptions, coinOptions, data]);
 
-  const t = useTranslations("dash1");
+  const t = useTranslations("dash");
 
   let weights = {
     "Top 10": 0,

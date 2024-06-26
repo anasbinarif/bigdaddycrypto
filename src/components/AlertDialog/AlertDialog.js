@@ -8,6 +8,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import { useTranslations } from "next-intl";
 
 const DeleteConfirmationDialog = ({
   open,
@@ -15,6 +16,7 @@ const DeleteConfirmationDialog = ({
   handleDeleteConfirm,
   asset,
 }) => {
+  const t = useTranslations("deleteDialog");
   return (
     <Dialog
       open={open}
@@ -34,7 +36,7 @@ const DeleteConfirmationDialog = ({
         id="delete-dialog-title"
         sx={{ fontWeight: "bold", padding: 0, mb: "1rem" }}
       >
-        Asset löschen
+        {t("heading")}
       </DialogTitle>
       <DialogContent
         sx={{
@@ -47,21 +49,19 @@ const DeleteConfirmationDialog = ({
         }}
       >
         <DialogContentText id="delete-dialog-description" sx={{ padding: 0 }}>
-          Bist du dir sicher, dass du dieses Asset{" "}
-          <strong>{asset?.Ticker}</strong> aus deinem Portfolio löschen
-          möchtest?{" "}
+          {t("text1")} <strong>{asset?.Ticker}</strong> {t("text2")}{" "}
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ padding: 0 }}>
         <Button onClick={handleClose} sx={{ color: "var(--color-secondary)" }}>
-          Abbrechen
+          {t("cancel")}
         </Button>
         <Button
           onClick={handleDeleteConfirm}
           autoFocus
           sx={{ backgroundColor: "var(--color-secondary-2)", color: "#000" }}
         >
-          Löschen
+          {t("confirm")}
         </Button>
       </DialogActions>
     </Dialog>

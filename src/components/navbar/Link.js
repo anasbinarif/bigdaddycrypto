@@ -31,9 +31,10 @@ import {
   faShareAlt,
   faShareSquare,
   faUser,
+  faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { useRouter, usePathname } from "next/navigation";
+import useEnhancedEffect from "@mui/utils/useEnhancedEffect";
 
 const NavbarLink = ({ mobileView, handleClose }) => {
   const router = useRouter();
@@ -114,27 +115,52 @@ const NavbarLink = ({ mobileView, handleClose }) => {
 
       console.log(str);
       await navigator.clipboard.writeText(str);
-      // setAlert("link copied");
+      setAlert("link copied");
     } catch (err) {
       console.log(err);
     }
   };
 
+  useEffect(() => {
+    let timeoutId;
+
+    if (alert) {
+      timeoutId = setTimeout(() => {
+        setAlert("");
+      }, 1200);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [alert]);
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", position: "relative" }}>
-        {/* {alert && (
+        {alert && (
           <Box
             sx={{
               position: "absolute",
-              bottom: 0,
+              top: 60,
               right: 0,
-              backgroundColor: "red",
+              padding: "5px",
+              borderRadius: "4px",
+              backgroundColor: "var(--color-secondary-2)",
+              color: "#000",
+              display: "flex",
+              alignItems: "center",
             }}
           >
+            <FontAwesomeIcon
+              icon={faExclamationCircle}
+              style={{ marginRight: "5px" }}
+            />
             {alert}
           </Box>
-        )} */}
+        )}
         {session &&
           session.user?.isAdmin &&
           (mobileView ? (

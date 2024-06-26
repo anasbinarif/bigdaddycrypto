@@ -227,7 +227,14 @@
     "nft": "Tokenisierung/RWA",
     "none": "Kein Hype-Thema"
   },
-  "dash1": {
+  "deleteDialog": {
+    "heading": "Asset löschen",
+    "text1": "Bist du dir sicher, dass du dieses Asset",
+    "text2": "aus deinem Portfolio löschen möchtest?",
+    "cancel": "Abbrechen",
+    "confirm": "Löschen"
+  },
+  "dash": {
     "signIn": "Iniciar sesión",
     "homeHeader": "Casa",
     "homeContent": "Beinvenidos a mi casa.",
@@ -283,6 +290,10 @@
     "visualisiert": "visualisiert",
     "Korrelation": "Korrelation",
     "Bärenmarkt nach": "Bärenmarkt nach",
-    "Bottom der Coins Bärenmarkt nach 2021 visualisiert": "Bottom der Coins Bärenmarkt nach 2021 visualisiert"
+    "Bottom der Coins Bärenmarkt nach 2021 visualisiert": "Bottom der Coins Bärenmarkt nach 2021 visualisiert",
+    "Reichweite": "Reichweite",
+    "Korrektur Korrelation": "Korrektur Korrelation",
+    "Haltedauer der Korrektur(en)": "Haltedauer der Korrektur",
+    "Tage": "Tage"
   }
 }
