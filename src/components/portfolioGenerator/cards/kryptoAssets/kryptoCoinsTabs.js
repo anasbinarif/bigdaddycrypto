@@ -143,7 +143,7 @@ const ScrollableKryptoTabs = ({
     if (line === 2) {
       newValue += firstHalfCount;
     }
-    console.log(newValue);
+    // console.log(newValue);
     setValue(newValue);
     // console.log("1111111111111111111111111111111111", tabLabels[newValue]);
     const selectedCategory = categoryMapping[tabLabels[newValue]];
@@ -197,9 +197,9 @@ const ScrollableKryptoTabs = ({
           value={value === 0 ? value : false}
           onChange={(e, newValue) => {
             setValue(0);
-            console.log(tabLabels[newValue]);
+            // console.log(tabLabels[newValue]);
             const selectedCategory = categoryMapping[tabLabels[value]];
-            console.log(selectedCategory);
+            // console.log(selectedCategory);
             setCurrentCategory(selectedCategory);
           }}
           variant="scrollable"
@@ -308,7 +308,7 @@ const ScrollableKryptoTabs = ({
           }}
         >
           {tabLabels.map((label, index) => {
-            console.log(index, toCamelCase(label.toLowerCase()));
+            // console.log(index, toCamelCase(label.toLowerCase()));
             return (
               <Tab
                 key={index + 1}

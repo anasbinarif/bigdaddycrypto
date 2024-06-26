@@ -46,7 +46,7 @@ const DonutChart = ({
 
   useEffect(() => {
     const portData = preCalcPort || portfolio;
-    console.log(portfolio);
+    // console.log(portfolio);
     const calculateSecurityScore = () => {
       let totalInvestment = 0;
       let weightedScore = 0;
@@ -54,7 +54,7 @@ const DonutChart = ({
       portData.assetsCalculations.assets.forEach((asset) => {
         totalInvestment += asset.totalInvest;
       });
-      console.log(totalInvestment);
+      // console.log(totalInvestment);
 
       portData.assetsCalculations.assets.forEach((asset) => {
         const assetDetails = portData.assets.find(
@@ -70,11 +70,11 @@ const DonutChart = ({
     };
 
     if (portData?.assetsCalculations && portData.assets) {
-      console.log(portData);
+      // console.log(portData);
       calculateSecurityScore();
     }
   }, [portfolio, preCalcPort]);
-  console.log(securityScore);
+  // console.log(securityScore);
 
   useEffect(() => {
     const drawChart = () => {
@@ -223,7 +223,7 @@ const DonutChart = ({
     const fetchScore = async () => {
       const portData = preCalcPort || portfolio;
       if (portData?.assets) {
-        console.log(portData.assets);
+        // console.log(portData.assets);
         try {
           const calculatedScore = await calculateScore(portData.assets);
           setScore(calculatedScore?.score);

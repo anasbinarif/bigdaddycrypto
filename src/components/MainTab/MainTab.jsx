@@ -146,7 +146,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           },
         }}
       >
-        {hoursRemaining !== null && (
+        {hoursRemaining !== null && sessionJotai?.user?.subscriptionPlan === "free" && (
           <Box
             sx={{
               paddingLeft: width < 500 ? 0 : "24px",
