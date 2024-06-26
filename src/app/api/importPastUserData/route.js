@@ -28,6 +28,10 @@ export async function POST(req) {
             return NextResponse.json({ message: "Invalid PIN" }, { status: 401 });
         }
 
+        if (pastUser.ImportedSuccessfully) {
+            return NextResponse.json({ message: "This User is already Imported" }, { status: 401 });
+        }
+
         const userPortfolio = await UserPortfolio.findOne({ userId: userID });
         if (userPortfolio) {
             return NextResponse.json({ message: "User already has portfolios" }, { status: 404 });
@@ -130,6 +134,8 @@ export async function POST(req) {
             user.pastUserCheck = true;
             user.pastUserAccessTime = new Date();
             user.pastUserAccess = true;
+            pastUser.ImportedSuccessfully = true;
+            await pastUser.save()
             await user.save();
             return NextResponse.json({ userPortfolios }, { status: 200 });
         } catch (e) {
