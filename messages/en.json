@@ -231,7 +231,14 @@
   "Overview": {
     "buttonText": "Request comment from BigDaddy now"
   },
-  "dash1": {
+  "deleteDialog": {
+    "heading": "Delete Asset",
+    "text1": "Are you sure that you want to delete this asset",
+    "text2": "from your portfolio?",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "dash": {
     "signIn": "Sign In",
     "homeHeader": "Home",
     "homeContent": "Welcome to my home.",
@@ -278,15 +285,19 @@
     "haveYourPropertyDesc": "Turn your real estate aspirations into reality by owning your dream property with our expert assistance.",
     "testimonial": "Testimonial",
     "happyClients": "Happy Clients",
-    "Anstiege": "Anstiege",
-    "X-Anstiege": "X-Anstiege",
-    "Anstiege und Abfälle": "Anstiege und Abfälle",
-    "Abfälle": "Abfälle",
-    "MC Gruppe": "MC Gruppe",
-    "Haupt-Kategorie": "Haupt-Kategorie",
-    "visualisiert": "visualisiert",
-    "Korrelation": "Korrelation",
-    "Bärenmarkt nach": "Bärenmarkt nach",
-    "Bottom der Coins Bärenmarkt nach 2021 visualisiert": "Bottom der Coins Bärenmarkt nach 2021 visualisiert"
+    "Anstiege": "Rises",
+    "X-Anstiege": "X-Rises",
+    "Anstiege und Abfälle": "Climbs and Drops",
+    "Abfälle": "Drops",
+    "MC Gruppe": "MC Group",
+    "Haupt-Kategorie": "Main Category",
+    "visualisiert": "visualized",
+    "Korrelation": "Correlation",
+    "Bärenmarkt nach": "Bear market after",
+    "Bottom der Coins Bärenmarkt nach 2021 visualisiert": "Bottom of Coins Bear Market After 2021 Visualized",
+    "Reichweite": "Reach",
+    "Korrektur Korrelation": "Correction Correlation",
+    "Haltedauer der Korrektur(en)": "Correction Hold Period",
+    "Tage": "Days"
   }
 }
