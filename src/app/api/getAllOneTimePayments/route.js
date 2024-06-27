@@ -1,5 +1,5 @@
 import { connectToDb } from '../../../lib/utils';
-import { Payments, User } from '../../../lib/models';
+import { Payments, UserPortfolio } from '../../../lib/models';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -9,8 +9,10 @@ export async function GET() {
         const payments = await Payments.find()
             .populate('userId', 'email username')
 
-        const paymentDetails = payments.flatMap(payment => 
-            payment.oneTimePayment.map(oneTimePayment => ({
+        const paymentDetailsPromises = payments.map(async payment => {
+            const portfolio = await UserPortfolio.findOne({ userId: payment.userId._id });
+            const notizen = portfolio ? portfolio.Notizen : null;
+            return payment.oneTimePayment.map(oneTimePayment => ({
                 userEmail: payment.userId.email,
                 userId: payment.userId._id,
                 username: payment.userId.username,
@@ -18,9 +20,13 @@ export async function GET() {
                     date: oneTimePayment.date,
                     price: oneTimePayment.price,
                     status: oneTimePayment.status
-                }
-            }))
-        );
+                },
+                notizen
+            }));
+        });
+
+        const paymentDetailsArrays = await Promise.all(paymentDetailsPromises);
+        const paymentDetails = paymentDetailsArrays.flat();
 
         return NextResponse.json({ success: true, data: paymentDetails });
     } catch (error) {

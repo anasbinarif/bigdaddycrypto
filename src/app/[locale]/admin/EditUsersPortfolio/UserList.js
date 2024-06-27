@@ -112,6 +112,9 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
                     </TableSortLabel>
                   </TableCell>
                   <TableCell>
+                    <TableSortLabel>Comment</TableSortLabel>
+                  </TableCell>
+                  <TableCell>
                     <TableSortLabel>Email</TableSortLabel>
                   </TableCell>
                   <TableCell
@@ -151,7 +154,7 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {usersWithShortId.map((user, index) => (
+                {users.map((user, index) => (
                   <TableRow
                     key={index}
                     hover
@@ -167,6 +170,16 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
                   >
                     <TableCell>
                       <Typography variant="body2">{user.username}</Typography>
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        // maxHeight: "100px",
+                        // overflow: "auto",
+                        // display: "block",
+                        // width: "200px",
+                      }}
+                    >
+                      {user.notizen.UserComment ? user.notizen.UserComment : ''}
                     </TableCell>
                     <TableCell
                       sx={{

@@ -1,51 +1,38 @@
-import { connectToDb } from "../../../lib/utils";
-import { User, UserPortfolio } from "../../../lib/models";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
-    const { userID } = await req.json();
-    const baseURL = process.env.NEXT_PUBLIC_URI;
+    const berlinTimeZone = "Europe/Berlin";
+    const targetDate = new Date(Date.UTC(2024, 6, 10, 12, 0, 0)); // June 27, 2 PM in Berlin time zone (UTC+2 becomes UTC+0)
 
     try {
-        await connectToDb();
-
-        const user = await User.findById(userID).exec();
-        if (!user) {
-            return NextResponse.json({ message: "User not found" }, { status: 404 });
-        }
-
-        if (!user.pastUserAccessTime || !user.pastUser) {
-            return NextResponse.json({ message: "User does not have past user" }, { status: 200 });
-        }
-
         const now = new Date();
-        const pastUserAccessTime = new Date(user.pastUserAccessTime);
-        const timeDifference = now - pastUserAccessTime;
+        const berlinFormatter = new Intl.DateTimeFormat("en-GB", {
+            timeZone: berlinTimeZone,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        });
 
+        const berlinNowString = berlinFormatter.formatToParts(now);
+        const berlinNow = new Date(
+            `${berlinNowString.find(part => part.type === "year").value}-${berlinNowString.find(part => part.type === "month").value}-${berlinNowString.find(part => part.type === "day").value}T${berlinNowString.find(part => part.type === "hour").value}:${berlinNowString.find(part => part.type === "minute").value}:${berlinNowString.find(part => part.type === "second").value}+02:00`
+        );
+
+        if (berlinNow < targetDate) {
+            return NextResponse.json({ result: false, message: "The target date has not started yet" }, { status: 200 });
+        }
+
+        const timeDifference = berlinNow - targetDate;
         const hoursPassed = timeDifference / (1000 * 60 * 60);
+        const hoursRemaining = 48 - hoursPassed;
+
         if (hoursPassed > 48) {
-            // user.pastUserCheck = false;
-            // user.pastUserCheckTime = null;
-            // await user.save();
-            const response = await fetch(`${baseURL}/api/getUserSubscriptionPlan`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ userId: userID }),
-            });
-            const userPlan = await response.json();
-            console.log("what scene g", userPlan);
-            if (userPlan?.plan != "free") {
-                return NextResponse.json({ message: `User have got the ${userPlan?.plan} plan`, userPlan: userPlan?.plan }, { status: 200 });
-            }
-            else{
-                await UserPortfolio.updateOne({ userId: userID }, { $set: { assets: [] } }).exec();
-                return NextResponse.json({ message: "Past user access has expired and portfolio assets have been deleted" }, { status: 200 });
-            }
-            return NextResponse.json({ message: "Past user access has expired" }, { status: 200 });
+            return NextResponse.json({ result: false }, { status: 200 });
         } else {
-            return NextResponse.json({ message: "Past user access is still valid", hoursRemaining: 48 - hoursPassed }, { status: 200 });
+            return NextResponse.json({ result: true, hoursRemaining: hoursRemaining.toFixed(2) }, { status: 200 });
         }
     } catch (e) {
         console.log("Error during time check:", e);

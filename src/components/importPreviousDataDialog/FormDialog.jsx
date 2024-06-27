@@ -66,9 +66,20 @@ const FormDialog = () => {
           body: JSON.stringify({ userID }),
         });
 
-        if (response.ok) {
+        const timeCheck = await fetch("/api/checkPastUserTime", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userID: sessionJotai?.user.id }),
+          cache: "no-store",
+        });
+
+        if (response.ok && timeCheck.ok) {
           const data = await response.json();
-          if (!data.pastUserCheck) {
+          const timeCheckRes = await timeCheck.json();
+          // console.log("timeCheckRes..", timeCheckRes);
+          if (!data.pastUserCheck && timeCheckRes.result) {
             handleClickOpen();
           }
         }

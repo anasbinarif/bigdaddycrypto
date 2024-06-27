@@ -272,6 +272,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               <Link
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
                 href="/dashboard"
+                onClick={handleGraphClick}
                 className={styles.nav__link}
               >
                 Dashboards
