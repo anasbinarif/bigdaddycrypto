@@ -348,7 +348,11 @@ const pastUserSchema = new mongoose.Schema({
     },
     RequestDate: {
         type: String
-    }
+    },
+    ImportedSuccessfully: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true });
 
 const pastPortfolioSchema = new mongoose.Schema({
