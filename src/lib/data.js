@@ -723,7 +723,6 @@ export async function fetchUserSubscriptionPlan(userId) {
       body: JSON.stringify({ userId }),
     });
 
-    console.log("fetchUserSubscriptionPlan");
 
     if (!response.ok) {
       const errorData = await response.json();

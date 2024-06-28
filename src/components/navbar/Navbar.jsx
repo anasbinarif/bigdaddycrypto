@@ -106,7 +106,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
     };
 
     const handleDashboardClick = (event) => {
-        if (sessionJotai?.user?.subscriptionPlan === "free" || sessionJotai?.user.billingCycle === "monthly") {
+        if (sessionJotai?.user?.subscriptionPlan === "free" || sessionJotai?.user?.billingCycle === "monthly") {
             setAlertMessage(t("alertDashboard"));
             setAlertOpen(true);
             event.preventDefault();

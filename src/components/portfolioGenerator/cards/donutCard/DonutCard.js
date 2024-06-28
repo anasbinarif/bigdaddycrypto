@@ -21,7 +21,7 @@ export const DonutCard = ({ preCalcPort, preCalcCalculations }) => {
           sessionJotai?.user.id || id
         );
         setPortfolioCalculations(userPortfolio?.calculation);
-        console.log("userPortfoliouserPortfoliouserPortfolio", userPortfolio);
+        // console.log("userPortfoliouserPortfoliouserPortfolio", userPortfolio);
         setLoadingPortfolio(true);
       } else {
         setPortfolioCalculations(preCalcCalculations);

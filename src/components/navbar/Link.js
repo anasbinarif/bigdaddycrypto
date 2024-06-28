@@ -102,7 +102,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               subscriptionPlan: subscriptionData.plan,
               paymentDetails: subscriptionData.payment,
               subscribed: subscriptionData.plan !== "free",
-              billingCycle: subscriptionData?.payment?.Subscription.billingCycle
+              billingCycle: subscriptionData?.payment?.Subscription?.billingCycle
             },
           });
         }

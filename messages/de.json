@@ -46,7 +46,11 @@
     "loading": "Keine Einträge",
     "coinRemovedSuccess": "Coin erfolgreich entfernt",
     "delete": "Löschen",
-    "favourite": "Favorit"
+    "favourite": "Favorit",
+    "importCSVTitle": "CSV importieren",
+    "dragAndDrop": "Ziehen und ablegen",
+    "cancel": "Abbrechen",
+    "upload": "Hochladen"
   },
   "coinCard": {
     "potential": "Potential",

@@ -3,7 +3,6 @@ import {Box, Typography, useTheme} from '@mui/material';
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 
 const DonutLegendSkeleton = () => {
-    console.log("DonutLegendSkeleton");
     const theme = useTheme();
     const categories = [
         { name: 'AI', color: '#FFD700', count: 0, percentage: 0 },

@@ -46,7 +46,11 @@
     "loading": "No entries",
     "coinRemovedSuccess": "Coin removed successfully",
     "delete": "Delete", 
-    "favourite": "Favourite"
+    "favourite": "Favourite",
+    "importCSVTitle": "Import CSV",
+    "dragAndDrop": "Drag And Drop",
+    "cancel": "Cancel",
+    "upload": "Upload"
   },
   "coinCard": {
     "potential": "Potential",

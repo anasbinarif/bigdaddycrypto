@@ -174,7 +174,7 @@ export default function Item1({ loadingPortfolio }) {
             <Typography sx={{ fontSize: "0.9rem" }}>
               {t("totalValue")}
             </Typography>
-            <Typography
+            <Box
               sx={{
                 position: "relative",
                 fontSize: "2rem",
@@ -206,7 +206,7 @@ export default function Item1({ loadingPortfolio }) {
                   {addCommas(totalGesamtwert)}
                 </div>
               )}
-            </Typography>
+            </Box>
             <Typography
               className={gesamtwertPercentage < 0 ? "down" : "up"}
               sx={{
