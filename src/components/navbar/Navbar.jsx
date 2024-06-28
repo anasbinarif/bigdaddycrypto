@@ -16,7 +16,7 @@ import { SessionProvider } from "next-auth/react";
 import NavbarLink from "../navbar/Link";
 import Link from "next/link";
 import Image from "next/image";
-import HomeIcon from "../../../public/assets/svg/bdc.svg";
+import HomeIcon from "../../../public/assets/svg/Logo-03.svg";
 import FormDialog from "../importPreviousDataDialog/FormDialog";
 import { useTranslations } from "next-intl";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -128,8 +128,8 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   width: "auto",
                   height: "35px",
                   cursor: "pointer",
-                  backgroundColor: "white",
-                  borderRadius: "50%",
+                  // backgroundColor: "white",
+                  // borderRadius: "50%",
                   padding: "2px",
                 }}
               />

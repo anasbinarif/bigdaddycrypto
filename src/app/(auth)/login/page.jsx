@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useAtom } from "jotai/index";
 import Image from "next/image";
-import HomeIcon from "../../../../public/assets/svg/bdc.svg";
+import HomeIcon from "../../../../public/assets/svg/Logo-03.svg";
 import AlertBar from "../../../components/customAllert/Alert";
 import { sessionAtom } from "../../../app/stores/sessionStore";
 import { LanguageProvider, useLanguage } from "../LanguageContext";
@@ -174,15 +174,15 @@ const LoginPage = () => {
         >
           <Box
             sx={{
-              margin: "-58px 0 0 0",
-              width: "70px",
-              height: "70px",
+              margin: "0 12px 0 0",
+              width: "150px",
+              height: "40px",
             }}
           >
             <Box
               color="inherit"
               sx={{
-                borderRadius: "50%",
+                // borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -192,12 +192,12 @@ const LoginPage = () => {
                 src={HomeIcon}
                 alt="Home Icon"
                 style={{
-                  padding: "1px 3px 3.5px",
+                  // padding: "1px 3px 3.5px",
                   width: "100%",
                   height: "auto",
                   cursor: "pointer",
-                  backgroundColor: "white",
-                  borderRadius: "50%",
+                  // backgroundColor: "white",
+                  // borderRadius: "50%",
                   objectFit: "cover",
                 }}
               />

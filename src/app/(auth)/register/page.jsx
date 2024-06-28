@@ -10,7 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import HomeIcon from "../../../../public/assets/svg/bdc.svg";
+import HomeIcon from "../../../../public/assets/svg/Logo-03.svg";
 import { customAlphabet } from "nanoid";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
@@ -208,15 +208,15 @@ const RegisterPage = () => {
         >
           <Box
             sx={{
-              margin: "-58px 0 0 0",
-              width: "70px",
-              height: "70px",
+              margin: "0 12px 0 0",
+              width: "150px",
+              height: "50px",
             }}
           >
             <Box
               color="inherit"
               sx={{
-                borderRadius: "50%",
+                // borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -230,8 +230,8 @@ const RegisterPage = () => {
                   width: "100%",
                   height: "auto",
                   cursor: "pointer",
-                  backgroundColor: "white",
-                  borderRadius: "50%",
+                  // backgroundColor: "white",
+                  // borderRadius: "50%",
                   objectFit: "cover",
                 }}
               />
