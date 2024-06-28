@@ -253,10 +253,30 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               <LanguageSwitcher />
               <CurrencySwitcher />
               <Button
+                onClick={generateLink}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  whiteSpace: "nowrap",
+                  color: "var(--color-secondary)",
+                  padding: 0,
+                  fontSize: "15px",
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faShareAlt}
+                  style={{ marginRight: "10px" }}
+                />
+                Share
+              </Button>
+              <Button
                 onClick={handleOpenDialog}
                 sx={{
                   whiteSpace: "nowrap",
                   color: "var(--color-secondary)",
+                  padding: 0,
+                  fontSize: "15px",
                 }}
               >
                 {t("changePassword")}
@@ -421,6 +441,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   sx={{
                     whiteSpace: "nowrap",
                     color: "var(--color-secondary)",
+                    justifyContent: "flex-start",
                   }}
                 >
                   {t("changePassword")}
