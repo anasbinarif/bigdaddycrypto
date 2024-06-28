@@ -86,7 +86,7 @@ const Agb = () => {
               rechtlich bindendes Angebot, sondern eine Aufforderung zur
               Bestellung dar.
               <br style={{ marginBottom: "1rem" }}></br>
-              Durch Anklicken des Buttons "Bestellen" geben Sie eine
+              Durch Anklicken des Buttons &quot;Bestellen&quot; geben Sie eine
               verbindliche Bestellung der im Warenkorb enthaltenen
               Dienstleistungen ab. Der Vertrag kommt zustande, wenn wir Ihre
               Bestellung durch eine Auftragsbestätigung per E-Mail unmittelbar
