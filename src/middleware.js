@@ -25,6 +25,10 @@ export const config = {
     "/verifyPage",
     "/dashboard",
     "/shared",
+    "/policy/datenschutz",
+    "/policy/widerrufsbelehrung",
+    "/policy/agb",
+    "/policy/impressum",
     // "/((?!api|_next/static|_next/image|favicon.ico|apple-touch-icon.png|favicon.svg|images/books|icons|manifest).*)",
   ],
 };

@@ -43,6 +43,7 @@ const RegisterPage = () => {
     pinMessage: "",
   });
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const isValidEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Standard email regex
@@ -443,6 +444,41 @@ const RegisterPage = () => {
             }
             label={languageData["disclaimer"]}
             sx={{
+              alignSelf: "flex-start",
+              alignItems: "flex-start",
+              mb: "1rem",
+              "& .MuiButtonBase-root": {
+                padding: "0 10px",
+                // ml: "10px",
+              },
+              "& .MuiTypography-root": {
+                color: "#ffffff80",
+                fontSize: "14px", // Set desired font size here
+                textAlign: "left",
+              },
+            }}
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                sx={{
+                  "&.MuiCheckbox-root": {
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
+                    "&.Mui-checked": {
+                      color: "var(--color-secondary)",
+                    },
+                  },
+                }}
+              />
+            }
+            label={languageData["terms"]}
+            sx={{
+              alignSelf: "flex-start",
               alignItems: "flex-start",
               mb: "1rem",
               "& .MuiButtonBase-root": {
@@ -461,7 +497,7 @@ const RegisterPage = () => {
             variant="contained"
             color="primary"
             fullWidth
-            disabled={!disclaimerAccepted || pending}
+            disabled={!disclaimerAccepted || !termsAccepted || pending}
             onClick={handleRegister}
             sx={{
               textTransform: "capitalize",

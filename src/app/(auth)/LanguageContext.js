@@ -19,6 +19,7 @@ const langs = {
     passwordLabel:
       "*Password should be 8 characters long, have a capital letter, atleast 1 number and a special character",
     disclaimer: "I have read the disclaimer and agree to it.",
+    terms: "I have read and agree to the Terms and Conditions.",
     register: "To Register",
     registerDisclaimer:
       "The information presented here is for personal purposes only and does not constitute financial advice.",
@@ -41,6 +42,8 @@ const langs = {
     passwordLabel:
       "*Das Passwort sollte 8 Zeichen lang sein, einen Großbuchstaben, mindestens 1 Zahl und ein Sonderzeichen enthalten",
     disclaimer: "Ich habe den Disclaimer gelesen und bin damit einverstanden.",
+    terms:
+      "Ich habe die Allgemeinen Geschäftsbedingungen gelesen und stimme zu.",
     register: "registrieren",
     registerDisclaimer:
       "Die hier dargestellten Informationen dienen ausschließlich für persönliche Zwecke und stellen keine Finanzberatung dar.",
