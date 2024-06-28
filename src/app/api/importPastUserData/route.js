@@ -97,12 +97,16 @@ export async function POST(req) {
             const adjustedDCA = portfolio.DCA !== "" ? Number(portfolio.DCA) + 1 : 0;
             const adjustedGewichtung = portfolio.Gewichtung !== "" ? Number(portfolio.Gewichtung) + 1 : 0;
             const adjustedRelevanz = portfolio.Relevanz !== "" ? Number(portfolio.Relevanz) + 1 : 0;
+            const Price = assetMap[portfolio.AssetID] ? assetMap[portfolio.AssetID].Price : 0;
+            const totalHoldingsValue = (totalCoins * parseFloat(Price)).toFixed(
+                2
+            );
 
 
 
             const assets = [{
                 CoinGeckoID: assetMap[portfolio.AssetID] ? assetMap[portfolio.AssetID].CoinGeckoID : null,
-                Holdings: portfolio.Holdings,
+                Holdings: totalHoldingsValue,
                 DCA: portfolio.avgPrice,
                 DCA_0: adjustedDCA,
                 Gewichtung: adjustedGewichtung,
