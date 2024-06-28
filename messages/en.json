@@ -22,7 +22,9 @@
     "changePassword": "Change Password",
     "changeText": "Confirm old password and new password",
     "confirm": "Confirm old password",
-    "new": "New password"
+    "new": "New password",
+    "alertGraph": "To access the assets graph, please subscribe to one of our plans.",
+    "alertDashboard": "To access the Dashboard, please subscribe to one of our Yearly plans."
   },
   "bewertungCard": {
     "title": "Evaluation",

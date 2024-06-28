@@ -94,7 +94,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           const subscriptionData = await fetchUserSubscriptionPlan(
             session.user?.id
           );
-          console.log("subscriptionData", subscriptionData, session);
+          // console.log("subscriptionData", subscriptionData, session);
           setSession({
             ...session,
             user: {
@@ -102,6 +102,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               subscriptionPlan: subscriptionData.plan,
               paymentDetails: subscriptionData.payment,
               subscribed: subscriptionData.plan !== "free",
+              billingCycle: subscriptionData?.payment?.Subscription.billingCycle
             },
           });
         }
@@ -115,7 +116,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
     };
 
     updateSessionWithSubscription();
-  }, [status, session]);
+  }, [status]);
 
   const handleLogoutFun = async () => {
     setLoading(true);

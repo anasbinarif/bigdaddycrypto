@@ -22,7 +22,9 @@
     "changePassword": "Passwort ändern",
     "changeText": "Altes Passwort und neues Passwort bestätigen",
     "confirm": "Altes Passwort bestätigen",
-    "new": "Neues Passwort"
+    "new": "Neues Passwort",
+    "alertGraph": "Um auf die Vermögensübersicht zuzugreifen, abonnieren Sie bitte einen unserer Pläne.",
+    "alertDashboard": "Um auf das Dashboard zuzugreifen, abonnieren Sie bitte einen unserer Jahrespläne."
   },
   "bewertungCard": {
     "title": "Bewertung",

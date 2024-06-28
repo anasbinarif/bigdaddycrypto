@@ -1,16 +1,16 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Box,
-  Menu,
-  MenuItem,
-  Snackbar,
-  Alert,
-  Popper,
+    AppBar,
+    Toolbar,
+    Typography,
+    IconButton,
+    Box,
+    Menu,
+    MenuItem,
+    Snackbar,
+    Alert,
+    Popper,
 } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import NavbarLink from "../navbar/Link";
@@ -31,295 +31,301 @@ import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Navbar = ({ tabSelector, setTabSelector }) => {
-  const t = useTranslations("navbar");
-  const [sessionJotai, setSession] = useAtom(sessionAtom);
-  const theme = useTheme();
-  const [width, setWidth] = useState(0);
-  const isMobile = width < 992;
-  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
-  const [accountAnchorEl, setAccountAnchorEl] = useState(null);
-  const [isSubscribed, setIsSubscribed] = useState("nope");
-  const [alertOpen, setAlertOpen] = useState(false);
+    const t = useTranslations("navbar");
+    const [sessionJotai, setSession] = useAtom(sessionAtom);
+    const theme = useTheme();
+    const [width, setWidth] = useState(0);
+    const isMobile = width < 992;
+    const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+    const [accountAnchorEl, setAccountAnchorEl] = useState(null);
+    const [isSubscribed, setIsSubscribed] = useState("nope");
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth);
+    useEffect(() => {
+        const handleResize = () => {
+            setWidth(window.innerWidth);
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    const PopperMy = useCallback((props) => {
+        const anchorEl = document.getElementById("hamMenu");
+
+        return (
+            <Popper
+                {...props}
+                anchorEl={anchorEl}
+                style={{
+                    width: anchorEl.clientWidth,
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                }}
+                sx={{
+                    "& > .MuiPaper-root": {
+                        backgroundColor: "#1d1d1d",
+                    },
+                }}
+                placement="bottom-end"
+            />
+        );
+    }, []);
+
+    const handleMenuClick = (event) => {
+        setMenuAnchorEl(event.currentTarget);
     };
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
+    useEffect(() => {
+        if (sessionJotai) {
+            setIsSubscribed(sessionJotai?.user?.subscribed ? "true" : "false");
+        }
+    }, [sessionJotai]);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
+    const handleAccountClick = (event) => {
+        setAccountAnchorEl(event.currentTarget);
     };
-  }, []);
 
-  const PopperMy = useCallback((props) => {
-    const anchorEl = document.getElementById("hamMenu");
+    const handleClose = () => {
+        setMenuAnchorEl(null);
+        setAccountAnchorEl(null);
+    };
+
+    const handleGraphClick = (event) => {
+        if (sessionJotai?.user?.subscriptionPlan === "free") {
+            setAlertMessage(t("alertGraph"));
+            setAlertOpen(true);
+            event.preventDefault();
+        }
+    };
+
+    const handleDashboardClick = (event) => {
+        if (sessionJotai?.user?.subscriptionPlan === "free" || sessionJotai?.user.billingCycle === "monthly") {
+            setAlertMessage(t("alertDashboard"));
+            setAlertOpen(true);
+            event.preventDefault();
+        }
+    };
 
     return (
-      <Popper
-        {...props}
-        anchorEl={anchorEl}
-        style={{
-          width: anchorEl.clientWidth,
-          position: "absolute",
-          bottom: 0,
-          right: 0,
-        }}
-        sx={{
-          "& > .MuiPaper-root": {
-            backgroundColor: "#1d1d1d",
-          },
-        }}
-        placement="bottom-end"
-      />
-    );
-  }, []);
-
-  const handleMenuClick = (event) => {
-    setMenuAnchorEl(event.currentTarget);
-  };
-
-  useEffect(() => {
-    if (sessionJotai) {
-      setIsSubscribed(sessionJotai?.user?.subscribed ? "true" : "false");
-    }
-  }, [sessionJotai]);
-
-  const handleAccountClick = (event) => {
-    setAccountAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setMenuAnchorEl(null);
-    setAccountAnchorEl(null);
-  };
-
-  const handleGraphClick = (event) => {
-    if (sessionJotai?.user?.subscriptionPlan === "free") {
-      setAlertOpen(true);
-      event.preventDefault();
-    }
-  };
-
-  return (
-    <>
-      <AppBar
-        position="fixed"
-        sx={{
-          backgroundColor: "#111826",
-          borderBottom: "1px solid #444444",
-        }}
-      >
-        <Toolbar
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
-          }}
-        >
-          <Link style={{ display: "flex", alignItems: "center" }} href="/">
-            <IconButton color="inherit">
-              <Image
-                src={HomeIcon}
-                alt="Home Icon"
-                style={{
-                  width: "auto",
-                  height: "35px",
-                  cursor: "pointer",
-                  // backgroundColor: "white",
-                  // borderRadius: "50%",
-                  padding: "2px",
-                }}
-              />
-            </IconButton>
-            {!isMobile && (
-              <Typography variant="body1" sx={{ ml: 1 }}>
-                {t("companyName")}
-              </Typography>
-            )}
-          </Link>
-          {isSubscribed === "false" && <SubscribeDialog />}
-          <FormDialog />
-          {isMobile ? (
-            <Box>
-              <IconButton color="inherit" onClick={handleMenuClick}>
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="hamMenu"
-                // anchorEl={menuAnchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(menuAnchorEl)}
-                onClose={handleClose}
+        <>
+            <AppBar
+                position="fixed"
                 sx={{
-                  "& .MuiPaper-root": {
-                    backgroundColor: "rgb(32, 37, 48)",
-                    color: "#ffffff",
-                  },
-                  fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                    backgroundColor: "#111826",
+                    borderBottom: "1px solid #444444",
                 }}
-              >
-                <MenuItem onClick={handleClose}>
-                  <Link href="/" className={styles.nav__link}>
-                    {t("home")}
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Link href="/faq" className={styles.nav__link}>
-                    {t("faq")}
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Link href="/media" className={styles.nav__link}>
-                    {t("media")}
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Link
-                    href="/assetsGraph"
-                    onClick={handleGraphClick}
-                    className={styles.nav__link}
-                  >
-                    {t("graph")}
-                  </Link>
-                  <FontAwesomeIcon
-                    icon={faCrown}
-                    style={{
-                      paddingLeft: "10px",
-                      opacity: "0.25",
-                      fontSize: "0.9rem",
-                    }}
-                  />
-                </MenuItem>
-              </Menu>
-              <SessionProvider>
-                <IconButton color="inherit" onClick={handleAccountClick}>
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  // anchorEl={accountAnchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(accountAnchorEl)}
-                  onClose={handleClose}
-                  sx={{
-                    "& .MuiPaper-root": {
-                      backgroundColor: "rgb(32, 37, 48)",
-                      color: "#ffffff",
-                    },
-                    "& .MuiBox-root": {
-                      display: "flex",
-                      flexDirection: "column",
-
-                      "& .MuiMenuItem-root": {
-                        display: "flex",
-                        flexDirection: "column",
-                      },
-                    },
-                    fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
-                  }}
-                >
-                  <NavbarLink mobileView={true} handleClose={handleClose} />
-                </Menu>
-              </SessionProvider>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
-              }}
             >
-              <Link
-                style={{ marginRight: "15px", fontFamily: "inherit" }}
-                href="/"
-                className={styles.nav__link}
-              >
-                {t("home")}
-              </Link>
-              <Link
-                style={{ marginRight: "15px", fontFamily: "inherit" }}
-                href="/faq"
-                className={styles.nav__link}
-              >
-                {t("faq")}
-              </Link>
-              <Link
-                style={{ marginRight: "15px", fontFamily: "inherit" }}
-                href="/media"
-                className={styles.nav__link}
-              >
-                {t("media")}
-              </Link>
-              <Link
-                style={{ marginRight: "15px", fontFamily: "inherit" }}
-                href="/dashboard"
-                onClick={handleGraphClick}
-                className={styles.nav__link}
-              >
-                Dashboards
-              </Link>
-
-              <Box>
-                <Link
-                  style={{ marginRight: "0px", fontFamily: "inherit" }}
-                  href="/assetsGraph"
-                  onClick={handleGraphClick}
-                  className={styles.nav__link}
+                <Toolbar
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                    }}
                 >
-                  {t("graph")}
-                </Link>
-                <FontAwesomeIcon
-                  icon={faCrown}
-                  style={{
-                    paddingLeft: "5px",
-                    opacity: "0.25",
-                    fontSize: "0.9rem",
-                    marginRight: "15px",
-                  }}
-                />
-              </Box>
-              <SessionProvider>
-                <NavbarLink />
-              </SessionProvider>
-            </Box>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={6000}
-        onClose={() => setAlertOpen(false)}
-      >
-        <Alert
-          onClose={() => setAlertOpen(false)}
-          severity="info"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          To access the assets graph, please subscribe to one of our plans.
-        </Alert>
-      </Snackbar>
-    </>
-  );
+                    <Link style={{ display: "flex", alignItems: "center" }} href="/">
+                        <IconButton color="inherit">
+                            <Image
+                                src={HomeIcon}
+                                alt="Home Icon"
+                                style={{
+                                    width: "auto",
+                                    height: "35px",
+                                    cursor: "pointer",
+                                    padding: "2px",
+                                }}
+                            />
+                        </IconButton>
+                        {!isMobile && (
+                            <Typography variant="body1" sx={{ ml: 1 }}>
+                                {t("companyName")}
+                            </Typography>
+                        )}
+                    </Link>
+                    {isSubscribed === "false" && <SubscribeDialog />}
+                    <FormDialog />
+                    {isMobile ? (
+                        <Box>
+                            <IconButton color="inherit" onClick={handleMenuClick}>
+                                <MenuIcon />
+                            </IconButton>
+                            <Menu
+                                id="hamMenu"
+                                anchorOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                }}
+                                open={Boolean(menuAnchorEl)}
+                                onClose={handleClose}
+                                sx={{
+                                    "& .MuiPaper-root": {
+                                        backgroundColor: "rgb(32, 37, 48)",
+                                        color: "#ffffff",
+                                    },
+                                    fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                                }}
+                            >
+                                <MenuItem onClick={handleClose}>
+                                    <Link href="/" className={styles.nav__link}>
+                                        {t("home")}
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                    <Link href="/faq" className={styles.nav__link}>
+                                        {t("faq")}
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                    <Link href="/media" className={styles.nav__link}>
+                                        {t("media")}
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                    <Link
+                                        href="/assetsGraph"
+                                        onClick={handleGraphClick}
+                                        className={styles.nav__link}
+                                    >
+                                        {t("graph")}
+                                    </Link>
+                                    <FontAwesomeIcon
+                                        icon={faCrown}
+                                        style={{
+                                            paddingLeft: "10px",
+                                            opacity: "0.25",
+                                            fontSize: "0.9rem",
+                                        }}
+                                    />
+                                </MenuItem>
+                            </Menu>
+                            <SessionProvider>
+                                <IconButton color="inherit" onClick={handleAccountClick}>
+                                    <AccountCircle />
+                                </IconButton>
+                                <Menu
+                                    anchorOrigin={{
+                                        vertical: "top",
+                                        horizontal: "right",
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: "top",
+                                        horizontal: "right",
+                                    }}
+                                    open={Boolean(accountAnchorEl)}
+                                    onClose={handleClose}
+                                    sx={{
+                                        "& .MuiPaper-root": {
+                                            backgroundColor: "rgb(32, 37, 48)",
+                                            color: "#ffffff",
+                                        },
+                                        "& .MuiBox-root": {
+                                            display: "flex",
+                                            flexDirection: "column",
+
+                                            "& .MuiMenuItem-root": {
+                                                display: "flex",
+                                                flexDirection: "column",
+                                            },
+                                        },
+                                        fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                                    }}
+                                >
+                                    <NavbarLink mobileView={true} handleClose={handleClose} />
+                                </Menu>
+                            </SessionProvider>
+                        </Box>
+                    ) : (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                            }}
+                        >
+                            <Link
+                                style={{ marginRight: "15px", fontFamily: "inherit" }}
+                                href="/"
+                                className={styles.nav__link}
+                            >
+                                {t("home")}
+                            </Link>
+                            <Link
+                                style={{ marginRight: "15px", fontFamily: "inherit" }}
+                                href="/faq"
+                                className={styles.nav__link}
+                            >
+                                {t("faq")}
+                            </Link>
+                            <Link
+                                style={{ marginRight: "15px", fontFamily: "inherit" }}
+                                href="/media"
+                                className={styles.nav__link}
+                            >
+                                {t("media")}
+                            </Link>
+                            <Link
+                                style={{ marginRight: "15px", fontFamily: "inherit" }}
+                                href="/dashboard"
+                                onClick={handleDashboardClick}
+                                className={styles.nav__link}
+                            >
+                                Dashboards
+                            </Link>
+
+                            <Box>
+                                <Link
+                                    style={{ marginRight: "0px", fontFamily: "inherit" }}
+                                    href="/assetsGraph"
+                                    onClick={handleGraphClick}
+                                    className={styles.nav__link}
+                                >
+                                    {t("graph")}
+                                </Link>
+                                <FontAwesomeIcon
+                                    icon={faCrown}
+                                    style={{
+                                        paddingLeft: "5px",
+                                        opacity: "0.25",
+                                        fontSize: "0.9rem",
+                                        marginRight: "15px",
+                                    }}
+                                />
+                            </Box>
+                            <SessionProvider>
+                                <NavbarLink />
+                            </SessionProvider>
+                        </Box>
+                    )}
+                </Toolbar>
+            </AppBar>
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={6000}
+                onClose={() => setAlertOpen(false)}
+            >
+                <Alert
+                    onClose={() => setAlertOpen(false)}
+                    severity="info"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+        </>
+    );
 };
 
 export default Navbar;

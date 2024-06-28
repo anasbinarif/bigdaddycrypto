@@ -187,15 +187,15 @@ export const getAssets = async (category, userId) => {
     }
 
     if (!response.ok) {
-      throw new Error("Failed to fetch data");
+      // throw new Error("Failed to fetch data");
     }
 
     const data = await response.json();
-    console.log(`Fetched assets for category: ${category}`, data);
+    // console.log(`Fetched assets for category: ${category}`, data);
     return data;
   } catch (error) {
-    console.error("Error fetching assets:", error);
-    throw error;
+    // console.error("Error fetching assets:", error);
+    // throw error;
   }
 };
 
@@ -256,6 +256,9 @@ export const getUserPortfolio = async (userId) => {
   };
 
   const data1 = await res.json();
+  if (data1.message == "No portfolio found") {
+    return null;
+  }
   const data = {
     assets: data1?.data.assetDetails,
     assetsCalculations: data1?.data.portfolio,
