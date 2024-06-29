@@ -437,6 +437,7 @@ const RegisterPage = () => {
                 onChange={(e) => setDisclaimerAccepted(e.target.checked)}
                 sx={{
                   "&.MuiCheckbox-root": {
+                    color: "#ffffff80",
                     "&:hover": {
                       backgroundColor: "transparent",
                     },
@@ -471,6 +472,7 @@ const RegisterPage = () => {
                 onChange={(e) => setTermsAccepted(e.target.checked)}
                 sx={{
                   "&.MuiCheckbox-root": {
+                    color: "#ffffff80",
                     "&:hover": {
                       backgroundColor: "transparent",
                     },

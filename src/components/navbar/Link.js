@@ -65,7 +65,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         body: JSON.stringify({
           email: sessionJotai?.user.email,
           newPassword: newPassword,
-          oldPassword: currentPassword
+          oldPassword: currentPassword,
         }),
       });
 
@@ -77,15 +77,13 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         handleCloseDialog();
       } else if (changePasswordData.error == "Incorrect old password") {
         setAlert("Incorrect old password");
-      }
-      else {
+      } else {
         setAlert("Failed to change password");
       }
     } catch (error) {
       setAlert("An error occurred");
     }
-
-  }
+  };
 
   useEffect(() => {
     const updateSessionWithSubscription = async () => {
@@ -102,7 +100,8 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               subscriptionPlan: subscriptionData.plan,
               paymentDetails: subscriptionData.payment,
               subscribed: subscriptionData.plan !== "free",
-              billingCycle: subscriptionData?.payment?.Subscription?.billingCycle
+              billingCycle:
+                subscriptionData?.payment?.Subscription?.billingCycle,
             },
           });
         }
@@ -149,8 +148,9 @@ const NavbarLink = ({ mobileView, handleClose }) => {
 
       const resData = await res.json();
       console.log(resData, window.location.hostname);
-      const str = `${window.location.hostname}${window.location.hostname === "localhost" ? ":3000" : ""
-        }/en/shared?id=${sessionJotai?.user.id}&key=${resData.data}`;
+      const str = `${window.location.hostname}${
+        window.location.hostname === "localhost" ? ":3000" : ""
+      }/en/shared?id=${sessionJotai?.user.id}&key=${resData.data}`;
 
       console.log(str);
       await navigator.clipboard.writeText(str);
@@ -239,13 +239,14 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                 transition: "all 0.2s ease-in-out",
               }}
             >
-              <Typography variant="body1">
+              <Typography variant="body1" sx={{ textAlign: "center" }}>
                 {t("portfolioId")}: {session?.user?.username}
               </Typography>
               <Typography
                 sx={{
                   color: "var(--color-secondary)",
                   textTransform: "uppercase",
+                  textAlign: "center",
                   // ml: "10px",
                 }}
               >
@@ -263,6 +264,8 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   color: "var(--color-secondary)",
                   padding: 0,
                   fontSize: "15px",
+                  display: "flex",
+                  justifyContent: "center",
                 }}
               >
                 <FontAwesomeIcon
@@ -297,6 +300,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   sx={{
                     width: "100%",
                     display: "flex",
+                    justifyContent: "center",
                     bgcolor: "#202530",
                     p: "0.25em 0.7em",
                     borderRadius: "50px",
@@ -613,12 +617,17 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             },
           }}
         >
-          <Button type="submit" sx={{
-            "&:hover": {
-              backgroundColor: "#02673e",
-              borderBottom: "2px solid var(--color-secondary)",
-            },
-          }} >{t("changePassword")}</Button>
+          <Button
+            type="submit"
+            sx={{
+              "&:hover": {
+                backgroundColor: "#02673e",
+                borderBottom: "2px solid var(--color-secondary)",
+              },
+            }}
+          >
+            {t("changePassword")}
+          </Button>
         </DialogActions>
       </Dialog>
     </>
