@@ -7,7 +7,7 @@ import {
 import { useAtom } from "jotai/index";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
-import { calculateScore } from "../../../../lib/data";
+import { calculateScore0 } from "../../../../lib/data";
 
 const categoryColors = {
   AI: "#FFD700",
@@ -225,7 +225,7 @@ const DonutChart = ({
       if (portData?.assets) {
         // console.log(portData.assets);
         try {
-          const calculatedScore = await calculateScore(portData.assets);
+          const calculatedScore = await calculateScore0(portData.assets);
           setScore(calculatedScore?.score);
           // console.log("Calculated Score:", calculatedScore);
         } catch (error) {

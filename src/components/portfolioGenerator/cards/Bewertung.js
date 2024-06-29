@@ -180,34 +180,40 @@ const setColorPot = (dataPotential) => {
   }
 };
 
-const calculateDotColor = (name, score, portfolio) => {
+const calculateDotColor = (name, score) => {
   switch (name) {
     case "scoreFactor_Category":
-      if (score > 10) return green[500];
-      if (score >= 7) return "orange";
-      if (score >= 5) return "lightcoral";
-      return "darkred";
+      if (score > 10) return green[500]; // Green: > 10%
+      if (score >= 7) return "orange"; // Orange: 7% to 10%
+      if (score >= 5) return "lightcoral"; // Light Red: 5% to 7%
+      return "darkred"; // Dark Red: < 5%
+
     case "scoreFactor_CategoryTwice":
-      if (score >= 2) return green[500];
-      if (score > 0) return "orange";
-      return "red";
+      if (score >= 10) return green[500]; // Green: Min 2 coins from every category
+      if (score > 0) return "orange"; // Orange: If one category has less than 2 coins
+      return "red"; // Red: If 2 or more categories have 0 coins
+
     case "scoreFactor_CategoryMissing":
-      if (score === 0) return green[500];
-      if (score === 1) return "orange";
-      return "red";
+      if (score === 10) return green[500]; // Green: All categories selected
+      if (score === 7) return "orange"; // Orange: One category not selected
+      return "red"; // Red: Two or more categories not selected
+
     case "scoreFactor_Allocation":
-      if (score < 5) return green[500];
-      if (score < 8) return "orange";
-      return "red";
+      if (score < 5) return green[500]; // Green: Difference < 5%
+      if (score < 8) return "orange"; // Orange: Difference 5% - 8%
+      return "red"; // Red: Difference >= 8%
+
     case "scoreFactor_CoinCount":
-      if (score >= 20 && score <= 40) return green[500];
-      if (score >= 15 && score < 20) return yellow[800];
-      if (score >= 10 && score < 15) return "orange";
-      return "red";
+      if (score >= 20 && score <= 40) return green[500]; // Green: 20 - 40 coins
+      if (score >= 15 && score < 20) return yellow[800]; // Yellow: 15 - 20 coins
+      if (score >= 10 && score < 15) return "orange"; // Orange: 10 - 15 coins
+      return "red"; // Red: < 10 or > 40 coins
+
     default:
       return "grey";
   }
 };
+
 
 function BewertungCard({ preCalcPort }) {
   const [portfolio] = useAtom(portfolioAtom);

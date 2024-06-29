@@ -810,6 +810,172 @@ export const calculateScore = (portfolioData) => {
 
     if (assetCount >= 2) {
       score += (100 / totalCategories) * 0.9;
+      scoreFactor_Category += (100 / totalCategories) * 0.1;
+    } else {
+      score += (100 / totalCategories) * 0.8;
+      scoreFactor_Category += (100 / totalCategories) * 0.1;
+    }
+  });
+
+  // Adjust scoreFactor_Category based on the rules
+  if (maxCategoryPercentage > 10) {
+    scoreFactor_Category = 10; // Green
+  } else if (maxCategoryPercentage >= 7) {
+    scoreFactor_Category = 7; // Orange
+  } else if (maxCategoryPercentage >= 5) {
+    scoreFactor_Category = 5; // Light Red
+  } else {
+    scoreFactor_Category = 4; // Dark Red
+  }
+
+  // Calculate scoreFactor_CategoryTwice based on double coverage
+  let categoryWithLessThan2Coins = 0;
+  let categoryWithZeroCoins = 0;
+  Object.keys(categoryCounts).forEach((category) => {
+    let assetCount = categoryCounts[category];
+    if (assetCount < 2) {
+      categoryWithLessThan2Coins++;
+    }
+    if (assetCount === 0) {
+      categoryWithZeroCoins++;
+    }
+  });
+
+  if (categoryWithZeroCoins >= 2) {
+    scoreFactor_CategoryTwice = 2; // Red
+  } else if (categoryWithLessThan2Coins > 0) {
+    scoreFactor_CategoryTwice = 7; // Orange
+  } else {
+    scoreFactor_CategoryTwice = 10; // Green
+  }
+
+  // Calculate scoreFactor_CategoryMissing based on missing categories
+  const missingCategoriesCount = totalCategories - Object.keys(categoryCounts).length;
+
+  if (missingCategoriesCount >= 2) {
+    scoreFactor_CategoryMissing = 2; // Red
+  } else if (missingCategoriesCount > 0) {
+    scoreFactor_CategoryMissing = 7; // Orange
+  } else {
+    scoreFactor_CategoryMissing = 10; // Green
+  }
+
+  // Calculate the score based on the number of selected assets
+  score += Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
+
+  // Calculate scoreFactor_CoinCount based on the number of coins
+  if (selectedAssetsCount < 10 || selectedAssetsCount > 40) {
+    scoreFactor_CoinCount = 2; // Red
+  } else if (selectedAssetsCount >= 10 && selectedAssetsCount < 15) {
+    scoreFactor_CoinCount = 7; // Orange
+  } else if (selectedAssetsCount >= 15 && selectedAssetsCount < 20) {
+    scoreFactor_CoinCount = 8; // Yellow
+  } else {
+    scoreFactor_CoinCount = 10; // Green
+  }
+
+  let averageCategoryAllocation = 100 / Object.keys(categoryCounts).length;
+  let maxCategoryAllocation = 0;
+  let minCategoryAllocation = 100;
+
+  for (let category in categoryCounts) {
+    let allocation = (categoryCounts[category] / selectedAssetsCount) * 100;
+    if (allocation > maxCategoryAllocation) {
+      maxCategoryAllocation = allocation;
+    }
+    if (allocation < minCategoryAllocation) {
+      minCategoryAllocation = allocation;
+    }
+  }
+
+  // Calculate scoreFactor_Allocation based on the difference in % share
+  let allocationDifference = maxCategoryAllocation - minCategoryAllocation;
+
+  if (allocationDifference >= 8) {
+    scoreFactor_Allocation = 2; // Red
+  } else if (allocationDifference >= 5) {
+    scoreFactor_Allocation = 7; // Orange
+  } else {
+    scoreFactor_Allocation = 10; // Green
+  }
+
+  // Calculate BTC allocation fix
+  let totalAmount = 0;
+  portfolioData.forEach((item) => {
+    let value = parseFloat(item.amount);
+    if (!isNaN(value)) {
+      totalAmount += value;
+    }
+  });
+
+  let btcAmount = portfolioData.find((item) => item.coin === "BTC")?.amount || 0;
+  let btcAllo = (100 / totalAmount) * btcAmount;
+
+  // if (btcAllo >= maxCategoryAllocation * 0.8) {
+  //   maxSF = (maxSF + 1.5) / 2.5;
+  //   minSF = (minSF + 1.5) / 2.5;
+  // }
+
+  // Final score calculation
+  // score = score * maxSF * minSF;
+  // score = Math.min(100, score);
+
+  // if (totalCategories > Object.keys(categoryCounts).length) {
+  //   score = score * 0.9;
+  // }
+
+  // if (isNaN(score)) {
+  //   score = 0;
+  // }
+
+  return {
+    // score: score.toFixed(1),
+    scoreFactor_Category: scoreFactor_Category.toFixed(0),
+    scoreFactor_CategoryTwice: scoreFactor_CategoryTwice.toFixed(0),
+    scoreFactor_CategoryMissing: scoreFactor_CategoryMissing.toFixed(0),
+    scoreFactor_Allocation: scoreFactor_Allocation.toFixed(0),
+    scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0),
+  };
+};
+
+export const calculateScore0 = (portfolioData) => {
+  const totalCategories = 9;
+  const maxAssetsCount = 20;
+  let selectedAssetsCount = 0;
+  let categoryCounts = {};
+
+  // Count the occurrences of each category in the portfolio
+  portfolioData.forEach((item) => {
+    item.Category.forEach((category) => {
+      if (!categoryCounts[category]) {
+        categoryCounts[category] = 0;
+      }
+      categoryCounts[category]++;
+    });
+    selectedAssetsCount++;
+  });
+
+  let score = 0;
+  let scoreFactor_Category = 0;
+  let scoreFactor_CategoryTwice = 0;
+  let scoreFactor_Allocation = 0;
+  let scoreFactor_CoinCount = 0;
+  let scoreFactor_CategoryMissing = 0;
+  let maxCategoryPercentage = 0;
+  let totalCategoryPercentage = 0;
+
+  // Calculate the score based on category distribution
+  Object.keys(categoryCounts).forEach((category) => {
+    let assetCount = categoryCounts[category];
+    let categoryPercentage = (assetCount / selectedAssetsCount) * 100;
+    totalCategoryPercentage += categoryPercentage;
+
+    if (categoryPercentage > maxCategoryPercentage) {
+      maxCategoryPercentage = categoryPercentage;
+    }
+
+    if (assetCount >= 2) {
+      score += (100 / totalCategories) * 0.9;
       scoreFactor_CategoryTwice += (100 / totalCategories) * 0.1;
       scoreFactor_Category += (100 / totalCategories) * 0.1;
     } else {
@@ -899,10 +1065,15 @@ export const calculateScore = (portfolioData) => {
 
   return {
     score: score.toFixed(1),
-    scoreFactor_Category: scoreFactor_Category.toFixed(0),
-    scoreFactor_CategoryTwice: scoreFactor_CategoryTwice.toFixed(0),
-    scoreFactor_CategoryMissing: scoreFactor_CategoryMissing.toFixed(0),
-    scoreFactor_Allocation: scoreFactor_Allocation.toFixed(0),
-    scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0),
+    // scoreFactor_Category: scoreFactor_Category.toFixed(0),
+    // scoreFactor_CategoryTwice: scoreFactor_CategoryTwice.toFixed(0),
+    // scoreFactor_CategoryMissing: scoreFactor_CategoryMissing.toFixed(0),
+    // scoreFactor_Allocation: scoreFactor_Allocation.toFixed(0),
+    // scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0),
   };
 };
+
+
+
+
+
