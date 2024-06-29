@@ -772,7 +772,7 @@ export const reverseCategoriesDisplay = {
   "Tokenisierung/ RWA": "nft",
 };
 
-export const calculateScore = (portfolioData) => {
+export const calculateScore = (portfolioData, cals) => {
   const totalCategories = 9;
   const maxAssetsCount = 20;
   let selectedAssetsCount = 0;
@@ -800,6 +800,8 @@ export const calculateScore = (portfolioData) => {
 
   // Calculate the score based on category distribution
   Object.keys(categoryCounts).forEach((category) => {
+    if (category === "none") return; // Ignore the 'none' category
+
     let assetCount = categoryCounts[category];
     let categoryPercentage = (assetCount / selectedAssetsCount) * 100;
     totalCategoryPercentage += categoryPercentage;
@@ -807,96 +809,99 @@ export const calculateScore = (portfolioData) => {
     if (categoryPercentage > maxCategoryPercentage) {
       maxCategoryPercentage = categoryPercentage;
     }
-
-    if (assetCount >= 2) {
-      score += (100 / totalCategories) * 0.9;
-      scoreFactor_Category += (100 / totalCategories) * 0.1;
-    } else {
-      score += (100 / totalCategories) * 0.8;
-      scoreFactor_Category += (100 / totalCategories) * 0.1;
-    }
   });
 
-  // Adjust scoreFactor_Category based on the rules
-  if (maxCategoryPercentage > 10) {
-    scoreFactor_Category = 10; // Green
-  } else if (maxCategoryPercentage >= 7) {
-    scoreFactor_Category = 7; // Orange
-  } else if (maxCategoryPercentage >= 5) {
-    scoreFactor_Category = 5; // Light Red
-  } else {
-    scoreFactor_Category = 4; // Dark Red
-  }
+  // Adjust scoreFactor_CategoryTwice based on the rules using cals.counts
+  let categoriesWithLessThan2Coins = 0;
+  let categoriesWith0Coins = 0;
 
-  // Calculate scoreFactor_CategoryTwice based on double coverage
-  let categoryWithLessThan2Coins = 0;
-  let categoryWithZeroCoins = 0;
-  Object.keys(categoryCounts).forEach((category) => {
-    let assetCount = categoryCounts[category];
+  Object.keys(cals.counts).forEach((category) => {
+    if (category === "none") return; // Ignore the 'none' category
+
+    let assetCount = cals.counts[category];
     if (assetCount < 2) {
-      categoryWithLessThan2Coins++;
-    }
-    if (assetCount === 0) {
-      categoryWithZeroCoins++;
+      categoriesWithLessThan2Coins++;
+      if (assetCount === 0) {
+        categoriesWith0Coins++;
+      }
     }
   });
 
-  if (categoryWithZeroCoins >= 2) {
-    scoreFactor_CategoryTwice = 2; // Red
-  } else if (categoryWithLessThan2Coins > 0) {
-    scoreFactor_CategoryTwice = 7; // Orange
+  if (categoriesWith0Coins >= 2) {
+    scoreFactor_CategoryTwice = 3; // If 2 or more categories have 0 coins
+  } else if (categoriesWithLessThan2Coins > 0) {
+    scoreFactor_CategoryTwice = 2; // If even one category has less than 2 coins
   } else {
-    scoreFactor_CategoryTwice = 10; // Green
+    scoreFactor_CategoryTwice = 1; // If Min 2 coins added to portfolio from every coin category
   }
 
-  // Calculate scoreFactor_CategoryMissing based on missing categories
-  const missingCategoriesCount = totalCategories - Object.keys(categoryCounts).length;
+  // Adjust scoreFactor_CategoryMissing based on the rules using cals.counts
+  let missingCategories = 0;
 
-  if (missingCategoriesCount >= 2) {
-    scoreFactor_CategoryMissing = 2; // Red
-  } else if (missingCategoriesCount > 0) {
-    scoreFactor_CategoryMissing = 7; // Orange
+  Object.keys(cals.counts).forEach((category) => {
+    if (category === "none") return; // Ignore the 'none' category
+
+    let assetCount = cals.counts[category];
+    if (assetCount === 0) {
+      missingCategories++;
+    }
+  });
+
+  if (missingCategories >= 2) {
+    scoreFactor_CategoryMissing = 3; // If 2 or more categories are not selected
+  } else if (missingCategories > 0) {
+    scoreFactor_CategoryMissing = 2; // If even one category is not selected
   } else {
-    scoreFactor_CategoryMissing = 10; // Green
+    scoreFactor_CategoryMissing = 1; // If coins from all categories are selected
   }
 
-  // Calculate the score based on the number of selected assets
   score += Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
+  const totalAssets = portfolioData.length;
 
-  // Calculate scoreFactor_CoinCount based on the number of coins
-  if (selectedAssetsCount < 10 || selectedAssetsCount > 40) {
-    scoreFactor_CoinCount = 2; // Red
-  } else if (selectedAssetsCount >= 10 && selectedAssetsCount < 15) {
-    scoreFactor_CoinCount = 7; // Orange
-  } else if (selectedAssetsCount >= 15 && selectedAssetsCount < 20) {
-    scoreFactor_CoinCount = 8; // Yellow
+  if (totalAssets >= 20 && totalAssets <= 40) {
+    scoreFactor_CoinCount = 1;
+  } else if (totalAssets >= 15 && totalAssets < 20) {
+    scoreFactor_CoinCount = 2;
+  } else if (totalAssets >= 10 && totalAssets < 15) {
+    scoreFactor_CoinCount = 3;
   } else {
-    scoreFactor_CoinCount = 10; // Green
+    scoreFactor_CoinCount = 4;
   }
 
-  let averageCategoryAllocation = 100 / Object.keys(categoryCounts).length;
-  let maxCategoryAllocation = 0;
-  let minCategoryAllocation = 100;
+  // Calculate the scoreFactor_Allocation using cals.percentages
+  let percentages = Object.entries(cals.percentages)
+    .filter(([category, percentage]) => category !== "none")
+    .map(([category, percentage]) => parseFloat(percentage.replace('%', '')));
 
-  for (let category in categoryCounts) {
-    let allocation = (categoryCounts[category] / selectedAssetsCount) * 100;
-    if (allocation > maxCategoryAllocation) {
-      maxCategoryAllocation = allocation;
-    }
-    if (allocation < minCategoryAllocation) {
-      minCategoryAllocation = allocation;
-    }
-  }
 
-  // Calculate scoreFactor_Allocation based on the difference in % share
-  let allocationDifference = maxCategoryAllocation - minCategoryAllocation;
+  let maxPercentage = Math.max(...percentages);
+  let minPercentage = Math.min(...percentages); // Ignore zero percentages
+
+  let allocationDifference = maxPercentage - minPercentage;
 
   if (allocationDifference >= 8) {
-    scoreFactor_Allocation = 2; // Red
+    scoreFactor_Allocation = 1;
   } else if (allocationDifference >= 5) {
-    scoreFactor_Allocation = 7; // Orange
+    scoreFactor_Allocation = 2;
   } else {
-    scoreFactor_Allocation = 10; // Green
+    scoreFactor_Allocation = 3;
+  }
+
+  // Calculate the scoreFactor_Category using cals.percentages
+  let lowestCategoryPercentage = Math.min(
+    ...percentages.filter((p) => p > 0)
+  );
+
+  if (percentages.every((percentage) => percentage === 0)) {
+    scoreFactor_Category = 4; // No coin selected
+  } else if (lowestCategoryPercentage > 10) {
+    scoreFactor_Category = 1; // All categories >10%
+  } else if (lowestCategoryPercentage >= 7) {
+    scoreFactor_Category = 2; // 7% to 10%
+  } else if (lowestCategoryPercentage >= 5) {
+    scoreFactor_Category = 3; // 5% to 7%
+  } else {
+    scoreFactor_Category = 4; // <5%
   }
 
   // Calculate BTC allocation fix
@@ -911,25 +916,24 @@ export const calculateScore = (portfolioData) => {
   let btcAmount = portfolioData.find((item) => item.coin === "BTC")?.amount || 0;
   let btcAllo = (100 / totalAmount) * btcAmount;
 
-  // if (btcAllo >= maxCategoryAllocation * 0.8) {
-  //   maxSF = (maxSF + 1.5) / 2.5;
-  //   minSF = (minSF + 1.5) / 2.5;
-  // }
+  let maxSF = 1;
+  let minSF = 1;
+
+  if (btcAllo >= maxPercentage * 0.8) {
+    maxSF = (maxSF + 1.5) / 2.5;
+    minSF = (minSF + 1.5) / 2.5;
+  }
 
   // Final score calculation
-  // score = score * maxSF * minSF;
-  // score = Math.min(100, score);
+  score = score * maxSF * minSF;
+  score = Math.min(100, score);
 
-  // if (totalCategories > Object.keys(categoryCounts).length) {
-  //   score = score * 0.9;
-  // }
-
-  // if (isNaN(score)) {
-  //   score = 0;
-  // }
+  if (isNaN(score)) {
+    score = 0;
+  }
 
   return {
-    // score: score.toFixed(1),
+    score: score.toFixed(1),
     scoreFactor_Category: scoreFactor_Category.toFixed(0),
     scoreFactor_CategoryTwice: scoreFactor_CategoryTwice.toFixed(0),
     scoreFactor_CategoryMissing: scoreFactor_CategoryMissing.toFixed(0),
@@ -937,6 +941,154 @@ export const calculateScore = (portfolioData) => {
     scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0),
   };
 };
+
+
+
+
+
+
+
+
+
+
+// export const calculateScore = (portfolioData) => {
+//   const totalCategories = 9;
+//   let selectedAssetsCount = 0;
+//   let categoryCounts = {};
+
+//   // Count the occurrences of each category in the portfolio
+//   portfolioData.forEach((item) => {
+//     item.Category.forEach((category) => {
+//       if (!categoryCounts[category]) {
+//         categoryCounts[category] = 0;
+//       }
+//       categoryCounts[category]++;
+//     });
+//     selectedAssetsCount++;
+//   });
+
+//   let scoreFactor_Category = 0;
+//   let scoreFactor_CategoryTwice = 0;
+//   let scoreFactor_Allocation = 0;
+//   let scoreFactor_CoinCount = 0;
+//   let scoreFactor_CategoryMissing = 0;
+//   let maxCategoryPercentage = 0;
+//   let totalCategoryPercentage = 0;
+
+//   // Calculate the score based on category distribution
+//   Object.keys(categoryCounts).forEach((category) => {
+//     let assetCount = categoryCounts[category];
+//     let categoryPercentage = (assetCount / selectedAssetsCount) * 100;
+//     totalCategoryPercentage += categoryPercentage;
+
+//     if (categoryPercentage > maxCategoryPercentage) {
+//       maxCategoryPercentage = categoryPercentage;
+//     }
+
+//     if (assetCount >= 2) {
+//       scoreFactor_Category += (100 / totalCategories) * 0.1;
+//     } else {
+//       scoreFactor_Category += (100 / totalCategories) * 0.1;
+//     }
+//   });
+
+//   // Adjust scoreFactor_Category based on the rules
+//   if (maxCategoryPercentage > 10) {
+//     scoreFactor_Category = 10; // Green
+//   } else if (maxCategoryPercentage >= 7) {
+//     scoreFactor_Category = 7; // Orange
+//   } else if (maxCategoryPercentage >= 5) {
+//     scoreFactor_Category = 5; // Light Red
+//   } else {
+//     scoreFactor_Category = 4; // Dark Red
+//   }
+
+//   // Calculate scoreFactor_CategoryTwice based on double coverage
+//   let categoryWithLessThan2Coins = 0;
+//   let categoryWithZeroCoins = 0;
+//   Object.keys(categoryCounts).forEach((category) => {
+//     let assetCount = categoryCounts[category];
+//     if (assetCount < 2) {
+//       categoryWithLessThan2Coins++;
+//     }
+//     if (assetCount === 0) {
+//       categoryWithZeroCoins++;
+//     }
+//   });
+
+//   if (categoryWithZeroCoins >= 2) {
+//     scoreFactor_CategoryTwice = 2; // Red
+//   } else if (categoryWithLessThan2Coins > 0) {
+//     scoreFactor_CategoryTwice = 7; // Orange
+//   } else {
+//     scoreFactor_CategoryTwice = 10; // Green
+//   }
+
+//   // Calculate scoreFactor_CategoryMissing based on missing categories
+//   const missingCategoriesCount = totalCategories - Object.keys(categoryCounts).length;
+
+//   if (missingCategoriesCount >= 2) {
+//     scoreFactor_CategoryMissing = 2; // Red
+//   } else if (missingCategoriesCount > 0) {
+//     scoreFactor_CategoryMissing = 7; // Orange
+//   } else {
+//     scoreFactor_CategoryMissing = 10; // Green
+//   }
+
+
+//   // Calculate scoreFactor_CoinCount based on the number of coins
+//   if (selectedAssetsCount < 10 || selectedAssetsCount > 40) {
+//     scoreFactor_CoinCount = 2; // Red
+//   } else if (selectedAssetsCount >= 10 && selectedAssetsCount < 15) {
+//     scoreFactor_CoinCount = 7; // Orange
+//   } else if (selectedAssetsCount >= 15 && selectedAssetsCount < 20) {
+//     scoreFactor_CoinCount = 8; // Yellow
+//   } else {
+//     scoreFactor_CoinCount = 10; // Green
+//   }
+
+//   let averageCategoryAllocation = 100 / Object.keys(categoryCounts).length;
+//   let maxCategoryAllocation = 0;
+//   let minCategoryAllocation = 100;
+
+//   for (let category in categoryCounts) {
+//     let allocation = (categoryCounts[category] / selectedAssetsCount) * 100;
+//     if (allocation > maxCategoryAllocation) {
+//       maxCategoryAllocation = allocation;
+//     }
+//     if (allocation < minCategoryAllocation) {
+//       minCategoryAllocation = allocation;
+//     }
+//   }
+
+//   // Calculate scoreFactor_Allocation based on the difference in % share
+//   let allocationDifference = maxCategoryAllocation - minCategoryAllocation;
+
+//   if (allocationDifference >= 8) {
+//     scoreFactor_Allocation = 2; // Red
+//   } else if (allocationDifference >= 5) {
+//     scoreFactor_Allocation = 7; // Orange
+//   } else {
+//     scoreFactor_Allocation = 10; // Green
+//   }
+
+//   // Calculate BTC allocation fix
+//   let totalAmount = 0;
+//   portfolioData.forEach((item) => {
+//     let value = parseFloat(item.amount);
+//     if (!isNaN(value)) {
+//       totalAmount += value;
+//     }
+//   });
+//   return {
+//     // score: score.toFixed(1),
+//     scoreFactor_Category: scoreFactor_Category.toFixed(0),
+//     scoreFactor_CategoryTwice: scoreFactor_CategoryTwice.toFixed(0),
+//     scoreFactor_CategoryMissing: scoreFactor_CategoryMissing.toFixed(0),
+//     scoreFactor_Allocation: scoreFactor_Allocation.toFixed(0),
+//     scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0),
+//   };
+// };
 
 export const calculateScore0 = (portfolioData) => {
   const totalCategories = 9;
