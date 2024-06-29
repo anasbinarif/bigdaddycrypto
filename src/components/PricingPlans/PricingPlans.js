@@ -57,6 +57,7 @@ const plans = [
       "Graph",
       "Import / Export CSV of Portfolio",
       "Access to small dashboards (only in yearly subscription)",
+      "15% Discount on Portfolio commentary - Yearly subscription",
     ],
     nonFeatures: [
       "Portfolio Generator Indicators",
@@ -85,6 +86,7 @@ const plans = [
       "Add new coins to assets",
       "3 Sub Portfolios",
       "Access to VIP discord Channel and Telegram",
+      "20% Discount on Portfolio commentary - Yearly subscription",
     ],
     nonFeatures: [],
   },
