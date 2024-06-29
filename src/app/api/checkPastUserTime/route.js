@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
     const berlinTimeZone = "Europe/Berlin";
-    const targetDate = new Date(Date.UTC(2024, 6, 10, 12, 0, 0)); // June 27, 2 PM in Berlin time zone (UTC+2 becomes UTC+0)
+    const targetDate = new Date(Date.UTC(2024, 6, 1, 20, 0, 0));
 
     try {
         const now = new Date();
