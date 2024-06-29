@@ -4,6 +4,7 @@ import { verifyToken } from "../../../lib/auth";
 
 export async function POST(req) {
   const tokenVerificationResponse = await verifyToken(req);
+  console.log(tokenVerificationResponse);
   if (tokenVerificationResponse) {
     return tokenVerificationResponse;
   }

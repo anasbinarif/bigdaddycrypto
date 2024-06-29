@@ -518,7 +518,7 @@ const PricingPlans = () => {
                 >
                   Allgemeinen Geschäftsbedingungen (AGB)
                 </Link>{" "}
-                gelesen und akzeptiere sie."
+                gelesen und akzeptiere sie.
               </Typography>
             }
             sx={{

@@ -100,6 +100,11 @@ const PortfolioForm = () => {
   const [msg, setMsg] = useState("");
   const [notes, setNotes] = useState("");
   const [id, setid] = useState("");
+
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [acceptAgb, setAcceptAgb] = useState(false);
+  const [acceptWider, setAcceptWider] = useState(false);
+
   useEffect(() => {
     if (portfolio?.assetsCalculations) {
       setNotes(portfolio?.assetsCalculations.Notizen);
@@ -270,10 +275,6 @@ const PortfolioForm = () => {
   });
 
   // console.log(steps);
-
-  const [promptOpen, setPromptOpen] = useState(false);
-  const [acceptAgb, setAcceptAgb] = useState(false);
-  const [acceptWider, setAcceptWider] = useState(false);
 
   const handleClosePrompt = () => {
     setPromptOpen(false);
@@ -1081,7 +1082,7 @@ const PortfolioForm = () => {
                 >
                   Allgemeinen Geschäftsbedingungen (AGB)
                 </Link>{" "}
-                gelesen und akzeptiere sie."
+                gelesen und akzeptiere sie.
               </Typography>
             }
             sx={{

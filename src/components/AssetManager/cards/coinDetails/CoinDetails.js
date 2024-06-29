@@ -279,6 +279,7 @@ const CoinDetails = (props) => {
             Portfolio_Assets,
           }),
         });
+        console.log(response);
         if (response.ok) {
           setAlertInfo({
             message: t("successAlert"),
