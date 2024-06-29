@@ -55,11 +55,6 @@ const Dashboard = () => {
   const theme = useTheme();
 
   useEffect(() => {
-    if (
-      sessionJotai?.user?.billingCycle !== "yearly" ||
-      sessionJotai?.user?.subscriptionPlan === "free"
-    )
-      router.push("/");
 
     const handleResize = () => {
       setWidth(window.innerWidth);

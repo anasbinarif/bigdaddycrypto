@@ -106,14 +106,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
   };
 
   const handleDashboardClick = (event) => {
-    if (
-      sessionJotai?.user?.subscriptionPlan === "free" ||
-      sessionJotai?.user?.billingCycle === "monthly"
-    ) {
-      setAlertMessage(t("alertDashboard"));
-      setAlertOpen(true);
-      event.preventDefault();
-    }
+    
   };
 
   return (
@@ -190,7 +183,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Link href="/media" className={styles.nav__link}>
+                  <Link href="/media" className={styles.nav__link} onClick={handleGraphClick}>
                     {t("media")}
                   </Link>
                 </MenuItem>
@@ -282,6 +275,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               </Link>
               <Link
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
+                onClick={handleGraphClick}
                 href="/media"
                 className={styles.nav__link}
               >
