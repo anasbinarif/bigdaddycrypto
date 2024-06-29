@@ -40,7 +40,10 @@ const LanguageSwitcher = () => {
           fontSize: "15px",
           width: "100%",
           padding: 0,
-          justifyContent: "flex-start",
+          justifyContent: "center",
+          "&:hover": {
+            backgroundColor: "#ffffff20",
+          },
           // ml: 2,
         }}
       >

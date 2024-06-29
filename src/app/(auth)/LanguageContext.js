@@ -23,6 +23,11 @@ const langs = {
     register: "To Register",
     registerDisclaimer:
       "The information presented here is for personal purposes only and does not constitute financial advice.",
+    userNameHelper:
+      "The user names are generated at random to ensure maximum anonymity.",
+    passwordShort: "Passwort must be at least 8 characters.",
+    passwordError:
+      "Passwort must be at least 8 letters. Atleast 1 capital letter, number and special character.",
   },
   deutsch: {
     label: "Anmelden",
@@ -47,6 +52,11 @@ const langs = {
     register: "registrieren",
     registerDisclaimer:
       "Die hier dargestellten Informationen dienen ausschließlich für persönliche Zwecke und stellen keine Finanzberatung dar.",
+    userNameHelper:
+      "Für eine höchstmögliche Anonymität werden die Benutzernamen per Zufall generiert.",
+    passwordShort: "Das Passwort muss mindestens 8 Zeichen lang sein.",
+    passwordError:
+      "Das Passwort muss mindestens 8 Buchstaben lang sein. Mindestens 1 Großbuchstabe, Zahl und Sonderzeichen.",
   },
 };
 

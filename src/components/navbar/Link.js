@@ -356,6 +356,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                 padding: "0.75rem 0.9rem",
                 borderRadius: "50px",
                 cursor: "pointer",
+
                 "&:hover": {
                   backgroundColor: "var(--color-secondary-2)",
                 },
@@ -370,10 +371,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   position: "absolute",
                   top: "110%",
                   right: 0,
-                  backgroundColor: "#00000033",
+                  backgroundColor: "#000000",
+                  borderRadius: "8px",
                   padding: "10px",
                   display: "flex",
                   flexDirection: "column",
+                  // alignItems: "center",
                   gap: "10px",
                   minWidth: "150px",
                   transition: "all 0.2s ease-in-out",
@@ -383,6 +386,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   variant="body1"
                   sx={{
                     fontSize: "clamp(0.625rem, -0.1563rem + 1.25vw, 0.9375rem)",
+                    textAlign: "center",
                   }}
                 >
                   {t("portfolioId")}: {session?.user?.username}
@@ -391,6 +395,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   sx={{
                     color: "var(--color-secondary)",
                     textTransform: "uppercase",
+                    textAlign: "center",
                     // ml: "10px",
                   }}
                 >
@@ -404,6 +409,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                     whiteSpace: "nowrap",
                     color: "var(--color-secondary)",
                     justifyContent: "flex-start",
+                    padding: "4px 8px",
+                    fontSize: 15,
+                    // fontWeight: 700,
+                    "&:hover": {
+                      backgroundColor: "#ffffff20",
+                    },
                   }}
                 >
                   {t("changePassword")}
@@ -417,6 +428,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                     sx={{
                       width: "100%",
                       display: "flex",
+                      justifyContent: "center",
                       bgcolor: "#202530",
                       p: "0.25em 0.7em",
                       borderRadius: "50px",
@@ -475,49 +487,60 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           },
         }}
       >
-        <DialogTitle>{t("changePassword")}</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold" }}>
+          {t("changePassword")}
+        </DialogTitle>
         <DialogContent
           sx={{
             "& .MuiTypography-root": { color: "white" },
             "& .MuiFormControl-root": {
+              mb: 2,
+              "& .MuiFormHelperText-root": {
+                color: "#ffffff", // Helper text color
+              },
+              "& .MuiFilledInput-input": {
+                color: "#fff",
+                "&::placeholder": {
+                  color: "#fff",
+                },
+              },
               "& .MuiInputBase-root": {
-                "&.MuiInput-root": {
-                  borderRadius: "8px",
-                  padding: "5px 10px",
-                  backgroundColor: "#202530",
-                  border: "1px solid #ffffff80",
-                  "&:hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    borderBottom: "2px solid var(--color-secondary)",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ffffff",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    // borderColor: "#ffffff",
-                  },
+                "&.MuiFilledInput-root": {
                   "&::after": {
-                    borderBottom: "none",
+                    borderBottom: "2px solid var(--color-secondary)",
                   },
                 },
               },
-            },
-            "& .MuiFormLabel-root": {
-              zIndex: "100",
-              top: "5px",
-              left: "10px",
-              color: "#ffffff80",
-              "&.MuiInputLabel-root.Mui-focused": {
-                transform: "translate(0, -10px) scale(0.75)",
-                color: "var(--color-secondary)",
+              "& .MuiInputBase-input": {
+                height: "1.6em",
+              },
+              "& .MuiFormLabel-root": {
+                color: "#ffffff80",
+                "&.MuiInputLabel-root.Mui-focused": {
+                  color: "var(--color-secondary)",
+                },
+              },
+              "& .MuiFilledInput-root": {
+                borderRadius: "8px",
+                backgroundColor: "#202530",
+                border: "1px solid #ffffff80",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&.Mui-focused": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
               },
             },
           }}
         >
-          <DialogContentText>{t("changeText")}</DialogContentText>
+          {/* <DialogContentText>{t("changeText")}</DialogContentText> */}
           <TextField
             autoFocus
             required
@@ -527,7 +550,8 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             label={t("confirm")}
             type="text"
             fullWidth
-            variant="standard"
+            variant="filled"
+            sx={{ mb: "1rem" }}
           />
           <TextField
             required
@@ -537,7 +561,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             label={t("new")}
             type="password"
             fullWidth
-            variant="standard"
+            variant="filled"
           />
         </DialogContent>
         <DialogActions

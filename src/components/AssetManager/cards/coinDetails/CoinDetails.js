@@ -198,7 +198,13 @@ const CoinDetails = (props) => {
   const addRow = () => {
     setRowVals([
       ...rowVals,
-      { Type: "Kauf", Date: "00/00/00", PricePerCoin: 0, Betrag: 0, Coins: 0 },
+      {
+        Type: "Kauf",
+        Date: "00/00/00",
+        PricePerCoin: null,
+        Betrag: null,
+        Coins: null,
+      },
     ]);
   };
 

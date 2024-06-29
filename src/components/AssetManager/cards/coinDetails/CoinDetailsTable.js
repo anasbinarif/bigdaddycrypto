@@ -13,9 +13,11 @@ import {
   TableRow,
   Tooltip,
   Typography,
+  Popper,
 } from "@mui/material";
 import styles from "./coinDetails.module.css";
 import { useTranslations } from "next-intl";
+import { useCallback } from "react";
 
 const CoinDetailsTable = ({
   rowVals,
@@ -40,6 +42,37 @@ const CoinDetailsTable = ({
   };
 
   const today = new Date().toISOString().split("T")[0];
+
+  const PopperMy = useCallback((props) => {
+    const anchorEl = document.getElementById("filters");
+
+    return (
+      <Popper
+        {...props}
+        anchorEl={anchorEl}
+        style={{
+          width: anchorEl.clientWidth,
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+        }}
+        sx={{
+          "& > .MuiPaper-root": {
+            "& .MuiAutocomplete-noOptions": {
+              color: "white",
+            },
+            "& > .MuiTypography-root": {
+              color: "white",
+            },
+            backgroundColor: "#202530",
+            filter: "brightness(0.8)",
+          },
+        }}
+        placement="bottom-end"
+      />
+    );
+  }, []);
+
   return (
     <TableContainer
       component={Paper}
@@ -154,6 +187,14 @@ const CoinDetailsTable = ({
                       },
                     },
                     "& .MuiSvgIcon-root": { color: "#ffffff" },
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        color: "white",
+                        backgroundColor: "#111826", // Background color of the popup menu
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="Kauf">{t("buy")}</MenuItem>

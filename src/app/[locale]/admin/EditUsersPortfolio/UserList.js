@@ -28,20 +28,25 @@ const darkTheme = createTheme({
   },
 });
 
-const UserList = ({ users, setSelectedUserPortfolio }) => {
+const UserList = ({
+  users,
+  setSelectedUserPortfolio,
+  setPortfolioCalculations,
+}) => {
   const [loading, setLoading] = useState(false);
   const [blurEmail, setBlurEmail] = useState(true);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("userEmail");
 
-  console.log("usersusersusers", users);
+  // console.log("usersusersusers", users);
 
   const handleUserClicked = async (user) => {
     setLoading(true);
     const userPortfolio = await getUserPortfolio(user.userId);
     setSelectedUserPortfolio(userPortfolio?.data);
+    setPortfolioCalculations(userPortfolio?.calculation);
     setLoading(false);
-    console.log("User portfolio:", user, userPortfolio);
+    // console.log("User portfolio:", user, userPortfolio);
   };
 
   const handleToggleChange = (event) => {
@@ -172,14 +177,16 @@ const UserList = ({ users, setSelectedUserPortfolio }) => {
                       <Typography variant="body2">{user.username}</Typography>
                     </TableCell>
                     <TableCell
-                      sx={{
-                        // maxHeight: "100px",
-                        // overflow: "auto",
-                        // display: "block",
-                        // width: "200px",
-                      }}
+                      sx={
+                        {
+                          // maxHeight: "100px",
+                          // overflow: "auto",
+                          // display: "block",
+                          // width: "200px",
+                        }
+                      }
                     >
-                      {user.notizen.UserComment ? user.notizen.UserComment : ''}
+                      {user.notizen.UserComment ? user.notizen.UserComment : ""}
                     </TableCell>
                     <TableCell
                       sx={{

@@ -54,7 +54,10 @@ const CurrencySwitcher = () => {
           padding: 0,
           minWidth: "auto",
           width: "100%",
-          justifyContent: "flex-start",
+          justifyContent: "center",
+          "&:hover": {
+            backgroundColor: "#ffffff20",
+          },
         }}
       >
         {currencySymbol[currency]}

@@ -59,12 +59,13 @@ const options = {
   },
 };
 
-export default function Item1({ loadingPortfolio }) {
+export default function Item1({ preCalcPort }) {
   const [width, setWidth] = useState(0);
   const [portfolio] = useAtom(portfolioAtom);
   const [graphPercentage, setGraphPercentage] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const t = useTranslations("item1");
+  console.log(preCalcPort);
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,14 +81,16 @@ export default function Item1({ loadingPortfolio }) {
   }, []);
 
   useEffect(() => {
-    if (portfolio.assetsCalculations && portfolio.assets) {
-      const totalInvestment = portfolio?.assetsCalculations.assets.reduce(
+    const portData = preCalcPort || portfolio;
+    console.log(portData);
+    if (portData.assetsCalculations && portData.assets) {
+      const totalInvestment = portData?.assetsCalculations.assets.reduce(
         (acc, curr) => acc + curr.totalInvest,
         0
       );
-      const mergedData = portfolio.assets.map((asset) => {
+      const mergedData = portData.assets.map((asset) => {
         const calc =
-          portfolio?.assetsCalculations.assets.find(
+          portData?.assetsCalculations.assets.find(
             (ac) => ac.CoinGeckoID === asset.CoinGeckoID
           ) || {};
         const percentage = totalInvestment
@@ -100,7 +103,7 @@ export default function Item1({ loadingPortfolio }) {
       });
       setGraphPercentage(mergedData);
     }
-  }, [portfolio]);
+  }, [portfolio, preCalcPort]);
 
   useEffect(() => {
     const data = [
@@ -113,12 +116,14 @@ export default function Item1({ loadingPortfolio }) {
     setGraphData(data);
   }, [graphPercentage]);
 
-  const assetsLength = portfolio?.assetsCalculations?.assets.length;
-  const totalInvestment = portfolio.assetsCalculations.assets.reduce(
+  const portData = preCalcPort || portfolio;
+
+  const assetsLength = portData?.assetsCalculations?.assets.length;
+  const totalInvestment = portData?.assetsCalculations?.assets.reduce(
     (acc, curr) => acc + curr.totalInvest,
     0
   );
-  const totalGesamtwert = portfolio.assetsCalculations.assets
+  const totalGesamtwert = portData?.assetsCalculations?.assets
     .reduce((acc, curr) => acc + curr.Holdings, 0)
     .toFixed(2);
   const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);

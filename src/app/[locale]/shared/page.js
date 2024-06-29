@@ -39,6 +39,7 @@ import Item1 from "../../../components/portfolioÜbersicht/Item1";
 import Item4 from "../../../components/portfolioÜbersicht/Item4";
 import BewertungCard from "../../../components/portfolioGenerator/cards/Bewertung";
 import GridExample from "../../../components/portfolioÜbersicht/portfolioTable/Table";
+import LoadingCircle from "../../../components/loading/Loading";
 
 const SharedPage = () => {
   const t = useTranslations("Overview");
@@ -149,7 +150,7 @@ const SharedPage = () => {
       setSortedData(mergedData);
     }
   }, [portfolio]);
-  // console.log(portfolioCalculations);
+  console.log(portfolioCalculations);
 
   const switchLanguage = (lang) => {
     if (lang === "english") {
@@ -242,13 +243,18 @@ const SharedPage = () => {
               </Button>
             </Box>
           </Box>
-          <Box sx={{ flexGrow: 1, mt: "5rem", mb: "5rem" }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={width > 1100 ? 8 : 12}>
-                <GridExample preCalcPort={sortedData} />
-              </Grid>
-              <Grid item xs={12} md={width > 1100 ? 4 : 12}>
-                {/* <Card
+          {!portfolio.assets ? (
+            <Box>
+              <LoadingCircle />
+            </Box>
+          ) : (
+            <Box sx={{ flexGrow: 1, mt: "5rem", mb: "5rem" }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={width > 1100 ? 8 : 12}>
+                  <GridExample preCalcPort={sortedData} />
+                </Grid>
+                <Grid item xs={12} md={width > 1100 ? 4 : 12}>
+                  {/* <Card
                   sx={{
                     // padding: "15px",
                     backgroundColor: "#1188ff",
@@ -276,27 +282,28 @@ const SharedPage = () => {
                     </Typography>
                   </Link>
                 </Card> */}
-                <Grid container spacing={2}>
-                  {/* <Grid item xs={12}>
-                    <Item1 />
-                  </Grid> */}
-                  <Grid item xs={12}>
-                    <DonutCard
-                      preCalcPort={portfolio}
-                      preCalcCalculations={portfolioCalculations}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <BewertungCard preCalcPort={portfolio} />
-                  </Grid>
-                  <Grid item xs={12}>
-                    {/* <Item4 msg={msg} setMsg={setMsg} /> */}
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Item1 preCalcPort={portfolio} />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <DonutCard
+                        preCalcPort={portfolio}
+                        preCalcCalculations={portfolioCalculations}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <BewertungCard preCalcPort={portfolio} />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Item4 />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Box>
-          <Footer />
+            </Box>
+          )}
+          {/* <Footer /> */}
         </>
       )}
     </>

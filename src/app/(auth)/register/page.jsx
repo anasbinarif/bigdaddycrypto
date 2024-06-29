@@ -98,15 +98,14 @@ const RegisterPage = () => {
       setErrors((prev) => ({
         ...prev,
         pin: true,
-        pinMessage: "Passwort must be at least 4 digits.",
+        pinMessage: languageData["passwordShort"],
       }));
       hasErrors = true;
     } else if (!passwordRegex.test(user.pin)) {
       setErrors((prev) => ({
         ...prev,
         pin: true,
-        pinMessage:
-          "Passwort must be at least 8 letters. Atleast 1 capital letter, number and special character",
+        pinMessage: languageData["passwordError"],
       }));
       hasErrors = true;
     } else {
@@ -143,17 +142,23 @@ const RegisterPage = () => {
           // router.push("/check-email");
           // alert("check Your Email");
           console.log("check Your Email");
+          setUser({
+            userName: generateUserName(6),
+            userEmail: "",
+            pin: "",
+          });
+          console.log("user register");
+          setAlert({
+            open: true,
+            message: "User Register",
+            severity: "success",
+          });
+          setPending(false);
+          setTimeout(() => {
+            router.push("/login");
+          }, 1000);
+          // router.push("/checkEmail");
         }
-        setUser({
-          userName: generateUserName(6),
-          userEmail: "",
-          pin: "",
-        });
-        console.log("user register");
-        setAlert({ open: true, message: "User Register", severity: "success" });
-        // router.push("/login");
-        // router.push("/checkEmail");
-        setPending(false);
       } else {
         const error = await res.json();
         setAlert({
@@ -300,7 +305,7 @@ const RegisterPage = () => {
                 },
               },
             }}
-            helperText="Für eine höchstmögliche Anonymität werden die Benutzernamen per Zufall generiert."
+            helperText={languageData["userNameHelper"]}
           />
 
           <TextField

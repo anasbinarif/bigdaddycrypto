@@ -104,7 +104,6 @@ const hypeCoinColor = {
 //   return { avgMin, avgMax };
 // };
 
-
 const calculatePotential = (portfolio) => {
   let totalPotentialMin = 0;
   let totalPotentialMax = 0;
@@ -446,8 +445,8 @@ function BewertungCard({ preCalcPort }) {
                   fontSize: "14px",
                 }}
               >
-                {isNaN(potential.avgMin) ? 0 : potential.avgMin}-
-                {isNaN(potential.avgMax) ? 0 : potential.avgMax}x
+                {isNaN(potential.avgMin) ? 0 : Math.floor(potential.avgMin)}x -{" "}
+                {isNaN(potential.avgMax) ? 0 : Math.floor(potential.avgMax)}x
               </span>
             </Typography>
           </Box>
