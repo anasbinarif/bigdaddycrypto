@@ -14,11 +14,18 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Allocation from "../../../../public/assets/images/Allocation.webp";
 import Check from "../../../../public/assets/images/Check.webp";
 import Image from "next/image";
+import Link from "next/link";
 import Checkout from "../../../components/oneTimePayment/OneTimePaymentCheckout";
 import CustomizedSteppers from "./CustomizedSteppers";
 import { useRouter, usePathname } from "next/navigation";
@@ -91,20 +98,18 @@ const PortfolioForm = () => {
   const [showNext, setShowNext] = useState(false);
   const [portfolio] = useAtom(portfolioAtom);
   const [msg, setMsg] = useState("");
-  const [notes, setNotes] = useState("")
+  const [notes, setNotes] = useState("");
   const [id, setid] = useState("");
   useEffect(() => {
-    if (portfolio?.assetsCalculations){
-      setNotes(portfolio?.assetsCalculations.Notizen)
-      setid(portfolio?.assetsCalculations.userId)
+    if (portfolio?.assetsCalculations) {
+      setNotes(portfolio?.assetsCalculations.Notizen);
+      setid(portfolio?.assetsCalculations.userId);
     }
-  }, [portfolio])
-
+  }, [portfolio]);
 
   const router = useRouter();
   // const { query } = router;
   const pathname = usePathname();
-
 
   useEffect(() => {
     const query = window.location.search;
@@ -186,11 +191,11 @@ const PortfolioForm = () => {
       let price = await calculatePrice(portfolioData);
       const billingCycle = sessionJotai?.user?.billingCycle;
       const subscriptionPlan = sessionJotai?.user?.subscriptionPlan;
-      if (billingCycle === 'yearly') {
-        if (subscriptionPlan === 'Pro') {
+      if (billingCycle === "yearly") {
+        if (subscriptionPlan === "Pro") {
           price = price * 0.85;
-        } else if (subscriptionPlan === 'Premium') {
-          price = price * 0.80;
+        } else if (subscriptionPlan === "Premium") {
+          price = price * 0.8;
         }
       }
       console.log("Calculated Price:", price);
@@ -265,6 +270,19 @@ const PortfolioForm = () => {
   });
 
   // console.log(steps);
+
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [acceptAgb, setAcceptAgb] = useState(false);
+  const [acceptWider, setAcceptWider] = useState(false);
+
+  const handleClosePrompt = () => {
+    setPromptOpen(false);
+  };
+
+  const handleAcceptPrompt = (e) => {
+    e.preventDefault();
+    setOpen(true);
+  };
 
   return (
     <>
@@ -846,7 +864,7 @@ const PortfolioForm = () => {
                             background: "#E8B01B",
                           },
                         }}
-                        onClick={() => setOpen(true)}
+                        onClick={() => setPromptOpen(true)}
                       >
                         Zum Warenkorb
                       </Button>
@@ -968,6 +986,182 @@ const PortfolioForm = () => {
           </Box>
         </Box>
       </Container>
+      <Dialog
+        open={promptOpen}
+        onClose={handleClosePrompt}
+        // fullScreen={fullScreen}
+        PaperProps={{
+          onSubmit: handleAcceptPrompt,
+          component: "form",
+          sx: {
+            width: { xs: "100%", sm: "90%", md: "70%" },
+            maxWidth: "600px",
+            backgroundColor: "#111826",
+            color: "white",
+            // padding: "1rem",
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: "bold" }}>Please Verify</DialogTitle>
+        <DialogContent
+          sx={{
+            "& .MuiTypography-root": { color: "white" },
+            "& .MuiFormControl-root": {
+              mb: 2,
+              "& .MuiFormHelperText-root": {
+                color: "#ffffff", // Helper text color
+              },
+              "& .MuiFilledInput-input": {
+                color: "#fff",
+                "&::placeholder": {
+                  color: "#fff",
+                },
+              },
+              "& .MuiInputBase-root": {
+                "&.MuiFilledInput-root": {
+                  "&::after": {
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                },
+              },
+              "& .MuiInputBase-input": {
+                height: "1.6em",
+              },
+              "& .MuiFormLabel-root": {
+                color: "#ffffff80",
+                "&.MuiInputLabel-root.Mui-focused": {
+                  color: "var(--color-secondary)",
+                },
+              },
+              "& .MuiFilledInput-root": {
+                borderRadius: "8px",
+                backgroundColor: "#202530",
+                border: "1px solid #ffffff80",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&.Mui-focused": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+              },
+            },
+          }}
+        >
+          {/* <DialogContentText>{t("changeText")}</DialogContentText> */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={acceptAgb}
+                onChange={(e) => setAcceptAgb(e.target.checked)}
+                sx={{
+                  "&.MuiCheckbox-root": {
+                    borderColor: "white",
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
+                    "&.Mui-checked": {
+                      color: "var(--color-secondary)",
+                    },
+                  },
+                }}
+              />
+            }
+            label={
+              <Typography>
+                Ich habe die{" "}
+                <Link href="/policy/agb" style={{ color: "orange" }}>
+                  Allgemeinen Geschäftsbedingungen (AGB)
+                </Link>{" "}
+                gelesen und akzeptiere sie."
+              </Typography>
+            }
+            sx={{
+              alignSelf: "flex-start",
+              alignItems: "flex-start",
+              mb: "1rem",
+              "& .MuiButtonBase-root": {
+                padding: "0 10px",
+                // ml: "10px",
+              },
+              "& .MuiTypography-root": {
+                color: "#ffffff80",
+                fontSize: "14px", // Set desired font size here
+                textAlign: "left",
+              },
+            }}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={acceptWider}
+                onChange={(e) => setAcceptWider(e.target.checked)}
+                sx={{
+                  "&.MuiCheckbox-root": {
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
+                    "&.Mui-checked": {
+                      color: "var(--color-secondary)",
+                    },
+                  },
+                }}
+              />
+            }
+            label={
+              <Typography>
+                Ich bin damit einverstanden und nehme zur Kenntnis, dass für
+                meine individuell angefertigte Bestellung kein
+                <Link href="/policy/agb" style={{ color: "orange" }}>
+                  Widerrufsrecht
+                </Link>{" "}
+                besteht.
+              </Typography>
+            }
+            sx={{
+              alignSelf: "flex-start",
+              alignItems: "flex-start",
+              mb: "1rem",
+              "& .MuiButtonBase-root": {
+                padding: "0 10px",
+                // ml: "10px",
+              },
+              "& .MuiTypography-root": {
+                color: "#ffffff80",
+                fontSize: "14px", // Set desired font size here
+                textAlign: "left",
+              },
+            }}
+          />
+        </DialogContent>
+        <DialogActions
+          sx={{
+            "& .MuiButtonBase-root": {
+              backgroundColor: "var(--color-secondary-2)",
+              color: "#111826",
+              margin: "1rem",
+            },
+          }}
+        >
+          <Button
+            type="submit"
+            disabled={!acceptAgb || !acceptWider}
+            sx={{
+              "&:hover": {
+                backgroundColor: "#02673e",
+                borderBottom: "2px solid var(--color-secondary)",
+              },
+            }}
+          >
+            Button
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Footer />
     </>
   );

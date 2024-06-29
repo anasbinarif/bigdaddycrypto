@@ -108,26 +108,26 @@ const CoinDetailsDisplay = ({
             {addCommas(
               convertPrice(financialSummary.totalHoldingsValue, currency, rates)
             ).length > 12 && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 10,
-                    left: 10,
-                    backgroundColor: "#818181ef",
-                    borderRadius: "4px",
-                    padding: "2px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {addCommas(
-                    convertPrice(
-                      financialSummary.totalHoldingsValue,
-                      currency,
-                      rates
-                    )
-                  )}
-                </div>
-              )}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 10,
+                  backgroundColor: "#818181ef",
+                  borderRadius: "4px",
+                  padding: "2px",
+                  fontSize: "14px",
+                }}
+              >
+                {addCommas(
+                  convertPrice(
+                    financialSummary.totalHoldingsValue,
+                    currency,
+                    rates
+                  )
+                )}
+              </div>
+            )}
           </Typography>
 
           <Typography
@@ -215,28 +215,24 @@ const CoinDetailsDisplay = ({
             )}{" "}
             {currencySign[currency]}
             {addCommas(
-              convertPrice(financialSummary.totalHoldingsValue, currency, rates)
+              convertPrice(financialSummary.totalWinLoss, currency, rates)
             ).length > 12 && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 10,
-                    left: 10,
-                    backgroundColor: "#818181ef",
-                    borderRadius: "4px",
-                    padding: "2px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {addCommas(
-                    convertPrice(
-                      financialSummary.totalHoldingsValue,
-                      currency,
-                      rates
-                    )
-                  )}
-                </div>
-              )}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 10,
+                  backgroundColor: "#818181ef",
+                  borderRadius: "4px",
+                  padding: "2px",
+                  fontSize: "14px",
+                }}
+              >
+                {addCommas(
+                  convertPrice(financialSummary.totalWinLoss, currency, rates)
+                )}
+              </div>
+            )}
           </Typography>
           <Typography
             className={
@@ -285,8 +281,9 @@ const CoinDetailsDisplay = ({
             sx={{
               fontSize: "1.8rem",
               fontWeight: "bold",
-              color: `${financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
-                }`,
+              color: `${
+                financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
+              }`,
               whiteSpace: "nowrap",
               "@media only screen and (max-width: 1500px)": {
                 fontSize: "1.5rem",
@@ -295,12 +292,12 @@ const CoinDetailsDisplay = ({
           >
             {financialSummary.avgPurchasePrice > 0
               ? `${addCommas(
-                convertPrice(
-                  financialSummary.avgPurchasePrice,
-                  currency,
-                  rates
-                )
-              )} ${currencySign[currency]}`
+                  convertPrice(
+                    financialSummary.avgPurchasePrice,
+                    currency,
+                    rates
+                  )
+                )} ${currencySign[currency]}`
               : `--,-- ${currencySign[currency]}`}
           </Typography>
           <Typography
@@ -351,8 +348,9 @@ const CoinDetailsDisplay = ({
             sx={{
               fontSize: "1.8rem",
               fontWeight: "bold",
-              color: `${financialSummary.avgSellingPrice > 0 ? "" : "rgb(68, 68, 68)"
-                }`,
+              color: `${
+                financialSummary.avgSellingPrice > 0 ? "" : "rgb(68, 68, 68)"
+              }`,
               whiteSpace: "nowrap",
               "@media only screen and (max-width: 1500px)": {
                 fontSize: "1.5rem",
@@ -361,12 +359,12 @@ const CoinDetailsDisplay = ({
           >
             {financialSummary.avgSellingPrice > 0
               ? `${addCommas(
-                convertPrice(
-                  financialSummary.avgSellingPrice,
-                  currency,
-                  rates
-                )
-              )} ${currencySign[currency]}`
+                  convertPrice(
+                    financialSummary.avgSellingPrice,
+                    currency,
+                    rates
+                  )
+                )} ${currencySign[currency]}`
               : `--,-- ${currencySign[currency]}`}
           </Typography>
           {financialSummary.avgSellingPricePercentage > 0 && (
@@ -443,8 +441,10 @@ const CoinDetailsDisplay = ({
             )
               ? ""
               : `${(
-                (financialSummary.realizedProfit / financialSummary.totalInvested) * 100
-              ).toFixed(2)} % ${t("ofInvestment")}`}{" "}
+                  (financialSummary.realizedProfit /
+                    financialSummary.totalInvested) *
+                  100
+                ).toFixed(2)} % ${t("ofInvestment")}`}{" "}
           </Typography>
         </Box>
       </Box>
