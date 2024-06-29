@@ -196,6 +196,15 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                   <Link
+                    href="/dashboard"
+                    className={styles.nav__link}
+                    onClick={handleDashboardClick}
+                  >
+                    Dashboard
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link
                     href="/assetsGraph"
                     onClick={handleGraphClick}
                     className={styles.nav__link}

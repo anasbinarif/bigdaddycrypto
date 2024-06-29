@@ -11,6 +11,13 @@ import {
   IconButton,
   Switch,
   SwitchProps,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  TextField,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -24,6 +31,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
 import SubscribeDialog from "../../components/subscribeDialog/SubscribeDialog";
 import { MySwitch } from "../../components/styledSwitch/styledSwitch";
+import Link from "next/link";
 
 const plans = [
   {
@@ -97,6 +105,9 @@ const PricingPlans = () => {
   const [sessionJotai] = useAtom(sessionAtom);
   const [userSubscription, setUserSubscription] = useState(null);
   const [open, setOpen] = useState(false);
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [acceptAgb, setAcceptAgb] = useState(false);
+  const [acceptWider, setAcceptWider] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -124,8 +135,18 @@ const PricingPlans = () => {
   }, [userSubscription]);
 
   function handelSubModal() {
-    setOpen(true);
+    // setOpen(true);
+    setPromptOpen(true);
   }
+
+  const handleClosePrompt = () => {
+    setPromptOpen(false);
+  };
+
+  const handleAcceptPrompt = (e) => {
+    e.preventDefault();
+    setOpen(true);
+  };
 
   return (
     <Box sx={{}}>
@@ -402,6 +423,189 @@ const PricingPlans = () => {
           ))}
         </Box>
       </Container>
+      <Dialog
+        open={promptOpen}
+        onClose={handleClosePrompt}
+        // fullScreen={fullScreen}
+        PaperProps={{
+          onSubmit: handleAcceptPrompt,
+          component: "form",
+          sx: {
+            width: { xs: "100%", sm: "90%", md: "70%" },
+            maxWidth: "600px",
+            backgroundColor: "#111826",
+            color: "white",
+            // padding: "1rem",
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: "bold" }}>Please Verify</DialogTitle>
+        <DialogContent
+          sx={{
+            "& .MuiTypography-root": { color: "white" },
+            "& .MuiFormControl-root": {
+              mb: 2,
+              "& .MuiFormHelperText-root": {
+                color: "#ffffff", // Helper text color
+              },
+              "& .MuiFilledInput-input": {
+                color: "#fff",
+                "&::placeholder": {
+                  color: "#fff",
+                },
+              },
+              "& .MuiInputBase-root": {
+                "&.MuiFilledInput-root": {
+                  "&::after": {
+                    borderBottom: "2px solid var(--color-secondary)",
+                  },
+                },
+              },
+              "& .MuiInputBase-input": {
+                height: "1.6em",
+              },
+              "& .MuiFormLabel-root": {
+                color: "#ffffff80",
+                "&.MuiInputLabel-root.Mui-focused": {
+                  color: "var(--color-secondary)",
+                },
+              },
+              "& .MuiFilledInput-root": {
+                borderRadius: "8px",
+                backgroundColor: "#202530",
+                border: "1px solid #ffffff80",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&.Mui-focused": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ffffff",
+                },
+              },
+            },
+          }}
+        >
+          {/* <DialogContentText>{t("changeText")}</DialogContentText> */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={acceptAgb}
+                onChange={(e) => setAcceptAgb(e.target.checked)}
+                sx={{
+                  "&.MuiCheckbox-root": {
+                    color: "#ffffff80",
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
+                    "&.Mui-checked": {
+                      color: "var(--color-secondary)",
+                    },
+                  },
+                }}
+              />
+            }
+            label={
+              <Typography>
+                Ich habe die{" "}
+                <Link
+                  href="/policy/agb"
+                  style={{ color: "var(--color-secondary)" }}
+                >
+                  Allgemeinen Geschäftsbedingungen (AGB)
+                </Link>{" "}
+                gelesen und akzeptiere sie.
+              </Typography>
+            }
+            sx={{
+              alignSelf: "flex-start",
+              alignItems: "flex-start",
+              mb: "1rem",
+              "& .MuiButtonBase-root": {
+                padding: "0 10px",
+                // ml: "10px",
+              },
+              "& .MuiTypography-root": {
+                color: "#ffffff80",
+                fontSize: "14px", // Set desired font size here
+                textAlign: "left",
+              },
+            }}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={acceptWider}
+                onChange={(e) => setAcceptWider(e.target.checked)}
+                sx={{
+                  "&.MuiCheckbox-root": {
+                    color: "#ffffff80",
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
+                    "&.Mui-checked": {
+                      color: "var(--color-secondary)",
+                    },
+                  },
+                }}
+              />
+            }
+            label={
+              <Typography>
+                Ich bin damit einverstanden und nehme zur Kenntnis, dass für
+                meine individuell angefertigte Bestellung kein{" "}
+                <Link
+                  href="/policy/agb"
+                  style={{ color: "var(--color-secondary)" }}
+                >
+                  Widerrufsrecht
+                </Link>{" "}
+                besteht.
+              </Typography>
+            }
+            sx={{
+              alignSelf: "flex-start",
+              alignItems: "flex-start",
+              mb: "1rem",
+              "& .MuiButtonBase-root": {
+                padding: "0 10px",
+                // ml: "10px",
+              },
+              "& .MuiTypography-root": {
+                color: "#ffffff80",
+                fontSize: "14px", // Set desired font size here
+                textAlign: "left",
+              },
+            }}
+          />
+        </DialogContent>
+        <DialogActions
+          sx={{
+            "& .MuiButtonBase-root": {
+              backgroundColor: "var(--color-secondary-2)",
+              color: "#111826",
+              margin: "1rem",
+            },
+          }}
+        >
+          <Button
+            type="submit"
+            disabled={!acceptAgb || !acceptWider}
+            sx={{
+              "&:hover": {
+                backgroundColor: "#02673e",
+                borderBottom: "2px solid var(--color-secondary)",
+              },
+            }}
+          >
+            Zum Bezahlen fortfahren
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
