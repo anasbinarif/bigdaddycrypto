@@ -26,7 +26,12 @@ import { theme1, theme2 } from "../theme";
 import { useTranslations } from "next-intl";
 import { symbol } from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faD, faDownload, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import {
+  faD,
+  faDownload,
+  faEnvelope,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import Dash1 from "./dash1/components/MainPage";
 import dash1 from "../../../../public/assets/images/dash1.png";
 import Dash2 from "./dash2/components/MainPageSecondDashboard";
@@ -161,7 +166,9 @@ const Dashboard = () => {
                     <Box
                       sx={{
                         padding: "1rem",
-                        border: "3px solid var(--color-secondary)",
+                        border: expandDashboard[1]
+                          ? "none"
+                          : "3px solid var(--color-secondary)",
                         borderRadius: "15px",
                         transition: "all 500ms ease-in-out",
                         transformOrigin: "top left",
@@ -189,10 +196,18 @@ const Dashboard = () => {
                           top: 6,
                           right: 15,
                           display: expandDashboard[1] ? "block" : "none",
+                          color: "white",
+
+                          "&:hover": {
+                            color: "var(--color-secondary)",
+                          },
                         }}
                         onClick={() => handleExpandDashboard(1)}
                       >
-                        Close
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          style={{ fontSize: "1.5rem" }}
+                        />
                       </Button>
                       <Box
                         onClick={() => handleExpandDashboard(1)}
@@ -260,7 +275,9 @@ const Dashboard = () => {
                     <Box
                       sx={{
                         padding: "1rem",
-                        border: "3px solid var(--color-secondary)",
+                        border: expandDashboard[2]
+                          ? "none"
+                          : "3px solid var(--color-secondary)",
                         borderRadius: "15px",
                         transition: "all 500ms ease-in-out",
                         transformOrigin: "top right",
@@ -288,10 +305,18 @@ const Dashboard = () => {
                           top: 6,
                           right: 15,
                           display: expandDashboard[2] ? "block" : "none",
+                          color: "white",
+
+                          "&:hover": {
+                            color: "var(--color-secondary)",
+                          },
                         }}
                         onClick={() => handleExpandDashboard(2)}
                       >
-                        Close
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          style={{ fontSize: "1.5rem" }}
+                        />
                       </Button>
                       <Box
                         onClick={() => handleExpandDashboard(2)}
