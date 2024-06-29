@@ -385,6 +385,12 @@ const Testing = () => {
               MenuListProps: {
                 disableListWrap: true,
               },
+              PaperProps: {
+                style: {
+                  color: "white",
+                  backgroundColor: "#111826",
+                },
+              },
             }}
             // onChange={(e) => setSelectedItem(e.target.value)}
           >
@@ -393,6 +399,7 @@ const Testing = () => {
                 checked={areAllTrue(selectedItem)}
                 onChange={handleCheckboxChange}
                 name="all"
+                sx={{ color: "var(--color-secondary) !important" }}
               />
               All Categories
             </MenuItem>
@@ -402,6 +409,7 @@ const Testing = () => {
                   checked={selectedItem[key]}
                   onChange={handleCheckboxChange}
                   name={key}
+                  sx={{ color: "var(--color-secondary) !important" }}
                 />
                 {value}
               </MenuItem>

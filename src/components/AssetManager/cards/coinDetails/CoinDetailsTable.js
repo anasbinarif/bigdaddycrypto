@@ -192,7 +192,7 @@ const CoinDetailsTable = ({
                     PaperProps: {
                       style: {
                         color: "white",
-                        backgroundColor: "#111826", // Background color of the popup menu
+                        backgroundColor: "#111826",
                       },
                     },
                   }}

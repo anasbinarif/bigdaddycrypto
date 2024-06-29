@@ -145,11 +145,11 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 }}
               />
             </IconButton>
-            {!isMobile && (
+            {/* {!isMobile && (
               <Typography variant="body1" sx={{ ml: 1 }}>
                 {t("companyName")}
               </Typography>
-            )}
+            )} */}
           </Link>
           {isSubscribed === "false" && <SubscribeDialog />}
           <FormDialog />
