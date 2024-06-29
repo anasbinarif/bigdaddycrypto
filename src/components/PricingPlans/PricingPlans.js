@@ -498,7 +498,7 @@ const PricingPlans = () => {
                 onChange={(e) => setAcceptAgb(e.target.checked)}
                 sx={{
                   "&.MuiCheckbox-root": {
-                    borderColor: "white",
+                    color: "#ffffff80",
                     "&:hover": {
                       backgroundColor: "transparent",
                     },
@@ -512,7 +512,10 @@ const PricingPlans = () => {
             label={
               <Typography>
                 Ich habe die{" "}
-                <Link href="/policy/agb" style={{ color: "orange" }}>
+                <Link
+                  href="/policy/agb"
+                  style={{ color: "var(--color-secondary)" }}
+                >
                   Allgemeinen Geschäftsbedingungen (AGB)
                 </Link>{" "}
                 gelesen und akzeptiere sie."
@@ -540,6 +543,7 @@ const PricingPlans = () => {
                 onChange={(e) => setAcceptWider(e.target.checked)}
                 sx={{
                   "&.MuiCheckbox-root": {
+                    color: "#ffffff80",
                     "&:hover": {
                       backgroundColor: "transparent",
                     },
@@ -553,8 +557,11 @@ const PricingPlans = () => {
             label={
               <Typography>
                 Ich bin damit einverstanden und nehme zur Kenntnis, dass für
-                meine individuell angefertigte Bestellung kein
-                <Link href="/policy/agb" style={{ color: "orange" }}>
+                meine individuell angefertigte Bestellung kein{" "}
+                <Link
+                  href="/policy/agb"
+                  style={{ color: "var(--color-secondary)" }}
+                >
                   Widerrufsrecht
                 </Link>{" "}
                 besteht.
@@ -595,7 +602,7 @@ const PricingPlans = () => {
               },
             }}
           >
-            Button
+            Zum Bezahlen fortfahren
           </Button>
         </DialogActions>
       </Dialog>
