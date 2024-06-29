@@ -6,10 +6,6 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "../../../lib/auth";
 
 export async function POST(req, res) {
-  const tokenVerificationResponse = await verifyToken(req);
-  if (tokenVerificationResponse) {
-    return tokenVerificationResponse;
-  }
 
   if (req.method !== "POST") {
     return NextResponse.json({ error: "Request Not Allowed" }, { status: 405 });

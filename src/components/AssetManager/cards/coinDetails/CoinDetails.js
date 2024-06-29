@@ -256,7 +256,7 @@ const CoinDetails = (props) => {
     if (!error) {
       const userID = sessionJotai?.user.id;
       const CoinGeckoID = coin?.CoinGeckoID;
-      console.log("Saving data", rowVals, CoinGeckoID, userID);
+      // console.log("Saving data", rowVals, CoinGeckoID, userID);
       const Portfolio_Assets = {
         totalInvest: financialSummary.totalInvested || 0,
         totalSold: financialSummary.realizedProfit || 0,
@@ -280,7 +280,6 @@ const CoinDetails = (props) => {
           }),
         });
         if (response.ok) {
-          console.log("hbhbhbhbhbhbhbhbhbhbhbh");
           setAlertInfo({
             message: t("successAlert"),
             severity: "success",
@@ -380,7 +379,6 @@ const CoinDetails = (props) => {
       setAlertOpen(true);
       return;
     }
-    console.log("portfolioportfolioportfolio,", portfolio);
 
     const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
     const rows = [];

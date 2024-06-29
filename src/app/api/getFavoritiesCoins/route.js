@@ -12,7 +12,7 @@ export async function POST(request) {
         const portfolio = await UserPortfolio.findOne({ userId: userId });
 
         if (!portfolio) {
-            return new NextResponse(JSON.stringify({ success: false, message: "Portfolio not found" }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+            return new NextResponse(JSON.stringify({ success: false, message: "Portfolio not found" }), { status: 200, headers: { 'Content-Type': 'application/json' } });
         }
 
         // Extract the CoinGeckoIDs of the favorite assets

@@ -40,6 +40,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
   const [accountAnchorEl, setAccountAnchorEl] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState("nope");
   const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
     const handleResize = () => {
@@ -98,6 +99,18 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
 
   const handleGraphClick = (event) => {
     if (sessionJotai?.user?.subscriptionPlan === "free") {
+      setAlertMessage(t("alertGraph"));
+      setAlertOpen(true);
+      event.preventDefault();
+    }
+  };
+
+  const handleDashboardClick = (event) => {
+    if (
+      sessionJotai?.user?.subscriptionPlan === "free" ||
+      sessionJotai?.user?.billingCycle === "monthly"
+    ) {
+      setAlertMessage(t("alertDashboard"));
       setAlertOpen(true);
       event.preventDefault();
     }
@@ -128,17 +141,15 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   width: "auto",
                   height: "35px",
                   cursor: "pointer",
-                  // backgroundColor: "white",
-                  // borderRadius: "50%",
                   padding: "2px",
                 }}
               />
             </IconButton>
-            {/* {!isMobile && (
+            {!isMobile && (
               <Typography variant="body1" sx={{ ml: 1 }}>
                 {t("companyName")}
               </Typography>
-            )} */}
+            )}
           </Link>
           {isSubscribed === "false" && <SubscribeDialog />}
           <FormDialog />
@@ -149,7 +160,6 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               </IconButton>
               <Menu
                 id="hamMenu"
-                // anchorEl={menuAnchorEl}
                 anchorOrigin={{
                   vertical: "top",
                   horizontal: "right",
@@ -207,7 +217,6 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   <AccountCircle />
                 </IconButton>
                 <Menu
-                  // anchorEl={accountAnchorEl}
                   anchorOrigin={{
                     vertical: "top",
                     horizontal: "right",
@@ -272,7 +281,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               <Link
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
                 href="/dashboard"
-                onClick={handleGraphClick}
+                onClick={handleDashboardClick}
                 className={styles.nav__link}
               >
                 Dashboards
@@ -315,7 +324,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
           variant="filled"
           sx={{ width: "100%" }}
         >
-          To access the assets graph, please subscribe to one of our plans.
+          {alertMessage}
         </Alert>
       </Snackbar>
     </>

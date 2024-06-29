@@ -227,7 +227,7 @@ const DonutChart = ({
         try {
           const calculatedScore = await calculateScore(portData.assets);
           setScore(calculatedScore?.score);
-          console.log("Calculated Score:", calculatedScore);
+          // console.log("Calculated Score:", calculatedScore);
         } catch (error) {
           console.error("Error calculating score:", error);
         }
@@ -235,9 +235,7 @@ const DonutChart = ({
     };
     fetchScore();
   }, [portfolio, preCalcPort]);
-  useEffect(() => {
-    console.log("Calculated Score2:", score);
-  }, [score]);
+
 
   function calculateNote(score) {
     if (score >= 91) {

@@ -183,7 +183,16 @@ const PortfolioForm = () => {
   const handleFormSubmited = async () => {
     handleNext();
     try {
-      const price = await calculatePrice(portfolioData);
+      let price = await calculatePrice(portfolioData);
+      const billingCycle = sessionJotai?.user?.billingCycle;
+      const subscriptionPlan = sessionJotai?.user?.subscriptionPlan;
+      if (billingCycle === 'yearly') {
+        if (subscriptionPlan === 'Pro') {
+          price = price * 0.85;
+        } else if (subscriptionPlan === 'Premium') {
+          price = price * 0.80;
+        }
+      }
       console.log("Calculated Price:", price);
       setTotalOneTimePrice(price);
       const userId = sessionJotai?.user.id;

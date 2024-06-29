@@ -9,12 +9,11 @@ export async function POST(req) {
 
   try {
     const portfolio = await UserPortfolio.findOne({ userId: objectUserId });
-    // console.log(portfolio);
     if (!portfolio) {
       console.log("No portfolio found");
       return NextResponse.json(
         { message: "No portfolio found" },
-        { status: 404 },
+        { status: 200 },
         { data: {} }
       );
     }

@@ -119,7 +119,7 @@ const SubscribeDialog = ({ open, handleClose }) => {
       setSnackbarMessage("Subscription approved!");
       setSnackbarSeverity("success");
       const subscriptionData = await fetchUserSubscriptionPlan(userId);
-      console.log("subscriptionData", subscriptionData);
+      // console.log("subscriptionData", subscriptionData);
       setSession({
         ...sessionJotai,
         user: {

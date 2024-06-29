@@ -48,6 +48,45 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   const [alert, setAlert] = useState("");
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const handleChangePassword = async (event) => {
+    event.preventDefault();
+
+    const currentPassword = event.target.elements.Name.value;
+    const newPassword = event.target.elements.EditPIN.value;
+    const token = sessionJotai?.user.accessToken;
+
+    try {
+      const changePasswordRes = await fetch("/api/changePassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: sessionJotai?.user.email,
+          newPassword: newPassword,
+          oldPassword: currentPassword
+        }),
+      });
+
+      const changePasswordData = await changePasswordRes.json();
+
+      if (changePasswordData.success) {
+        setAlert("Password changed successfully");
+        setOpenDialog(falses);
+        handleCloseDialog();
+      } else if (changePasswordData.error == "Incorrect old password") {
+        setAlert("Incorrect old password");
+      }
+      else {
+        setAlert("Failed to change password");
+      }
+    } catch (error) {
+      setAlert("An error occurred");
+    }
+
+  }
+
   useEffect(() => {
     const updateSessionWithSubscription = async () => {
       try {
@@ -55,7 +94,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           const subscriptionData = await fetchUserSubscriptionPlan(
             session.user?.id
           );
-          console.log("subscriptionData", subscriptionData, session);
+          // console.log("subscriptionData", subscriptionData, session);
           setSession({
             ...session,
             user: {
@@ -63,6 +102,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               subscriptionPlan: subscriptionData.plan,
               paymentDetails: subscriptionData.payment,
               subscribed: subscriptionData.plan !== "free",
+              billingCycle: subscriptionData?.payment?.Subscription?.billingCycle
             },
           });
         }
@@ -76,7 +116,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
     };
 
     updateSessionWithSubscription();
-  }, [status, session]);
+  }, [status]);
 
   const handleLogoutFun = async () => {
     setLoading(true);
@@ -109,9 +149,8 @@ const NavbarLink = ({ mobileView, handleClose }) => {
 
       const resData = await res.json();
       console.log(resData, window.location.hostname);
-      const str = `${window.location.hostname}${
-        window.location.hostname === "localhost" ? ":3000" : ""
-      }/en/shared?id=${sessionJotai?.user.id}&key=${resData.data}`;
+      const str = `${window.location.hostname}${window.location.hostname === "localhost" ? ":3000" : ""
+        }/en/shared?id=${sessionJotai?.user.id}&key=${resData.data}`;
 
       console.log(str);
       await navigator.clipboard.writeText(str);
@@ -477,6 +516,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         onClose={handleCloseDialog}
         fullScreen={fullScreen}
         PaperProps={{
+          onSubmit: handleChangePassword,
           component: "form",
           sx: {
             width: { xs: "100%", sm: "90%", md: "70%" },
@@ -573,7 +613,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             },
           }}
         >
-          <Button>{t("changePassword")}</Button>
+          <Button type="submit" sx={{
+            "&:hover": {
+              backgroundColor: "#02673e",
+              borderBottom: "2px solid var(--color-secondary)",
+            },
+          }} >{t("changePassword")}</Button>
         </DialogActions>
       </Dialog>
     </>
