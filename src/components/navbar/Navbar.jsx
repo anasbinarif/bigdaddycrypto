@@ -108,7 +108,6 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
     }
   };
 
-<<<<<<< HEAD
   const handleMediaClick = (event) => {
     if (
       !sessionJotai?.user?.subscriptionPlan ||
@@ -120,10 +119,6 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
       setAlertOpen(true);
       event.preventDefault();
     }
-=======
-  const handleDashboardClick = (event) => {
-    
->>>>>>> origin/master
   };
 
   return (
@@ -200,7 +195,11 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Link href="/media" className={styles.nav__link} onClick={handleGraphClick}>
+                  <Link
+                    href="/media"
+                    className={styles.nav__link}
+                    onClick={handleGraphClick}
+                  >
                     {t("media")}
                     <FontAwesomeIcon
                       icon={faCrown}
@@ -313,7 +312,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               </Link>
               <Link
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
-                onClick={handleGraphClick}
+                // onClick={handleGraphClick}
                 href="/media"
                 className={styles.nav__link}
                 onClick={handleMediaClick}
