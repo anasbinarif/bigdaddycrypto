@@ -6,6 +6,8 @@ import {
   Button,
   Typography,
   FormControlLabel,
+  List,
+  ListItem,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -485,7 +487,17 @@ const RegisterPage = () => {
                 }}
               />
             }
-            label={languageData["terms"]}
+            label={
+              <Box>
+                {languageData["terms1"]}{" "}
+                <Link
+                  href="/en/policy/agb"
+                  style={{ color: "var(--color-secondary)" }}
+                >
+                  {languageData["terms2"]}
+                </Link>
+              </Box>
+            }
             sx={{
               alignSelf: "flex-start",
               alignItems: "flex-start",
@@ -541,6 +553,46 @@ const RegisterPage = () => {
         >
           Disclaimer:
           <br /> {languageData["registerDisclaimer"]}
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: "#111826", // Set background color
+          color: "#777", // Set text color to ensure visibility on dark backgrounds
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center", // Center horizontally
+          alignItems: "center", // Center vertically
+          padding: "20px", // Add padding for spacing
+        }}
+      >
+        <Box sx={{ mb: "1rem" }}>
+          <List sx={{ display: "flex" }}>
+            <ListItem>
+              <Link href="/en/policy/datenschutz" target="_blank">
+                Datenschutz
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link href="/policy/widerrufsbelehrung" target="_blank">
+                Widerrufsbelehrung
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link href="/policy/agb" target="_blank">
+                AGB
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link href="/policy/impressum" target="_blank">
+                Impressum
+              </Link>
+            </ListItem>
+          </List>
+        </Box>
+        <Typography variant="body1" textAlign="center" fontSize="12px">
+          {/* Text aligned to center */}
+          {languageData["footerText"]}
         </Typography>
       </Box>
       <AlertBar
