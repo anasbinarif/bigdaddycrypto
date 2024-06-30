@@ -273,9 +273,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           <CircularProgress color="inherit" />
         </Box>
       )}
-      {showCookieDrawer && (
-        <CookieBottomDrawer />
-      )}
+      {showCookieDrawer && <CookieBottomDrawer setLoading={setLoading} />}
     </>
   );
 }
