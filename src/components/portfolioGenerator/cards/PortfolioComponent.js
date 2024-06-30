@@ -522,7 +522,7 @@ const PortfolioComponent = ({
         severity: "error",
       });
     }
-  }
+  };
   // console.log("port,", portfolio);
 
   return (
@@ -902,6 +902,12 @@ const PortfolioComponent = ({
             handleDeleteConfirm={handleDeleteConfirm}
             asset={selectedAsset}
           />
+          {/* <DeleteConfirmationDialog
+            open={Boolean(selectedAsset)}
+            handleClose={handleCloseDialog}
+            handleDeleteConfirm={handleDeleteConfirm}
+            asset={selectedAsset}
+          /> */}
         </Box>
       </Box>
       <Snackbar

@@ -11,6 +11,7 @@ import {
   DialogTitle,
   useMediaQuery,
   useTheme,
+  Typography,
 } from "@mui/material";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../app/stores/sessionStore";
@@ -26,6 +27,7 @@ const FormDialog = () => {
   const [, setPortfolio] = useAtom(portfolioAtom);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [error, setError] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -91,6 +93,7 @@ const FormDialog = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    setError("");
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries(formData.entries());
     const { Name, EditPIN } = formJson;
@@ -105,6 +108,8 @@ const FormDialog = () => {
         body: JSON.stringify({ Name, EditPIN, userID }),
       });
 
+      // console.log(response);
+
       if (response.ok) {
         const data = await response.json();
         console.log("Data imported successfully", data.userPortfolios);
@@ -112,14 +117,18 @@ const FormDialog = () => {
         const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
         setPortfolio(userPortfolio.data);
       } else {
-        handleConfirmClose();
-        throw new Error("Failed to import data");
+        const respData = await response.json();
+        // console.log(respData);
+        throw new Error(respData.message);
       }
     } catch (error) {
-      handleConfirmClose();
+      setError(error.message);
+      // handleConfirmClose();
       console.error("Error importing data:", error);
     }
   };
+
+  // console.log(sessionJotai);
 
   return (
     <div>
@@ -149,6 +158,7 @@ const FormDialog = () => {
                   padding: "5px 10px",
                   backgroundColor: "#202530",
                   border: "1px solid #ffffff80",
+                  color: "white",
                   "&:hover": {
                     backgroundColor: "rgba(255, 255, 255, 0.2)",
                     borderBottom: "2px solid var(--color-secondary)",
@@ -202,6 +212,11 @@ const FormDialog = () => {
             fullWidth
             variant="standard"
           />
+          {error && (
+            <Typography sx={{ color: "red !important", fontSize: "0.8rem" }}>
+              {error}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions
           sx={{

@@ -19,6 +19,7 @@ const EditPortfolio = () => {
   const [users, setUsers] = useState([]);
   const [selectedUserPortfolio, setSelectedUserPortfolio] = useState([]);
   const [portfolioCalculations, setPortfolioCalculations] = useState([]);
+  const [selectedNotizen, setSelectedNotizen] = useState("");
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
@@ -57,6 +58,7 @@ const EditPortfolio = () => {
           users={users}
           setSelectedUserPortfolio={setSelectedUserPortfolio}
           setPortfolioCalculations={setPortfolioCalculations}
+          setSelectedNotizen={setSelectedNotizen}
         />
       </Grid>
       <Grid item xs={8} md={width > 1100 ? 8 : 12}>
@@ -81,7 +83,10 @@ const EditPortfolio = () => {
               <BewertungCard preCalcPort={selectedUserPortfolio} />
             </Grid>
             <Grid item xs={12}>
-              <Item4 preCalcPort={selectedUserPortfolio} />
+              <Item4
+                preCalcComment={selectedNotizen ? selectedNotizen : ""}
+                preCalcPort={selectedUserPortfolio}
+              />
             </Grid>
           </Grid>
         </Grid>

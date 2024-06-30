@@ -32,6 +32,7 @@ const UserList = ({
   users,
   setSelectedUserPortfolio,
   setPortfolioCalculations,
+  setSelectedNotizen,
 }) => {
   const [loading, setLoading] = useState(false);
   const [blurEmail, setBlurEmail] = useState(true);
@@ -45,6 +46,7 @@ const UserList = ({
     const userPortfolio = await getUserPortfolio(user.userId);
     setSelectedUserPortfolio(userPortfolio?.data);
     setPortfolioCalculations(userPortfolio?.calculation);
+    setSelectedNotizen(user.notizen);
     setLoading(false);
     // console.log("User portfolio:", user, userPortfolio);
   };
@@ -101,9 +103,44 @@ const UserList = ({
               // label="Blur User Email"
             />
           </Box>
-          <TableContainer component={Paper} sx={{ maxHeight: "600px" }}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              maxHeight: "600px",
+              overflowX: "auto",
+              backgroundColor: "transparent",
+              backgroundImage: "none",
+              boxShadow: "none",
+
+              "& .MuiTableCell-root": {
+                minWidth: "110px",
+              },
+            }}
+          >
             <Table aria-label="user table" stickyHeader>
-              <TableHead>
+              <TableHead
+                sx={{
+                  "& .MuiTableCell-root": {
+                    // backgroundColor: "transparent",
+                    padding: "2px",
+                    color: "#ffffff50",
+                    fontWeight: "bold",
+                    "&:first-child": {
+                      padding: "16px",
+                    },
+
+                    "& .MuiButtonBase-root": {
+                      marginLeft: "auto",
+                      display: "flex",
+                      alignItems: "flex-start",
+
+                      "& .MuiSvgIcon-root": {
+                        opacity: 1,
+                      },
+                    },
+                  },
+                }}
+              >
                 <TableRow>
                   <TableCell
                     sortDirection={orderBy === "userEmail" ? order : false}
@@ -158,7 +195,16 @@ const UserList = ({
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody
+                sx={{
+                  border: "1px solid #ffffff18",
+                  backgroundColor: "#00000030",
+
+                  "& .MuiTableCell-root": {
+                    width: "auto",
+                  },
+                }}
+              >
                 {users.map((user, index) => (
                   <TableRow
                     key={index}
@@ -171,6 +217,14 @@ const UserList = ({
                         : user.oneTimePayment.status === "Paid"
                         ? "#00aa6655"
                         : "#de0b0b55",
+                      "& .MuiTableCell-root": {
+                        "&:not(:first-child)": {
+                          borderRight: "1px solid #ffffff18",
+                        },
+                      },
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.08)",
+                      },
                     }}
                   >
                     <TableCell>

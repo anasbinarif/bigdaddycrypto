@@ -8,10 +8,12 @@ import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { getUserPortfolio } from "../../lib/data";
 import { sessionAtom } from "../../app/stores/sessionStore";
 
-export default function Item4({ msg, setMsg }) {
+export default function Item4({ preCalcComment, msg, setMsg }) {
   const t = useTranslations("item4");
   const [sessionJotai] = useAtom(sessionAtom);
   const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+
+  console.log(preCalcComment);
 
   const handleNotesSave = async () => {
     const userId = portfolio?.assetsCalculations.userId;
@@ -69,9 +71,12 @@ export default function Item4({ msg, setMsg }) {
       <TextareaAutosize
         aria-label="user comment textarea"
         placeholder={t("placeholder")}
-        value={msg?.UserComment}
+        value={preCalcComment?.UserComment || msg?.UserComment}
         maxRows={7}
-        onChange={handleUserCommentChange}
+        onChange={(e) => {
+          if (preCalcComment?.MissingCoins) return;
+          handleUserCommentChange(e);
+        }}
         style={{
           width: "100%",
           resize: "none",
@@ -87,9 +92,12 @@ export default function Item4({ msg, setMsg }) {
       <TextareaAutosize
         aria-label="missing coins textarea"
         placeholder={t("placeholder")}
-        value={msg?.MissingCoins}
+        value={preCalcComment?.MissingCoins || msg?.MissingCoins}
         minRows={7}
-        onChange={handleMissingCoinsChange}
+        onChange={(e) => {
+          if (preCalcComment?.MissingCoins) return;
+          handleMissingCoinsChange(e);
+        }}
         style={{
           width: "100%",
           resize: "none",
@@ -102,18 +110,20 @@ export default function Item4({ msg, setMsg }) {
           outline: "none",
         }}
       />
-      <Button
-        sx={{
-          marginTop: "20px",
-          backgroundColor: "#1188ff",
-          color: "white",
-          fontSize: "0.8rem",
-          "&:hover": { backgroundColor: "#0a549f" },
-        }}
-        onClick={handleNotesSave}
-      >
-        Save
-      </Button>
+      {!preCalcComment && (
+        <Button
+          sx={{
+            marginTop: "20px",
+            backgroundColor: "#1188ff",
+            color: "white",
+            fontSize: "0.8rem",
+            "&:hover": { backgroundColor: "#0a549f" },
+          }}
+          onClick={handleNotesSave}
+        >
+          Save
+        </Button>
+      )}
     </Box>
   );
 }

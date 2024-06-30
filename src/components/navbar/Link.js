@@ -149,12 +149,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
       });
 
       const resData = await res.json();
-      console.log(resData, window.location.hostname);
+      // console.log(resData, window.location.hostname);
       const str = `${window.location.hostname}${
         window.location.hostname === "localhost" ? ":3000" : ""
       }/en/shared?id=${sessionJotai?.user.id}&key=${resData.data}`;
 
-      console.log(str);
+      // console.log(str);
       await navigator.clipboard.writeText(str);
       setAlert("link copied");
     } catch (err) {
@@ -209,8 +209,8 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               <Link href="/admin" style={{ marginBottom: "1rem" }}>
                 {t("admin")}
               </Link>
-              <LanguageSwitcher />
-              <CurrencySwitcher />
+              {/* <LanguageSwitcher />
+              <CurrencySwitcher /> */}
             </MenuItem>
           ) : (
             <Link
@@ -252,7 +252,13 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   // ml: "10px",
                 }}
               >
-                {sessionJotai?.user?.subscriptionPlan}
+                {sessionJotai?.user?.subscriptionPlan
+                  ? sessionJotai?.user?.subscriptionPlan
+                  : (!sessionJotai?.user?.subscriptionPlan ||
+                      sessionJotai?.user?.subscriptionPlan === "free") &&
+                    sessionJotai?.user?.pastUserCheck
+                  ? "Free+"
+                  : "Free"}
               </Typography>
               <LanguageSwitcher />
               <CurrencySwitcher />
@@ -444,7 +450,13 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                     // ml: "10px",
                   }}
                 >
-                  {sessionJotai?.user?.subscriptionPlan}
+                  {sessionJotai?.user?.subscriptionPlan
+                    ? sessionJotai?.user?.subscriptionPlan
+                    : (!sessionJotai?.user?.subscriptionPlan ||
+                        sessionJotai?.user?.subscriptionPlan === "free") &&
+                      sessionJotai?.user?.pastUserCheck
+                    ? "Free+"
+                    : "Free"}
                 </Typography>
                 <LanguageSwitcher />
                 <CurrencySwitcher />

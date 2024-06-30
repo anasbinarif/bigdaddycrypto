@@ -112,14 +112,14 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         // }
         setShowCookieDrawer(true);
       };
-  
+
       fetchCookies();
     }, 5000);
-  
+
     return () => clearTimeout(timer);
   }, [sessionJotai]);
 
-  console.log("showCookieDrawer", showCookieDrawer);
+  // console.log("showCookieDrawer", showCookieDrawer);
 
   return (
     <>
