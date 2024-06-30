@@ -13,8 +13,9 @@ export async function POST(req) {
     if (!user) {
         return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
+    user.CookiesPrompt = false;
+    user.save()
     return NextResponse.json(
-        { CookiesPrompt: user.CookiesPrompt },
-        { status: 200 }
+        { message: "Cookies prompt updated" }, { status: 200 }
     );
 }
