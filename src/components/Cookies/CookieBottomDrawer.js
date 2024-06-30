@@ -69,8 +69,8 @@ export default function CookieBottomDrawer({ setLoading }) {
         <Typography sx={{ mb: "2rem" }}>
           Wir verwenden Cookies, um Ihr Surferlebnis zu verbessern,
           personalisierter Content oder Inhalte bereitzustellen und unseren
-          Datenverkehr zu analysieren. Durch Klicken auf "Alle akzeptieren"
-          stimmen Sie der Verwendung von Cookies zu.
+          Datenverkehr zu analysieren. Durch Klicken auf &quot;Alle
+          akzeptieren&quot; stimmen Sie der Verwendung von Cookies zu.
         </Typography>
         <Typography sx={{ "& a:hover": { textDecoration: "underline" } }}>
           Weitere Informationen finden Sie unter{" "}
