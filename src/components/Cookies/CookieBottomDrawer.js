@@ -24,10 +24,10 @@ export default function CookieBottomDrawer({ setLoading }) {
     setOpen(open);
   };
 
-  const handleAcceptAll = () => {
+  const handleAcceptAll = async () => {
     console.log("Accepted all cookies");
     const userID = sessionJotai?.user.id;
-    const res = fetch("/api/acceptCookies", {
+    const res = await fetch("/api/acceptCookies", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,6 +39,15 @@ export default function CookieBottomDrawer({ setLoading }) {
 
   const handleRejectAll = async () => {
     console.log("Rejected all cookies");
+    const userID = sessionJotai?.user.id;
+    const res = await fetch("/api/rejectCookies", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userID }),
+    });
+    const d = await res.json();
     setOpen(false);
     setLoading(true);
     await signOut({ redirect: true, callbackUrl: "/login" });
