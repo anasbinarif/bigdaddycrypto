@@ -5,9 +5,13 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Divider } from '@mui/material';
+import { useAtom } from 'jotai';
+import { sessionAtom } from '../../app/stores/sessionStore';
 
 export default function CookieBottomDrawer() {
     const [open, setOpen] = React.useState(true);
+    const [sessionJotai] = useAtom(sessionAtom);
+
 
     const toggleDrawer = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -18,11 +22,13 @@ export default function CookieBottomDrawer() {
 
     const handleAcceptAll = () => {
         console.log("Accepted all cookies");
+        const userID = sessionJotai?.user.id;
         const res = fetch("/api/acceptCookies", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({ userID  }),
         });
         setOpen(false);
     };

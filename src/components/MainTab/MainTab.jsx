@@ -96,11 +96,27 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowCookieDrawer(true);
-    }, 300);
-
+      const fetchCookies = async () => {
+        const userID = sessionJotai?.user.id;
+        const res = await fetch("/api/checkUserCookiesStatus", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userID }),
+        });
+  
+        const cookie = await res.json();
+        if (!cookie?.CookiesPrompt) {
+          setShowCookieDrawer(true);
+        }
+      };
+  
+      fetchCookies();
+    }, 5000);
+  
     return () => clearTimeout(timer);
-  }, []);
+  }, [sessionJotai]);
 
   console.log("showCookieDrawer", showCookieDrawer);
 
