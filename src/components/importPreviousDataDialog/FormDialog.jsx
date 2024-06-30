@@ -18,13 +18,15 @@ import { sessionAtom } from "../../app/stores/sessionStore";
 import { getUserPortfolio } from "../../lib/data";
 import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
+import {useSession} from "next-auth/react";
 
 const FormDialog = () => {
   const t = useTranslations("formDialog");
   const [open, setOpen] = useState(false);
   const [confirmClose, setConfirmClose] = useState(false);
-  const [sessionJotai] = useAtom(sessionAtom);
+  const [sessionJotai, setSession] = useAtom(sessionAtom);
   const [, setPortfolio] = useAtom(portfolioAtom);
+  const { data: session, status } = useSession();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [error, setError] = useState("");
@@ -116,6 +118,13 @@ const FormDialog = () => {
         handleConfirmClose();
         const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
         setPortfolio(userPortfolio.data);
+        setSession({
+          ...session,
+          user: {
+            ...session.user,
+            pastUser: sessionJotai?.user?.pastUser || "temp"
+          },
+        });
       } else {
         const respData = await response.json();
         // console.log(respData);

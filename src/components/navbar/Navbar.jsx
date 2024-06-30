@@ -157,7 +157,9 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
             )} */}
           </Link>
           {isSubscribed === "false" && <SubscribeDialog />}
+          <SessionProvider>
           <FormDialog />
+          </SessionProvider>
           {isMobile ? (
             <Box>
               <IconButton color="inherit" onClick={handleMenuClick}>

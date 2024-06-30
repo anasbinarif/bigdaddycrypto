@@ -132,6 +132,7 @@ export const authOptions = {
         token.pastUserCheck = user_0.pastUserCheck;
         token.subscribed = user_0.subscribed;
         token.accessToken = user.accessToken;
+        token.pastUser = user_0.pastUser;
       }
       return token;
     },
@@ -144,6 +145,7 @@ export const authOptions = {
         session.user.pastUserCheck = token.pastUserCheck;
         session.user.subscribed = token.subscribed;
         session.user.accessToken = token.accessToken;
+        session.user.pastUser = token.pastUser;
       }
       return session;
     },

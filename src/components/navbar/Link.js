@@ -99,6 +99,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             ...session,
             user: {
               ...session.user,
+              pastUser: sessionJotai?.user?.pastUser || "temp",
               subscriptionPlan: subscriptionData.plan,
               paymentDetails: subscriptionData.payment,
               subscribed: subscriptionData.plan !== "free",
@@ -252,13 +253,14 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                   // ml: "10px",
                 }}
               >
-                {sessionJotai?.user?.subscriptionPlan
+                {/* {sessionJotai?.user?.subscriptionPlan
                   ? sessionJotai?.user?.subscriptionPlan
                   : (!sessionJotai?.user?.subscriptionPlan ||
                       sessionJotai?.user?.subscriptionPlan === "free") &&
                     sessionJotai?.user?.pastUserCheck
                   ? "Free+"
-                  : "Free"}
+                  : "Free"} */}
+                  {sessionJotai?.user?.subscriptionPlan != "free" ?  sessionJotai?.user?.subscriptionPlan : sessionJotai?.user?.pastUser === "" ? "FREE" : "FREE+"}
               </Typography>
               <LanguageSwitcher />
               <CurrencySwitcher />
@@ -267,12 +269,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "flex-start",
+                  // justifyContent: "flex-start",
                   whiteSpace: "nowrap",
                   color: "var(--color-secondary)",
                   padding: 0,
                   fontSize: "15px",
-                  display: "flex",
+                  // display: "flex",
                   justifyContent: "center",
                 }}
               >
@@ -450,13 +452,14 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                     // ml: "10px",
                   }}
                 >
-                  {sessionJotai?.user?.subscriptionPlan
+                  {/* {sessionJotai?.user?.subscriptionPlan
                     ? sessionJotai?.user?.subscriptionPlan
                     : (!sessionJotai?.user?.subscriptionPlan ||
                         sessionJotai?.user?.subscriptionPlan === "free") &&
                       sessionJotai?.user?.pastUserCheck
                     ? "Free+"
-                    : "Free"}
+                    : "Free"} */}
+                    {sessionJotai?.user?.subscriptionPlan != "free" ?  sessionJotai?.user?.subscriptionPlan : sessionJotai?.user?.pastUser === "" ? "FREE" : "FREE+"}
                 </Typography>
                 <LanguageSwitcher />
                 <CurrencySwitcher />
