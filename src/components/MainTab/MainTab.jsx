@@ -105,7 +105,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         //   },
         //   body: JSON.stringify({ userID }),
         // });
-  
+
         // const cookie = await res.json();
         // if (!cookie?.CookiesPrompt) {
         //   setShowCookieDrawer(true);
