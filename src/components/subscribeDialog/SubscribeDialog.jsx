@@ -124,7 +124,6 @@ const SubscribeDialog = ({ open, handleClose }) => {
         ...sessionJotai,
         user: {
           ...sessionJotai.user,
-          pastUser: sessionJotai?.user?.pastUser || "temp",
           subscriptionPlan: subscriptionData.plan,
           paymentDetails: subscriptionData.payment,
           subscribed: true,
