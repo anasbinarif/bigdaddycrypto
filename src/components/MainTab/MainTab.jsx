@@ -20,7 +20,7 @@ import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { getUserPortfolio } from "../../lib/data";
 import { useTranslations } from "next-intl";
 import PricingPlans from "../../components/PricingPlans/PricingPlans";
-// import theme from "../../app/[locale]/theme";
+import CookieBottomDrawer from "../Cookies/CookieBottomDrawer";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,6 +48,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   const [value, setValue] = useState("one");
   const [selectedCoin, setSelectedCoin] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [showCookieDrawer, setShowCookieDrawer] = useState(false);
   const handleChange = (event, newValue) => {
     setValue(newValue);
     setTabSelector(newValue);
@@ -93,6 +94,16 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     }
   }, [portfolio]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCookieDrawer(true);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  console.log("showCookieDrawer", showCookieDrawer);
+
   return (
     <>
       <Box
@@ -101,7 +112,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           bgcolor: "#111826",
           padding: width < 500 ? "0" : "1.25% 1%",
           marginTop: "80px",
-          // margin: "1rem 0 0",
           "& > #simple-tabpanel-one > .MuiBox-root": {
             "@media only screen and (max-width: 500px)": {
               padding: "10px",
@@ -114,20 +124,8 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           },
         }}
       >
-        {/* {hoursRemaining !== null && sessionJotai?.user?.subscriptionPlan === "free" && (
-          <Box
-            sx={{
-              paddingLeft: width < 500 ? 0 : "24px",
-              paddingBottom: "24px",
-              float: "right",
-            }}
-          >
-            {`You have ${hoursRemaining?.toFixed(2)} hours remaining`}
-          </Box>
-        )} */}
         <Tabs
           value={value}
-          // indicatorColor={"white"}
           variant="scrollable"
           scrollButtons={width < 500}
           allowScrollButtonsMobile
@@ -155,9 +153,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
               border: 0,
               borderRadius: "4px",
               marginRight: "4px",
-              // "&.Mui-selected": {
-              //   color: "#1188ff",
-              // },
             },
             "& .MuiTabs-indicator": {
               backgroundColor: "var(--color-secondary-2)",
@@ -166,7 +161,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
               backgroundColor: "var(--color-secondary-2)",
             },
             "& .Mui-selected": {
-              // borderBottomColor: "var(--color-secondary)",
               color: "var(--color-secondary)",
             },
           }}
@@ -180,9 +174,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
                 borderBottomColor: "var(--color-secondary)",
                 color: "var(--color-secondary)",
               },
-              // "&.MuiTab-root:not(.Mui-selected):hover": {
-              //   backgroundColor: "var(--color-secondary-2)",
-              // },
               "@media only screen and (max-width: 600px)": {
                 fontSize: "0.8rem",
                 padding: "0.5rem",
@@ -227,7 +218,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           />
         </Tabs>
         <TabPanel value={value} index="one">
-          {/* <Box>Hello</Box> */}
           <PortfolioDisplay
             loadingPortfolio={loadingPortfolio}
             assetsLeangth={assetsLeangth}
@@ -265,6 +255,9 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         >
           <CircularProgress color="inherit" />
         </Box>
+      )}
+      {showCookieDrawer && (
+        <CookieBottomDrawer />
       )}
     </>
   );

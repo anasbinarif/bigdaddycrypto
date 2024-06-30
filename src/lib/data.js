@@ -875,11 +875,13 @@ export const calculateScore = (portfolioData, cals) => {
 
 
   let maxPercentage = Math.max(...percentages);
-  let minPercentage = Math.min(...percentages); // Ignore zero percentages
+  let minPercentage = Math.min(...percentages);
 
   let allocationDifference = maxPercentage - minPercentage;
 
-  if (allocationDifference >= 8) {
+  if (totalAssets == 0) {
+    scoreFactor_Allocation = 1;
+  }else if (allocationDifference >= 8) {
     scoreFactor_Allocation = 1;
   } else if (allocationDifference >= 5) {
     scoreFactor_Allocation = 2;
@@ -892,7 +894,9 @@ export const calculateScore = (portfolioData, cals) => {
     ...percentages.filter((p) => p > 0)
   );
 
-  if (percentages.every((percentage) => percentage === 0)) {
+  if (totalAssets == 0) {
+    scoreFactor_Category = 4;
+  }else if (percentages.every((percentage) => percentage === 0)) {
     scoreFactor_Category = 4; // No coin selected
   } else if (lowestCategoryPercentage > 10) {
     scoreFactor_Category = 1; // All categories >10%

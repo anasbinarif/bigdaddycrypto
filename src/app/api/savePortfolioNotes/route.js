@@ -13,8 +13,8 @@ export async function POST(req) {
             return NextResponse.json({ message: "User portfolio not found" }, { status: 404 });
         }
 
-        userPortfolio.Notizen.UserComment = msg.UserComment || userPortfolio.Notizen.UserComment;
-        userPortfolio.Notizen.MissingCoins = msg.MissingCoins || userPortfolio.Notizen.MissingCoins;
+        userPortfolio.Notizen.UserComment = msg.UserComment;
+        userPortfolio.Notizen.MissingCoins = msg.MissingCoins;
 
         await userPortfolio.save();
 

@@ -25,10 +25,18 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function PortfolioUbersicht({ loadingPortfolio }) {
   const [portfolio] = useAtom(portfolioAtom);
-  const [msg, setMsg] = useState({});
+  const [msg, setMsg] = useState({
+    UserComment: "",
+    MissingCoins: ""
+  });
   useEffect(() => {
-    if (portfolio?.assetsCalculations) setMsg(portfolio?.assetsCalculations.Notizen)
-  }, [portfolio])
+    if (portfolio?.assetsCalculations?.Notizen) {
+      setMsg({
+        UserComment: portfolio.assetsCalculations.Notizen.UserComment,
+        MissingCoins: portfolio.assetsCalculations.Notizen.MissingCoins
+      });
+    }
+  }, [portfolio]);
   const t = useTranslations("Overview");
   const [width, setWidth] = useState(0);
 
@@ -54,7 +62,6 @@ export default function PortfolioUbersicht({ loadingPortfolio }) {
         <Grid item xs={12} md={width > 1100 ? 4 : 12}>
           <Card
             sx={{
-              // padding: "15px",
               backgroundColor: "#1188ff",
               cursor: "pointer",
               display: "flex",
@@ -64,8 +71,6 @@ export default function PortfolioUbersicht({ loadingPortfolio }) {
             }}
           >
             <Link
-              // target="_blank"
-              // rel="noopener noreferrer"
               href={`/portfolioOverview?msg=${msg}`}
               style={{ width: "100%", textAlign: "center", padding: "15px 0" }}
             >

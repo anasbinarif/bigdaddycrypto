@@ -50,7 +50,8 @@
     "importCSVTitle": "Import CSV",
     "dragAndDrop": "Drag And Drop",
     "cancel": "Cancel",
-    "upload": "Upload"
+    "upload": "Upload",
+    "deleteAll": "Delete All"
   },
   "coinCard": {
     "potential": "Potential",

@@ -5,13 +5,17 @@ import { Button, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import { useAtom } from "jotai";
 import { portfolioAtom } from "../../app/stores/portfolioStore";
+import { getUserPortfolio } from "../../lib/data";
+import { sessionAtom } from "../../app/stores/sessionStore";
 
 export default function Item4({ msg, setMsg }) {
   const t = useTranslations("item4");
-  const [portfolio] = useAtom(portfolioAtom);
+  const [sessionJotai] = useAtom(sessionAtom);
+  const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
 
   const handleNotesSave = async () => {
     const userId = portfolio?.assetsCalculations.userId;
+    console.log("msgmsg", msg);
     const res = await fetch("/api/savePortfolioNotes", {
       method: "POST",
       headers: {
@@ -19,8 +23,33 @@ export default function Item4({ msg, setMsg }) {
       },
       body: JSON.stringify({ userId, msg }),
     });
+    if (res.ok) {
+      const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+      setPortfolio(userPortfolio?.data);
+    }
+  };
 
-  }
+  const handleUserCommentChange = (e) => {
+    const disallowedRegex = /[<>&"'\/\\:;|`~\x00-\x1F]/g;
+    const sanitizedString = e.target.value.replace(
+      disallowedRegex,
+      function (match) {
+        return "%" + match.charCodeAt(0).toString(16).toUpperCase();
+      }
+    );
+    setMsg((prevMsg) => ({ ...prevMsg, UserComment: sanitizedString }));
+  };
+
+  const handleMissingCoinsChange = (e) => {
+    const disallowedRegex = /[<>&"'\/\\:;|`~\x00-\x1F]/g;
+    const sanitizedString = e.target.value.replace(
+      disallowedRegex,
+      function (match) {
+        return "%" + match.charCodeAt(0).toString(16).toUpperCase();
+      }
+    );
+    setMsg((prevMsg) => ({ ...prevMsg, MissingCoins: sanitizedString }));
+  };
 
   return (
     <Box
@@ -38,20 +67,11 @@ export default function Item4({ msg, setMsg }) {
         {t("notes")}
       </Typography>
       <TextareaAutosize
-        aria-label="empty textarea"
+        aria-label="user comment textarea"
         placeholder={t("placeholder")}
-        defaultValue={msg?.UserComment}
+        value={msg?.UserComment}
         maxRows={7}
-        onChange={(e) => {
-          const disallowedRegex = /[<>&"'\/\\:;|`~\x00-\x1F]/g;
-          const sanitizedString = e.target.value.replace(
-            disallowedRegex,
-            function (match) {
-              return "%" + match.charCodeAt(0).toString(16).toUpperCase();
-            }
-          );
-          setMsg(sanitizedString);
-        }}
+        onChange={handleUserCommentChange}
         style={{
           width: "100%",
           resize: "none",
@@ -65,10 +85,11 @@ export default function Item4({ msg, setMsg }) {
         }}
       />
       <TextareaAutosize
-        aria-label="empty textarea"
+        aria-label="missing coins textarea"
         placeholder={t("placeholder")}
-        defaultValue={msg?.MissingCoins}
+        value={msg?.MissingCoins}
         minRows={7}
+        onChange={handleMissingCoinsChange}
         style={{
           width: "100%",
           resize: "none",
@@ -81,14 +102,16 @@ export default function Item4({ msg, setMsg }) {
           outline: "none",
         }}
       />
-      <Button sx={{
-        marginTop: "20px",
-        backgroundColor: "#1188ff",
-        color: "white",
-        fontSize: "0.8rem",
-        "&:hover": { backgroundColor: "#0a549f" },
-      }}
-        onClick={handleNotesSave}>
+      <Button
+        sx={{
+          marginTop: "20px",
+          backgroundColor: "#1188ff",
+          color: "white",
+          fontSize: "0.8rem",
+          "&:hover": { backgroundColor: "#0a549f" },
+        }}
+        onClick={handleNotesSave}
+      >
         Save
       </Button>
     </Box>

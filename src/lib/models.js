@@ -55,6 +55,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    CookiesPrompt: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );

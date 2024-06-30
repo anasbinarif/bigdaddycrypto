@@ -50,7 +50,8 @@
     "importCSVTitle": "CSV importieren",
     "dragAndDrop": "Ziehen und ablegen",
     "cancel": "Abbrechen",
-    "upload": "Hochladen"
+    "upload": "Hochladen",
+    "deleteAll": "Alles löschen"
   },
   "coinCard": {
     "potential": "Potential",

@@ -494,6 +494,37 @@ const PortfolioComponent = ({
     }
   };
 
+  const handleDeleteAllPortfolioCoins = async () => {
+    const token = sessionJotai?.user?.accessToken;
+    const response = await fetch("/api/deleteAllPortfolioCoins", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        userId: sessionJotai?.user.id,
+      }),
+    });
+    if (response.ok) {
+      setAlert({
+        open: true,
+        message: "All portfolio coins deleted successfully!",
+        severity: "success",
+      });
+      const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+      setPortfolio(userPortfolio?.data);
+    } else {
+      const errorData = await response.json();
+      setAlert({
+        open: true,
+        message: errorData.message || "Failed to delete portfolio coins",
+        severity: "error",
+      });
+    }
+  }
+  // console.log("port,", portfolio);
+
   return (
     <>
       <Box
@@ -541,10 +572,11 @@ const PortfolioComponent = ({
                 {t("title")} ({assetsLeangth})
               </Typography>
               <Button
+                onClick={handleDeleteAllPortfolioCoins}
                 sx={{
                   backgroundColor: "#00000033",
                   padding: "0.5rem 1rem",
-                  color: "white",
+                  // color: "white",
                   display: "flex",
                   alignItems: "center",
                   textTransform: "capitalize",
@@ -557,7 +589,7 @@ const PortfolioComponent = ({
                   },
                 }}
               >
-                Delete All
+                {t("deleteAll")}
                 <FontAwesomeIcon
                   icon={faTrash}
                   style={{ marginLeft: "10px", transform: "translateY(-2px)" }}
