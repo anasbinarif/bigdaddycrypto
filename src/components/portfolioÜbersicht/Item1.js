@@ -83,12 +83,12 @@ export default function Item1({ preCalcPort }) {
   useEffect(() => {
     const portData = preCalcPort || portfolio;
     console.log(portData);
-    if (portData.assetsCalculations && portData.assets) {
+    if (portData?.assetsCalculations && portData.assets) {
       const totalInvestment = portData?.assetsCalculations.assets.reduce(
         (acc, curr) => acc + curr.totalInvest,
         0
       );
-      const mergedData = portData.assets.map((asset) => {
+      const mergedData = portData?.assets.map((asset) => {
         const calc =
           portData?.assetsCalculations.assets.find(
             (ac) => ac.CoinGeckoID === asset.CoinGeckoID

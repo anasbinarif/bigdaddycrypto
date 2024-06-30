@@ -27,10 +27,10 @@ const Third = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const totalInvestment = portfolio.assetsCalculations.assets
+  const totalInvestment = portfolio?.assetsCalculations.assets
     .reduce((acc, curr) => acc + curr.totalInvest, 0)
     .toFixed(2);
-  const totalGesamtwert = portfolio.assetsCalculations.assets
+  const totalGesamtwert = portfolio?.assetsCalculations.assets
     .reduce((acc, curr) => acc + curr.Holdings, 0)
     .toFixed(2);
   const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
