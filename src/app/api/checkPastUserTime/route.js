@@ -22,7 +22,7 @@ export async function POST(req) {
         );
 
         if (berlinNow < targetDate) {
-            return NextResponse.json({ result: false, message: "The target date has not started yet" }, { status: 200 });
+            return NextResponse.json({ result: true, message: "The target date has not started yet" }, { status: 200 });
         }
 
         const timeDifference = berlinNow - targetDate;
