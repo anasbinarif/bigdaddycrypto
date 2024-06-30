@@ -1003,7 +1003,9 @@ const PortfolioForm = () => {
           },
         }}
       >
-        <DialogTitle sx={{ fontWeight: "bold" }}>Please Verify</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold", mb: "1rem" }}>
+          Please Verify
+        </DialogTitle>
         <DialogContent
           sx={{
             "& .MuiTypography-root": { color: "white" },
@@ -1062,7 +1064,7 @@ const PortfolioForm = () => {
                 onChange={(e) => setAcceptAgb(e.target.checked)}
                 sx={{
                   "&.MuiCheckbox-root": {
-                    color: "#ffffff80",
+                    color: "#ffffff",
                     "&:hover": {
                       backgroundColor: "transparent",
                     },
@@ -1094,7 +1096,7 @@ const PortfolioForm = () => {
                 // ml: "10px",
               },
               "& .MuiTypography-root": {
-                color: "#ffffff80",
+                color: "#ffffff",
                 fontSize: "14px", // Set desired font size here
                 textAlign: "left",
               },
@@ -1107,7 +1109,7 @@ const PortfolioForm = () => {
                 onChange={(e) => setAcceptWider(e.target.checked)}
                 sx={{
                   "&.MuiCheckbox-root": {
-                    color: "#ffffff80",
+                    color: "#ffffff",
                     "&:hover": {
                       backgroundColor: "transparent",
                     },
@@ -1140,12 +1142,27 @@ const PortfolioForm = () => {
                 // ml: "10px",
               },
               "& .MuiTypography-root": {
-                color: "#ffffff80",
+                color: "#ffffff",
                 fontSize: "14px", // Set desired font size here
                 textAlign: "left",
               },
             }}
           />
+          <Box
+            sx={{
+              padding: "0 2rem",
+              "& .MuiTypography-root": {
+                fontSize: "0.8rem",
+                color: "#ffffff80",
+              },
+            }}
+          >
+            <Typography>
+              Hinweis: "Bitte beachten Sie, dass die Haftung der Cryptoverse
+              Solutions GbR und ihrer Gesellschafter gemäß unseren AGB
+              beschränkt ist. Weitere Informationen finden Sie in unseren AGB."
+            </Typography>
+          </Box>
         </DialogContent>
         <DialogActions
           sx={{

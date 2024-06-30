@@ -321,7 +321,12 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
                 // top: "-50%",
                 // right: "-15px",
               }}
-              color="gold"
+              color={
+                sessionJotai?.user?.subscriptionPlan &&
+                sessionJotai?.user?.subscriptionPlan === "Premium"
+                  ? "gold"
+                  : "grey"
+              }
             />
           </Box>
           <Autocomplete

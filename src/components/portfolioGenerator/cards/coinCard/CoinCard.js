@@ -199,7 +199,10 @@ const CoinCard = ({
   async function handleFavouriteClick() {
     setLoading(true);
     // console.log("handleFavouriteClick", coin);
-    if (sessionJotai?.user?.subscriptionPlan === "free") {
+    if (
+      !sessionJotai?.user?.subscriptionPlan ||
+      sessionJotai?.user?.subscriptionPlan === "free"
+    ) {
       setError(
         "If you want to add coins to Fav, please subscribe to one of our plans."
       );
@@ -261,7 +264,9 @@ const CoinCard = ({
     //   "1 / coin?.Bottom * coin?.Price",
     //   (1 / coin?.Bottom) * coin?.Price
     // );
-    const xfactorValue = Math.max((1 / coin?.Bottom) * coin?.Price, 1).toFixed(1);
+    const xfactorValue = Math.max((1 / coin?.Bottom) * coin?.Price, 1).toFixed(
+      1
+    );
     setXfactorText(`${xfactorValue}x in diesem Zyklus`);
   }, [coin]);
 
@@ -294,13 +299,13 @@ const CoinCard = ({
             border: selected
               ? "1px solid #00aa66aa"
               : Risk === "risk"
-                ? "1px solid rgb(222,11,11)"
-                : "none",
+              ? "1px solid rgb(222,11,11)"
+              : "none",
             backgroundColor: selected
               ? "#00aa6633"
               : Risk === "risk"
-                ? "rgba(222,11,11,0.05)"
-                : "#00000033",
+              ? "rgba(222,11,11,0.05)"
+              : "#00000033",
             width: "95%",
             borderStyle: risk ? "dashed" : selected ? "solid" : "none",
             borderLeft: selected ? "" : risk ? "none" : "",
@@ -439,25 +444,25 @@ const CoinCard = ({
             border: selected
               ? "1px solid #00aa66aa"
               : risk
-                ? "1px solid rgb(222, 11, 11)"
-                : "none",
+              ? "1px solid rgb(222, 11, 11)"
+              : "none",
             backgroundColor: selected
               ? "#00aa6633"
               : risk
-                ? "rgba(222, 11, 11, .05)"
-                : "#00000033",
+              ? "rgba(222, 11, 11, .05)"
+              : "#00000033",
             width:
               width >= 1500
                 ? "calc(25% - 16px)"
                 : width > 1200
-                  ? "calc(33.33% - 16px)"
-                  : width > 900
-                    ? "calc(50% - 16px)"
-                    : width > 700
-                      ? "calc(33.33% - 16px)"
-                      : width > 500
-                        ? "calc(50% - 16px)"
-                        : "calc(100% - 16px)",
+                ? "calc(33.33% - 16px)"
+                : width > 900
+                ? "calc(50% - 16px)"
+                : width > 700
+                ? "calc(33.33% - 16px)"
+                : width > 500
+                ? "calc(50% - 16px)"
+                : "calc(100% - 16px)",
             borderStyle: risk ? "dashed" : selected ? "solid" : "none",
             borderLeft: selected ? "" : risk ? "none" : "",
           }}

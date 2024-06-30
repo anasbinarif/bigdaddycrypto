@@ -136,6 +136,7 @@ const RegisterPage = () => {
           },
           body: JSON.stringify(email),
         });
+        console.log(res);
         if (res.error) {
           setError(res.error);
         } else {
@@ -199,8 +200,8 @@ const RegisterPage = () => {
       >
         <Box
           sx={{
-            padding: "20px",
-            maxWidth: "400px",
+            padding: "25px 30px",
+            maxWidth: "420px",
             backgroundColor: "#202530",
             borderRadius: "8px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
@@ -213,7 +214,7 @@ const RegisterPage = () => {
         >
           <Box
             sx={{
-              margin: "0 12px 0 0",
+              margin: "-10px 12px 0 0",
               width: "150px",
               height: "50px",
             }}
@@ -251,6 +252,7 @@ const RegisterPage = () => {
               fontFamily: "inherit",
               fontWeight: "bold",
               fontSize: "1rem",
+              color: "var(--color-secondary)",
               textAlign: "center",
             }}
           >

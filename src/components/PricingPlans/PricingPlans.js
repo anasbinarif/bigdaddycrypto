@@ -37,8 +37,9 @@ const plans = [
   {
     title: "Free",
     price: "€0.00",
-    features: ["max. 10 Coins in portfolio", "FAQ", "Mediathek"],
+    features: ["max. 10 Coins in portfolio", "FAQ"],
     nonFeatures: [
+      "Mediathek",
       "Favorite coins",
       "Blocklist",
       "Graph",
@@ -59,7 +60,7 @@ const plans = [
     features: [
       "Unlimited Coins",
       "FAQ",
-      "Mediathek (24 hours in advance)",
+      "Mediathek",
       "Favorite coins",
       "Blocklist",
       "Graph",
@@ -83,18 +84,18 @@ const plans = [
     features: [
       "Unlimited Coins",
       "FAQ",
-      "Mediathek (24 hours in advance)",
+      "Mediathek",
       "Favorite coins",
       "Blocklist",
       "Graph",
       "Import / Export CSV of Portfolio",
       "Access to all Dashboards (only in yearly subscription)",
+      "20% Discount on Portfolio commentary - Yearly subscription",
       "Portfolio Generator Indicators",
       "Access to all Livestreams",
       "Add new coins to assets",
       "3 Sub Portfolios",
       "Access to VIP discord Channel and Telegram",
-      "20% Discount on Portfolio commentary - Yearly subscription",
     ],
     nonFeatures: [],
   },
@@ -422,6 +423,21 @@ const PricingPlans = () => {
             </Card>
           ))}
         </Box>
+        <Box
+          sx={{
+            margin: "2rem 0 3rem",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          Um ihr Abonnement zu kündigen, senden Sie bitte eine E-Mail an{"    "}
+          <Link
+            href="mailto:support@koinfolio.com"
+            style={{ color: "var(--color-secondary)" }}
+          >
+            support@koinfolio.com
+          </Link>
+        </Box>
       </Container>
       <Dialog
         open={promptOpen}
@@ -498,7 +514,7 @@ const PricingPlans = () => {
                 onChange={(e) => setAcceptAgb(e.target.checked)}
                 sx={{
                   "&.MuiCheckbox-root": {
-                    color: "#ffffff80",
+                    color: "#ffffff",
                     "&:hover": {
                       backgroundColor: "transparent",
                     },
@@ -530,7 +546,7 @@ const PricingPlans = () => {
                 // ml: "10px",
               },
               "& .MuiTypography-root": {
-                color: "#ffffff80",
+                color: "#ffffff",
                 fontSize: "14px", // Set desired font size here
                 textAlign: "left",
               },
@@ -543,7 +559,7 @@ const PricingPlans = () => {
                 onChange={(e) => setAcceptWider(e.target.checked)}
                 sx={{
                   "&.MuiCheckbox-root": {
-                    color: "#ffffff80",
+                    color: "#ffffff",
                     "&:hover": {
                       backgroundColor: "transparent",
                     },
@@ -576,12 +592,27 @@ const PricingPlans = () => {
                 // ml: "10px",
               },
               "& .MuiTypography-root": {
-                color: "#ffffff80",
+                color: "#ffffff",
                 fontSize: "14px", // Set desired font size here
                 textAlign: "left",
               },
             }}
           />
+          <Box
+            sx={{
+              padding: "0 2rem",
+              "& .MuiTypography-root": {
+                fontSize: "0.8rem",
+                color: "#ffffff80",
+              },
+            }}
+          >
+            <Typography>
+              Hinweis: "Bitte beachten Sie, dass die Haftung der Cryptoverse
+              Solutions GbR und ihrer Gesellschafter gemäß unseren AGB
+              beschränkt ist. Weitere Informationen finden Sie in unseren AGB."
+            </Typography>
+          </Box>
         </DialogContent>
         <DialogActions
           sx={{

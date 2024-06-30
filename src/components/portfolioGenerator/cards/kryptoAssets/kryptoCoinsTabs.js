@@ -22,6 +22,8 @@ import { useTranslations } from "next-intl";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import { useAtom } from "jotai";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
 
 function toCamelCase(str) {
   // Split the string based on '-' or '/' character
@@ -189,6 +191,8 @@ const ScrollableKryptoTabs = ({
   };
   // console.log(firstHalfLabels, secondHalfLabels);
 
+  console.log(sessionJotai);
+
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -237,6 +241,9 @@ const ScrollableKryptoTabs = ({
               // borderBottomColor: "var(--color-secondary)",
               color: "var(--color-secondary)",
             },
+            "& .MuiTabs-flexContainer": {
+              alignItems: "center",
+            },
           }}
         >
           <Tab
@@ -260,7 +267,22 @@ const ScrollableKryptoTabs = ({
               },
             }}
           />
+          <FontAwesomeIcon
+            icon={faCrown}
+            style={{
+              paddingLeft: "10px",
+              opacity: "0.5",
+              fontSize: "0.9rem",
+            }}
+            color={
+              sessionJotai?.user?.subscriptionPlan &&
+              sessionJotai?.user?.subscriptionPlan !== "free"
+                ? "gold"
+                : "grey"
+            }
+          />
         </Tabs>
+
         <Tabs
           value={value >= tabLabels.length ? false : value > 0 ? value : false}
           onChange={(e, newValue) => handleChange(e, newValue, 1)}

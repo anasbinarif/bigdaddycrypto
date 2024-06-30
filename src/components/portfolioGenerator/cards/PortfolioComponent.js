@@ -36,7 +36,7 @@ import { sessionAtom } from "../../../app/stores/sessionStore";
 import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { faCrown, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCrown, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import addCommas from "../../../lib/currencyFormatter";
 
@@ -73,6 +73,7 @@ const PortfolioComponent = ({
   const [deleteIconIndex, setDeleteIconIndex] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);
+  const [err, setErr] = useState(false);
   const t = useTranslations("portfolioComponent");
 
   const [currency, setCurrency] = useState("EUR");
@@ -241,7 +242,13 @@ const PortfolioComponent = ({
   };
 
   async function handleFavouriteClick(asset) {
-    if (sessionJotai?.user?.subscriptionPlan === "free") {
+    if (
+      !sessionJotai?.user?.subscriptionPlan ||
+      sessionJotai?.user?.subscriptionPlan === "free"
+    ) {
+      setErr(
+        "If you want to add coins to Fav, please subscribe to one of our plans."
+      );
       setAlertOpen(true);
       return;
     }
@@ -290,7 +297,11 @@ const PortfolioComponent = ({
   };
 
   const handleExportCSV = () => {
-    if (sessionJotai?.user?.subscriptionPlan === "free") {
+    if (
+      !sessionJotai?.user?.subscriptionPlan ||
+      sessionJotai?.user?.subscriptionPlan === "free"
+    ) {
+      setErr("If export portfolio, please subscribe to one of our plans.");
       setAlertOpen(true);
       return;
     }
@@ -335,7 +346,13 @@ const PortfolioComponent = ({
   };
 
   const handleImport = () => {
-    if (sessionJotai?.user?.subscriptionPlan === "free") {
+    if (
+      !sessionJotai?.user?.subscriptionPlan ||
+      sessionJotai?.user?.subscriptionPlan === "free"
+    ) {
+      setErr(
+        "If you want to import portfolio, please subscribe to one of our plans."
+      );
       setAlertOpen(true);
       return;
     }
@@ -504,18 +521,49 @@ const PortfolioComponent = ({
           }}
         >
           <Box sx={{ p: 3, width: "100%" }}>
-            <Typography
-              variant="h4"
-              gutterBottom
+            <Box
               sx={{
-                fontWeight: 700,
-                fontSize: "1.6rem",
-                marginBottom: "1rem",
-                mt: "8px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              {t("title")} ({assetsLeangth})
-            </Typography>
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                  fontWeight: 700,
+                  fontSize: "1.6rem",
+                  marginBottom: "1rem",
+                  mt: "8px",
+                }}
+              >
+                {t("title")} ({assetsLeangth})
+              </Typography>
+              <Button
+                sx={{
+                  backgroundColor: "#00000033",
+                  padding: "0.5rem 1rem",
+                  color: "white",
+                  display: "flex",
+                  alignItems: "center",
+                  textTransform: "capitalize",
+                  color: "var(--color-secondary)",
+                  fontWeight: "bold",
+
+                  "&:hover": {
+                    color: "black",
+                    backgroundColor: "var(--color-secondary)",
+                  },
+                }}
+              >
+                Delete All
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  style={{ marginLeft: "10px", transform: "translateY(-2px)" }}
+                />
+              </Button>
+            </Box>
             <Typography
               variant="subtitle1"
               gutterBottom
@@ -697,6 +745,10 @@ const PortfolioComponent = ({
                       backgroundColor: "#00000033",
                       color: "white",
                       fontSize: "0.8rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0.5rem 1rem",
                     }}
                     onClick={handleImport}
                   >
@@ -708,9 +760,15 @@ const PortfolioComponent = ({
                         paddingLeft: "5px",
                         opacity: "0.5",
                         fontSize: "0.9rem",
-                        marginRight: "15px",
+                        // marginRight: "15px",
+                        transform: "translateY(-1px)",
                       }}
-                      color="gold"
+                      color={
+                        sessionJotai?.user?.subscriptionPlan &&
+                        sessionJotai?.user?.subscriptionPlan !== "free"
+                          ? "gold"
+                          : "grey"
+                      }
                     />
                   </Button>
                   <Button
@@ -719,7 +777,10 @@ const PortfolioComponent = ({
                       backgroundColor: "#00000033",
                       color: "white",
                       fontSize: "0.8rem",
-                      marginLeft: "10px",
+                      // marginLeft: "10px",
+                      display: "flex",
+                      justifyContent: "center",
+                      padding: "0.5rem 1rem",
                     }}
                     onClick={handleExportCSV}
                   >
@@ -731,9 +792,15 @@ const PortfolioComponent = ({
                         paddingLeft: "5px",
                         opacity: "0.5",
                         fontSize: "0.9rem",
-                        marginRight: "15px",
+                        // marginRight: "15px",
+                        transform: "translateY(-1px)",
                       }}
-                      color="gold"
+                      color={
+                        sessionJotai?.user?.subscriptionPlan &&
+                        sessionJotai?.user?.subscriptionPlan !== "free"
+                          ? "gold"
+                          : "grey"
+                      }
                     />
                   </Button>
                   <Dialog
@@ -816,8 +883,7 @@ const PortfolioComponent = ({
           variant="filled"
           sx={{ width: "100%" }}
         >
-          If you want to add/remove a coin to Favourites, please subscribe to
-          one of our plans.
+          {err}
         </Alert>
       </Snackbar>
       {loading && (

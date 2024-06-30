@@ -174,7 +174,7 @@ const LoginPage = () => {
         >
           <Box
             sx={{
-              margin: "0 12px 0 0",
+              margin: "-10px 12px 0 0",
               width: "150px",
               height: "40px",
             }}
@@ -213,6 +213,7 @@ const LoginPage = () => {
               fontWeight: "bold",
               fontSize: "1rem",
               textAlign: "center",
+              color: "var(--color-secondary)",
             }}
           >
             {languageData["label"]}

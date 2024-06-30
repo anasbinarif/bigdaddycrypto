@@ -48,6 +48,8 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   const [alert, setAlert] = useState("");
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [openDialog, setOpenDialog] = useState(false);
+
   const handleChangePassword = async (event) => {
     event.preventDefault();
 
@@ -126,9 +128,9 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   // console.log(sessionJotai.user);
 
   // Change Password logic
-  const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpenDialog = () => {
+    setOpen(false);
     setOpenDialog(true);
   };
 
@@ -185,10 +187,10 @@ const NavbarLink = ({ mobileView, handleClose }) => {
               position: "absolute",
               top: 60,
               right: 0,
-              padding: "5px",
+              padding: "10px",
               borderRadius: "4px",
-              backgroundColor: "var(--color-secondary-2)",
-              color: "#000",
+              backgroundColor: "#0288d1;",
+              color: "#fff",
               display: "flex",
               alignItems: "center",
             }}
@@ -592,7 +594,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             id="Name"
             name="Name"
             label={t("confirm")}
-            type="text"
+            type="password"
             fullWidth
             variant="filled"
             sx={{ mb: "1rem" }}

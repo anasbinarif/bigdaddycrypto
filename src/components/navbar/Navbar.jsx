@@ -98,19 +98,24 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
   };
 
   const handleGraphClick = (event) => {
-    if (sessionJotai?.user?.subscriptionPlan === "free") {
+    if (
+      !sessionJotai?.user?.subscriptionPlan ||
+      sessionJotai?.user?.subscriptionPlan === "free"
+    ) {
       setAlertMessage(t("alertGraph"));
       setAlertOpen(true);
       event.preventDefault();
     }
   };
 
-  const handleDashboardClick = (event) => {
+  const handleMediaClick = (event) => {
     if (
-      sessionJotai?.user?.subscriptionPlan === "free" ||
-      sessionJotai?.user?.billingCycle === "monthly"
+      !sessionJotai?.user?.subscriptionPlan ||
+      sessionJotai?.user?.subscriptionPlan === "free"
     ) {
-      setAlertMessage(t("alertDashboard"));
+      setAlertMessage(
+        "To access the Mediathek tab, please subscribe to one of our plans"
+      );
       setAlertOpen(true);
       event.preventDefault();
     }
@@ -192,13 +197,28 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 <MenuItem onClick={handleClose}>
                   <Link href="/media" className={styles.nav__link}>
                     {t("media")}
+                    <FontAwesomeIcon
+                      icon={faCrown}
+                      style={{
+                        paddingLeft: "10px",
+                        opacity: "0.5",
+                        fontSize: "0.9rem",
+                        marginRight: "15px",
+                      }}
+                      color={
+                        sessionJotai?.user?.subscriptionPlan &&
+                        sessionJotai?.user?.subscriptionPlan !== "free"
+                          ? "gold"
+                          : "grey"
+                      }
+                    />
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                   <Link
                     href="/dashboard"
                     className={styles.nav__link}
-                    onClick={handleDashboardClick}
+                    // onClick={handleDashboardClick}
                   >
                     Dashboard
                   </Link>
@@ -210,15 +230,21 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                     className={styles.nav__link}
                   >
                     {t("graph")}
+                    <FontAwesomeIcon
+                      icon={faCrown}
+                      style={{
+                        paddingLeft: "10px",
+                        opacity: "0.5",
+                        fontSize: "0.9rem",
+                      }}
+                      color={
+                        sessionJotai?.user?.subscriptionPlan &&
+                        sessionJotai?.user?.subscriptionPlan !== "free"
+                          ? "gold"
+                          : "grey"
+                      }
+                    />
                   </Link>
-                  <FontAwesomeIcon
-                    icon={faCrown}
-                    style={{
-                      paddingLeft: "10px",
-                      opacity: "0.25",
-                      fontSize: "0.9rem",
-                    }}
-                  />
                 </MenuItem>
               </Menu>
               <SessionProvider>
@@ -284,13 +310,29 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
                 href="/media"
                 className={styles.nav__link}
+                onClick={handleMediaClick}
               >
                 {t("media")}
+                <FontAwesomeIcon
+                  icon={faCrown}
+                  style={{
+                    paddingLeft: "2px",
+                    opacity: "0.5",
+                    fontSize: "0.9rem",
+                    // marginRight: "15px",
+                  }}
+                  color={
+                    sessionJotai?.user?.subscriptionPlan &&
+                    sessionJotai?.user?.subscriptionPlan !== "free"
+                      ? "gold"
+                      : "grey"
+                  }
+                />
               </Link>
               <Link
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
                 href="/dashboard"
-                onClick={handleDashboardClick}
+                // onClick={handleDashboardClick}
                 className={styles.nav__link}
               >
                 Dashboards
@@ -308,11 +350,17 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                 <FontAwesomeIcon
                   icon={faCrown}
                   style={{
-                    paddingLeft: "5px",
-                    opacity: "0.25",
+                    paddingLeft: "2px",
+                    opacity: "0.5",
                     fontSize: "0.9rem",
                     marginRight: "15px",
                   }}
+                  color={
+                    sessionJotai?.user?.subscriptionPlan &&
+                    sessionJotai?.user?.subscriptionPlan !== "free"
+                      ? "gold"
+                      : "grey"
+                  }
                 />
               </Box>
               <SessionProvider>
