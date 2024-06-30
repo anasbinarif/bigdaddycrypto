@@ -450,11 +450,10 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                     // ml: "10px",
                   }}
                 >
-                  {sessionJotai?.user?.subscriptionPlan
-                    ? sessionJotai?.user?.subscriptionPlan
-                    : (!sessionJotai?.user?.subscriptionPlan ||
-                        sessionJotai?.user?.subscriptionPlan === "free") &&
-                      sessionJotai?.user?.pastUserCheck
+                  {sessionJotai?.user?.subscriptionPlan &&
+                  sessionJotai?.user?.subscriptionPlan !== "free"
+                    ? sessionJotai.user.subscriptionPlan
+                    : sessionJotai?.user?.pastUserCheck
                     ? "Free+"
                     : "Free"}
                 </Typography>
