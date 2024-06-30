@@ -13,7 +13,8 @@ import { useAtom } from "jotai";
 import { portfolioAtom } from "../../../app/stores/portfolioStore";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { calculateScore } from "../../../lib/data";
+import { calculateScore, getUserPortfolio } from "../../../lib/data";
+import { sessionAtom } from "../../../app/stores/sessionStore";
 
 const hypeCoinColor = {
   0: "#DC143C",
@@ -104,16 +105,21 @@ const hypeCoinColor = {
 //   return { avgMin, avgMax };
 // };
 
-const calculatePotential = (portfolio) => {
+const calculatePotential = (portfolio, buyAndSell) => {
   let totalPotentialMin = 0;
   let totalPotentialMax = 0;
   let totalAssetsAmount = 0;
 
   portfolio.forEach((asset) => {
-    const { Potential, Bottom, Price } = asset;
-    const dataPotential = parseFloat(Potential);
+    const { Potential, Bottom, Price, CoinGeckoID } = asset;
+    const dataPotential = parseFloat(Potential) || 0;
     const dataBottom = parseFloat(Bottom);
     const dataPrice = parseFloat(Price);
+
+    const userEntryData = buyAndSell.find(item => item.CoinGeckoID === CoinGeckoID);
+    const userEntryPrice = userEntryData.DCA == 0 ? dataPotential : userEntryData.DCA;
+
+
     const assetAmount = 1;
 
     if (dataPotential && dataBottom && dataPrice) {
@@ -138,18 +144,20 @@ const calculatePotential = (portfolio) => {
       } else if (dataPotential > 7) {
         potentialMin = 15;
         potentialMax = 30;
-      } else if (dataPotential > 6.7) {
+      } else if (dataPotential <= 7) {
         potentialMin = 10;
         potentialMax = 15;
-      } else {
-        potentialMin = 1;
-        potentialMax = 10;
       }
+      let adjustedMin = 0
+      let adjustedMax = 0
 
-      // Adjust the potential based on the user's entry price
-      const adjustedMin = (potentialMin * dataBottom) / dataPrice;
-      const adjustedMax = (potentialMax * dataBottom) / dataPrice;
-
+      if (userEntryData.DCA === 0) {
+        adjustedMin = potentialMin;
+        adjustedMax = potentialMax;
+      } else {
+        adjustedMin = (dataBottom / userEntryPrice) * potentialMin;
+        adjustedMax = (dataBottom / userEntryPrice) * potentialMax;
+      }
       totalPotentialMin += adjustedMin * assetAmount;
       totalPotentialMax += adjustedMax * assetAmount;
       totalAssetsAmount += assetAmount;
@@ -180,35 +188,30 @@ const setColorPot = (dataPotential) => {
   }
 };
 
-const calculateDotColor = (name, score) => {
+const calculateDotColor = (name, score, portfolio) => {
   switch (name) {
     case "scoreFactor_Category":
-      if (score > 10) return green[500]; // Green: > 10%
-      if (score >= 7) return "orange"; // Orange: 7% to 10%
-      if (score >= 5) return "lightcoral"; // Light Red: 5% to 7%
-      return "darkred"; // Dark Red: < 5%
-
+      if (score === 1) return green[500];
+      if (score === 2) return "orange";
+      if (score === 3) return "#ff0000";
+      return "#800000";
     case "scoreFactor_CategoryTwice":
-      if (score >= 10) return green[500]; // Green: Min 2 coins from every category
-      if (score > 0) return "orange"; // Orange: If one category has less than 2 coins
-      return "red"; // Red: If 2 or more categories have 0 coins
-
+      if (score === 1) return green[500];
+      if (score === 2) return "orange";
+      return "#800000";
     case "scoreFactor_CategoryMissing":
-      if (score === 10) return green[500]; // Green: All categories selected
-      if (score === 7) return "orange"; // Orange: One category not selected
-      return "red"; // Red: Two or more categories not selected
-
+      if (score === 1) return green[500];
+      if (score === 2) return "orange";
+      return "#800000";
     case "scoreFactor_Allocation":
-      if (score < 5) return green[500]; // Green: Difference < 5%
-      if (score < 8) return "orange"; // Orange: Difference 5% - 8%
-      return "red"; // Red: Difference >= 8%
-
+      if (score === 3) return green[500];
+      if (score === 2) return "orange";
+      return "#800000";
     case "scoreFactor_CoinCount":
-      if (score >= 20 && score <= 40) return green[500]; // Green: 20 - 40 coins
-      if (score >= 15 && score < 20) return yellow[800]; // Yellow: 15 - 20 coins
-      if (score >= 10 && score < 15) return "orange"; // Orange: 10 - 15 coins
-      return "red"; // Red: < 10 or > 40 coins
-
+      if (score === 1) return green[500];
+      if (score === 2) return yellow[800];
+      if (score === 3) return "orange";
+      return "#800000";
     default:
       return "grey";
   }
@@ -219,6 +222,7 @@ function BewertungCard({ preCalcPort }) {
   const [portfolio] = useAtom(portfolioAtom);
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
   const [potential, setPotential] = useState({ avgMin: 0, avgMax: 0 });
+  const [sessionJotai] = useAtom(sessionAtom);
   const [hypeColorScore, setHypeColorScore] = useState({
     scoreFactor_Category: 0,
     scoreFactor_CategoryTwice: 0,
@@ -231,10 +235,16 @@ function BewertungCard({ preCalcPort }) {
   useEffect(() => {
     const calculateMetrics = async () => {
       const portData = portfolio?.assets ? portfolio : preCalcPort;
-      // console.log(portData);
+      // console.log("portData=", portData);
       if (portData?.assets) {
         // console.log(portData);
         const assets = portData.assets;
+        const buyAndSell = portData.assetsCalculations.assets;
+        console.log("assets=", assets);
+        const userPortfolio = await getUserPortfolio(
+          sessionJotai?.user.id || id
+        );
+        console.log("assets==", userPortfolio?.calculation);
 
         // Calculate Sicherheit Average
         const sicherheitValues = assets
@@ -243,17 +253,17 @@ function BewertungCard({ preCalcPort }) {
         const avgSicherheit =
           sicherheitValues.length > 0
             ? sicherheitValues.reduce((acc, val) => acc + val, 0) /
-              sicherheitValues.length
+            sicherheitValues.length
             : 0;
         setSicherheitAverage(avgSicherheit.toFixed(1));
 
         // Calculate Potential
-        const potentialResult = calculatePotential(assets);
+        const potentialResult = calculatePotential(assets, buyAndSell);
         setPotential(potentialResult);
 
         // Calculate Hype Color Score
         try {
-          const calculatedScore = await calculateScore(assets);
+          const calculatedScore = await calculateScore(assets, userPortfolio?.calculation);
           setHypeColorScore({
             scoreFactor_Category: Math.min(
               Number(calculatedScore.scoreFactor_Category),
