@@ -3,7 +3,7 @@ import Datenschutz from "../../components/PolicyEl/policies/datenschutz";
 import Widerrufsbelehrung from "../../components/PolicyEl/policies/widerrufsbelehrung";
 import Agb from "../../components/PolicyEl/policies/agb";
 import Impressum from "../../components/PolicyEl/policies/impressum";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 const Policy = ({ component }) => {

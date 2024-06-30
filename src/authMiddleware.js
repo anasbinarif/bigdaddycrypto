@@ -29,7 +29,19 @@ function withAuthMiddleware(middleware) {
       callbacks: {
         authorized: ({ token, req }) => {
           const path = req.nextUrl.pathname;
-          if (path === "/en/shared" || path === "/de/shared") {
+          // console.log(path);
+          if (
+            path === "/en/shared" ||
+            path === "/de/shared" ||
+            path === "/en/policy/datenschutz" ||
+            path === "/de/policy/datenschutz" ||
+            path === "/en/policy/widerrufsbelehrung" ||
+            path === "/de/policy/widerrufsbelehrung" ||
+            path === "/en/policy/agb" ||
+            path === "/de/policy/agb" ||
+            path === "/en/policy/impressum" ||
+            path === "/de/policy/impressum"
+          ) {
             return true;
           }
           return !!token;

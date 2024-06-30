@@ -312,7 +312,6 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
               </Link>
               <Link
                 style={{ marginRight: "15px", fontFamily: "inherit" }}
-                // onClick={handleGraphClick}
                 href="/media"
                 className={styles.nav__link}
                 onClick={handleMediaClick}
