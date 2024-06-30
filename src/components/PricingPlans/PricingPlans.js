@@ -18,6 +18,7 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
+  capitalize,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -35,16 +36,16 @@ import Link from "next/link";
 
 const plans = [
   {
-    title: "Free",
+    title: "free",
     price: "€0.00",
-    features: ["max. 10 Coins in portfolio", "FAQ"],
+    features: ["max. 10 Coins in portfolio", "FAQ", "Advertising"],
     nonFeatures: [
       "Mediathek",
       "Favorite coins",
       "Blocklist",
       "Graph",
       "Import / Export CSV of Portfolio",
-      "Access to all Dashboards (only in yearly subscription)",
+      "Access to all Dashboards/small studies",
       "Portfolio Generator Indicators",
       "Access to all Livestreams",
       "Add new coins to assets",
@@ -60,19 +61,20 @@ const plans = [
     features: [
       "Unlimited Coins",
       "FAQ",
+      "No Advertising",
       "Mediathek",
       "Favorite coins",
       "Blocklist",
       "Graph",
       "Import / Export CSV of Portfolio",
-      "Access to small dashboards (only in yearly subscription)",
+      "All small Studies (PDFs) only in yearly subscription",
       "15% Discount on Portfolio commentary - Yearly subscription",
+      "Add new coins to assets",
+      "3 Sub Portfolios",
     ],
     nonFeatures: [
       "Portfolio Generator Indicators",
       "Access to all Livestreams",
-      "Add new coins to assets",
-      "3 Sub Portfolios",
       "Access to VIP discord Channel and Telegram",
     ],
   },
@@ -84,17 +86,18 @@ const plans = [
     features: [
       "Unlimited Coins",
       "FAQ",
+      "No Advertising",
       "Mediathek",
       "Favorite coins",
       "Blocklist",
       "Graph",
       "Import / Export CSV of Portfolio",
-      "Access to all Dashboards (only in yearly subscription)",
+      "All Dashboards/small studies (PDFs) only in yearly",
       "20% Discount on Portfolio commentary - Yearly subscription",
-      "Portfolio Generator Indicators",
-      "Access to all Livestreams",
       "Add new coins to assets",
       "3 Sub Portfolios",
+      "Portfolio Generator Indicators",
+      "Access to all Livestreams",
       "Access to VIP discord Channel and Telegram",
     ],
     nonFeatures: [],
@@ -305,7 +308,7 @@ const PricingPlans = () => {
                   align="center"
                   sx={{ m: "2rem 0", fontWeight: "bold" }}
                 >
-                  {plan.title}
+                  {capitalize(plan.title)}
                 </Typography>
                 <Typography
                   variant="h4"

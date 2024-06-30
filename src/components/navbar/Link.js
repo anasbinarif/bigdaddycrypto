@@ -179,6 +179,15 @@ const NavbarLink = ({ mobileView, handleClose }) => {
     };
   }, [alert]);
 
+  console.log(
+    sessionJotai?.user?.subscriptionPlan &&
+      sessionJotai?.user?.subscriptionPlan !== "free"
+      ? sessionJotai?.user?.subscriptionPlan
+      : sessionJotai?.user?.pastUser
+      ? "FREE+"
+      : "FREE"
+  );
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", position: "relative" }}>
@@ -260,7 +269,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                     sessionJotai?.user?.pastUserCheck
                   ? "Free+"
                   : "Free"} */}
-                  {sessionJotai?.user?.subscriptionPlan != "free" ?  sessionJotai?.user?.subscriptionPlan : sessionJotai?.user?.pastUser === "" ? "FREE" : "FREE+"}
+                {sessionJotai?.user?.subscriptionPlan &&
+                sessionJotai?.user?.subscriptionPlan !== "free"
+                  ? sessionJotai?.user?.subscriptionPlan
+                  : sessionJotai?.user?.pastUser !== ""
+                  ? "FREE+"
+                  : "FREE"}
               </Typography>
               <LanguageSwitcher />
               <CurrencySwitcher />
@@ -459,7 +473,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                       sessionJotai?.user?.pastUserCheck
                     ? "Free+"
                     : "Free"} */}
-                    {sessionJotai?.user?.subscriptionPlan != "free" ?  sessionJotai?.user?.subscriptionPlan : sessionJotai?.user?.pastUser === "" ? "FREE" : "FREE+"}
+                  {sessionJotai?.user?.subscriptionPlan &&
+                  sessionJotai?.user?.subscriptionPlan !== "free"
+                    ? sessionJotai?.user?.subscriptionPlan
+                    : sessionJotai?.user?.pastUser !== ""
+                    ? "FREE+"
+                    : "FREE"}
                 </Typography>
                 <LanguageSwitcher />
                 <CurrencySwitcher />
