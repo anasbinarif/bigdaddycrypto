@@ -105,16 +105,16 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           },
           body: JSON.stringify({ userID }),
         });
-  
+
         const cookie = await res.json();
         if (!cookie?.CookiesPrompt) {
           setShowCookieDrawer(true);
         }
       };
-  
+
       fetchCookies();
     }, 5000);
-  
+
     return () => clearTimeout(timer);
   }, [sessionJotai]);
 
@@ -272,9 +272,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           <CircularProgress color="inherit" />
         </Box>
       )}
-      {showCookieDrawer && (
-        <CookieBottomDrawer />
-      )}
+      {showCookieDrawer && <CookieBottomDrawer setLoading={setLoading} />}
     </>
   );
 }
