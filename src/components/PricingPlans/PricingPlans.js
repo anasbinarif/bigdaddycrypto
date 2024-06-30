@@ -608,9 +608,10 @@ const PricingPlans = () => {
             }}
           >
             <Typography>
-              Hinweis: "Bitte beachten Sie, dass die Haftung der Cryptoverse
-              Solutions GbR und ihrer Gesellschafter gemäß unseren AGB
-              beschränkt ist. Weitere Informationen finden Sie in unseren AGB."
+              Hinweis: &quot;Bitte beachten Sie, dass die Haftung der
+              Cryptoverse Solutions GbR und ihrer Gesellschafter gemäß unseren
+              AGB beschränkt ist. Weitere Informationen finden Sie in unseren
+              AGB.&quot;
             </Typography>
           </Box>
         </DialogContent>
