@@ -574,17 +574,17 @@ const RegisterPage = () => {
               </Link>
             </ListItem>
             <ListItem>
-              <Link href="/policy/widerrufsbelehrung" target="_blank">
+              <Link href="/en/policy/widerrufsbelehrung" target="_blank">
                 Widerrufsbelehrung
               </Link>
             </ListItem>
             <ListItem>
-              <Link href="/policy/agb" target="_blank">
+              <Link href="/en/policy/agb" target="_blank">
                 AGB
               </Link>
             </ListItem>
             <ListItem>
-              <Link href="/policy/impressum" target="_blank">
+              <Link href="/en/policy/impressum" target="_blank">
                 Impressum
               </Link>
             </ListItem>
