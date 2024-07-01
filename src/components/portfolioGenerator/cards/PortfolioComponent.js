@@ -84,6 +84,8 @@ const PortfolioComponent = ({
   const [openDialog, setOpenDialog] = useState(false);
   const [file, setFile] = useState(null);
 
+  const [delAllBtn, setDelAllBtn] = useState(false);
+
   useEffect(() => {
     const fetchCurrencyAndRates = async () => {
       const { rates } = await getCurrencyAndRates();
@@ -524,6 +526,7 @@ const PortfolioComponent = ({
         severity: "error",
       });
     }
+    setDelAllBtn(false);
   };
   // console.log("port,", portfolio);
 
@@ -574,7 +577,7 @@ const PortfolioComponent = ({
                 {t("title")} ({assetsLeangth})
               </Typography>
               <Button
-                onClick={handleDeleteAllPortfolioCoins}
+                onClick={() => setDelAllBtn(true)}
                 sx={{
                   backgroundColor: "#00000033",
                   padding: "0.5rem 1rem",
@@ -910,12 +913,12 @@ const PortfolioComponent = ({
             handleDeleteConfirm={handleDeleteConfirm}
             asset={selectedAsset}
           />
-          {/* <DeleteConfirmationDialog
-            open={Boolean(selectedAsset)}
-            handleClose={handleCloseDialog}
-            handleDeleteConfirm={handleDeleteConfirm}
-            asset={selectedAsset}
-          /> */}
+          <DeleteConfirmationDialog
+            open={delAllBtn}
+            handleClose={() => setDelAllBtn(false)}
+            handleDeleteConfirm={handleDeleteAllPortfolioCoins}
+            // asset={selectedAsset}
+          />
         </Box>
       </Box>
       <Snackbar
