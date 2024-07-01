@@ -49,7 +49,8 @@ const DeleteConfirmationDialog = ({
         }}
       >
         <DialogContentText id="delete-dialog-description" sx={{ padding: 0 }}>
-          {t("text1")} <strong>{asset?.Ticker}</strong> {t("text2")}{" "}
+          {t("text1")} <strong>{asset?.Ticker || "All assets"}</strong>{" "}
+          {t("text2")}{" "}
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ padding: 0 }}>
