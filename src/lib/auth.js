@@ -24,7 +24,7 @@ const login = async (credentials) => {
 
     if (!isPasswordCorrect) throw new Error("Wrong password!");
 
-    if(!user.activated) throw new Error("Kindly Verify Your Account from the your email!");
+    if(!user.activated) throw new Error("Kindly Verify Your Account from the your email or Reregister!");
 
     return user;
   } catch (err) {

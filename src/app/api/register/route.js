@@ -9,12 +9,19 @@ export async function POST(req) {
     await connectToDb();
 
     const getUser = await User.findOne({ email: userEmail });
+
     if (getUser) {
-      return NextResponse.json(
-        { error: "User with this email already exists" },
-        { status: 500 }
-      );
+      if (!getUser.activated) {
+        // If the user exists but is not activated, delete the user
+        await User.deleteOne({ email: userEmail });
+      } else {
+        return NextResponse.json(
+            { error: "User with this email already exists" },
+            { status: 500 }
+        );
+      }
     }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(pin, salt);
     const newUser = new User({
@@ -23,17 +30,17 @@ export async function POST(req) {
       password: hashedPassword,
     });
 
-    await newUser?.save();
+    await newUser.save();
     console.log("saved to db");
     return NextResponse.json(
-      { message: "User created successfully" },
-      { status: 201 }
+        { message: "User created successfully" },
+        { status: 201 }
     );
   } catch (e) {
     console.log(e);
     return NextResponse.json(
-      { message: "Error occur while registering the user" },
-      { status: 500 }
+        { message: "Error occurred while registering the user" },
+        { status: 500 }
     );
   }
 }
