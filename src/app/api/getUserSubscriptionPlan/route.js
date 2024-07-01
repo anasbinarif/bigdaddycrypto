@@ -24,7 +24,8 @@ export async function POST(req) {
             return NextResponse.json({ plan: 'free', payment: payment });
         }
 
-        return NextResponse.json({ plan: payment.Subscription.plan, payment });
+
+        return NextResponse.json({ plan: payment.Subscription.plan || "free+", payment });
     } catch (error) {
         console.error('Error fetching user subscription plan:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
