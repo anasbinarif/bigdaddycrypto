@@ -720,6 +720,7 @@ export async function fetchUserSubscriptionPlan(userId) {
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-store",
       body: JSON.stringify({ userId }),
     });
 

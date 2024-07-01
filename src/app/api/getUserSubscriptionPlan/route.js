@@ -17,22 +17,17 @@ export async function POST(req) {
 
     // console.log(payment.Subscription);
 
-    if (!payment && user.pastUser !== "") {
-      return NextResponse.json({ plan: "free+", payment: null });
-    }
-    // console.log(payment.Subscription);
-
     if (!payment || !payment.Subscription) {
       return NextResponse.json({ plan: "free", payment: null });
     }
-    // console.log(payment.Subscription);
-
     if (!payment.Subscription) {
       return NextResponse.json({ plan: "free", payment: payment });
     }
-    // console.log(payment.Subscription);
 
-    return NextResponse.json({ plan: payment.Subscription.plan, payment });
+    return NextResponse.json({
+      plan: payment.Subscription.plan || "free+",
+      payment,
+    });
   } catch (error) {
     console.error("Error fetching user subscription plan:", error);
     return NextResponse.json(
