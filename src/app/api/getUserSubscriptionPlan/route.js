@@ -15,18 +15,22 @@ export async function POST(req) {
       "userId"
     );
 
-    console.log(payment);
+    // console.log(payment.Subscription);
 
     if (!payment && user.pastUser !== "") {
       return NextResponse.json({ plan: "free+", payment: null });
     }
+    // console.log(payment.Subscription);
 
     if (!payment || !payment.Subscription) {
       return NextResponse.json({ plan: "free", payment: null });
     }
+    // console.log(payment.Subscription);
+
     if (!payment.Subscription) {
       return NextResponse.json({ plan: "free", payment: payment });
     }
+    // console.log(payment.Subscription);
 
     return NextResponse.json({ plan: payment.Subscription.plan, payment });
   } catch (error) {

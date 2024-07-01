@@ -723,14 +723,15 @@ export async function fetchUserSubscriptionPlan(userId) {
       body: JSON.stringify({ userId }),
     });
 
-    // console.log(response);
-
     if (!response.ok) {
       const errorData = await response.json();
+      console.log(errorData);
       throw new Error(errorData.error || "Failed to fetch subscription plan");
     }
 
-    return await response.json();
+    const respData = await response.json();
+    console.log(respData);
+    return respData;
   } catch (error) {
     console.error("Error in fetchUserSubscriptionPlan:", error);
     throw error;
