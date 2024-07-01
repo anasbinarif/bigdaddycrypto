@@ -77,7 +77,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         setAlert("Password changed successfully");
         setOpenDialog(falses);
         handleCloseDialog();
-      } else if (changePasswordData.error == "Incorrect old password") {
+      } else if (changePasswordData.error === "Incorrect old password") {
         setAlert("Incorrect old password");
       } else {
         setAlert("Failed to change password");
@@ -94,12 +94,11 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           const subscriptionData = await fetchUserSubscriptionPlan(
             session.user?.id
           );
-          // console.log("subscriptionData", subscriptionData, session);
+          console.log("subscriptionData", subscriptionData, session);
           setSession({
             ...session,
             user: {
               ...session.user,
-              pastUser: sessionJotai?.user?.pastUser || "temp",
               subscriptionPlan: subscriptionData.plan,
               paymentDetails: subscriptionData.payment,
               subscribed: subscriptionData.plan !== "free",
@@ -179,14 +178,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
     };
   }, [alert]);
 
-  console.log(
-    sessionJotai?.user?.subscriptionPlan &&
-      sessionJotai?.user?.subscriptionPlan !== "free"
-      ? sessionJotai?.user?.subscriptionPlan
-      : sessionJotai?.user?.pastUser
-      ? "FREE+"
-      : "FREE"
-  );
+  console.log(sessionJotai);
 
   return (
     <>
@@ -269,12 +261,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                     sessionJotai?.user?.pastUserCheck
                   ? "Free+"
                   : "Free"} */}
-                {sessionJotai?.user?.subscriptionPlan &&
-                sessionJotai?.user?.subscriptionPlan !== "free"
-                  ? sessionJotai?.user?.subscriptionPlan
-                  : sessionJotai?.user?.pastUser !== ""
-                  ? "FREE+"
-                  : "FREE"}
+                {sessionJotai?.user?.subscriptionPlan}
               </Typography>
               <LanguageSwitcher />
               <CurrencySwitcher />
@@ -473,12 +460,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                       sessionJotai?.user?.pastUserCheck
                     ? "Free+"
                     : "Free"} */}
-                  {sessionJotai?.user?.subscriptionPlan &&
-                  sessionJotai?.user?.subscriptionPlan !== "free"
-                    ? sessionJotai?.user?.subscriptionPlan
-                    : sessionJotai?.user?.pastUser !== ""
-                    ? "FREE+"
-                    : "FREE"}
+                  {sessionJotai?.user?.subscriptionPlan}
                 </Typography>
                 <LanguageSwitcher />
                 <CurrencySwitcher />

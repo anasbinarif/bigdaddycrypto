@@ -723,6 +723,7 @@ export async function fetchUserSubscriptionPlan(userId) {
       body: JSON.stringify({ userId }),
     });
 
+    // console.log(response);
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -855,7 +856,8 @@ export const calculateScore = (portfolioData, cals) => {
     scoreFactor_CategoryMissing = 1; // If coins from all categories are selected
   }
 
-  score += Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
+  score +=
+    Math.min(maxAssetsCount, selectedAssetsCount) * (10 / maxAssetsCount);
   const totalAssets = portfolioData.length;
 
   if (totalAssets >= 20 && totalAssets <= 40) {
@@ -871,8 +873,7 @@ export const calculateScore = (portfolioData, cals) => {
   // Calculate the scoreFactor_Allocation using cals.percentages
   let percentages = Object.entries(cals.percentages)
     .filter(([category, percentage]) => category !== "none")
-    .map(([category, percentage]) => parseFloat(percentage.replace('%', '')));
-
+    .map(([category, percentage]) => parseFloat(percentage.replace("%", "")));
 
   let maxPercentage = Math.max(...percentages);
   let minPercentage = Math.min(...percentages);
@@ -881,7 +882,7 @@ export const calculateScore = (portfolioData, cals) => {
 
   if (totalAssets == 0) {
     scoreFactor_Allocation = 1;
-  }else if (allocationDifference >= 8) {
+  } else if (allocationDifference >= 8) {
     scoreFactor_Allocation = 1;
   } else if (allocationDifference >= 5) {
     scoreFactor_Allocation = 2;
@@ -890,13 +891,11 @@ export const calculateScore = (portfolioData, cals) => {
   }
 
   // Calculate the scoreFactor_Category using cals.percentages
-  let lowestCategoryPercentage = Math.min(
-    ...percentages.filter((p) => p > 0)
-  );
+  let lowestCategoryPercentage = Math.min(...percentages.filter((p) => p > 0));
 
   if (totalAssets == 0) {
     scoreFactor_Category = 4;
-  }else if (percentages.every((percentage) => percentage === 0)) {
+  } else if (percentages.every((percentage) => percentage === 0)) {
     scoreFactor_Category = 4; // No coin selected
   } else if (lowestCategoryPercentage > 10) {
     scoreFactor_Category = 1; // All categories >10%
@@ -917,7 +916,8 @@ export const calculateScore = (portfolioData, cals) => {
     }
   });
 
-  let btcAmount = portfolioData.find((item) => item.coin === "BTC")?.amount || 0;
+  let btcAmount =
+    portfolioData.find((item) => item.coin === "BTC")?.amount || 0;
   let btcAllo = (100 / totalAmount) * btcAmount;
 
   let maxSF = 1;
@@ -945,15 +945,6 @@ export const calculateScore = (portfolioData, cals) => {
     scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0),
   };
 };
-
-
-
-
-
-
-
-
-
 
 // export const calculateScore = (portfolioData) => {
 //   const totalCategories = 9;
@@ -1038,7 +1029,6 @@ export const calculateScore = (portfolioData, cals) => {
 //   } else {
 //     scoreFactor_CategoryMissing = 10; // Green
 //   }
-
 
 //   // Calculate scoreFactor_CoinCount based on the number of coins
 //   if (selectedAssetsCount < 10 || selectedAssetsCount > 40) {
@@ -1228,8 +1218,3 @@ export const calculateScore0 = (portfolioData) => {
     // scoreFactor_CoinCount: scoreFactor_CoinCount.toFixed(0),
   };
 };
-
-
-
-
-
