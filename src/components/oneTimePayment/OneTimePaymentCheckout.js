@@ -18,7 +18,7 @@ const Checkout = ({ open, handleClose, price, confirmOneTimePayment }) => {
                 {
                     description: "One Time Payment for Review Portfolio",
                     amount: {
-                        currency_code: "USD",
+                        currency_code: "EUR",
                         value: price,
                     },
                 },
