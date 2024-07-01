@@ -100,7 +100,8 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
   const handleGraphClick = (event) => {
     if (
       !sessionJotai?.user?.subscriptionPlan ||
-      sessionJotai?.user?.subscriptionPlan === "free"
+      sessionJotai?.user?.subscriptionPlan === "free" ||
+      sessionJotai?.user?.subscriptionPlan === "free+"
     ) {
       setAlertMessage(t("alertGraph"));
       setAlertOpen(true);
@@ -111,7 +112,8 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
   const handleMediaClick = (event) => {
     if (
       !sessionJotai?.user?.subscriptionPlan ||
-      sessionJotai?.user?.subscriptionPlan === "free"
+      sessionJotai?.user?.subscriptionPlan === "free" ||
+      sessionJotai?.user?.subscriptionPlan === "free+"
     ) {
       setAlertMessage(
         "To access the Mediathek tab, please subscribe to one of our plans"
@@ -158,7 +160,7 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
           </Link>
           {isSubscribed === "false" && <SubscribeDialog />}
           <SessionProvider>
-          <FormDialog />
+            <FormDialog />
           </SessionProvider>
           {isMobile ? (
             <Box>
@@ -213,7 +215,8 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                       }}
                       color={
                         sessionJotai?.user?.subscriptionPlan &&
-                        sessionJotai?.user?.subscriptionPlan !== "free"
+                        sessionJotai?.user?.subscriptionPlan !== "free" &&
+                        sessionJotai?.user?.subscriptionPlan !== "free+"
                           ? "gold"
                           : "grey"
                       }
@@ -245,7 +248,8 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                       }}
                       color={
                         sessionJotai?.user?.subscriptionPlan &&
-                        sessionJotai?.user?.subscriptionPlan !== "free"
+                        sessionJotai?.user?.subscriptionPlan !== "free" &&
+                        sessionJotai?.user?.subscriptionPlan !== "free+"
                           ? "gold"
                           : "grey"
                       }
@@ -329,7 +333,8 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   }}
                   color={
                     sessionJotai?.user?.subscriptionPlan &&
-                    sessionJotai?.user?.subscriptionPlan !== "free"
+                    sessionJotai?.user?.subscriptionPlan !== "free" &&
+                    sessionJotai?.user?.subscriptionPlan !== "free+"
                       ? "gold"
                       : "grey"
                   }
@@ -363,7 +368,8 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
                   }}
                   color={
                     sessionJotai?.user?.subscriptionPlan &&
-                    sessionJotai?.user?.subscriptionPlan !== "free"
+                    sessionJotai?.user?.subscriptionPlan !== "free" &&
+                    sessionJotai?.user?.subscriptionPlan !== "free+"
                       ? "gold"
                       : "grey"
                   }

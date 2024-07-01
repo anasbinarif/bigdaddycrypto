@@ -276,7 +276,8 @@ const ScrollableKryptoTabs = ({
             }}
             color={
               sessionJotai?.user?.subscriptionPlan &&
-              sessionJotai?.user?.subscriptionPlan !== "free"
+              sessionJotai?.user?.subscriptionPlan !== "free" &&
+              sessionJotai?.user?.subscriptionPlan !== "free+"
                 ? "gold"
                 : "grey"
             }

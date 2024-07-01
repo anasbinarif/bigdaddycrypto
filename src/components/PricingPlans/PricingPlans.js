@@ -149,6 +149,7 @@ const PricingPlans = () => {
 
   const handleAcceptPrompt = (e) => {
     e.preventDefault();
+    setPromptOpen(false);
     setOpen(true);
   };
 
@@ -157,7 +158,10 @@ const PricingPlans = () => {
       <SubscribeDialog open={open} handleClose={handleClose} />
       <Container>
         {userSubscription && userSubscription?.plan !== "free" && (
-          <CurrentPlan planDetails={userSubscription?.payment?.Subscription} />
+          <CurrentPlan
+            planDetails={userSubscription?.payment?.Subscription}
+            plan={userSubscription?.plan}
+          />
         )}
         <Box textAlign="center" my={4}>
           <Typography

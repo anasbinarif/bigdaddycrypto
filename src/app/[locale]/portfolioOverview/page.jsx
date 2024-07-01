@@ -282,6 +282,7 @@ const PortfolioForm = () => {
 
   const handleAcceptPrompt = (e) => {
     e.preventDefault();
+    setPromptOpen(false);
     setOpen(true);
   };
 

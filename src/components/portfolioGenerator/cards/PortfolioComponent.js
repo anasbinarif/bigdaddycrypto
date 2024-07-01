@@ -299,7 +299,8 @@ const PortfolioComponent = ({
   const handleExportCSV = () => {
     if (
       !sessionJotai?.user?.subscriptionPlan ||
-      sessionJotai?.user?.subscriptionPlan === "free"
+      sessionJotai?.user?.subscriptionPlan === "free" ||
+      sessionJotai?.user?.subscriptionPlan === "free+"
     ) {
       setErr("If export portfolio, please subscribe to one of our plans.");
       setAlertOpen(true);
@@ -348,7 +349,8 @@ const PortfolioComponent = ({
   const handleImport = () => {
     if (
       !sessionJotai?.user?.subscriptionPlan ||
-      sessionJotai?.user?.subscriptionPlan === "free"
+      sessionJotai?.user?.subscriptionPlan === "free" ||
+      sessionJotai?.user?.subscriptionPlan === "free+"
     ) {
       setErr(
         "If you want to import portfolio, please subscribe to one of our plans."
@@ -604,150 +606,153 @@ const PortfolioComponent = ({
               {t("subtitle")}
             </Typography>
             {loadingPortfolio ? (
-              <Grid
-                sx={{
-                  borderRadius: "4px",
-                  overflow: "auto",
-                  scrollbarColor: "#555559 #333339",
-                  maxHeight: "500px",
-                  // width: "100%",
-                  "& .MuiGrid-item": {
-                    "@media only screen and (max-width: 1000px)": {
-                      maxWidth: "1000px",
+              <>
+                <Grid
+                  sx={{
+                    borderRadius: "4px",
+                    overflow: "auto",
+                    scrollbarColor: "#555559 #333339",
+                    maxHeight: "500px",
+                    // width: "100%",
+                    "& .MuiGrid-item": {
+                      "@media only screen and (max-width: 1000px)": {
+                        maxWidth: "1000px",
+                      },
                     },
-                  },
-                }}
-              >
-                {loadingPortfolio &&
-                  portfolio.assets
-                    .slice()
-                    // .reverse()
-                    .map((asset, index) => (
-                      <Grid
-                        item
-                        key={index}
-                        xs={12}
-                        sm={6}
-                        md={15}
-                        sx={{
-                          width: "100%",
-                          "& .MuiPaper-root": {
-                            backgroundColor: "#00000033",
-                          },
-                        }}
-                      >
-                        <Card
-                          onMouseEnter={() => handleMouseEnter(index)}
-                          onMouseLeave={() => handleMouseLeave()}
-                          onDoubleClick={() => setCoin(index)}
+                  }}
+                >
+                  {loadingPortfolio &&
+                    portfolio.assets
+                      .slice()
+                      // .reverse()
+                      .map((asset, index) => (
+                        <Grid
+                          item
+                          key={index}
+                          xs={12}
+                          sm={6}
+                          md={15}
                           sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            p: 2,
-                            cursor: "pointer",
-                            borderRadius: 0,
-                            backgroundColor: "#23252b",
-                            "&:hover": { backgroundColor: "#00000099" },
-                            position: "relative",
-                            userSelect: "none",
                             width: "100%",
+                            "& .MuiPaper-root": {
+                              backgroundColor: "#00000033",
+                            },
                           }}
                         >
-                          {deleteIconIndex === index && (
-                            <CategoryColorBar
-                              colors={getCategoryColors(asset.Category)}
-                            />
-                          )}
-                          <Box
+                          <Card
+                            onMouseEnter={() => handleMouseEnter(index)}
+                            onMouseLeave={() => handleMouseLeave()}
+                            onDoubleClick={() => setCoin(index)}
                             sx={{
                               display: "flex",
+                              justifyContent: "space-between",
                               alignItems: "center",
+                              p: 2,
+                              cursor: "pointer",
+                              borderRadius: 0,
+                              backgroundColor: "#23252b",
+                              "&:hover": { backgroundColor: "#00000099" },
+                              position: "relative",
+                              userSelect: "none",
+                              width: "100%",
                             }}
                           >
-                            <Avatar
-                              src={asset.cgImageURL}
-                              sx={{ width: 28, height: 28, mr: 1 }}
-                            />
-                            <Box sx={{ flexGrow: 1 }}>
-                              <Typography
-                                variant="h6"
-                                sx={{ color: "#fff", fontSize: "14px" }}
-                              >
-                                {asset.Ticker}
-                              </Typography>
-                            </Box>
-                          </Box>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: "#fff",
-                              // flexGrow: 1,
-                              flexBasis: "33%",
-                              marginLeft: "auto",
-                              textAlign: "right",
-                            }}
-                          >
-                            {addCommas(
-                              convertPrice(asset?.Price || 0, currency, rates)
-                            )}{" "}
-                            {currencySign[currency]}
-                          </Typography>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              flexDirection: "row",
-                              flexBasis: "40%",
-                              justifyContent: "flex-end",
-                            }}
-                          >
+                            {deleteIconIndex === index && (
+                              <CategoryColorBar
+                                colors={getCategoryColors(asset.Category)}
+                              />
+                            )}
                             <Box
                               sx={{
                                 display: "flex",
-                                alignItems: "flex-end",
-                                flexDirection: "column",
+                                alignItems: "center",
                               }}
                             >
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{ color: "#fff" }}
-                              >
-                                {convertPrice(
-                                  setFinancialSummaryAPI(asset.CoinGeckoID)[1],
-                                  currency,
-                                  rates
-                                )}{" "}
-                                {currencySign[currency]}
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{ color: "gray" }}
-                              >
-                                {setFinancialSummaryAPI(
-                                  asset.CoinGeckoID
-                                )[0].toFixed(2)}{" "}
-                                {asset.Ticker}
-                              </Typography>
-                            </Box>
-                            {deleteIconIndex === index && (
-                              <>
-                                <Tooltip
-                                  title="Delete"
-                                  onClick={() => handleDeleteClick(asset)}
+                              <Avatar
+                                src={asset.cgImageURL}
+                                sx={{ width: 28, height: 28, mr: 1 }}
+                              />
+                              <Box sx={{ flexGrow: 1 }}>
+                                <Typography
+                                  variant="h6"
+                                  sx={{ color: "#fff", fontSize: "14px" }}
                                 >
-                                  <IconButton
-                                    sx={{
-                                      color: "gray",
-                                      "&:hover": { color: "red" },
-                                    }}
+                                  {asset.Ticker}
+                                </Typography>
+                              </Box>
+                            </Box>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "#fff",
+                                // flexGrow: 1,
+                                flexBasis: "33%",
+                                marginLeft: "auto",
+                                textAlign: "right",
+                              }}
+                            >
+                              {addCommas(
+                                convertPrice(asset?.Price || 0, currency, rates)
+                              )}{" "}
+                              {currencySign[currency]}
+                            </Typography>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                flexBasis: "40%",
+                                justifyContent: "flex-end",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "flex-end",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  sx={{ color: "#fff" }}
+                                >
+                                  {convertPrice(
+                                    setFinancialSummaryAPI(
+                                      asset.CoinGeckoID
+                                    )[1],
+                                    currency,
+                                    rates
+                                  )}{" "}
+                                  {currencySign[currency]}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  sx={{ color: "gray" }}
+                                >
+                                  {setFinancialSummaryAPI(
+                                    asset.CoinGeckoID
+                                  )[0].toFixed(2)}{" "}
+                                  {asset.Ticker}
+                                </Typography>
+                              </Box>
+                              {deleteIconIndex === index && (
+                                <>
+                                  <Tooltip
+                                    title="Delete"
+                                    onClick={() => handleDeleteClick(asset)}
                                   >
-                                    <DeleteIcon />
-                                  </IconButton>
-                                </Tooltip>
-                                {/* <Tooltip
+                                    <IconButton
+                                      sx={{
+                                        color: "gray",
+                                        "&:hover": { color: "red" },
+                                      }}
+                                    >
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                  {/* <Tooltip
                                   title="Favourite"
                                   onClick={() => handleFavouriteClick(asset)}
                                 >
@@ -764,12 +769,13 @@ const PortfolioComponent = ({
                                     <FavoriteIcon />
                                   </IconButton>
                                 </Tooltip> */}
-                              </>
-                            )}
-                          </Box>
-                        </Card>
-                      </Grid>
-                    ))}
+                                </>
+                              )}
+                            </Box>
+                          </Card>
+                        </Grid>
+                      ))}
+                </Grid>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Button
                     sx={{
@@ -797,7 +803,8 @@ const PortfolioComponent = ({
                       }}
                       color={
                         sessionJotai?.user?.subscriptionPlan &&
-                        sessionJotai?.user?.subscriptionPlan !== "free"
+                        sessionJotai?.user?.subscriptionPlan !== "free" &&
+                        sessionJotai?.user?.subscriptionPlan !== "free+"
                           ? "gold"
                           : "grey"
                       }
@@ -829,7 +836,8 @@ const PortfolioComponent = ({
                       }}
                       color={
                         sessionJotai?.user?.subscriptionPlan &&
-                        sessionJotai?.user?.subscriptionPlan !== "free"
+                        sessionJotai?.user?.subscriptionPlan !== "free" &&
+                        sessionJotai?.user?.subscriptionPlan !== "free+"
                           ? "gold"
                           : "grey"
                       }
@@ -881,7 +889,7 @@ const PortfolioComponent = ({
                     </DialogActions>
                   </Dialog>
                 </Box>
-              </Grid>
+              </>
             ) : (
               <Card
                 sx={{
