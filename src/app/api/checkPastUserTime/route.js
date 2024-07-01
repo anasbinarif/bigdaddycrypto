@@ -1,33 +1,23 @@
+import { DateTime } from "luxon";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
     const berlinTimeZone = "Europe/Berlin";
-    const targetDate = new Date(Date.UTC(2024, 6, 1, 20, 0, 0));
+    const targetDateUTC = DateTime.fromISO("2024-07-01T18:45:00Z");
 
     try {
-        const now = new Date();
-        const berlinFormatter = new Intl.DateTimeFormat("en-GB", {
-            timeZone: berlinTimeZone,
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-        });
+        // Get the current time in Berlin
+        const berlinNow = DateTime.now().setZone(berlinTimeZone);
+        console.log("berlinNow111", berlinNow.toString(), "targetDateUTC", targetDateUTC.toString());
 
-        const berlinNowString = berlinFormatter.formatToParts(now);
-        const berlinNow = new Date(
-            `${berlinNowString.find(part => part.type === "year").value}-${berlinNowString.find(part => part.type === "month").value}-${berlinNowString.find(part => part.type === "day").value}T${berlinNowString.find(part => part.type === "hour").value}:${berlinNowString.find(part => part.type === "minute").value}:${berlinNowString.find(part => part.type === "second").value}+02:00`
-        );
-
-        if (berlinNow < targetDate) {
+        if (berlinNow < targetDateUTC) {
             return NextResponse.json({ result: false, message: "The target date has not started yet" }, { status: 200 });
         }
 
-        const timeDifference = berlinNow - targetDate;
-        const hoursPassed = timeDifference / (1000 * 60 * 60);
+        const timeDifference = berlinNow.diff(targetDateUTC, 'hours').hours;
+        const hoursPassed = timeDifference;
         const hoursRemaining = 48 - hoursPassed;
+        console.log("hoursPassed", hoursPassed);
 
         if (hoursPassed > 48) {
             return NextResponse.json({ result: false }, { status: 200 });
