@@ -138,20 +138,20 @@ const Dashboard = () => {
 
   const handleExpandDashboard = (dashboardNum) => {
     // console.log(DashboardNum, !expandDashboard[DashboardNum]);
-    // if (
-    //   sessionJotai?.user?.subscriptionPlan !== "Premium" ||
-    //   sessionJotai?.user?.billingCycle !== "yearly"
-    // ) {
-    //   setError(
-    //     "To access the dashboards, please subscribe to the premium yearly plan"
-    //   );
-    //   setAlertOpen(true);
-    //   setTimeout(() => {
-    //     setError("");
-    //     setAlertOpen(false);
-    //   }, 1500);
-    //   return;
-    // }
+    if (
+      sessionJotai?.user?.subscriptionPlan !== "Premium" ||
+      sessionJotai?.user?.billingCycle !== "yearly"
+    ) {
+      setError(
+        "To access the dashboards, please subscribe to the premium yearly plan"
+      );
+      setAlertOpen(true);
+      setTimeout(() => {
+        setError("");
+        setAlertOpen(false);
+      }, 1500);
+      return;
+    }
     setExpandDashboard({
       ...expandDashboard,
       [dashboardNum]: !expandDashboard[dashboardNum],
