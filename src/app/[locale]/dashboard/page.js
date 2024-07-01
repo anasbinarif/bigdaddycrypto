@@ -193,7 +193,7 @@ const Dashboard = () => {
               <LoadingCircle />
             </Box>
           ) : (
-            <>
+            <Box sx={{ position: "relative" }}>
               <Box
                 sx={{
                   padding: "8rem 3rem 3rem",
@@ -212,7 +212,6 @@ const Dashboard = () => {
                   display: "flex",
                   flexWrap: "wrap",
                   padding: "0 3rem 4rem",
-                  position: "relative",
                   gap: "3rem",
                   "@media only screen and (max-width: 900px)": {
                     flexDirection: "column",
@@ -342,7 +341,9 @@ const Dashboard = () => {
                         }}
                       />
                     </Box>
-                    <Dash1 expanded={expandDashboard[1]} />
+                    {expandDashboard[1] && (
+                      <Dash1 expanded={expandDashboard[1]} />
+                    )}
                   </Box>
                 </Box>
                 <Box
@@ -472,7 +473,9 @@ const Dashboard = () => {
                         }}
                       />
                     </Box>
-                    <Dash2 expanded={expandDashboard[2]} />
+                    {expandDashboard[2] && (
+                      <Dash2 expanded={expandDashboard[2]} />
+                    )}
                   </Box>
                 </Box>
               </Box>
@@ -682,7 +685,7 @@ const Dashboard = () => {
               ></Box> */}
                 </Box>
               </Box>
-            </>
+            </Box>
           )}
           <Snackbar
             open={alertOpen}
