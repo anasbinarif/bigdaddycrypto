@@ -201,7 +201,8 @@ const CoinCard = ({
     // console.log("handleFavouriteClick", coin);
     if (
       !sessionJotai?.user?.subscriptionPlan ||
-      sessionJotai?.user?.subscriptionPlan === "free"
+      sessionJotai?.user?.subscriptionPlan === "free" ||
+      sessionJotai?.user?.subscriptionPlan === "free+"
     ) {
       setError(
         "If you want to add coins to Fav, please subscribe to one of our plans."

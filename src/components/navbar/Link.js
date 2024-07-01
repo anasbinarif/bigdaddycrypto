@@ -94,7 +94,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           const subscriptionData = await fetchUserSubscriptionPlan(
             session.user?.id
           );
-          // console.log("subscriptionData", subscriptionData, session);
+          console.log("subscriptionData", subscriptionData, session);
           setSession({
             ...session,
             user: {
@@ -112,6 +112,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         }
         // console.log("session for admin", session, status);
       } catch (error) {
+        console.log(error);
         console.error("Error updating session with subscription:", error);
       }
     };
@@ -177,6 +178,8 @@ const NavbarLink = ({ mobileView, handleClose }) => {
       }
     };
   }, [alert]);
+
+  console.log(sessionJotai);
 
   return (
     <>
@@ -259,7 +262,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                     sessionJotai?.user?.pastUserCheck
                   ? "Free+"
                   : "Free"} */}
-                  {sessionJotai?.user?.subscriptionPlan}
+                {sessionJotai?.user?.subscriptionPlan}
               </Typography>
               <LanguageSwitcher />
               <CurrencySwitcher />
@@ -458,7 +461,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
                       sessionJotai?.user?.pastUserCheck
                     ? "Free+"
                     : "Free"} */}
-                    {sessionJotai?.user?.subscriptionPlan}
+                  {sessionJotai?.user?.subscriptionPlan}
                 </Typography>
                 <LanguageSwitcher />
                 <CurrencySwitcher />
