@@ -40,16 +40,16 @@ const plans = [
     price: "€0.00",
     features: ["max. 10 Coins in portfolio", "FAQ", "Advertising"],
     nonFeatures: [
-      "Mediathek",
-      "Favorite coins",
-      "Blocklist",
-      "Graph",
-      "Import / Export CSV of Portfolio",
-      "Access to all Dashboards/small studies",
+      "Add own coins to portfolio (coming soon)",
+      "Access to all Dashboards/small studies (PDFs)",
+      "Access to Graph",
+      "Import / Export CSV of portfolio",
+      "Mediathek (incl. Livestreams – coming soon)",
+      "Add coins to Favorites",
+      "Block Coins (coming soon)",
+      "Discount on Portfolio commentary",
       "Portfolio Generator Indicators",
-      "Access to all Livestreams",
-      "Add new coins to assets",
-      "3 Sub Portfolios",
+      "3 Sub Portfolios (coming soon)",
       "Access to VIP discord Channel and Telegram",
     ],
   },
@@ -62,20 +62,19 @@ const plans = [
       "Unlimited Coins",
       "FAQ",
       "No Advertising",
-      "Mediathek",
-      "Favorite coins",
-      "Blocklist",
-      "Graph",
-      "Import / Export CSV of Portfolio",
-      "All small Studies (PDFs) only in yearly subscription",
+      "Add own coins to portfolio (coming soon)",
+      "Access to Studies (PDFs) only in yearly subscription",
+      "Access to Graph",
+      "Import / Export CSV of portfolio",
+      "Mediathek (incl. Livestreams – coming soon)",
+      "Add coins to Favorites",
+      "Block Coins (coming soon)",
       "15% Discount on Portfolio commentary - Yearly subscription",
-      "Add new coins to assets",
-      "3 Sub Portfolios",
     ],
     nonFeatures: [
       "Portfolio Generator Indicators",
-      "Access to all Livestreams",
-      "Access to VIP discord Channel and Telegram",
+      "3 Sub Portfolios (coming soon)",
+      "Access to VIP discord Channel and Telegram (coming soon)",
     ],
   },
   {
@@ -87,18 +86,17 @@ const plans = [
       "Unlimited Coins",
       "FAQ",
       "No Advertising",
-      "Mediathek",
-      "Favorite coins",
-      "Blocklist",
-      "Graph",
-      "Import / Export CSV of Portfolio",
-      "All Dashboards/small studies (PDFs) only in yearly",
-      "20% Discount on Portfolio commentary - Yearly subscription",
-      "Add new coins to assets",
-      "3 Sub Portfolios",
+      "Add own coins to portfolio (coming soon)",
+      "Access to all Dashboards/Studies (PDFs) only in yearly subscription",
+      "Access to Graph",
+      "Import / Export CSV of portfolio",
+      "Mediathek (incl. Livestreams – coming soon)",
+      "Add coins to Favorites",
+      "Block Coins (coming soon)",
+      "15% Discount on Portfolio commentary - Yearly subscription",
       "Portfolio Generator Indicators",
-      "Access to all Livestreams",
-      "Access to VIP discord Channel and Telegram",
+      "3 Sub Portfolios (coming soon)",
+      "Access to VIP discord Channel and Telegram (coming soon)",
     ],
     nonFeatures: [],
   },
@@ -382,7 +380,15 @@ const PricingPlans = () => {
                     marginTop: "25px",
                   }}
                 >
-                  <Box sx={{ marginTop: "16px" }} />
+                  <Box
+                    sx={{
+                      marginTop:
+                        (plan.title === "free" || plan.title === "free+") &&
+                        !["Pro", "Premium"].includes(userSubscription?.plan)
+                          ? "80px"
+                          : "16px",
+                    }}
+                  />
 
                   {plan.features.map((feature, index) => (
                     <li
