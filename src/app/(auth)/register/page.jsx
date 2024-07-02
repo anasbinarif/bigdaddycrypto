@@ -188,7 +188,18 @@ const RegisterPage = () => {
   // console.log(languageData);
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        minHeight: "100vh",
+        gap: 1,
+        "@media only screen and (max-width: 450px)": {
+          gap: 5,
+        },
+      }}
+    >
       <LanguageSwitcher />
       <Box
         sx={{
@@ -196,7 +207,7 @@ const RegisterPage = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "calc(100vh - 6rem)",
+          // height: "calc(100vh - 6rem)",
           backgroundColor: "#111826",
         }}
       >
@@ -212,6 +223,12 @@ const RegisterPage = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+
+            "@media only screen and (max-width: 500px)": {
+              margin: "0 2rem",
+              width: "85%",
+              padding: "30px 20px",
+            },
           }}
         >
           <Box
@@ -549,7 +566,16 @@ const RegisterPage = () => {
         </Box>
         <Typography
           variant="caption"
-          sx={{ mt: 2, maxWidth: "400px", fontSize: "12px" }}
+          sx={{
+            mt: 2,
+            maxWidth: "400px",
+            fontSize: "12px",
+            "@media only screen and (max-width: 500px)": {
+              margin: "0 2rem",
+              width: "85%",
+              padding: "15px 0",
+            },
+          }}
         >
           Disclaimer:
           <br /> {languageData["registerDisclaimer"]}
@@ -564,6 +590,7 @@ const RegisterPage = () => {
           justifyContent: "center", // Center horizontally
           alignItems: "center", // Center vertically
           padding: "20px", // Add padding for spacing
+          // mt: "10rem",
         }}
       >
         <Box sx={{ mb: "1rem" }}>
@@ -601,7 +628,7 @@ const RegisterPage = () => {
         severity={alert.severity}
         onClose={() => setAlert({ ...alert, open: false })}
       />
-    </>
+    </Box>
   );
 };
 

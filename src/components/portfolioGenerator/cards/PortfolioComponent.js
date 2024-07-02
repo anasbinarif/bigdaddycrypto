@@ -148,7 +148,7 @@ const PortfolioComponent = ({
 
       // Handle response
       if (response.ok) {
-        console.log("Success:", data.message);
+        // console.log("Success:", data.message);
         setSelectedAsset(null);
 
         // Remove the asset from the local state to update the UI
@@ -306,7 +306,7 @@ const PortfolioComponent = ({
       setAlertOpen(true);
       return;
     }
-    console.log("portfolioportfolioportfolio,", portfolio);
+    // console.log("portfolioportfolioportfolio,", portfolio);
 
     const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
     const rows = [];
