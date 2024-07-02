@@ -160,7 +160,7 @@ const LoginPage = () => {
           component="form"
           sx={{
             padding: "30px",
-            maxWidth: "400px",
+            width: "400px",
             backgroundColor: "#202530",
             borderRadius: "8px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
@@ -169,7 +169,12 @@ const LoginPage = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            minWidth: "400px",
+
+            "@media only screen and (max-width: 500px)": {
+              margin: "0 2rem",
+              width: "85%",
+              padding: "30px 20px",
+            },
           }}
         >
           <Box

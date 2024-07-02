@@ -114,7 +114,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
       };
 
       fetchCookies();
-    }, 10000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [sessionJotai]);

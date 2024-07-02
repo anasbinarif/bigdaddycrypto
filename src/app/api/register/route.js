@@ -16,8 +16,8 @@ export async function POST(req) {
         await User.deleteOne({ email: userEmail });
       } else {
         return NextResponse.json(
-            { error: "User with this email already exists" },
-            { status: 500 }
+          { error: "User with this email already exists" },
+          { status: 500 }
         );
       }
     }
@@ -31,16 +31,16 @@ export async function POST(req) {
     });
 
     await newUser.save();
-    console.log("saved to db");
+    // console.log("saved to db");
     return NextResponse.json(
-        { message: "User created successfully" },
-        { status: 201 }
+      { message: "User created successfully" },
+      { status: 201 }
     );
   } catch (e) {
     console.log(e);
     return NextResponse.json(
-        { message: "Error occurred while registering the user" },
-        { status: 500 }
+      { message: "Error occurred while registering the user" },
+      { status: 500 }
     );
   }
 }

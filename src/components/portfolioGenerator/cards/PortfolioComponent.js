@@ -131,7 +131,7 @@ const PortfolioComponent = ({
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = selectedAsset.CoinGeckoID;
     const token = sessionJotai?.user.accessToken;
-    console.log("testing delete", CoinGeckoID, userId);
+    // console.log("testing delete", CoinGeckoID, userId);
 
     try {
       setLoading(true);
@@ -149,7 +149,7 @@ const PortfolioComponent = ({
 
       // Handle response
       if (response.ok) {
-        console.log("Success:", data.message);
+        // console.log("Success:", data.message);
         setSelectedAsset(null);
 
         // Remove the asset from the local state to update the UI
@@ -255,7 +255,7 @@ const PortfolioComponent = ({
       return;
     }
     setLoading(true);
-    console.log("FavouriteClick", asset);
+    // console.log("FavouriteClick", asset);
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = asset?.CoinGeckoID;
     const token = sessionJotai?.user.accessToken;
@@ -308,7 +308,7 @@ const PortfolioComponent = ({
       setAlertOpen(true);
       return;
     }
-    console.log("portfolioportfolioportfolio,", portfolio);
+    // console.log("portfolioportfolioportfolio,", portfolio);
 
     const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
     const rows = [];
@@ -381,7 +381,7 @@ const PortfolioComponent = ({
       Papa.parse(file, {
         header: true,
         complete: async (results) => {
-          console.log("Parsed CSV Data:", results.data);
+          // console.log("Parsed CSV Data:", results.data);
 
           // Filter and map the parsed data to match portfolio coins
           const portfolioCoins = portfolio.assetsCalculations.assets
@@ -456,7 +456,7 @@ const PortfolioComponent = ({
           });
 
           try {
-            console.log("/api/importBuyAndSell", apiData);
+            // console.log("/api/importBuyAndSell", apiData);
             // Call the API to store the data
             const response = await fetch("/api/importBuyAndSell", {
               method: "POST",
