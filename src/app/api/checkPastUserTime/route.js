@@ -3,12 +3,12 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
     const berlinTimeZone = "Europe/Berlin";
-    const targetDateUTC = DateTime.fromISO("2024-07-01T18:45:00Z");
+    const targetDateUTC = DateTime.fromISO("2024-07-02T17:00:00Z");
 
     try {
         // Get the current time in Berlin
         const berlinNow = DateTime.now().setZone(berlinTimeZone);
-        console.log("berlinNow111", berlinNow.toString(), "targetDateUTC", targetDateUTC.toString());
+        console.log("berlinNow1111", berlinNow.toString(), "targetDateUTC", targetDateUTC.toString());
 
         if (berlinNow < targetDateUTC) {
             return NextResponse.json({ result: false, message: "The target date has not started yet" }, { status: 200 });
