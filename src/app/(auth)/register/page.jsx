@@ -136,6 +136,7 @@ const RegisterPage = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          cache: "no-store",
           body: JSON.stringify(email),
         });
         // console.log(res);

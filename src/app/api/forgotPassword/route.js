@@ -1,9 +1,11 @@
 // pages/api/forgot-password.js
 import { connectToDb } from "../../../lib/utils";
 import { User } from "../../../lib/models";
-import nodemailer from "nodemailer";
+import sgMail from '@sendgrid/mail';
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export async function POST(req, res) {
   const { email } = await req.json();
@@ -22,27 +24,22 @@ export async function POST(req, res) {
 
     const resetUrl = `${process.env.NEXT_PUBLIC_URI}/resetPassword?token=${token}&email=${email}`;
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_SERVER_USER,
-        pass: process.env.EMAIL_SERVER_PASSWORD,
-      },
-    });
-
-    await transporter.sendMail({
+    const msg = {
       from: process.env.EMAIL_FROM,
       to: email,
       subject: "Password Reset Request",
       text: `Please use the following link to reset your password: ${resetUrl}`,
       html: html(resetUrl),
-    });
+    };
+
+    await sgMail.send(msg);
 
     return NextResponse.json({ message: "Reset link sent" }, { status: 200 });
   } catch (error) {
+    console.error("Error occurred while sending password reset email:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
+        { error: "Internal Server Error" },
+        { status: 500 }
     );
   }
 }

@@ -19,7 +19,7 @@ export async function POST(req) {
       return NextResponse.json({ plan: 'free+', payment: null });
     }
 
-    if (!payment || !payment.Subscription) {
+    if (!payment || !payment?.Subscription) {
       return NextResponse.json({ plan: 'free', payment: null });
     }
     if (!payment.Subscription) {

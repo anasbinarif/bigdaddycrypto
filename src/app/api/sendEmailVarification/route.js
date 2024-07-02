@@ -1,6 +1,8 @@
-import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
-import { NextResponse } from "next/server";
+import sgMail from '@sendgrid/mail';
+import jwt from 'jsonwebtoken';
+import { NextResponse } from 'next/server';
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export async function POST(req, res) {
     try {
@@ -17,25 +19,17 @@ export async function POST(req, res) {
 
         const verifyUrl = `${process.env.NEXT_PUBLIC_URI}/verify?token=${token}&email=${email}`;
 
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_SERVER_USER,
-                pass: process.env.EMAIL_SERVER_PASSWORD,
-            },
-        });
-
-        const mailOptions = {
-            from: process.env.EMAIL_FROM,
+        const msg = {
             to: email,
+            from: process.env.EMAIL_FROM,
             subject: "Email Verification",
             text: `Please use the following link to verify your email: ${verifyUrl}`,
             html: verificationHtml(verifyUrl),
         };
 
-        console.log("Sending mail with options:", mailOptions);  // Logging the mail options
+        console.log("Sending mail with options:", msg);  // Logging the mail options
 
-        await transporter.sendMail(mailOptions);
+        await sgMail.send(msg);
 
         return NextResponse.json({ message: 'Verification link sent' }, { status: 200 });
     } catch (error) {
