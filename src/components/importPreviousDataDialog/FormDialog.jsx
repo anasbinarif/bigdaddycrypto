@@ -18,7 +18,8 @@ import { sessionAtom } from "../../app/stores/sessionStore";
 import { getUserPortfolio } from "../../lib/data";
 import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { useTranslations } from "next-intl";
-import {useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 const FormDialog = () => {
   const t = useTranslations("formDialog");
@@ -122,9 +123,10 @@ const FormDialog = () => {
           ...session,
           user: {
             ...session.user,
-            pastUser: sessionJotai?.user?.pastUser || "temp"
+            pastUser: sessionJotai?.user?.pastUser || "temp",
           },
         });
+        await signOut({ redirect: true, callbackUrl: "/login" });
       } else {
         const respData = await response.json();
         // console.log(respData);
