@@ -12,7 +12,6 @@ export async function GET(request) {
     } else {
       assets = await Assets.find();
     }
-    console.log(assets);
     return NextResponse.json({ data: assets }, { status: 200 });
   } catch (e) {
     return NextResponse.json(

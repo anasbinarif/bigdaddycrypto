@@ -240,11 +240,9 @@ function BewertungCard({ preCalcPort }) {
         // console.log(portData);
         const assets = portData.assets;
         const buyAndSell = portData.assetsCalculations.assets;
-        console.log("assets=", assets);
         const userPortfolio = await getUserPortfolio(
           sessionJotai?.user.id || id
         );
-        console.log("assets==", userPortfolio?.calculation);
 
         // Calculate Sicherheit Average
         const sicherheitValues = assets

@@ -131,7 +131,6 @@ const PortfolioComponent = ({
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = selectedAsset.CoinGeckoID;
     const token = sessionJotai?.user.accessToken;
-    console.log("testing delete", CoinGeckoID, userId);
 
     try {
       setLoading(true);
@@ -255,7 +254,6 @@ const PortfolioComponent = ({
       return;
     }
     setLoading(true);
-    console.log("FavouriteClick", asset);
     const userId = sessionJotai?.user.id;
     const CoinGeckoID = asset?.CoinGeckoID;
     const token = sessionJotai?.user.accessToken;
@@ -381,7 +379,6 @@ const PortfolioComponent = ({
       Papa.parse(file, {
         header: true,
         complete: async (results) => {
-          console.log("Parsed CSV Data:", results.data);
 
           // Filter and map the parsed data to match portfolio coins
           const portfolioCoins = portfolio.assetsCalculations.assets
@@ -456,7 +453,6 @@ const PortfolioComponent = ({
           });
 
           try {
-            console.log("/api/importBuyAndSell", apiData);
             // Call the API to store the data
             const response = await fetch("/api/importBuyAndSell", {
               method: "POST",

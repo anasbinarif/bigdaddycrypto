@@ -94,7 +94,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
           const subscriptionData = await fetchUserSubscriptionPlan(
             session.user?.id
           );
-          console.log("subscriptionData", subscriptionData, session);
+          // console.log("subscriptionData", subscriptionData, session);
           setSession({
             ...session,
             user: {

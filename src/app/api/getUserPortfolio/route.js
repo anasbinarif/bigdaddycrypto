@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 export async function POST(req) {
   const { userId } = await req.json();
   const objectUserId = new mongoose.Types.ObjectId(userId);
-  console.log(userId);
 
   try {
     const portfolio = await UserPortfolio.findOne({ userId: objectUserId });

@@ -82,7 +82,7 @@ const CoinDetails = (props) => {
     const asset = portfolio?.assetsCalculations?.assets.find(
       (a) => a.CoinGeckoID === coin?.CoinGeckoID
     );
-    console.log("date asset", asset);
+    // console.log("date asset", asset);
     if (asset && asset.buyAndSell) {
       setRowVals(
         asset.buyAndSell.map((row) => ({

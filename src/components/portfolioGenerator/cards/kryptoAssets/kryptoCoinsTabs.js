@@ -191,7 +191,6 @@ const ScrollableKryptoTabs = ({
   };
   // console.log(firstHalfLabels, secondHalfLabels);
 
-  console.log(sessionJotai);
 
   return (
     <>
