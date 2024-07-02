@@ -141,7 +141,6 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
           .slice(0, 5)
       : [];
 
-    console.log(filteredResults);
 
     setSearchData(filteredResults);
   };

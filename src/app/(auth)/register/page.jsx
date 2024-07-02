@@ -138,7 +138,7 @@ const RegisterPage = () => {
           },
           body: JSON.stringify(email),
         });
-        console.log(res);
+        // console.log(res);
         if (res.error) {
           setError(res.error);
         } else {
