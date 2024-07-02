@@ -15,7 +15,7 @@ export async function POST(req) {
       "userId"
     );
 
-    if (!payment && user.pastUser !== "") {
+    if (!payment?.Subscription && user.pastUser !== "") {
       return NextResponse.json({ plan: 'free+', payment: null });
     }
 
