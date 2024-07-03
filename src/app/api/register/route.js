@@ -8,12 +8,16 @@ export async function POST(req) {
   try {
     await connectToDb();
 
-    const getUser = await User.findOne({ email: userEmail });
+    // Convert email to lowercase to ensure case insensitivity
+    const emailLowerCase = userEmail.toLowerCase();
+
+    // Find the user with case insensitive email comparison
+    const getUser = await User.findOne({ email: { $regex: new RegExp(`^${emailLowerCase}$`, 'i') } });
 
     if (getUser) {
       if (!getUser.activated) {
         // If the user exists but is not activated, delete the user
-        await User.deleteOne({ email: userEmail });
+        await User.deleteOne({ email: getUser.email });
       } else {
         return NextResponse.json(
           { error: "User with this email already exists" },
