@@ -8,6 +8,25 @@ import { portfolioAtom } from "../../app/stores/portfolioStore";
 import { getUserPortfolio } from "../../lib/data";
 import { sessionAtom } from "../../app/stores/sessionStore";
 
+function desanitizeString(sanitizedString = "") {
+  // Regular expression to match encoded characters in the sanitized string
+  const encodedRegex = /%[0-9A-F]{2}/g;
+
+  // Replace encoded characters with their original counterparts
+  const originalString = sanitizedString.replace(
+    encodedRegex,
+    function (match) {
+      // Extract the hexadecimal code from the match (e.g., "%3C" -> "3C")
+      const hexCode = match.substring(1); // Remove the "%"
+
+      // Convert hexadecimal code to character and return
+      return String.fromCharCode(parseInt(hexCode, 16));
+    }
+  );
+
+  return originalString;
+}
+
 export default function Item4({ preCalcComment, msg, setMsg }) {
   const t = useTranslations("item4");
   const [sessionJotai] = useAtom(sessionAtom);
@@ -43,14 +62,14 @@ export default function Item4({ preCalcComment, msg, setMsg }) {
   };
 
   const handleMissingCoinsChange = (e) => {
-    const disallowedRegex = /[<>&"'\/\\:;|`~\x00-\x1F]/g;
-    const sanitizedString = e.target.value.replace(
-      disallowedRegex,
-      function (match) {
-        return "%" + match.charCodeAt(0).toString(16).toUpperCase();
-      }
-    );
-    setMsg((prevMsg) => ({ ...prevMsg, MissingCoins: sanitizedString }));
+    // const disallowedRegex = /[<>&"'\/\\:;|`~\x00-\x1F]/g;
+    // const sanitizedString = e.target.value.replace(
+    //   disallowedRegex,
+    //   function (match) {
+    //     return "%" + match.charCodeAt(0).toString(16).toUpperCase();
+    //   }
+    // );
+    setMsg((prevMsg) => ({ ...prevMsg, MissingCoins: e.target.value }));
   };
 
   return (
@@ -92,7 +111,10 @@ export default function Item4({ preCalcComment, msg, setMsg }) {
       <TextareaAutosize
         aria-label="missing coins textarea"
         placeholder={t("placeholder")}
-        value={preCalcComment?.MissingCoins || msg?.MissingCoins}
+        value={
+          desanitizeString(preCalcComment?.MissingCoins) ||
+          desanitizeString(msg?.MissingCoins)
+        }
         minRows={7}
         onChange={(e) => {
           if (preCalcComment?.MissingCoins) return;
