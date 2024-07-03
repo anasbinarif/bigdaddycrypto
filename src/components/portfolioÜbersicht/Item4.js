@@ -49,7 +49,6 @@ export default function Item4({ preCalcComment, msg, setMsg }) {
       setPortfolio(userPortfolio?.data);
     }
   };
-  console.log(1);
 
   const handleUserCommentChange = (e) => {
     const disallowedRegex = /[<>&"'\/\\:;|`~\x00-\x1F]/g;
