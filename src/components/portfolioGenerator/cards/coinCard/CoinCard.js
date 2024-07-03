@@ -131,8 +131,13 @@ const CoinCard = ({
 
   const handleDoubleClick = async () => {
     const userId = sessionJotai?.user.id;
+    // console.log(
+    //   sessionJotai.user.subscriptionPlan,
+    //   !sessionJotai?.user?.pastUserCheck
+    // );
+
     if (
-      !sessionJotai?.user?.pastUserCheck &&
+      // !sessionJotai?.user?.pastUserCheck &&
       sessionJotai?.user?.subscriptionPlan === "free" &&
       assetsLeangth >= 10 &&
       !selected

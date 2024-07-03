@@ -18,6 +18,8 @@ import {
 import styles from "./coinDetails.module.css";
 import { useTranslations } from "next-intl";
 import { useCallback } from "react";
+import addCommas from "../../../../lib/currencyFormatter";
+import maxLenCrop from "../../../../lib/checkString";
 
 const CoinDetailsTable = ({
   rowVals,
@@ -224,10 +226,13 @@ const CoinDetailsTable = ({
                     border: "none",
                     padding: "3px 5px",
                     borderRadius: "4px",
-                    maxWidth: "100px",
+                    maxWidth: "125px",
                   }}
                 >
-                  {row.PricePerCoin} €
+                  {row?.PricePerCoin
+                    ? maxLenCrop(row?.PricePerCoin.toString())
+                    : 0}{" "}
+                  €
                 </div>
               </TableCell>
               <TableCell>

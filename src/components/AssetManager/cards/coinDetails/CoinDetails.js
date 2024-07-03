@@ -220,7 +220,7 @@ const CoinDetails = (props) => {
       let num = betrag / coins;
       // console.log(num);
       if (num < 0.01) num = Number(num.toPrecision(2));
-      else num = num.toFixed(2);
+      // else num = num.toFixed(2);
       console.log(num);
 
       row["PricePerCoin"] = coins ? num : 0;
