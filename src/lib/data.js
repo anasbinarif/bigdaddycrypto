@@ -23,7 +23,12 @@ export const convertPrice = (price, currency, rates) => {
   if (!rates || !rates[currency]) {
     return parseFloat(price); // Ensure price is a number
   }
-  return (parseFloat(price) * rates[currency]).toFixed(2);
+  if (price >= 0.01) return (parseFloat(price) * rates[currency]).toFixed(2);
+  else {
+    let formattedNum = (parseFloat(price) * rates[currency]).toPrecision(2);
+
+    return parseFloat(formattedNum) * Math.sign(price);
+  }
 };
 
 export const categoryColors = {

@@ -58,7 +58,7 @@ const CoinDetailsDisplay = ({
           </Typography>
           {coin?.Price && (
             <Typography>
-              {addCommas(convertPrice(coin?.Price.toFixed(2), currency, rates))}{" "}
+              {addCommas(convertPrice(coin?.Price, currency, rates))}{" "}
               {currencySign[currency]}
             </Typography>
           )}
