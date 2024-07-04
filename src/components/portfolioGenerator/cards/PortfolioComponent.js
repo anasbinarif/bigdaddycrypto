@@ -196,26 +196,26 @@ const PortfolioComponent = ({
     setDeleteIconIndex(null);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (sessionJotai?.user) {
-  //       const userId = sessionJotai?.user.id;
-  //       try {
-  //         const res = await UpdateCryptoCoins(userId);
-  //         if (res.ok) {
-  //           // const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-  //           // setPortfolio(userPortfolio.data);
-  //         } else {
-  //           console.error("Failed to update crypto coins: ", res.statusText);
-  //         }
-  //       } catch (error) {
-  //         console.error("Error fetching data: ", error);
-  //       }
-  //     }
-  //   };
-  //
-  //   fetchData();
-  // }, [sessionJotai?.user.id, portfolio]);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (sessionJotai?.user) {
+        const userId = sessionJotai?.user.id;
+        try {
+          const res = await UpdateCryptoCoins(userId);
+          if (res.ok) {
+            const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+            setPortfolio(userPortfolio.data);
+          } else {
+            console.error("Failed to update crypto coins: ", res.statusText);
+          }
+        } catch (error) {
+          console.error("Error fetching data: ", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [sessionJotai?.user.id]);
 
   const setFinancialSummaryAPI = (CoinGeckoID) => {
     const asset = portfolio.assetsCalculations.assets.find(
