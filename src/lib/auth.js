@@ -13,7 +13,7 @@ import {NextResponse} from "next/server";
 const login = async (credentials) => {
   try {
     await connectToDb();
-    const user = await User.findOne({ email: credentials.email });
+    const user = await User.findOne({ email: { $regex: new RegExp(`^${credentials.email.toLowerCase()}$`, 'i') } });
 
     if (!user) throw new Error("Wrong email!");
 

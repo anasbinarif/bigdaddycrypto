@@ -39,6 +39,7 @@ import { useSearchParams } from "next/navigation";
 import { faCrown, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import addCommas from "../../../lib/currencyFormatter";
+import maxLenCrop from "../../../lib/checkString";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -379,7 +380,6 @@ const PortfolioComponent = ({
       Papa.parse(file, {
         header: true,
         complete: async (results) => {
-
           // Filter and map the parsed data to match portfolio coins
           const portfolioCoins = portfolio.assetsCalculations.assets
             .map((asset) => {
@@ -688,12 +688,44 @@ const PortfolioComponent = ({
                                 flexBasis: "33%",
                                 marginLeft: "auto",
                                 textAlign: "right",
+                                // position: "relative",
+
+                                // "& div": {
+                                //   display: "none",
+                                // },
+
+                                // "&:hover div": {
+                                //   display: "block",
+                                // },
                               }}
                             >
-                              {addCommas(
-                                convertPrice(asset?.Price || 0, currency, rates)
+                              {maxLenCrop(
+                                addCommas(
+                                  convertPrice(
+                                    asset?.Price || 0,
+                                    currency,
+                                    rates
+                                  )
+                                ).toString()
                               )}{" "}
                               {currencySign[currency]}
+                              {/* <div
+                                style={{
+                                  position: "absolute",
+                                  top: 0,
+                                  left: 0,
+                                  backgroundColor: "rgba(129, 129, 129, 0.937)",
+                                  borderRadius: "4px",
+                                }}
+                              >
+                                {addCommas(
+                                  convertPrice(
+                                    asset?.Price || 0,
+                                    currency,
+                                    rates
+                                  )
+                                ).toString()}
+                              </div> */}
                             </Typography>
                             <Box
                               sx={{
