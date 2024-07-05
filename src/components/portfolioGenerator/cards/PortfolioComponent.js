@@ -201,6 +201,8 @@ const PortfolioCard = React.memo(
   }
 );
 
+PortfolioCard.displayName = "PortfolioCard";
+
 const PortfolioComponent = ({
   loadingPortfolio,
   assetsLeangth,
