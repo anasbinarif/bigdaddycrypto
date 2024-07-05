@@ -3,17 +3,18 @@ import { User } from "./models";
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import { clientPromise } from "./mongodb";  // Assuming you have a mongodb.js that exports a client promise
+import { clientPromise } from "./mongodb"; // Assuming you have a mongodb.js that exports a client promise
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer, { createTransport } from "nodemailer";
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 
 const login = async (credentials) => {
   try {
     await connectToDb();
-    const user = await User.findOne({ email: { $regex: new RegExp(`^${credentials.email.toLowerCase()}$`, 'i') } });
+    // const user = await User.findOne({ email: { $regex: new RegExp(`^${credentials.email.toLowerCase()}$`, 'i') } });
+    const user = await User.findOne({ email: credentials.email });
 
     if (!user) throw new Error("Wrong email!");
 
@@ -24,7 +25,10 @@ const login = async (credentials) => {
 
     if (!isPasswordCorrect) throw new Error("Wrong password!");
 
-    if(!user.activated) throw new Error("Kindly Verify Your Account from the your email or Reregister!");
+    if (!user.activated)
+      throw new Error(
+        "Kindly Verify Your Account from the your email or Reregister!"
+      );
 
     return user;
   } catch (err) {
@@ -42,22 +46,22 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendVerificationRequest = async (params) => {
-  const { identifier, url, provider, theme, token } = params
-  const { host } = new URL(url)
+  const { identifier, url, provider, theme, token } = params;
+  const { host } = new URL(url);
   // NOTE: You are not required to use `nodemailer`, use whatever you want.
-  const transport = createTransport(provider.server)
+  const transport = createTransport(provider.server);
   const result = await transport.sendMail({
     to: identifier,
     from: provider.from,
     subject: `Sign in to ${host}`,
     text: text({ url, host }),
-    html: html({ url, host, theme, token, identifier}),
-  })
-  const failed = result.rejected.concat(result.pending).filter(Boolean)
+    html: html({ url, host, theme, token, identifier }),
+  });
+  const failed = result.rejected.concat(result.pending).filter(Boolean);
   if (failed.length) {
-    throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`)
+    throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`);
   }
-}
+};
 
 export const authOptions = {
   adapter: MongoDBAdapter(clientPromise),
@@ -112,10 +116,10 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      if (account.provider === 'credentials') {
+      if (account.provider === "credentials") {
         // Additional checks can be performed here
         return true;
-      } else if (account.provider === 'email') {
+      } else if (account.provider === "email") {
         // Additional checks can be performed for email provider
         console.log("checking 101", user, account, profile, email, credentials);
         return true;
@@ -154,11 +158,11 @@ export const authOptions = {
 
 const text = ({ url, site }) => `Sign in to ${site}\n${url}\n\n`;
 function html(params) {
-  const { url, host, theme, token, identifier } = params
+  const { url, host, theme, token, identifier } = params;
 
-  const escapedHost = host.replace(/\./g, "&#8203;.")
+  const escapedHost = host.replace(/\./g, "&#8203;.");
 
-  const brandColor = theme.brandColor || "#346df1"
+  const brandColor = theme.brandColor || "#346df1";
   const color = {
     background: "#f9f9f9",
     text: "#444",
@@ -166,7 +170,7 @@ function html(params) {
     buttonBackground: brandColor,
     buttonBorder: brandColor,
     buttonText: theme.buttonText || "#fff",
-  }
+  };
 
   return `
         <body style="background: ${color.background};">
@@ -198,7 +202,7 @@ function html(params) {
     </tr>
   </table>
 </body>
-`
+`;
 }
 
 export const verifyToken = async (req) => {
