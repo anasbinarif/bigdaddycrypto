@@ -94,6 +94,23 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     }
   }, [portfolio]);
 
+  //cron job for crypto coins
+    useEffect(() => {
+        const callCronJob = async () => {
+            const userID = sessionJotai?.user.id;
+            if (userID){
+                const res = await fetch("/api/cron", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({userID}),
+                });
+            }
+        }
+        callCronJob()
+    }, [sessionJotai]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       const fetchCookies = async () => {
