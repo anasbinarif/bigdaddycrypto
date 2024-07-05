@@ -18,7 +18,7 @@ const langs = {
     emailLabel: "Your Email address.",
     passwordLabel:
       "*Password should be 8 characters long, have a capital letter, atleast 1 number and a special character",
-    disclaimer: "I have read the disclaimer and agree to it.",
+    disclaimer: "I agree to receive emails regarding updates and promotions.",
     terms1: "I have read and agree to the",
     terms2: "Terms and Conditions.",
     register: "To Register",
@@ -49,7 +49,8 @@ const langs = {
     emailLabel: "Deine Email Adresse.",
     passwordLabel:
       "*Das Passwort sollte 8 Zeichen lang sein, einen Großbuchstaben, mindestens 1 Zahl und ein Sonderzeichen enthalten",
-    disclaimer: "Ich habe den Disclaimer gelesen und bin damit einverstanden.",
+    disclaimer:
+      "Ich stimme zu, E-Mails zu Updates und Werbeaktionen zu erhalten.",
     terms1: "Ich habe die Allgemeinen Geschäftsbedingungen",
     terms2: "gelesen und stimme zu.",
     register: "registrieren",
