@@ -116,9 +116,11 @@ const calculatePotential = (portfolio, buyAndSell) => {
     const dataBottom = parseFloat(Bottom);
     const dataPrice = parseFloat(Price);
 
-    const userEntryData = buyAndSell.find(item => item.CoinGeckoID === CoinGeckoID);
-    const userEntryPrice = userEntryData.DCA == 0 ? dataPotential : userEntryData.DCA;
-
+    const userEntryData = buyAndSell.find(
+      (item) => item.CoinGeckoID === CoinGeckoID
+    );
+    const userEntryPrice =
+      userEntryData.DCA == 0 ? dataPotential : userEntryData.DCA;
 
     const assetAmount = 1;
 
@@ -148,8 +150,8 @@ const calculatePotential = (portfolio, buyAndSell) => {
         potentialMin = 10;
         potentialMax = 15;
       }
-      let adjustedMin = 0
-      let adjustedMax = 0
+      let adjustedMin = 0;
+      let adjustedMax = 0;
 
       if (userEntryData.DCA === 0) {
         adjustedMin = potentialMin;
@@ -164,8 +166,8 @@ const calculatePotential = (portfolio, buyAndSell) => {
     }
   });
 
-  const avgMin = (totalPotentialMin / totalAssetsAmount).toFixed(1);
-  const avgMax = (totalPotentialMax / totalAssetsAmount).toFixed(1);
+  let avgMin = (totalPotentialMin / totalAssetsAmount).toFixed(1);
+  let avgMax = (totalPotentialMax / totalAssetsAmount).toFixed(1);
 
   return { avgMin, avgMax };
 };
@@ -217,7 +219,6 @@ const calculateDotColor = (name, score, portfolio) => {
   }
 };
 
-
 function BewertungCard({ preCalcPort }) {
   const [portfolio] = useAtom(portfolioAtom);
   const [sicherheitAverage, setSicherheitAverage] = useState(0);
@@ -251,7 +252,7 @@ function BewertungCard({ preCalcPort }) {
         const avgSicherheit =
           sicherheitValues.length > 0
             ? sicherheitValues.reduce((acc, val) => acc + val, 0) /
-            sicherheitValues.length
+              sicherheitValues.length
             : 0;
         setSicherheitAverage(avgSicherheit.toFixed(1));
 
@@ -261,7 +262,10 @@ function BewertungCard({ preCalcPort }) {
 
         // Calculate Hype Color Score
         try {
-          const calculatedScore = await calculateScore(assets, userPortfolio?.calculation);
+          const calculatedScore = await calculateScore(
+            assets,
+            userPortfolio?.calculation
+          );
           setHypeColorScore({
             scoreFactor_Category: Math.min(
               Number(calculatedScore.scoreFactor_Category),
@@ -459,8 +463,8 @@ function BewertungCard({ preCalcPort }) {
                   fontSize: "14px",
                 }}
               >
-                {isNaN(potential.avgMin) ? 0 : Math.floor(potential.avgMin)}x -{" "}
-                {isNaN(potential.avgMax) ? 0 : Math.floor(potential.avgMax)}x
+                {isNaN(potential.avgMin) ? 0 : potential.avgMin}x -{" "}
+                {isNaN(potential.avgMax) ? 0 : potential.avgMax}x
               </span>
             </Typography>
           </Box>

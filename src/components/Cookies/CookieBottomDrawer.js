@@ -11,7 +11,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 export default function CookieBottomDrawer({ setLoading }) {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [sessionJotai] = useAtom(sessionAtom);
 
   const toggleDrawer = (open) => (event) => {
