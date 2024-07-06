@@ -536,7 +536,7 @@ const RegisterPage = () => {
             variant="contained"
             color="primary"
             fullWidth
-            disabled={!disclaimerAccepted || !termsAccepted || pending}
+            disabled={!termsAccepted || pending}
             onClick={handleRegister}
             sx={{
               textTransform: "capitalize",

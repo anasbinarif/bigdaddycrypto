@@ -93,7 +93,10 @@ export async function POST(req, res) {
 
   try {
     await connectToDb();
-    const user = await User.findOne({ email });
+    const emailLowerCase = email.toLowerCase();
+
+    // Find the user with case-insensitive email comparison
+    const user = await User.findOne({ email: { $regex: new RegExp(`^${emailLowerCase}$`, 'i') } });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });

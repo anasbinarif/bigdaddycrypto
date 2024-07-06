@@ -103,7 +103,7 @@ const AddAsset = () => {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        const coins = getCoins();
+        const coins = await getCoins();
         setData(coins);
         setSearchData(coins.slice(0, 100));
       } catch (error) {
@@ -125,7 +125,7 @@ const AddAsset = () => {
 
     fetchAllData();
   }, []);
-  console.log("setAllAssets:", allAssets);
+  // console.log("setAllAssets:", allAssets);
 
   const searchCoin = (event) => {
     const searchText = event.target.value.toLowerCase();
@@ -337,7 +337,7 @@ const AddAsset = () => {
 
   const checkAssetInDB = (id) => {
     const val = allAssets.some(asset => asset.CoinGeckoID === id);
-    console.log("yoooo", val, id);
+    // console.log("yoooo", val, id);
     return val;
   }
 

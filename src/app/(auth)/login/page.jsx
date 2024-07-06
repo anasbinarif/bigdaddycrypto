@@ -76,7 +76,7 @@ const LoginPage = () => {
     }
 
     // PIN Validation
-    if (user.pin.trim() === "" || user.pin.length < 4) {
+    if (user.pin.trim() === "" || user.pin.length < 8) {
       setErrors((prev) => ({
         ...prev,
         pin: true,
@@ -88,6 +88,7 @@ const LoginPage = () => {
     }
 
     if (!hasErrors) {
+      // console.log(user);
       try {
         setPending(true);
         const res = await signIn("credentials", {

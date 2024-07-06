@@ -94,27 +94,53 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     }
   }, [portfolio]);
 
+  //cron job for crypto coins
+    useEffect(() => {
+        const callCronJob = async () => {
+            const userID = sessionJotai?.user.id;
+            if (userID){
+                const res = await fetch("/api/cron", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({userID}),
+                });
+            }
+        }
+        callCronJob()
+    }, [sessionJotai]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       const fetchCookies = async () => {
-        // const userID = sessionJotai?.user.id;
-        // const res = await fetch("/api/checkUserCookiesStatus", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({ userID }),
-        // });
+        const userID = sessionJotai?.user.id;
+        const token = sessionJotai?.user?.accessToken;
+        try {
+          const res = await fetch("/api/checkUserCookieStatus", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ userID }),
+          });
 
-        // const cookie = await res.json();
-        // if (!cookie?.CookiesPrompt) {
-        //   setShowCookieDrawer(true);
-        // }
-        setShowCookieDrawer(true);
+          // console.log(res);
+          // const cookie = await res.json();
+          // console.log(cookie);
+          res.ok || res.status === 403
+            ? setShowCookieDrawer(false)
+            : setShowCookieDrawer(true);
+          // setShowCookieDrawer(true);
+        } catch (err) {
+          // setShowCookieDrawer(true);
+          // console.log(err);
+        }
       };
 
       fetchCookies();
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [sessionJotai]);
