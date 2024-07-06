@@ -73,7 +73,7 @@ const PaymentsSchema = new mongoose.Schema(
     Subscription: {
       plan: {
         type: String,
-        enum: ["Pro", "Premium"],
+        enum: ["free+", "Pro", "Premium"],
         required: false,
       },
       planId: {
