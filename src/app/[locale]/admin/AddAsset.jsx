@@ -103,7 +103,7 @@ const AddAsset = () => {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        const coins = getCoins();
+        const coins = await getCoins();
         setData(coins);
         setSearchData(coins.slice(0, 100));
       } catch (error) {
