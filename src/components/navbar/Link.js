@@ -179,7 +179,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
     };
   }, [alert]);
 
-  console.log(sessionJotai);
+  // console.log(sessionJotai);
 
   return (
     <>

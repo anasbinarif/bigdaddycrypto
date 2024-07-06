@@ -10,12 +10,6 @@ export async function POST(req) {
   try {
     // Get the current time in Berlin
     const berlinNow = DateTime.now().setZone(berlinTimeZone);
-    // console.log(
-    //   "berlinNow",
-    //   berlinNow.toString(),
-    //   "targetDate",
-    //   targetDate.toString()
-    // );
 
     if (berlinNow < targetDate) {
       return NextResponse.json(

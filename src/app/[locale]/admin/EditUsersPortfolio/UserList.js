@@ -240,7 +240,7 @@ const UserList = ({
                         }
                       }
                     >
-                      {user.notizen.UserComment ? user.notizen.UserComment : ""}
+                      {user.notizen?.UserComment ? user.notizen.UserComment : ""}
                     </TableCell>
                     <TableCell
                       sx={{

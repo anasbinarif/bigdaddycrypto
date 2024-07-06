@@ -82,9 +82,9 @@ const FormDialog = () => {
 
         if (response.ok && timeCheck.ok) {
           const data = await response.json();
-          console.log(data);
+          // console.log(data);
           const timeCheckRes = await timeCheck.json();
-          console.log(timeCheckRes);
+          // console.log(timeCheckRes);
           // console.log("timeCheckRes..", timeCheckRes);
           if (!data.pastUserCheck && timeCheckRes.result) {
             handleClickOpen();
