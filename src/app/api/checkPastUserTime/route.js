@@ -14,7 +14,7 @@ export async function POST(req) {
     if (berlinNow < targetDate) {
       return NextResponse.json(
         {
-          result: true,
+          result: false,
           message: "It is before 6 pm Sunday 7 July 2024 (German time)",
         },
         { status: 200 }
