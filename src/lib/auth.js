@@ -64,7 +64,6 @@ const sendVerificationRequest = async (params) => {
 };
 
 export const authOptions = {
-  adapter: MongoDBAdapter(clientPromise),
   pages: {
     signIn: "/login",
   },
@@ -92,19 +91,6 @@ export const authOptions = {
         }
       },
     }),
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-      },
-      from: process.env.EMAIL_FROM,
-      sendVerificationRequest,
-      maxAge: 60 * 30,
-    }),
   ],
   session: {
     strategy: "jwt",
@@ -124,7 +110,7 @@ export const authOptions = {
         console.log("checking 101", user, account, profile, email, credentials);
         return true;
       }
-      return false; // Return false to disallow sign in
+      return false;
     },
     async jwt({ token, user }) {
       if (user) {

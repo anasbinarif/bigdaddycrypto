@@ -23,7 +23,7 @@ import {
   convertPrice,
   currencySign,
   getCurrencyAndRates,
-  getUserPortfolio,
+  getUserPortfolio, UpdateCryptoCoins,
 } from "../../../../lib/data";
 import Papa from "papaparse";
 import { addDays, parse } from "date-fns";
@@ -255,6 +255,7 @@ const CoinDetails = (props) => {
     setValidationError(error);
     if (!error) {
       const userID = sessionJotai?.user.id;
+      const userId = sessionJotai?.user.id;
       const CoinGeckoID = coin?.CoinGeckoID;
       // console.log("Saving data", rowVals, CoinGeckoID, userID);
       const Portfolio_Assets = {
@@ -281,6 +282,7 @@ const CoinDetails = (props) => {
         });
         console.log(response);
         if (response.ok) {
+          const res = await UpdateCryptoCoins(userId);
           setAlertInfo({
             message: t("successAlert"),
             severity: "success",
@@ -311,6 +313,7 @@ const CoinDetails = (props) => {
   useEffect(() => {
     const del = async () => {
       const userID = sessionJotai?.user.id;
+      const userId = sessionJotai?.user.id;
       const CoinGeckoID = coin?.CoinGeckoID;
       console.log("Saving data", rowVals, CoinGeckoID, userID);
       const Portfolio_Assets = {
@@ -336,11 +339,11 @@ const CoinDetails = (props) => {
           }),
         });
         if (response.ok) {
-          console.log("hbhbhbhbhbhbhbhbhbhbhbh");
           setAlertInfo({
             message: t("successAlert"),
             severity: "success",
           });
+          const res = await UpdateCryptoCoins(userId);
           const userPortfolio = await getUserPortfolio(userID);
           setPortfolio(userPortfolio?.data);
           setLoading(false);

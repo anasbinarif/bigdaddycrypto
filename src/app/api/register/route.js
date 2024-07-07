@@ -11,7 +11,7 @@ export async function POST(req) {
     // Convert email to lowercase to ensure case insensitivity
     const emailLowerCase = userEmail.toLowerCase();
 
-    // Find the user with case insensitive email comparison
+    // Find the user with case-insensitive email comparison
     const getUser = await User.findOne({ email: { $regex: new RegExp(`^${emailLowerCase}$`, 'i') } });
 
     if (getUser) {

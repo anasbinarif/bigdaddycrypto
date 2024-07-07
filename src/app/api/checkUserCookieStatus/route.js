@@ -16,14 +16,14 @@ export async function POST(req) {
 
     // console.log(userID);
     const user = await User.findOne({ _id: userID }).then((res) => res?._doc);
-    console.log(user);
+    // console.log(user);
     if (!user) throw new Error("Invalid user");
 
     if (!user?.CookiesPrompt) throw new Error("Cookies not accepted");
 
     return NextResponse.json({ message: "Cookies accepted" }, { status: 200 });
   } catch (e) {
-    console.log("Error during cookie check:", e);
+    // console.log("Error during cookie check:", e);
     return NextResponse.json(
       { message: "Error occurred while checking status or cookies unaccepted" },
       { status: 500 }

@@ -94,6 +94,23 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     }
   }, [portfolio]);
 
+  //cron job for crypto coins
+  useEffect(() => {
+    const callCronJob = async () => {
+      const userID = sessionJotai?.user.id;
+      if (userID) {
+        const res = await fetch("/api/cron", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userID }),
+        });
+      }
+    };
+    callCronJob();
+  }, [sessionJotai]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       const fetchCookies = async () => {
@@ -109,8 +126,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             body: JSON.stringify({ userID }),
           });
 
-          console.log(res);
-
+          // console.log(res);
           // const cookie = await res.json();
           // console.log(cookie);
           res.ok || res.status === 403
@@ -118,8 +134,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             : setShowCookieDrawer(true);
           // setShowCookieDrawer(true);
         } catch (err) {
-          console.log(err);
-          setShowCookieDrawer(true);
+          // setShowCookieDrawer(true);
           // console.log(err);
         }
       };
@@ -130,7 +145,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     return () => clearTimeout(timer);
   }, [sessionJotai]);
 
-  console.log("showCookieDrawer", showCookieDrawer);
+  // console.log("showCookieDrawer", showCookieDrawer);
 
   return (
     <>

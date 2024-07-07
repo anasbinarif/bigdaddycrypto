@@ -88,7 +88,7 @@ const LoginPage = () => {
     }
 
     if (!hasErrors) {
-      console.log(user);
+      // console.log(user);
       try {
         setPending(true);
         const res = await signIn("credentials", {

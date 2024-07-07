@@ -184,7 +184,7 @@ export const importPortfolios = async () => {
 
         const portfolios = jsonData.find(item => item.type === "table" && item.name === "Portfolios").data;
 
-        console.log("Total portfolios:", portfolios.length);
+        // console.log("Total portfolios:", portfolios.length);
 
         for (let i = 0; i < portfolios.length; i += BATCH_SIZE) {
             const batch = portfolios.slice(i, i + BATCH_SIZE);
