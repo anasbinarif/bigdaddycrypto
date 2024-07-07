@@ -109,7 +109,8 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             body: JSON.stringify({ userID }),
           });
 
-          // console.log(res);
+          console.log(res);
+
           // const cookie = await res.json();
           // console.log(cookie);
           res.ok || res.status === 403
@@ -117,7 +118,8 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             : setShowCookieDrawer(true);
           // setShowCookieDrawer(true);
         } catch (err) {
-          // setShowCookieDrawer(true);
+          console.log(err);
+          setShowCookieDrawer(true);
           // console.log(err);
         }
       };
@@ -128,7 +130,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     return () => clearTimeout(timer);
   }, [sessionJotai]);
 
-  // console.log("showCookieDrawer", showCookieDrawer);
+  console.log("showCookieDrawer", showCookieDrawer);
 
   return (
     <>
