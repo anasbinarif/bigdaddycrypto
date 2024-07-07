@@ -111,41 +111,39 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         callCronJob()
     }, [sessionJotai]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const fetchCookies = async () => {
-        const userID = sessionJotai?.user.id;
-        const token = sessionJotai?.user?.accessToken;
-        try {
-          const res = await fetch("/api/checkUserCookieStatus", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ userID }),
-          });
+    useEffect(() => {
+        if (sessionJotai && sessionJotai.user && sessionJotai.user.id && sessionJotai.user.accessToken) {
+            const timer = setTimeout(() => {
+                const fetchCookies = async () => {
+                    const userID = sessionJotai.user.id;
+                    const token = sessionJotai.user.accessToken;
+                    try {
+                        const res = await fetch("/api/checkUserCookieStatus", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({ userID }),
+                        });
 
-          // console.log(res);
-          // const cookie = await res.json();
-          // console.log(cookie);
-          res.ok || res.status === 403
-            ? setShowCookieDrawer(false)
-            : setShowCookieDrawer(true);
-          // setShowCookieDrawer(true);
-        } catch (err) {
-          // setShowCookieDrawer(true);
-          // console.log(err);
+                        const cookie = await res.json();
+                        cookie?.CookiesPrompt
+                            ? setShowCookieDrawer(false)
+                            : setShowCookieDrawer(true);
+                    } catch (err) {
+                    }
+                };
+
+                fetchCookies();
+            }, 500);
+
+            return () => clearTimeout(timer);
         }
-      };
+    }, [sessionJotai]);
 
-      fetchCookies();
-    }, 500);
 
-    return () => clearTimeout(timer);
-  }, [sessionJotai]);
-
-  // console.log("showCookieDrawer", showCookieDrawer);
+    // console.log("showCookieDrawer", showCookieDrawer);
 
   return (
     <>
