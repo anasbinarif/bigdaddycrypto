@@ -341,6 +341,7 @@ const PortfolioComponent = ({
 
   useEffect(() => {
     const fetchData = async () => {
+      // console.log(portfolio);
       if (sessionJotai?.user) {
         const userId = sessionJotai?.user.id;
         try {
@@ -728,6 +729,7 @@ const PortfolioComponent = ({
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                "& .MuiTypography-root": { color: "white" },
               }}
             >
               <Typography
@@ -738,6 +740,7 @@ const PortfolioComponent = ({
                   fontSize: "1.6rem",
                   marginBottom: "1rem",
                   mt: "8px",
+                  color: "white",
                 }}
               >
                 {t("title")} ({assetsLeangth})

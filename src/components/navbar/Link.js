@@ -72,10 +72,12 @@ const NavbarLink = ({ mobileView, handleClose }) => {
       });
 
       const changePasswordData = await changePasswordRes.json();
+      console.log(changePasswordRes, changePasswordData);
 
-      if (changePasswordData.success) {
-        setAlert("Password changed successfully");
-        setOpenDialog(falses);
+      if (changePasswordRes.ok) {
+        console.log(1);
+        setAlert("Password changed succesfully");
+        setOpenDialog(false);
         handleCloseDialog();
       } else if (changePasswordData.error === "Incorrect old password") {
         setAlert("Incorrect old password");

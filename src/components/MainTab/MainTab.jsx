@@ -95,55 +95,60 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   }, [portfolio]);
 
   //cron job for crypto coins
-    useEffect(() => {
-        const callCronJob = async () => {
-            const userID = sessionJotai?.user.id;
-            if (userID){
-                const res = await fetch("/api/cron", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({userID}),
-                });
-            }
-        }
-        callCronJob()
-    }, [sessionJotai]);
+  useEffect(() => {
+    const callCronJob = async () => {
+      const userID = sessionJotai?.user.id;
+      if (userID) {
+        const res = await fetch("/api/cron", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userID }),
+        });
+      }
+    };
+    callCronJob();
+  }, [sessionJotai]);
 
-    useEffect(() => {
-        if (sessionJotai && sessionJotai.user && sessionJotai.user.id && sessionJotai.user.accessToken) {
-            const timer = setTimeout(() => {
-                const fetchCookies = async () => {
-                    const userID = sessionJotai.user.id;
-                    const token = sessionJotai.user.accessToken;
-                    try {
-                        const res = await fetch("/api/checkUserCookieStatus", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: `Bearer ${token}`,
-                            },
-                            body: JSON.stringify({ userID }),
-                        });
+  console.log(portfolio);
 
-                        const cookie = await res.json();
-                        cookie?.CookiesPrompt
-                            ? setShowCookieDrawer(false)
-                            : setShowCookieDrawer(true);
-                    } catch (err) {
-                    }
-                };
+  useEffect(() => {
+    if (
+      sessionJotai &&
+      sessionJotai.user &&
+      sessionJotai.user.id &&
+      sessionJotai.user.accessToken
+    ) {
+      const timer = setTimeout(() => {
+        const fetchCookies = async () => {
+          const userID = sessionJotai.user.id;
+          const token = sessionJotai.user.accessToken;
+          try {
+            const res = await fetch("/api/checkUserCookieStatus", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ userID }),
+            });
 
-                fetchCookies();
-            }, 500);
+            const cookie = await res.json();
+            cookie?.CookiesPrompt
+              ? setShowCookieDrawer(false)
+              : setShowCookieDrawer(true);
+          } catch (err) {}
+        };
 
-            return () => clearTimeout(timer);
-        }
-    }, [sessionJotai]);
+        fetchCookies();
+      }, 500);
 
+      return () => clearTimeout(timer);
+    }
+  }, [sessionJotai]);
 
-    // console.log("showCookieDrawer", showCookieDrawer);
+  // console.log("showCookieDrawer", showCookieDrawer);
 
   return (
     <>

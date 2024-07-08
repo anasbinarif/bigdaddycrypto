@@ -82,7 +82,9 @@ const Third = () => {
           marginTop: "1rem",
         }}
       >
-        <Typography sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem" }}>
+        <Typography
+          sx={{ fontSize: isSmallScreen ? "0.8rem" : "0.9rem", color: "white" }}
+        >
           {t("totalValue")}
         </Typography>
         <Typography
@@ -90,6 +92,7 @@ const Third = () => {
             position: "relative",
             fontSize: isSmallScreen ? "1.5rem" : "2rem",
             fontWeight: "bold",
+            color: "white",
 
             "& > div": {
               display: "none",
@@ -155,7 +158,13 @@ const Third = () => {
           marginTop: "1rem",
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            "& .MuiTypography-root": { color: "white" },
+          }}
+        >
           <Typography
             sx={{
               fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
@@ -174,7 +183,13 @@ const Third = () => {
             {currencySign[currency]}
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            "& .MuiTypography-root": { color: "white" },
+          }}
+        >
           <Typography
             sx={{
               fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
@@ -193,7 +208,13 @@ const Third = () => {
             {currencySign[currency]}
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            "& .MuiTypography-root": { color: "white" },
+          }}
+        >
           <Typography
             sx={{
               fontSize: isSmallScreen ? "0.8rem" : "0.9rem",
@@ -211,7 +232,13 @@ const Third = () => {
             0,00 {currencySign[currency]}
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            "& .MuiTypography-root": { color: "white" },
+          }}
+        >
           <Typography
             sx={{
               fontSize: isSmallScreen ? "0.8rem" : "0.9rem",

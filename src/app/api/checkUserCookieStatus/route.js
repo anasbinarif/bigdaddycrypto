@@ -20,11 +20,16 @@ export async function POST(req) {
     // console.log(user);
     if (!user) throw new Error("Invalid user");
 
-    return NextResponse.json({ message: "Cookies accepted", CookiesPrompt: user?.CookiesPrompt }, { status: 200 });
+    return NextResponse.json(
+      { message: "Cookies accepted", CookiesPrompt: user?.CookiesPrompt },
+      { status: 200 }
+    );
   } catch (e) {
     // console.log("Error during cookie check:", e);
     return NextResponse.json(
-      { message: `Error occurred while checking status or cookies unaccepted, ${e}` },
+      {
+        message: `Error occurred while checking status or cookies unaccepted, ${e}`,
+      },
       { status: 500 }
     );
   }
