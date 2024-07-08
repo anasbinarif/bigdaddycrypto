@@ -23,7 +23,8 @@ import {
   convertPrice,
   currencySign,
   getCurrencyAndRates,
-  getUserPortfolio, UpdateCryptoCoins,
+  getUserPortfolio,
+  UpdateCryptoCoins,
 } from "../../../../lib/data";
 import Papa from "papaparse";
 import { addDays, parse } from "date-fns";
@@ -584,6 +585,7 @@ const CoinDetails = (props) => {
     fetchCurrencyAndRates();
   }, [currentCurrency]);
 
+  console.log(coin);
   return (
     <>
       <Box
@@ -679,6 +681,7 @@ const CoinDetails = (props) => {
                 fontSize: "0.8rem",
               }}
               onClick={addRow}
+              disabled={!coin}
             >
               <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />
               {t("newTransaction")}

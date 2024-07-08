@@ -111,6 +111,8 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     callCronJob();
   }, [sessionJotai]);
 
+  console.log(portfolio);
+
   useEffect(() => {
     if (
       sessionJotai &&
