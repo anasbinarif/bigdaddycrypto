@@ -32,10 +32,14 @@ const getRandomColor = (ticker) => {
 };
 
 const getSlices = (data, assets) => {
+  // console.log(assets);
   return data.slice(1).reduce((acc, item, index) => {
-    const categories = assets.filter((asset) => asset.Ticker === item[0])[0]
-      .Category;
-    const category = categories[categories.length - 1];
+    // console.log(item);
+    const categories = assets?.find(
+      (asset) => asset.Ticker === item[0]
+    )?.Category;
+    // console.log(categories);
+    const category = categories ? categories[categories.length - 1] : "ai";
     acc[index] = { color: categoryColorsNew[category] };
     return acc;
   }, {});
@@ -69,8 +73,8 @@ export default function Item1({ preCalcPort = null }) {
   const [graphPercentage, setGraphPercentage] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const t = useTranslations("item1");
-  console.log(portfolio);
-  console.log(graphData);
+  // console.log(portfolio);
+  // console.log(graphData);
 
   useEffect(() => {
     const handleResize = () => {

@@ -6,6 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   Paper,
   Avatar,
   Box,
@@ -17,7 +18,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { categoryColors, categoryColorsNew } from "../../../../lib/data"; // Import categoryColors directly
+import { categoryColors, categoryColorsNew } from "../../../../lib/data";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -200,9 +201,78 @@ function getContrastColor(rgb) {
   return Y >= 0.5 ? "#000000" : "#ffffff";
 }
 
+function descendingComparator(a, b, orderBy) {
+  const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  let aValue = a[orderBy];
+  let bValue = b[orderBy];
+
+  if (nums.includes(aValue[0]) && nums.includes(bValue[0])) {
+    aValue = parseFloat(aValue);
+    bValue = parseFloat(bValue);
+  }
+
+  if (typeof aValue === "string" && typeof bValue === "string") {
+    aValue = aValue.toUpperCase();
+    bValue = bValue.toUpperCase();
+    // console.log(aValue, bValue);
+    if (bValue < aValue) return -1;
+    if (bValue > aValue) return 1;
+    return 0;
+  }
+
+  // console.log(aValue, bValue);
+  // Convert percentage strings to numbers for comparison
+  if (typeof aValue === "string" && aValue.includes("%")) {
+    aValue = parseFloat(aValue.replace("%", ""));
+    bValue = parseFloat(bValue.replace("%", ""));
+  }
+
+  // Handle NaN and Infinity cases
+  if (
+    isNaN(aValue) ||
+    aValue === "NaN" ||
+    aValue === "Infinity" ||
+    aValue === "n/a"
+  )
+    aValue = 0;
+  if (
+    isNaN(bValue) ||
+    bValue === "NaN" ||
+    bValue === "Infinity" ||
+    bValue === "n/a"
+  )
+    bValue = 0;
+
+  // console.log(aValue, bValue);
+
+  if (bValue < aValue) return -1;
+  if (bValue > aValue) return 1;
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
 const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
   const [sortedData, setSortedData] = useState([]);
   const [dropdownValues, setDropdownValues] = useState({});
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("asset");
+
+  console.log(orderBy, order);
 
   useEffect(() => {
     if (portfolio?.assetsCalculations && portfolio?.assets) {
@@ -324,6 +394,12 @@ const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
     }
   };
 
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
   return (
     <Box
       sx={{
@@ -397,24 +473,48 @@ const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
             >
               <TableRow>
                 {[
-                  "Asset",
-                  "Bestand",
-                  "X",
-                  "Preis /+-%",
-                  "DCA Preis",
-                  "Investition",
-                  "Relevanz",
-                  "DCA",
-                  "Gewichtung",
+                  { label: "Asset", key: "asset" },
+                  // { label: "", key: "percentage" },
+                  { label: "Bestand", key: "bestand" },
+                  { label: "X", key: "X" },
+                  { label: "Preis /+-%", key: "preisChange" },
+                  { label: "DCA Preis", key: "dcaPrice" },
+                  { label: "Investition", key: "investition" },
+                  { label: "Relevanz", key: "relevanz" },
+                  { label: "DCA", key: "dca" },
+                  { label: "Gewichtung", key: "gewichtung" },
                 ].map((headCell) => (
                   <TableCell
-                    key={headCell}
+                    key={headCell.key}
+                    sortDirection={orderBy === headCell.key ? order : false}
                     sx={{
                       fontSize: "12px",
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {headCell}
+                    <TableSortLabel
+                      active={orderBy === headCell.key}
+                      direction={orderBy === headCell.key ? order : "asc"}
+                      onClick={(event) =>
+                        handleRequestSort(event, headCell.key)
+                      }
+                      sx={{
+                        fontSize: "12px",
+                        whiteSpace: "nowrap",
+                        // backgroundColor:
+                        //   headCell.key === "asset" ? "white" : "transparent",
+                        justifyContent:
+                          headCell.key === "asset"
+                            ? "flex-start"
+                            : headCell.key === "relevanz" ||
+                              headCell.key === "dca" ||
+                              headCell.key === "gewichtung"
+                            ? "center"
+                            : "flex-end",
+                      }}
+                    >
+                      {headCell.label}
+                    </TableSortLabel>
                   </TableCell>
                 ))}
               </TableRow>
@@ -429,231 +529,237 @@ const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
                 },
               }}
             >
-              {sortedData.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "& .MuiTableCell-root": {
-                      "&:not(:first-child)": {
-                        borderRight: "1px solid #ffffff18",
+              {stableSort(sortedData, getComparator(order, orderBy)).map(
+                (row, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "& .MuiTableCell-root": {
+                        "&:not(:first-child)": {
+                          borderRight: "1px solid #ffffff18",
+                        },
                       },
-                    },
-                    "&:hover": {
-                      backgroundColor: "rgba(255, 255, 255, 0.08)",
-                    },
-                  }}
-                >
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    sx={{ padding: "0px", width: "24%" }}
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.08)",
+                      },
+                    }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        p: 2,
-                        borderRadius: 0,
-                        position: "relative",
-                      }}
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      sx={{ padding: "0px", width: "24%" }}
                     >
-                      <CategoryColorBar
-                        colors={getCategoryColors(row.category)}
-                      />
-                      <Box display="flex" alignItems="center">
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          p: 2,
+                          borderRadius: 0,
+                          position: "relative",
+                        }}
+                      >
+                        <CategoryColorBar
+                          colors={getCategoryColors(row.category)}
+                        />
                         <Box display="flex" alignItems="center">
-                          <Avatar
-                            alt={row.asset}
-                            src={row.imageUrl}
-                            sx={{ width: 20, height: 20, marginRight: 1 }}
-                          />
-                          <Typography sx={{ fontSize: "14px" }}>
-                            {row.asset} ({row.ticker})
-                          </Typography>
-                        </Box>
-                        <Box
-                          //   component={Typography}
-                          sx={{
-                            ml: 1,
-                            bgcolor: `${
-                              getLightToneColor(
-                                categoryColorsNew[row.category[0]]
-                              ).lightTone
-                            }`,
-                            color: `${
-                              getLightToneColor(
-                                categoryColorsNew[row.category[0]]
-                              ).textColor
-                            }`,
-                            fontWeight: "bold",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            maxWidth: "50%",
-                            // lineHeight: "20px",
-                            padding: "3px 12px",
-                            borderRadius: "32px",
-                            fontSize: "12px",
-                            // marginLeft: "auto",
-                            // lineHeight: 1,
-                          }}
-                        >
-                          {row.percentage}
+                          <Box display="flex" alignItems="center">
+                            <Avatar
+                              alt={row.asset}
+                              src={row.imageUrl}
+                              sx={{ width: 20, height: 20, marginRight: 1 }}
+                            />
+                            <Typography sx={{ fontSize: "14px" }}>
+                              {row.asset} ({row.ticker})
+                            </Typography>
+                          </Box>
+                          <Box
+                            //   component={Typography}
+                            sx={{
+                              ml: 1,
+                              bgcolor: `${
+                                getLightToneColor(
+                                  categoryColorsNew[row.category[0]]
+                                ).lightTone
+                              }`,
+                              color: `${
+                                getLightToneColor(
+                                  categoryColorsNew[row.category[0]]
+                                ).textColor
+                              }`,
+                              fontWeight: "bold",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              maxWidth: "50%",
+                              // lineHeight: "20px",
+                              padding: "3px 12px",
+                              borderRadius: "32px",
+                              fontSize: "12px",
+                              // marginLeft: "auto",
+                              // lineHeight: 1,
+                            }}
+                          >
+                            {row.percentage}
+                          </Box>
                         </Box>
                       </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell component="th" scope="row" sx={{ padding: "5px" }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "end",
-                      }}
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      sx={{ padding: "5px" }}
                     >
-                      <StyledTypography sx={{ fontSize: "14px" }}>
-                        {row.bestand}
-                      </StyledTypography>
-                      <StyledTypography
-                        sx={{ color: "#999", fontSize: "12px" }}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "end",
+                        }}
                       >
-                        {row.totalCoins} {row.ticker}
-                      </StyledTypography>
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ padding: "5px 0 5px 5px" }}>
-                    <StyledTypography>
-                      {row.X ? row.X : "0,00"}x
-                    </StyledTypography>
-                  </TableCell>
-                  <TableCell sx={{ padding: "5px" }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "end",
-                      }}
-                    >
-                      <StyledTypography>{row.preisChange} €</StyledTypography>
-                      {row.pricePercentage !== "Infinity" && (
-                        <Typography
-                          className={row.pricePercentage < 0 ? "down" : "up"}
-                          sx={{
-                            "&.down": {
-                              color: "red",
-                            },
-                            "&.up": {
-                              color: "green",
-                            },
-                            "&.down:before": {
-                              content: '"▼ "',
-                              fontSize: "80%",
-                              marginRight: "3px",
-                            },
-                            "&.up:before": {
-                              content: '"▲ "',
-                              fontSize: "80%",
-                              marginRight: "3px",
-                            },
-                          }}
+                        <StyledTypography sx={{ fontSize: "14px" }}>
+                          {row.bestand}
+                        </StyledTypography>
+                        <StyledTypography
+                          sx={{ color: "#999", fontSize: "12px" }}
                         >
-                          {row.pricePercentage}
-                        </Typography>
-                      )}
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ padding: "5px" }}>
-                    <StyledTypography>{row.dcaPrice}</StyledTypography>
-                  </TableCell>
-                  <TableCell sx={{ padding: "5px" }}>
-                    <StyledTypography>{row.investition}</StyledTypography>
-                  </TableCell>
-                  <TableCell sx={{ padding: "5px" }}>
-                    <Select
-                      value={dropdownValues[index]?.relevanz || row.relevanz}
-                      onChange={(event) =>
-                        handleDropdownChange(event, index, "relevanz")
-                      }
-                      displayEmpty
-                      inputProps={{ "aria-label": "Relevanz" }}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: getDropdownBackgroundColor(
-                          dropdownValues[index]?.relevanz || row.relevanz
-                        ),
-                        "& *": {
-                          outline: "none",
-                          border: "none",
-                        },
-                      }}
-                    >
-                      {options.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </TableCell>
-                  <TableCell sx={{ padding: "5px" }}>
-                    <Select
-                      value={dropdownValues[index]?.dca || row.dca}
-                      onChange={(event) =>
-                        handleDropdownChange(event, index, "dca")
-                      }
-                      displayEmpty
-                      inputProps={{ "aria-label": "DCA" }}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: getDropdownBackgroundColor(
-                          dropdownValues[index]?.dca || row.dca
-                        ),
-                        "& *": {
-                          outline: "none",
-                          border: "none",
-                        },
-                      }}
-                    >
-                      {options.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option === "Scam?" ? "💀" : option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </TableCell>
-                  <TableCell sx={{ padding: "5px" }}>
-                    <Select
-                      value={
-                        dropdownValues[index]?.gewichtung || row.gewichtung
-                      }
-                      onChange={(event) =>
-                        handleDropdownChange(event, index, "gewichtung")
-                      }
-                      displayEmpty
-                      inputProps={{ "aria-label": "Gewichtung" }}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: getDropdownBackgroundColor(
+                          {row.totalCoins} {row.ticker}
+                        </StyledTypography>
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px 0 5px 5px" }}>
+                      <StyledTypography>
+                        {row.X && !isNaN(row.X) ? row.X : "0,00"}x
+                      </StyledTypography>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "end",
+                        }}
+                      >
+                        <StyledTypography>{row.preisChange} €</StyledTypography>
+                        {row.pricePercentage !== "Infinity" && (
+                          <Typography
+                            className={row.pricePercentage < 0 ? "down" : "up"}
+                            sx={{
+                              "&.down": {
+                                color: "red",
+                              },
+                              "&.up": {
+                                color: "green",
+                              },
+                              "&.down:before": {
+                                content: '"▼ "',
+                                fontSize: "80%",
+                                marginRight: "3px",
+                              },
+                              "&.up:before": {
+                                content: '"▲ "',
+                                fontSize: "80%",
+                                marginRight: "3px",
+                              },
+                            }}
+                          >
+                            {row.pricePercentage}
+                          </Typography>
+                        )}
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <StyledTypography>{row.dcaPrice}</StyledTypography>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <StyledTypography>{row.investition}</StyledTypography>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <Select
+                        value={dropdownValues[index]?.relevanz || row.relevanz}
+                        onChange={(event) =>
+                          handleDropdownChange(event, index, "relevanz")
+                        }
+                        displayEmpty
+                        inputProps={{ "aria-label": "Relevanz" }}
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: getDropdownBackgroundColor(
+                            dropdownValues[index]?.relevanz || row.relevanz
+                          ),
+                          "& *": {
+                            outline: "none",
+                            border: "none",
+                          },
+                        }}
+                      >
+                        {options.map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <Select
+                        value={dropdownValues[index]?.dca || row.dca}
+                        onChange={(event) =>
+                          handleDropdownChange(event, index, "dca")
+                        }
+                        displayEmpty
+                        inputProps={{ "aria-label": "DCA" }}
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: getDropdownBackgroundColor(
+                            dropdownValues[index]?.dca || row.dca
+                          ),
+                          "& *": {
+                            outline: "none",
+                            border: "none",
+                          },
+                        }}
+                      >
+                        {options.map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {option === "Scam?" ? "💀" : option}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </TableCell>
+                    <TableCell sx={{ padding: "5px" }}>
+                      <Select
+                        value={
                           dropdownValues[index]?.gewichtung || row.gewichtung
-                        ),
-                        "& *": {
-                          outline: "none",
-                          border: "none",
-                        },
-                      }}
-                    >
-                      {options.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option === "Scam?" ? "💀" : option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        }
+                        onChange={(event) =>
+                          handleDropdownChange(event, index, "gewichtung")
+                        }
+                        displayEmpty
+                        inputProps={{ "aria-label": "Gewichtung" }}
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: getDropdownBackgroundColor(
+                            dropdownValues[index]?.gewichtung || row.gewichtung
+                          ),
+                          "& *": {
+                            outline: "none",
+                            border: "none",
+                          },
+                        }}
+                      >
+                        {options.map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {option === "Scam?" ? "💀" : option}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
             </TableBody>
           </Table>
         </TableContainer>
