@@ -196,11 +196,12 @@ export async function updateCoinDetails(coinGeckoID) {
     }
 }
 
-export async function updateCoinDetailsCron(coinGeckoID) {
+export async function updateCoinDetailsCron(coinGeckoIDs) {
     const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
 
-    const getCurrentPrice = async (coinId, currency, apiKey) => {
-        const url = `https://pro-api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${currency}&x_cg_pro_api_key=${apiKey}`;
+    const getCurrentPrices = async (coinIds, currency, apiKey) => {
+        const ids = coinIds.join(',');
+        const url = `https://pro-api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=${currency}&x_cg_pro_api_key=${apiKey}`;
         try {
             const response = await fetch(url, { cache: "no-store" });
             if (!response.ok) {
@@ -211,11 +212,7 @@ export async function updateCoinDetailsCron(coinGeckoID) {
                 }
             }
             const data = await response.json();
-            if (data[coinId] && data[coinId][currency]) {
-                return data[coinId][currency];
-            } else {
-                throw new Error(`The data for ${coinId} in ${currency} is not available.`);
-            }
+            return data;
         } catch (error) {
             console.error(`An error occurred: ${error.message}`);
             throw error;
@@ -223,30 +220,35 @@ export async function updateCoinDetailsCron(coinGeckoID) {
     };
 
     try {
-        const currentPrice = await getCurrentPrice(coinGeckoID, 'eur', apiKey);
+        const currentPrices = await getCurrentPrices(coinGeckoIDs, 'eur', apiKey);
+        console.log("currentPricescurrentPrices", currentPrices);
 
-        if (coinGeckoID === "bitcoin") {
-            console.log("bitcoin price", currentPrice);
-        }
-
-        // Update the asset details in MongoDB
-        await Assets.updateOne(
-            { CoinGeckoID: coinGeckoID },
-            {
-                $set: {
-                    Price: currentPrice,
-                    cgPrice: currentPrice,
-                    LastPriceUpdate: new Date(),
-                },
+        const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
+            const currentPrice = currentPrices[coinGeckoID]?.eur;
+            if (currentPrice !== undefined) {
+                return Assets.updateOne(
+                    { CoinGeckoID: coinGeckoID },
+                    {
+                        $set: {
+                            Price: currentPrice,
+                            cgPrice: currentPrice,
+                            LastPriceUpdate: new Date(),
+                        },
+                    }
+                );
+            } else {
+                console.warn(`No price data available for ${coinGeckoID}`);
+                return Promise.resolve();
             }
-        );
+        });
+
+        await Promise.allSettled(updatePromises);
+
+        console.log("All coin details updated successfully.");
     } catch (error) {
         console.error(`Failed to get current price or update asset: ${error.message}`);
     }
 }
-
-
-
 
 
 

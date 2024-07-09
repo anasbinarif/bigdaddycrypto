@@ -13,7 +13,8 @@ export async function POST(req) {
             return NextResponse.json({ message: 'Cron job is already running' });
         }
 
-        cronJob = cron.schedule('*/2 * * * *', async () => {
+        // Schedule the cron job to run every 3 hours
+        cronJob = cron.schedule('0 */3 * * *', async () => {
             try {
                 const response = await fetch(`${process.env.BASE_URL}/api/scheduler`, {
                     method: 'POST',
@@ -33,7 +34,7 @@ export async function POST(req) {
         });
 
         isCronJobRunning = true;
-        console.log('Cron job scheduled to run every 5 minutes');
+        console.log('Cron job scheduled to run every 3 hours');
         return NextResponse.json({ message: 'Cron job scheduled successfully' });
     } catch (error) {
         console.error('Error setting up cron job:', error);
