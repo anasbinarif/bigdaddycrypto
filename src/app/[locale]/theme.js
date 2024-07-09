@@ -11,6 +11,7 @@ const theme1 = createTheme({
     redText: {
       color: "red",
     },
+    color: "white",
   },
   colors: {
     textColor: "#626ac7",

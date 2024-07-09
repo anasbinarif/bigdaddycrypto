@@ -642,6 +642,7 @@ const CoinDetails = (props) => {
                 fontWeight: value === 1 ? "bold" : "normal",
                 fontSize: "12px",
               }}
+              disabled
             />
             <Tab
               label={t("sellZones")}
@@ -653,6 +654,7 @@ const CoinDetails = (props) => {
                 fontWeight: value === 2 ? "bold" : "normal",
                 fontSize: "12px",
               }}
+              disabled
             />
           </Tabs>
           <Box>
