@@ -9,7 +9,7 @@ export async function POST(req) {
 
     if (userID) {
         try {
-            await fetch(`${process.env.BASE_URL}/api/crypto`, {
+            await fetch(`${process.env.BASE_URL}/api/cryptoCronjob`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

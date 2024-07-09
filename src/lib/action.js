@@ -169,7 +169,7 @@ export async function updateCoinDetails(coinGeckoID) {
                     prices.slice(-200).reduce((sum, p) => sum + p[1], 0) / 200;
                 // const currentPrice = prices[prices.length - 1][1];
                 const ratioToAvg = currentPrice / average200Days;
-                if (coinGeckoID==="bitcoin") {
+                if (coinGeckoID === "bitcoin") {
                     console.log("bitcoin price", currentPrice);
                 }
 
@@ -195,6 +195,57 @@ export async function updateCoinDetails(coinGeckoID) {
         console.error(`An error occurred: ${error.message}`);
     }
 }
+
+export async function updateCoinDetailsCron(coinGeckoID) {
+    const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
+
+    const getCurrentPrice = async (coinId, currency, apiKey) => {
+        const url = `https://pro-api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${currency}&x_cg_pro_api_key=${apiKey}`;
+        try {
+            const response = await fetch(url, { cache: "no-store" });
+            if (!response.ok) {
+                if (response.status === 429) {
+                    throw new Error("Rate limit exceeded. Please try again later or upgrade your plan.");
+                } else {
+                    throw new Error(`Error retrieving price data. HTTP Status Code: ${response.status}`);
+                }
+            }
+            const data = await response.json();
+            if (data[coinId] && data[coinId][currency]) {
+                return data[coinId][currency];
+            } else {
+                throw new Error(`The data for ${coinId} in ${currency} is not available.`);
+            }
+        } catch (error) {
+            console.error(`An error occurred: ${error.message}`);
+            throw error;
+        }
+    };
+
+    try {
+        const currentPrice = await getCurrentPrice(coinGeckoID, 'eur', apiKey);
+
+        if (coinGeckoID === "bitcoin") {
+            console.log("bitcoin price", currentPrice);
+        }
+
+        // Update the asset details in MongoDB
+        await Assets.updateOne(
+            { CoinGeckoID: coinGeckoID },
+            {
+                $set: {
+                    Price: currentPrice,
+                    cgPrice: currentPrice,
+                    LastPriceUpdate: new Date(),
+                },
+            }
+        );
+    } catch (error) {
+        console.error(`Failed to get current price or update asset: ${error.message}`);
+    }
+}
+
+
 
 
 

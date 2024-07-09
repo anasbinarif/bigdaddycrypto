@@ -107,19 +107,12 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           body: JSON.stringify({ userID }),
         });
       }
-    };
-    callCronJob();
+    }
+    callCronJob()
   }, [sessionJotai]);
 
-  console.log(portfolio);
-
   useEffect(() => {
-    if (
-      sessionJotai &&
-      sessionJotai.user &&
-      sessionJotai.user.id &&
-      sessionJotai.user.accessToken
-    ) {
+    if (sessionJotai && sessionJotai.user && sessionJotai.user.id && sessionJotai.user.accessToken) {
       const timer = setTimeout(() => {
         const fetchCookies = async () => {
           const userID = sessionJotai.user.id;
@@ -138,7 +131,8 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             cookie?.CookiesPrompt
               ? setShowCookieDrawer(false)
               : setShowCookieDrawer(true);
-          } catch (err) {}
+          } catch (err) {
+          }
         };
 
         fetchCookies();
@@ -148,31 +142,32 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     }
   }, [sessionJotai]);
 
+
   // console.log("showCookieDrawer", showCookieDrawer);
 
-    useEffect(() => {
-        const fetchPortfolioCoinsLoop = async () => {
-            console.log("fetchPortfolioCoinsLoop")
-            const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-            setPortfolio(userPortfolio.data);
-        };
+  useEffect(() => {
+    const fetchPortfolioCoinsLoop = async () => {
+      console.log("fetchPortfolioCoinsLoop")
+      const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+      setPortfolio(userPortfolio.data);
+    };
 
-        if (sessionJotai) {
-            const delay = 3 * 60 * 60 * 1000 + 5 * 60 * 1000; // 3 hours and 5 minutes in milliseconds
+    if (sessionJotai) {
+      const delay = 2 * 60 * 1000 + 30 * 1000;
 
-            const interval = setInterval(fetchPortfolioCoinsLoop, delay);
+      const interval = setInterval(fetchPortfolioCoinsLoop, delay);
 
-            const delayedFetch = setTimeout(fetchPortfolioCoinsLoop, delay);
+      const delayedFetch = setTimeout(fetchPortfolioCoinsLoop, delay);
 
-            return () => {
-                clearInterval(interval);
-                clearTimeout(delayedFetch); // Cleanup timeout on unmount
-            };
-        }
-    }, [sessionJotai]);
+      return () => {
+        clearInterval(interval);
+        clearTimeout(delayedFetch); // Cleanup timeout on unmount
+      };
+    }
+  }, [sessionJotai]);
 
 
-    return (
+  return (
     <>
       <Box
         sx={{
