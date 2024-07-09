@@ -14,7 +14,7 @@ export const connectToDb = async () => {
         console.log("MongoDB Connected");
 
         // Reset the cron job status
-        await CronJobStatus.updateOne({}, { isRunning: false });
+        // await CronJobStatus.updateOne({}, { isRunning: false });
 
     } catch (error) {
         console.log(error);
