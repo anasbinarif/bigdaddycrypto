@@ -221,7 +221,7 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
 
     try {
         const currentPrices = await getCurrentPrices(coinGeckoIDs, 'eur', apiKey);
-        console.log("currentPricescurrentPrices", currentPrices);
+        console.log("currentPrices", currentPrices);
 
         const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
             const currentPrice = currentPrices[coinGeckoID]?.eur;
@@ -249,6 +249,7 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
         console.error(`Failed to get current price or update asset: ${error.message}`);
     }
 }
+
 
 
 
