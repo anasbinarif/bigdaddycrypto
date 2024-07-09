@@ -1,6 +1,6 @@
 export default function addCommas(number) {
   // Check if the input is null or undefined
-  console.log(number);
+  // console.log(number);
   if (number == null) {
     return "";
   }
@@ -22,7 +22,7 @@ export default function addCommas(number) {
     return match === "," ? "." : ",";
   });
 
-  console.log(tempStr);
+  // console.log(tempStr);
 
   return tempStr;
 }

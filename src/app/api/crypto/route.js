@@ -32,7 +32,7 @@ export async function POST(req) {
       );
     }
   } catch (e) {
-    console.error("Error in GET function:", e);
+    console.error("Error in POST function:", e);
     return new NextResponse(
       JSON.stringify({
         message: `Error occurred updating coin data ${e.message}`,

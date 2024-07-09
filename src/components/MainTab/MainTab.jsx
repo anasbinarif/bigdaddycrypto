@@ -150,7 +150,29 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
 
   // console.log("showCookieDrawer", showCookieDrawer);
 
-  return (
+    useEffect(() => {
+        const fetchPortfolioCoinsLoop = async () => {
+            console.log("fetchPortfolioCoinsLoop")
+            const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
+            setPortfolio(userPortfolio.data);
+        };
+
+        if (sessionJotai) {
+            const delay = 3 * 60 * 60 * 1000 + 5 * 60 * 1000; // 3 hours and 5 minutes in milliseconds
+
+            const interval = setInterval(fetchPortfolioCoinsLoop, delay);
+
+            const delayedFetch = setTimeout(fetchPortfolioCoinsLoop, delay);
+
+            return () => {
+                clearInterval(interval);
+                clearTimeout(delayedFetch); // Cleanup timeout on unmount
+            };
+        }
+    }, [sessionJotai]);
+
+
+    return (
     <>
       <Box
         sx={{
