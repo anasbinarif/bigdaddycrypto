@@ -187,7 +187,7 @@ const CoinDetails = (props) => {
       X: checkNaN(X),
     });
     changeTableValue === 1 && setChangeTableValue(2);
-  }, [rowVals, coin?.Price]);
+  }, [rowVals, coin?.Price, portfolio]);
 
   const checkNaN = (value) => (isNaN(value) ? 0 : value);
 
