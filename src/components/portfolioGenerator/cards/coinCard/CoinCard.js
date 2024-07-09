@@ -20,7 +20,7 @@ import {
   bewerteAssetSpaeteinsteiger,
   categoryColorsNew,
   getUserPortfolio,
-  storeUserPortfolioCoin, UpdateCryptoCoins,
+  storeUserPortfolioCoin,
 } from "../../../../lib/data";
 import { portfolioAtom } from "../../../../app/stores/portfolioStore";
 import { useAtom } from "jotai";
@@ -154,8 +154,8 @@ const CoinCard = ({
     const res = await storeUserPortfolioCoin(userId, coin, token);
 
     if (res.ok) {
-      const ress = await UpdateCryptoCoins(userId);
-      if (ress) console.log("")
+      // const ress = await UpdateCryptoCoins(userId);
+      // if (ress) console.log("")
       const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
       setPortfolio(userPortfolio.data);
     } else {
