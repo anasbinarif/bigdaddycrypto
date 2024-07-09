@@ -153,7 +153,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     };
 
     if (sessionJotai) {
-      const delay = 2 * 60 * 1000 + 30 * 1000;
+      const delay = 30 * 1000;
 
       const interval = setInterval(fetchPortfolioCoinsLoop, delay);
 
@@ -164,7 +164,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
         clearTimeout(delayedFetch); // Cleanup timeout on unmount
       };
     }
-  }, [sessionJotai]);
+  }, [sessionJotai, portfolio]);
 
 
   return (

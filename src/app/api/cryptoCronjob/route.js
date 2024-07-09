@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Assets, UserPortfolio } from "../../../lib/models";
-import { updateCoinDetails, updateCoinDetailsCron } from "../../../lib/action";
+import { updateCoinDetailsCron } from "../../../lib/action";
 
 export async function POST(req) {
     const { userId } = await req.json();
@@ -11,15 +11,9 @@ export async function POST(req) {
         if (responsePing.ok) {
             const portfolio = await UserPortfolio.findOne({ userId: userId });
             const coinGeckoIDs = portfolio.assets.map((asset) => asset.CoinGeckoID);
-            const promises = coinGeckoIDs.map((coinGeckoID) =>
-                updateCoinDetailsCron(coinGeckoID).catch((error) =>
-                    console.error(
-                        `Failed to update details for ${coinGeckoID}: ${error.message}`
-                    )
-                )
-            );
-            await Promise.allSettled(promises);
-            console.log("All coin details updated successfully.");
+
+            await updateCoinDetailsCron(coinGeckoIDs);
+
             return new NextResponse(
                 JSON.stringify({ message: "All coin details updated successfully" }),
                 { status: 200 }
