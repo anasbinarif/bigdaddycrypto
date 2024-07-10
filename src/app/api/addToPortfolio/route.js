@@ -12,7 +12,7 @@ export async function POST(req) {
   const { userId, coin } = await req.json();
 
   try {
-    await updateCoinDetails(coin.CoinGeckoID);
+    // await updateCoinDetails(coin.CoinGeckoID);
     const userPortfolio = await UserPortfolio.findOne({ userId });
 
     if (!userPortfolio) {

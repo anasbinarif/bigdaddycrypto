@@ -466,6 +466,11 @@ const pastBuyAndSellSchema = new mongoose.Schema({
   },
 });
 
+const CronJobStatusSchema = new mongoose.Schema({
+  isRunning: { type: Boolean, default: false }
+});
+
+export const CronJobStatus = mongoose.models?.CronJobStatus || mongoose.model('CronJobStatus', CronJobStatusSchema);
 export const Payments =
   mongoose.models?.Payments || mongoose.model("Payments", PaymentsSchema);
 export const PastPortfolio =

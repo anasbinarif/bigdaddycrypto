@@ -1,4 +1,5 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+import { CronJobStatus } from "./models";
 
 const connection = {};
 
@@ -11,6 +12,10 @@ export const connectToDb = async () => {
         const db = await mongoose.connect(process.env.MONGODB_URI);
         connection.isConnected = db.connections[0].readyState;
         console.log("MongoDB Connected");
+
+        // Reset the cron job status
+        // await CronJobStatus.updateOne({}, { isRunning: false });
+
     } catch (error) {
         console.log(error);
         throw new Error(error);
@@ -18,13 +23,9 @@ export const connectToDb = async () => {
 };
 
 export const authorize = async (token) => {
-    //   const token = req?.cookies?.nattyToken;
-    //   console.log(token);
-
     if (!token) return null;
     try {
         const info = await jwt.verify(token, 'secret');
-
         return info;
     } catch (err) {
         console.error(err);

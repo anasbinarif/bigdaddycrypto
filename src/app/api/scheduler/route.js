@@ -1,29 +1,25 @@
 import { NextResponse } from 'next/server';
-import cron from 'node-cron';
+import { UserPortfolio } from "../../../lib/models";
+import { updateCoinDetailsCron } from "../../../lib/action";
 
 export async function POST(req) {
-    const { userID } = await req.json();
     console.log('######################################');
     console.log('# Running scheduler action           #');
     console.log('######################################');
 
-    if (userID) {
-        try {
-            await fetch(`${process.env.BASE_URL}/api/crypto`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ userId: userID }),
-                cache: "no-store",
-            });
+    try {
+        // Fetch all user portfolios
+        const portfolios = await UserPortfolio.find({});
+        
+        // Collect all unique CoinGeckoIDs
+        const coinGeckoIDs = [...new Set(portfolios.flatMap(portfolio => portfolio.assets.map(asset => asset.CoinGeckoID)))];
 
-            return NextResponse.json({ data: 'Success', status: 200 });
-        } catch (error) {
-            console.log(error);
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
-    } else {
-        return NextResponse.json({ error: 'userID is undefined' }, { status: 400 });
+        // Update coin details
+        await updateCoinDetailsCron(coinGeckoIDs);
+
+        return NextResponse.json({ data: 'Success', status: 200 });
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

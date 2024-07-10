@@ -103,96 +103,116 @@ export const calculatePrice = (portfolioData) => {
     return 0; // Default case if no match found
 };
 
-export async function updateCoinDetails(coinGeckoID) {
+// export async function updateCoinDetails(coinGeckoID) {
+//     const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
+//     const url = `https://pro-api.coingecko.com/api/v3/coins/${coinGeckoID}/market_chart`;
+//     const params = new URLSearchParams({
+//         vs_currency: "eur",
+//         days: "800",
+//         interval: "daily",
+//         x_cg_pro_api_key: apiKey,
+//     });
+//
+//     try {
+//         const response = await fetch(`${url}?${params.toString()}`, {
+//             cache: "no-store",
+//         });
+//         if (response.ok) {
+//             const data = await response.json();
+//             const prices = data.prices;
+//             if (prices.length > 0) {
+//                 const lowestLow = prices.reduce(
+//                     (min, p) => (p[1] < min[1] ? p : min),
+//                     prices[0]
+//                 );
+//                 const lowestPrice = Math.min(...prices.map(price => price[1]));
+//                 const highestHigh = prices.reduce(
+//                     (max, p) => (p[1] > max[1] ? p : max),
+//                     prices[0]
+//                 );
+//                 const lowestLowDate = new Date(lowestLow[0])
+//                     .toISOString()
+//                     .split("T")[0];
+//                 const highestHighDate = new Date(highestHigh[0])
+//                     .toISOString()
+//                     .split("T")[0];
+//                 const average200Days =
+//                     prices.slice(-200).reduce((sum, p) => sum + p[1], 0) / 200;
+//
+//                 // Update the asset details in MongoDB
+//                 await Assets.updateOne(
+//                     { CoinGeckoID: coinGeckoID },
+//                     {
+//                         $set: {
+//                             // Price: currentPrice,
+//                             // cgPrice: currentPrice,
+//                             // LastPriceUpdate: new Date(),
+//                             Bottom: lowestPrice,
+//                         },
+//                     }
+//                 );
+//             }
+//         } else {
+//             console.error(
+//                 `Error retrieving price data for ${coinGeckoID}. HTTP Status Code: ${response.status}`
+//             );
+//         }
+//     } catch (error) {
+//         console.error(`An error occurred: ${error.message}`);
+//     }
+// }
+
+export async function updateCoinDetailsCron(coinGeckoIDs) {
     const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
-    async function getCurrentPrice(coinId, currency, apiKey) {
-        const url = `https://pro-api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${currency}&x_cg_pro_api_key=${apiKey}`;
+
+    const getCurrentPrices = async (coinIds, currency, apiKey) => {
+        const ids = coinIds.join(',');
+        const url = `https://pro-api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=${currency}&x_cg_pro_api_key=${apiKey}`;
         try {
             const response = await fetch(url, { cache: "no-store" });
-            if (response.ok) {
-                const data = await response.json();
-                if (data[coinId] && data[coinId][currency]) {
-                    return data[coinId][currency];
+            if (!response.ok) {
+                if (response.status === 429) {
+                    throw new Error("Rate limit exceeded. Please try again later or upgrade your plan.");
                 } else {
-                    throw new Error(`The data for ${coinId} in ${currency} is not available.`);
+                    throw new Error(`Error retrieving price data. HTTP Status Code: ${response.status}`);
                 }
-            } else if (response.status === 429) {
-                throw new Error("Rate limit exceeded. Please try again later or upgrade your plan.");
-            } else {
-                throw new Error(`Error retrieving price data. HTTP Status Code: ${response.status}`);
             }
+            const data = await response.json();
+            return data;
         } catch (error) {
             console.error(`An error occurred: ${error.message}`);
             throw error;
         }
-    }
-    let currentPrice;
-    try {
-        currentPrice = await getCurrentPrice(coinGeckoID, 'eur', apiKey);
-        // console.log(`Current price of ${coinGeckoID}: €${currentPrice}`);
-    } catch (error) {
-        console.error(`Failed to get current price: ${error.message}`);
-        return;
-    }
-    const url = `https://pro-api.coingecko.com/api/v3/coins/${coinGeckoID}/market_chart`;
-    const params = new URLSearchParams({
-        vs_currency: "eur",
-        days: "800",
-        interval: "daily",
-        x_cg_pro_api_key: apiKey,
-    });
+    };
 
     try {
-        const response = await fetch(`${url}?${params.toString()}`, {
-            cache: "no-store",
-        });
-        if (response.ok) {
-            const data = await response.json();
-            const prices = data.prices;
-            if (prices.length > 0) {
-                const lowestLow = prices.reduce(
-                    (min, p) => (p[1] < min[1] ? p : min),
-                    prices[0]
-                );
-                const lowestPrice = Math.min(...prices.map(price => price[1]));
-                const highestHigh = prices.reduce(
-                    (max, p) => (p[1] > max[1] ? p : max),
-                    prices[0]
-                );
-                const lowestLowDate = new Date(lowestLow[0])
-                    .toISOString()
-                    .split("T")[0];
-                const highestHighDate = new Date(highestHigh[0])
-                    .toISOString()
-                    .split("T")[0];
-                const average200Days =
-                    prices.slice(-200).reduce((sum, p) => sum + p[1], 0) / 200;
-                // const currentPrice = prices[prices.length - 1][1];
-                const ratioToAvg = currentPrice / average200Days;
-                if (coinGeckoID==="bitcoin") {
-                    console.log("bitcoin price", currentPrice);
-                }
+        const currentPrices = await getCurrentPrices(coinGeckoIDs, 'eur', apiKey);
+        console.log("currentPrices", currentPrices);
 
-                // Update the asset details in MongoDB
-                await Assets.updateOne(
+        const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
+            const currentPrice = currentPrices[coinGeckoID]?.eur;
+            if (currentPrice !== undefined) {
+                return Assets.updateOne(
                     { CoinGeckoID: coinGeckoID },
                     {
                         $set: {
                             Price: currentPrice,
                             cgPrice: currentPrice,
                             LastPriceUpdate: new Date(),
-                            Bottom: lowestPrice,
                         },
                     }
                 );
+            } else {
+                console.warn(`No price data available for ${coinGeckoID}`);
+                return Promise.resolve();
             }
-        } else {
-            console.error(
-                `Error retrieving price data for ${coinGeckoID}. HTTP Status Code: ${response.status}`
-            );
-        }
+        });
+
+        await Promise.allSettled(updatePromises);
+
+        console.log("All coin details updated successfully.");
     } catch (error) {
-        console.error(`An error occurred: ${error.message}`);
+        console.error(`Failed to get current price or update asset: ${error.message}`);
     }
 }
 

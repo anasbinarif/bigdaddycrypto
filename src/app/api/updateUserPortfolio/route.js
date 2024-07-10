@@ -14,7 +14,7 @@ export async function POST(req) {
   try {
     const portfolio = await UserPortfolio.findOne({ userId: userId });
     if (!portfolio) {
-      console.log("No portfolio found");
+      // console.log("No portfolio found");
       return NextResponse.json(
         { message: "No portfolio found" },
         { status: 404 }

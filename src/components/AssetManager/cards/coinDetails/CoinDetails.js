@@ -24,7 +24,7 @@ import {
   currencySign,
   getCurrencyAndRates,
   getUserPortfolio,
-  UpdateCryptoCoins,
+
 } from "../../../../lib/data";
 import Papa from "papaparse";
 import { addDays, parse } from "date-fns";
@@ -188,7 +188,7 @@ const CoinDetails = (props) => {
       X: checkNaN(X),
     });
     changeTableValue === 1 && setChangeTableValue(2);
-  }, [rowVals, coin?.Price]);
+  }, [rowVals, coin?.Price, portfolio]);
 
   const checkNaN = (value) => (isNaN(value) ? 0 : value);
 
@@ -283,7 +283,7 @@ const CoinDetails = (props) => {
         });
         console.log(response);
         if (response.ok) {
-          const res = await UpdateCryptoCoins(userId);
+          // const res = await UpdateCryptoCoins(userId);
           setAlertInfo({
             message: t("successAlert"),
             severity: "success",
@@ -344,7 +344,7 @@ const CoinDetails = (props) => {
             message: t("successAlert"),
             severity: "success",
           });
-          const res = await UpdateCryptoCoins(userId);
+          // const res = await UpdateCryptoCoins(userId);
           const userPortfolio = await getUserPortfolio(userID);
           setPortfolio(userPortfolio?.data);
           setLoading(false);
