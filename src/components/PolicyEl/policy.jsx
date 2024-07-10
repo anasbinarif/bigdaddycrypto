@@ -17,9 +17,7 @@ const Policy = ({ component }) => {
         m: "0 5rem",
       }}
     >
-      <Box
-        sx={{ maxWidth: "1440px", "& .MuiTypography-root": { color: "white" } }}
-      >
+      <Box sx={{ maxWidth: "1440px" }}>
         {component === "datenschutz" ? (
           <Datenschutz />
         ) : component === "widerrufsbelehrung" ? (

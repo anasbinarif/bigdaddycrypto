@@ -116,7 +116,6 @@ const NavbarLink = ({ mobileView, handleClose }) => {
       } catch (error) {
         console.log(error);
         console.error("Error updating session with subscription:", error);
-        handleLogoutFun();
       }
     };
 

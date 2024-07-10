@@ -571,7 +571,6 @@ const RegisterPage = () => {
             mt: 2,
             maxWidth: "400px",
             fontSize: "12px",
-            color: "white",
             "@media only screen and (max-width: 500px)": {
               margin: "0 2rem",
               width: "85%",

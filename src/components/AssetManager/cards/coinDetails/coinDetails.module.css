@@ -30,7 +30,6 @@
   background-color: transparent;
   border: none;
   outline: none;
-  color: white;
 }
 
 .input--date {
@@ -39,7 +38,6 @@
   border-radius: 4px;
   padding: 5px;
   margin-right: auto;
-  color: white;
 }
 
 .input:focus-visible,

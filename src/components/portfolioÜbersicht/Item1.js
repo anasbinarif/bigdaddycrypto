@@ -11,7 +11,6 @@ import { Chart } from "react-google-charts";
 import { useTranslations } from "next-intl";
 import addCommas from "../../lib/currencyFormatter";
 import maxLenCrop from "../../lib/checkString";
-import { categoryColors, categoryColorsNew } from "../../lib/data";
 
 const hashString = (str) => {
   let hash = 0;
@@ -31,16 +30,9 @@ const getRandomColor = (ticker) => {
   return color;
 };
 
-const getSlices = (data, assets) => {
-  // console.log(assets);
+const getSlices = (data) => {
   return data.slice(1).reduce((acc, item, index) => {
-    // console.log(item);
-    const categories = assets?.find(
-      (asset) => asset.Ticker === item[0]
-    )?.Category;
-    // console.log(categories);
-    const category = categories ? categories[categories.length - 1] : "ai";
-    acc[index] = { color: categoryColorsNew[category] };
+    acc[index] = { color: getRandomColor(item[0]) };
     return acc;
   }, {});
 };
@@ -67,14 +59,13 @@ const options = {
   },
 };
 
-export default function Item1({ preCalcPort = null }) {
+export default function Item1({ preCalcPort }) {
   const [width, setWidth] = useState(0);
   const [portfolio] = useAtom(portfolioAtom);
   const [graphPercentage, setGraphPercentage] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const t = useTranslations("item1");
-  // console.log(portfolio);
-  // console.log(graphData);
+  console.log(preCalcPort);
 
   useEffect(() => {
     const handleResize = () => {
@@ -289,13 +280,7 @@ export default function Item1({ preCalcPort = null }) {
               width="100%"
               height="300px"
               data={graphData}
-              options={{
-                ...options,
-                slices: getSlices(
-                  graphData,
-                  preCalcPort ? preCalcPort?.assets : portfolio?.assets
-                ),
-              }}
+              options={{ ...options, slices: getSlices(graphData) }}
             />
             <Box
               sx={{
