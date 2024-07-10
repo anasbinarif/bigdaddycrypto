@@ -4,6 +4,7 @@ import { connectToDb } from '../../../lib/utils';
 import { CronJobStatus } from '../../../lib/models';
 
 let cronJob;
+let dailyCronJob;
 
 export async function POST(req) {
     await connectToDb();
@@ -40,14 +41,33 @@ export async function POST(req) {
             }
         });
 
+        // Schedule the daily cron job to run once a day
+        dailyCronJob = cron.schedule('0 0 * * *', async () => {
+            try {
+                const response = await fetch(`${process.env.BASE_URL}/api/bottomScheduler`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+            } catch (error) {
+                console.log('Error calling Bottom Scheduler API:', error);
+            }
+        });
+
         // Update the cron job status in the database
         cronJobStatus.isRunning = true;
         await cronJobStatus.save();
 
-        console.log('Cron job scheduled to run every 2 minutes');
-        return NextResponse.json({ message: 'Cron job scheduled successfully' });
+        console.log('Cron jobs scheduled successfully');
+        return NextResponse.json({ message: 'Cron jobs scheduled successfully' });
     } catch (error) {
-        console.error('Error setting up cron job:', error);
+        console.error('Error setting up cron jobs:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
@@ -59,15 +79,21 @@ export async function DELETE() {
         if (cronJob) {
             cronJob.stop();
             cronJob = null;
-            console.log('Cron job stopped');
+            console.log('2-minute cron job stopped');
+        }
+
+        if (dailyCronJob) {
+            dailyCronJob.stop();
+            dailyCronJob = null;
+            console.log('Daily cron job stopped');
         }
 
         // Update the cron job status in the database
         await CronJobStatus.updateOne({}, { isRunning: false });
 
-        return NextResponse.json({ message: 'Cron job stopped successfully' });
+        return NextResponse.json({ message: 'Cron jobs stopped successfully' });
     } catch (error) {
-        console.error('Error stopping cron job:', error);
+        console.error('Error stopping cron jobs:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
