@@ -217,7 +217,8 @@
     "nft": "Tokenisierung/RWA",
     "assetAdded": "Asset erfolgreich hinzugefügt!",
     "assetAddFailed": "Asset konnte nicht hinzugefügt werden.",
-    "fillAllFields": "Bitte füllen Sie alle erforderlichen Felder aus."
+    "fillAllFields": "Bitte füllen Sie alle erforderlichen Felder aus.",
+    "none": "No Hype-Topic"
   },
   "Overview": {
     "buttonText": "Jetzt Kommentar von BigDaddy anfragen"
