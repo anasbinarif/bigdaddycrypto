@@ -114,19 +114,6 @@ export const getAllTickers = async () => {
   }
 };
 
-export const getCoinData = async () => {
-  const res = await fetch(
-    "/api/crypto",
-    { next: { revalidate: 3600 } },
-    { cache: "force-cache" }
-  );
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
-};
-
 export const getAssetTest = async () => {
   try {
     const res = await fetch("/api/assets", {
@@ -158,7 +145,7 @@ export const getAllAssets = async () => {
     headers: {
       "Content-Type": "application/json",
     },
-    cache: "force-cache",
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -216,17 +203,6 @@ export const storeUserPortfolioCoin = async (userId, coin, token) => {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ userId, coin: newCoin }),
-  });
-};
-
-export const UpdateCryptoCoins = async (userId) => {
-  return await fetch("/api/crypto", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userId }),
-    cache: "no-store",
   });
 };
 
@@ -754,6 +730,7 @@ export const categoriesDisplay1 = {
   cbdc: "CBDC-Netzwerke",
   ecommerce: "eCommerce",
   nft: "Tokenisierung/RWA",
+  none: "none"
 };
 
 export const categoriesDisplay = {

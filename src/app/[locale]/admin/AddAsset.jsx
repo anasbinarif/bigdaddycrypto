@@ -276,8 +276,6 @@ const AddAsset = () => {
       !formData.ticker ||
       !formData.bottom ||
       !formData.cgPrice ||
-      !formData.potential ||
-      !formData.sicherheit ||
       formData.categories.length === 0
     ) {
       setAlertMessage(t("fillAllFields"));
@@ -322,6 +320,17 @@ const AddAsset = () => {
         sicherheit: "",
         categories: [],
       });
+      getAllAssets()
+          .then((data) => {
+            // console.log(data);
+            setAllAssets(data.data);
+            // setSearchData(data.data.slice(0, 5));
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            setLoading(false);
+          });
     } else {
       setAlertMessage(t("assetAddFailed"));
     }
@@ -628,6 +637,7 @@ const AddAsset = () => {
                 <MenuItem value="CBDC-Netzwerke">{t("cbdc")}</MenuItem>
                 <MenuItem value="eCommerce">{t("ecommerce")}</MenuItem>
                 <MenuItem value="Tokenisierung/RWA">{t("nft")}</MenuItem>
+                <MenuItem value="none">{t("none")}</MenuItem>
               </Select>
             </FormControl>
             <Box
