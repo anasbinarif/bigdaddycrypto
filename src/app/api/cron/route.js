@@ -41,8 +41,15 @@ export async function POST(req) {
             }
         });
 
-        // Schedule the daily cron job to run once a day
-        dailyCronJob = cron.schedule('0 0 * * *', async () => {
+        // Schedule the daily cron job to run 24 hours after starting
+        const currentTime = new Date();
+        const nextRunTime = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
+        const hours = nextRunTime.getHours();
+        const minutes = nextRunTime.getMinutes();
+
+        const cronExpression = `${minutes} ${hours} * * *`;
+
+        dailyCronJob = cron.schedule(cronExpression, async () => {
             try {
                 const response = await fetch(`${process.env.BASE_URL}/api/bottomScheduler`, {
                     method: 'POST',
