@@ -153,7 +153,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     };
 
     if (sessionJotai) {
-      const delay = 30 * 1000;
+      const delay = 120 * 1000; // 2 minutes in milliseconds
 
       const interval = setInterval(fetchPortfolioCoinsLoop, delay);
 
