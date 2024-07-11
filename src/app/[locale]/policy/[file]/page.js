@@ -25,7 +25,12 @@ const PolicyPage = () => {
   return (
     <>
       {sessionJotai?.user && <Navbar />}
-      <Box sx={{ p: "8rem 5rem 2rem" }}>
+      <Box
+        sx={{
+          p: "8rem 5rem 2rem",
+          "@media only screen and (max-width: 600px)": { p: "8rem 0 2rem" },
+        }}
+      >
         {/* Hello */}
         <Policy component={filename} />
       </Box>

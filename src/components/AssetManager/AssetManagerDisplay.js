@@ -1,4 +1,11 @@
-import { Grid, Paper, styled, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Grid,
+  Paper,
+  Box,
+  styled,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import BitpandaCard from "../../components/portfolioGenerator/cards/Bitpanda";
 import PortfolioComponent from "../../components/portfolioGenerator/cards/PortfolioComponent";
 import Second from "./cards/Second";
@@ -27,6 +34,7 @@ const AssetManagerDisplay = ({
   const [width, setWidth] = useState(0);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+  const [operationHappening, setOperationHappening] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -42,44 +50,54 @@ const AssetManagerDisplay = ({
   }, []);
 
   return (
-    <Grid
-      container
-      spacing={{ xs: 2, md: 3 }}
-      columns={{ xs: 4, sm: 8, md: 12 }}
-    >
-      <Grid item xs={4} sm={4} md={width > 1350 ? 4 : 3}>
-        <BitpandaCard />
-      </Grid>
-      <Grid item xs={4} sm={4} md={4}>
-        <Second />
-      </Grid>
-      <Grid item xs={4} sm={8} md={width > 1350 ? 4 : 5}>
-        <Third />
-      </Grid>
-      <Grid item xs={4} sm={8} md={width > 1350 ? 4 : width < 1100 ? 12 : 5}>
-        <PortfolioComponent
-          loadingPortfolio={loadingPortfolio}
-          assetsLeangth={assetsLeangth}
-          setSelectedCoin={setSelectedCoin}
-          setTabSelector={setTabSelector}
-        />
-      </Grid>
-      {isSmallScreen ? (
-        <Grid item xs={4}>
-          <CoinDetails
-            coin={portfolio?.assets[selectedCoin]}
-            index={selectedCoin}
+    <Box id="hello" sx={{ position: "relative" }}>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
+        <Grid item xs={4} sm={4} md={width > 1350 ? 4 : 3}>
+          <BitpandaCard />
+        </Grid>
+        <Grid item xs={4} sm={4} md={4}>
+          <Second />
+        </Grid>
+        <Grid item xs={4} sm={8} md={width > 1350 ? 4 : 5}>
+          <Third />
+        </Grid>
+        <Grid item xs={4} sm={8} md={width > 1350 ? 4 : width < 1100 ? 12 : 5}>
+          <PortfolioComponent
+            operationHappening={operationHappening}
+            loadingPortfolio={loadingPortfolio}
+            assetsLeangth={assetsLeangth}
+            setSelectedCoin={setSelectedCoin}
+            setTabSelector={setTabSelector}
           />
         </Grid>
-      ) : (
-        <Grid item xs={8} sm={8} md={width > 1350 ? 8 : width < 1100 ? 12 : 7}>
-          <CoinDetails
-            coin={portfolio?.assets[selectedCoin]}
-            index={selectedCoin}
-          />
-        </Grid>
-      )}
-    </Grid>
+        {isSmallScreen ? (
+          <Grid item xs={4}>
+            <CoinDetails
+              coin={portfolio?.assets[selectedCoin]}
+              index={selectedCoin}
+              setOperationHappening={setOperationHappening}
+            />
+          </Grid>
+        ) : (
+          <Grid
+            item
+            xs={8}
+            sm={8}
+            md={width > 1350 ? 8 : width < 1100 ? 12 : 7}
+          >
+            <CoinDetails
+              coin={portfolio?.assets[selectedCoin]}
+              index={selectedCoin}
+              setOperationHappening={setOperationHappening}
+            />
+          </Grid>
+        )}
+      </Grid>
+    </Box>
   );
 };
 

@@ -24,7 +24,6 @@ import {
   currencySign,
   getCurrencyAndRates,
   getUserPortfolio,
-
 } from "../../../../lib/data";
 import Papa from "papaparse";
 import { addDays, parse } from "date-fns";
@@ -34,9 +33,9 @@ import CoinDetailsTable from "./CoinDetailsTable";
 import CoinDetailsDisplay from "./CoinDetailsDisplay";
 import styles from "./coinDetails.module.css";
 
-const CoinDetails = (props) => {
+const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
   const t = useTranslations("coinDetails");
-  const { coin, index } = props;
+  // const { coin, index } = props;
   const [Loading, setLoading] = useState(false);
   const [width, setWidth] = useState(0);
   const [value, setValue] = useState(0);
@@ -234,7 +233,9 @@ const CoinDetails = (props) => {
 
   const handleBuyAndSell = async () => {
     setLoading(true);
+    setOperationHappening(true);
     let error = "";
+
     for (const row of rowVals) {
       if (row.Date === "" || row.Date === "00/00/00") {
         error = "Please enter a valid date.";
@@ -299,6 +300,7 @@ const CoinDetails = (props) => {
       }
       setShowAlert(true);
     }
+    setOperationHappening(false);
   };
 
   const closeAlert = () => {
@@ -313,6 +315,7 @@ const CoinDetails = (props) => {
 
   useEffect(() => {
     const del = async () => {
+      setOperationHappening(true);
       const userID = sessionJotai?.user.id;
       const userId = sessionJotai?.user.id;
       const CoinGeckoID = coin?.CoinGeckoID;
@@ -355,6 +358,7 @@ const CoinDetails = (props) => {
         setAlertInfo({ message: error.message, severity: "error" });
       }
       setShowAlert(true);
+      setOperationHappening(false);
     };
 
     changeTableValue === 2 && del() && setChangeTableValue(0);
@@ -734,6 +738,7 @@ const CoinDetails = (props) => {
             <Button
               sx={{
                 marginTop: "20px",
+                p: "0.5rem 1rem",
                 backgroundColor: "#1188ff",
                 color: "white",
                 fontSize: "0.8rem",

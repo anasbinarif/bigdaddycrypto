@@ -28,7 +28,6 @@ import {
   getCategoryColor,
   getCurrencyAndRates,
   getUserPortfolio,
-
 } from "../../../lib/data";
 import AlertBar from "../../customAllert/Alert";
 import { useAtom } from "jotai/index";
@@ -40,6 +39,7 @@ import { faCrown, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import addCommas from "../../../lib/currencyFormatter";
 import maxLenCrop from "../../../lib/checkString";
+import LoadingCircle from "../../loading/Loading";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -208,6 +208,7 @@ const PortfolioComponent = ({
   assetsLeangth,
   setSelectedCoin,
   setTabSelector,
+  operationHappening = null,
 }) => {
   const [width, setWidth] = useState(0);
   const [sessionJotai] = useAtom(sessionAtom);
@@ -671,10 +672,20 @@ const PortfolioComponent = ({
   // console.log("port,", portfolio);
 
   const renderPortfolio = useMemo(() => {
+    const sortedPortfolio =
+      portfolio?.assets &&
+      portfolio.assets.sort((a, b) => {
+        const aCalc = setFinancialSummaryAPI(a?.CoinGeckoID);
+        const bCalc = setFinancialSummaryAPI(b?.CoinGeckoID);
+
+        return bCalc[1] - aCalc[1];
+      });
+    // console.log(sortedPortfolio);
+
     return !portfolio?.assets ? (
       <></>
     ) : (
-      portfolio?.assets.slice().map((asset, index) => (
+      sortedPortfolio.slice().map((asset, index) => (
         <PortfolioCard
           key={asset.id} // Use a stable unique key
           asset={asset}
@@ -721,8 +732,25 @@ const PortfolioComponent = ({
             // p: "2px",
             display: "flex",
             borderRadius: "8px",
+            position: "relatvie",
           }}
         >
+          {operationHappening && (
+            <Box
+              sx={{
+                backgroundColor: "#00000080",
+                borderRadius: "8px",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 1,
+              }}
+            >
+              <LoadingCircle />
+            </Box>
+          )}
           <Box sx={{ p: 3, width: "100%" }}>
             <Box
               sx={{
