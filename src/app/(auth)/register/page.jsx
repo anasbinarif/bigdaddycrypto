@@ -8,6 +8,10 @@ import {
   FormControlLabel,
   List,
   ListItem,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Modal,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -46,6 +50,8 @@ const RegisterPage = () => {
   });
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
 
   const isValidEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Standard email regex
@@ -158,9 +164,7 @@ const RegisterPage = () => {
             severity: "success",
           });
           setPending(false);
-          setTimeout(() => {
-            router.push("/login");
-          }, 1000);
+          setModalOpen(true);
           // router.push("/checkEmail");
         }
       } else {
@@ -175,6 +179,11 @@ const RegisterPage = () => {
     }
     setLoading(false);
   }
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    router.push("/login");
+  };
 
   const handleUserChange = (event) => {
     const { name, value } = event.target;
@@ -571,6 +580,7 @@ const RegisterPage = () => {
             mt: 2,
             maxWidth: "400px",
             fontSize: "12px",
+            color: "white",
             "@media only screen and (max-width: 500px)": {
               margin: "0 2rem",
               width: "85%",
@@ -629,6 +639,63 @@ const RegisterPage = () => {
         severity={alert.severity}
         onClose={() => setAlert({ ...alert, open: false })}
       />
+      <Dialog
+        open={modalOpen}
+        onClose={handleCloseModal}
+        PaperProps={{
+          sx: {
+            width: { xs: "100%", sm: "90%", md: "70%" },
+            maxWidth: "600px",
+            backgroundColor: "#111826",
+            color: "white",
+            // padding: "1rem",
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            "& .MuiTypography-root": { color: "white" },
+            "& a": {
+              color: "var(--color-secondary)",
+
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            },
+          }}
+        >
+          <Typography>
+            Please check your email for a verification Link.
+          </Typography>
+          <Typography>
+            If you did not receive an email, please contact us at{" "}
+            <Link href="mailto:support@koinfolio.com">
+              support@koinfolio.com
+            </Link>
+          </Typography>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            "& .MuiButtonBase-root": {
+              backgroundColor: "var(--color-secondary-2)",
+              color: "#111826",
+              margin: "1rem",
+            },
+          }}
+        >
+          <Button
+            onClick={handleCloseModal}
+            sx={{
+              "&:hover": {
+                backgroundColor: "#02673e",
+                borderBottom: "2px solid var(--color-secondary)",
+              },
+            }}
+          >
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

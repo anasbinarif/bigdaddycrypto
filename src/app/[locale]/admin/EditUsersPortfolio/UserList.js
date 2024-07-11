@@ -39,7 +39,7 @@ const UserList = ({
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("userEmail");
 
-  // console.log("usersusersusers", users);
+  console.log("usersusersusers", users);
 
   const handleUserClicked = async (user) => {
     setLoading(true);
@@ -82,6 +82,8 @@ const UserList = ({
       return 0;
     });
   }, [users, order, orderBy]);
+
+  console.log(order, orderBy);
 
   return (
     <Box>
@@ -146,9 +148,9 @@ const UserList = ({
                     sortDirection={orderBy === "userEmail" ? order : false}
                   >
                     <TableSortLabel
-                      active={orderBy === "userEmail"}
-                      direction={orderBy === "userEmail" ? order : "asc"}
-                      onClick={(e) => handleRequestSort(e, "userEmail")}
+                      active={orderBy === "username"}
+                      direction={orderBy === "username" ? order : "asc"}
+                      onClick={(e) => handleRequestSort(e, "username")}
                     >
                       User
                     </TableSortLabel>
@@ -157,7 +159,13 @@ const UserList = ({
                     <TableSortLabel>Comment</TableSortLabel>
                   </TableCell>
                   <TableCell>
-                    <TableSortLabel>Email</TableSortLabel>
+                    <TableSortLabel
+                      active={orderBy === "userEmail"}
+                      direction={orderBy === "userEmail" ? order : "asc"}
+                      onClick={(e) => handleRequestSort(e, "userEmail")}
+                    >
+                      Email
+                    </TableSortLabel>
                   </TableCell>
                   <TableCell
                     sortDirection={
@@ -205,7 +213,7 @@ const UserList = ({
                   },
                 }}
               >
-                {users.map((user, index) => (
+                {sortedUsers.map((user, index) => (
                   <TableRow
                     key={index}
                     hover
@@ -240,7 +248,9 @@ const UserList = ({
                         }
                       }
                     >
-                      {user.notizen?.UserComment ? user.notizen.UserComment : ""}
+                      {user.notizen?.UserComment
+                        ? user.notizen.UserComment
+                        : ""}
                     </TableCell>
                     <TableCell
                       sx={{

@@ -15,9 +15,18 @@ const Policy = ({ component }) => {
         // flexDirection: "column",
         justifyContent: "center", // Center horizontally
         m: "0 5rem",
+
+        "@media only screen and (max-width: 600px)": {
+          m: "0 1rem",
+        },
       }}
     >
-      <Box sx={{ maxWidth: "1440px" }}>
+      <Box
+        sx={{
+          maxWidth: "1440px",
+          "& .MuiTypography-root": { color: "white" },
+        }}
+      >
         {component === "datenschutz" ? (
           <Datenschutz />
         ) : component === "widerrufsbelehrung" ? (

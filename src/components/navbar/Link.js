@@ -114,8 +114,9 @@ const NavbarLink = ({ mobileView, handleClose }) => {
         }
         // console.log("session for admin", session, status);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         console.error("Error updating session with subscription:", error);
+        handleLogoutFun();
       }
     };
 

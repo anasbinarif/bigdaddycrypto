@@ -5,7 +5,14 @@ import Link from "next/link";
 const Agb = () => {
   return (
     <>
-      <Typography sx={{ fontSize: "2.5rem" }}>
+      <Typography
+        sx={{
+          fontSize: "2.5rem",
+          "@media only screen and (max-width: 600px)": {
+            fontSize: "1.5rem",
+          },
+        }}
+      >
         Allgemeine Geschäftsbedingungen (AGB)
       </Typography>
       <List>
@@ -23,12 +30,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 1 Geltungsbereich
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Diese AGB gelten für alle Verträge, die über die Webseite der
               Cryptoverse Solutions GbR mit Kunden abgeschlossen werden.
@@ -49,12 +69,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 2 Vertragspartner
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Der Vertrag kommt zustande mit der Cryptoverse Solutions GbR,
               vertreten durch Ebrahim Gholamhosseinnejad.
@@ -75,12 +108,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 3 Vertragsabschluss
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Die Darstellung der Dienstleistungen auf der Webseite stellt kein
               rechtlich bindendes Angebot, sondern eine Aufforderung zur
@@ -108,12 +154,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 4 Widerrufsrecht
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Verbraucher haben ein vierzehntägiges Widerrufsrecht.
               <br style={{ marginBottom: "1rem" }}></br>
@@ -136,12 +195,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 5 Preise und Zahlungsbedingungen
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Die auf der Webseite genannten Preise enthalten die gesetzliche
               Mehrwertsteuer und sonstige Preisbestandteile.
@@ -165,12 +237,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 6 Erbringung der Dienstleistungen
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Die Erbringung der Dienstleistungen erfolgt digital. Videos und
               andere digitale Inhalte werden nach individueller Absprache mit
@@ -196,12 +281,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 7 Abonnements
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Bei Abschluss eines Abonnements wird der Vertrag auf unbestimmte
               Zeit geschlossen und kann von beiden Parteien mit einer Frist von
@@ -227,12 +325,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 8 Gewährleistung und Haftung
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               <List sx={{ m: "2rem 0 0" }}>
                 <ListItem>
@@ -275,12 +386,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 9 Freistellung
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               <List sx={{ m: "2rem 0 0" }}>
                 <ListItem>
@@ -314,12 +438,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 10 Datenschutz
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Informationen zur Verarbeitung personenbezogener Daten finden Sie
               in unserer Datenschutzerklärung.
@@ -340,12 +477,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 11 Nutzungsbedingungen der Webseite
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Die Nutzung unserer Webseite ist nur für rechtmäßige Zwecke
               gestattet.
@@ -372,12 +522,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 12 Lizenzierung und Urheberrecht
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Alle Inhalte und Werke auf dieser Webseite unterliegen dem
               deutschen Urheberrecht.
@@ -402,12 +565,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 13 Streitbeilegung
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Die Europäische Kommission stellt eine Plattform zur
               Online-Streitbeilegung (OS) bereit:
@@ -433,12 +609,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 14 Änderungen der AGB
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Wir behalten uns vor, diese AGB jederzeit zu ändern.
               <br style={{ marginBottom: "1rem" }}></br>
@@ -461,12 +650,25 @@ const Agb = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             § 15 Schlussbestimmungen
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Änderungen oder Ergänzungen dieser AGB bedürfen der Schriftform.
               <br style={{ marginBottom: "1rem" }}></br>
