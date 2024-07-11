@@ -680,7 +680,7 @@ const PortfolioComponent = ({
 
         return bCalc[1] - aCalc[1];
       });
-    // console.log(sortedPortfolio);
+    console.log(sortedPortfolio);
 
     return !portfolio?.assets ? (
       <></>
