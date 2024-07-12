@@ -187,7 +187,7 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
       X: checkNaN(X),
     });
     changeTableValue === 1 && setChangeTableValue(2);
-  }, [rowVals, coin?.Price, portfolio]);
+  }, [rowVals, coin?.Price]);
 
   const checkNaN = (value) => (isNaN(value) ? 0 : value);
 
@@ -219,7 +219,7 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
       const betrag = parseFloat(row["Betrag"]);
       let num = betrag / coins;
       // console.log(num);
-      if (num < 0.01) num = Number(num.toPrecision(2));
+      // if (num > 0.01) num = Number(num.toPrecision(2));
       // else num = num.toFixed(2);
       console.log(num);
 

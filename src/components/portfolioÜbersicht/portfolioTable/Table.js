@@ -297,7 +297,7 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
       setSortedData(mergedData);
     }
   }, [portfolio, preCalcPort]);
-  const assetsLeangth = portfolio?.assets?.length;
+  const assetsLeangth = preCalcPort?.length || portfolio?.assets?.length;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
