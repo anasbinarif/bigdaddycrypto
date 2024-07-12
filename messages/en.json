@@ -234,7 +234,7 @@
     "assetAdded": "Asset added successfully!",
     "assetAddFailed": "Failed to add asset.",
     "fillAllFields": "Please fill in all required fields.",
-    "none": "none"
+    "none": "No hype topic"
   },
   "Overview": {
     "buttonText": "Request comment from BigDaddy now"
