@@ -15,12 +15,21 @@ const validateCopeCartSignature = (req, rawBody) => {
 const updateSubscriptionStatus = async (event) => {
     const { event_type: eventType, buyer_email: buyerEmail, product_id: productId, product_name: productName, frequency, payment_status, transaction_id, transaction_amount, transaction_date, payment_plan } = event;
 
+    console.log("[INFO] Event type:", eventType);
+    console.log("[INFO] Buyer email:", buyerEmail);
+    console.log("[INFO] Product ID:", productId);
+    console.log("[INFO] Product name:", productName);
+    console.log("[INFO] Payment plan:", payment_plan);
+    console.log("[INFO] Payment status:", payment_status);
+
     const user = await User.findOne({ email: buyerEmail });
 
     if (!user) {
-        console.error(`User not found for email: ${buyerEmail}`);
+        console.error("[ERROR] User not found for email:", buyerEmail);
         return;
     }
+
+    console.log("[INFO] User found:", user.email);
 
     // Map product names to plan
     const planMapping = {
@@ -59,6 +68,7 @@ const updateSubscriptionStatus = async (event) => {
                 user.currentSubscription = payment._id;
                 user.activated = true;
                 await user.save();
+                console.log("[INFO] User subscription updated:", user.email);
             } else if (payment_plan !== 'abonement') {
                 const paymentRecord = await Payments.findOne({ userId: user._id }) || new Payments({ userId: user._id, oneTimePayment: [] });
                 const oneTimePayment = {
@@ -77,12 +87,13 @@ const updateSubscriptionStatus = async (event) => {
             user.subscribed = false;
             user.currentSubscription = null;
             await user.save();
+            console.log("[INFO] User subscription failed:", user.email);
             break;
 
         // Handle other events as necessary
 
         default:
-            console.log(`Unhandled event type: ${eventType}`);
+            console.log("[INFO] Unhandled event type:", eventType);
     }
 };
 
@@ -90,16 +101,21 @@ export async function POST(req) {
     const rawBody = await req.text();
     const webhookEvent = JSON.parse(rawBody);
 
+    console.log("[INFO] Received webhook event:", webhookEvent);
+
     try {
         if (!validateCopeCartSignature(req, rawBody)) {
+            console.error("[ERROR] Invalid signature");
             return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
         }
+
+        console.log("[INFO] Valid signature");
 
         await connectToDb();
         await updateSubscriptionStatus(webhookEvent);
         return NextResponse.json({ message: 'Webhook received' }, { status: 200 });
     } catch (error) {
-        console.error('Error processing webhook:', error);
+        console.error("[ERROR] Error processing webhook:", error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
