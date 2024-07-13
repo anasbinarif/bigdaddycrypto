@@ -55,7 +55,7 @@ const updateSubscriptionStatus = async (event) => {
                         plan: plan,
                         planId: productId,
                         billingCycle: frequency,
-                        status: payment_status,
+                        status: "active",
                         subscriptionId: transaction_id,
                         nextBilledAt: nextBillingDate.getTime(),
                         endDate: null,
@@ -70,16 +70,16 @@ const updateSubscriptionStatus = async (event) => {
                 await user.save();
                 console.log("[INFO] User subscription updated:", user.email);
             } else if (payment_plan !== 'abonement') {
-                const paymentRecord = await Payments.findOne({ userId: user._id }) || new Payments({ userId: user._id, oneTimePayment: [] });
-                const oneTimePayment = {
-                    date: new Date(transaction_date),
-                    price: transaction_amount,
-                    status: payment_status === 'paid' ? 'Paid' : 'Pending'
-                };
+                // const paymentRecord = await Payments.findOne({ userId: user._id }) || new Payments({ userId: user._id, oneTimePayment: [] });
+                // const oneTimePayment = {
+                //     date: new Date(transaction_date),
+                //     price: transaction_amount,
+                //     status: payment_status === 'paid' ? 'Paid' : 'Pending'
+                // };
 
-                paymentRecord.oneTimePayment.push(oneTimePayment);
-                await paymentRecord.save();
-                console.log("[INFO] Stored one-time payment details:", paymentRecord._id);
+                // paymentRecord.oneTimePayment.push(oneTimePayment);
+                // await paymentRecord.save();
+                // console.log("[INFO] Stored one-time payment details:", paymentRecord._id);
             }
             break;
 
