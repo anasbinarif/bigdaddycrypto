@@ -41,12 +41,6 @@ const updateSubscriptionStatus = async (event) => {
 
     console.log("[INFO] Mapped plan:", plan);
 
-    // Check if the payment already exists for this user
-    const existingPayment = await Payments.findOne({ userId: user._id });
-    if (existingPayment) {
-        console.log("[INFO] Payment already exists for user:", user._id, "existingPayment:", existingPayment);
-        return;
-    }
 
     switch (eventType) {
         case 'payment.made':
@@ -57,10 +51,10 @@ const updateSubscriptionStatus = async (event) => {
                 } else if (frequency === 'yearly') {
                     nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
                 }
-
-                const payment = new Payments({
-                    userId: user._id,
-                    Subscription: {
+                let paymentRecord = await Payments.findOne({ userId: user._id, 'Subscription.subscriptionId': transaction_id });
+                if (paymentRecord) {
+                    console.log("[INFO] Payment already exists for user:", user._id, "paymentRecord", paymentRecord);
+                    paymentRecord.Subscription = {
                         plan: plan,
                         planId: productId,
                         billingCycle: frequency,
@@ -68,18 +62,32 @@ const updateSubscriptionStatus = async (event) => {
                         subscriptionId: transaction_id,
                         nextBilledAt: nextBillingDate.getTime(),
                         endDate: null,
-                    },
-                });
-                await payment.save();
-                console.log("[INFO] Stored subscription payment details:", payment._id);
+                    };
+                } else {
+                    paymentRecord = new Payments({
+                        userId: user._id,
+                        Subscription: {
+                            plan: plan,
+                            planId: productId,
+                            billingCycle: frequency,
+                            status: "active",
+                            subscriptionId: transaction_id,
+                            nextBilledAt: nextBillingDate.getTime(),
+                            endDate: null,
+                        },
+                        oneTimePayment: [],
+                    });
+                }
+
+                await paymentRecord.save();
+                console.log("[INFO] Stored/Updated subscription payment details:", paymentRecord);
 
                 user.subscribed = true;
-                user.currentSubscription = payment._id;
+                user.currentSubscription = paymentRecord._id;
                 user.activated = true;
                 await user.save();
                 console.log("[INFO] User subscription updated:", user.email);
             } else if (payment_plan !== 'abonement') {
-                // const paymentRecord = await Payments.findOne({ userId: user._id }) || new Payments({ userId: user._id, oneTimePayment: [] });
                 // const oneTimePayment = {
                 //     date: new Date(transaction_date),
                 //     price: transaction_amount,
