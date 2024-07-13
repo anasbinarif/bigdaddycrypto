@@ -1,96 +1,109 @@
 // app/api/webhooks/copecart/route.js
+import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { connectToDb } from '../../../../lib/utils';
 import { User, Payments } from '../../../../lib/models';
-import { NextResponse } from 'next/server';
-import crypto from 'crypto';
 
 const COPECART_SECRET_KEY = "wbQ6MU5Q@4i%c!8MaQyL";
 
-export async function POST(req) {
-    await connectToDb();
-    console.log("[INFO] Received IPN request");
-
-    const rawBody = await req.text();
+const validateCopeCartSignature = (req, rawBody) => {
     const copecartSignature = req.headers.get('x-copecart-signature');
+    const generatedSignature = crypto.createHmac('sha256', COPECART_SECRET_KEY).update(rawBody).digest('base64');
+    return generatedSignature === copecartSignature;
+};
 
-    console.log("[DEBUG] Raw body:", rawBody);
-    console.log("[DEBUG] CopeCart Signature:", copecartSignature);
+const updateSubscriptionStatus = async (event) => {
+    const { event_type: eventType, buyer_email: buyerEmail, product_id: productId, product_name: productName, frequency, payment_status, transaction_id, transaction_amount, transaction_date, payment_plan } = event;
 
-    const generateSignature = (data, secret) => {
-        return crypto.createHmac('sha256', secret).update(data).digest('base64');
-    };
+    const user = await User.findOne({ email: buyerEmail });
 
-    const isValidSignature = (body, signature, secret) => {
-        const generatedSignature = generateSignature(body, secret);
-        console.log("[DEBUG] Generated Signature:", generatedSignature);
-        return generatedSignature === signature;
-    };
-
-    if (!isValidSignature(rawBody, copecartSignature, COPECART_SECRET_KEY)) {
-        console.error("[ERROR] Invalid signature");
-        return NextResponse.json({ error: 'Invalid signature copecart' }, { status: 400 });
+    if (!user) {
+        console.error(`User not found for email: ${buyerEmail}`);
+        return;
     }
+
+    // Map product names to plan
+    const planMapping = {
+        "Pro Abonnement": "Pro",
+        "Premium Abonnement": "Premium"
+    };
+
+    const plan = planMapping[productName];
+
+    switch (eventType) {
+        case 'payment.made':
+            if (plan && payment_plan === 'abonement') {
+                const nextBillingDate = new Date(transaction_date);
+                if (frequency === 'monthly') {
+                    nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
+                } else if (frequency === 'yearly') {
+                    nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
+                }
+
+                const payment = new Payments({
+                    userId: user._id,
+                    Subscription: {
+                        plan: plan,
+                        planId: productId,
+                        billingCycle: frequency,
+                        status: payment_status,
+                        subscriptionId: transaction_id,
+                        nextBilledAt: nextBillingDate.getTime(),
+                        endDate: null,
+                    },
+                });
+                await payment.save();
+                console.log("[INFO] Stored subscription payment details:", payment._id);
+
+                user.subscribed = true;
+                user.currentSubscription = payment._id;
+                user.activated = true;
+                await user.save();
+            } else if (payment_plan !== 'abonement') {
+                const paymentRecord = await Payments.findOne({ userId: user._id }) || new Payments({ userId: user._id, oneTimePayment: [] });
+                const oneTimePayment = {
+                    date: new Date(transaction_date),
+                    price: transaction_amount,
+                    status: payment_status === 'paid' ? 'Paid' : 'Pending'
+                };
+
+                paymentRecord.oneTimePayment.push(oneTimePayment);
+                await paymentRecord.save();
+                console.log("[INFO] Stored one-time payment details:", paymentRecord._id);
+            }
+            break;
+
+        case 'payment.failed':
+            user.subscribed = false;
+            user.currentSubscription = null;
+            await user.save();
+            break;
+
+        // Handle other events as necessary
+
+        default:
+            console.log(`Unhandled event type: ${eventType}`);
+    }
+};
+
+export async function POST(req) {
+    const rawBody = await req.text();
+    const webhookEvent = JSON.parse(rawBody);
 
     try {
-        const { event, data } = JSON.parse(rawBody);
-
-        console.log("[INFO] Event type:", event);
-
-        if (event === 'payment.made') {
-            console.log("[INFO] Processing payment.made event", data);
-            const userId = data.custom_fields?.user_id;
-            const planId = data.product_id;
-            const billingCycle = data.frequency;
-            const paymentStatus = data.payment_status;
-            const transactionId = data.transaction_id;
-            const transactionAmount = data.transaction_amount;
-            const transactionDate = data.transaction_date;
-
-            if (!userId || !planId || !transactionId) {
-                console.error("[ERROR] Missing user ID, plan ID, or transaction ID");
-                return NextResponse.json({ error: 'Missing user ID, plan ID, or transaction ID' }, { status: 400 });
-            }
-
-            const user = await User.findById(userId);
-            if (!user) {
-                console.error("[ERROR] User not found:", userId);
-                return NextResponse.json({ error: 'User not found' }, { status: 404 });
-            }
-
-            // Update user subscription status
-            user.subscribed = true;
-            user.currentSubscription = planId;
-            user.activated = true;
-            // await user.save();
-            console.log("[INFO] Updated user subscription status:", userId);
-
-            // Store payment details
-            const payment = new Payments({
-                userId,
-                Subscription: {
-                    plan: planId,
-                    billingCycle,
-                    status: paymentStatus,
-                    subscriptionId: transactionId,
-                    nextBilledAt: new Date(transactionDate).getTime() + 30 * 24 * 60 * 60 * 1000, // assuming monthly billing
-                    endDate: null,
-                },
-                oneTimePayment: [{
-                    date: new Date(transactionDate),
-                    price: transactionAmount,
-                    status: paymentStatus === 'paid' ? 'Paid' : 'Pending',
-                }],
-            });
-            // await payment.save();
-            console.log("[INFO] Stored payment details:", payment._id);
-
-            return NextResponse.json({ message: 'Subscription updated successfully' }, { status: 200 });
+        if (!validateCopeCartSignature(req, rawBody)) {
+            return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
         }
 
-        console.log("[INFO] Event not handled:", event);
-        return NextResponse.json({ message: 'Event received but not handled' }, { status: 200 });
+        await connectToDb();
+        await updateSubscriptionStatus(webhookEvent);
+        return NextResponse.json({ message: 'Webhook received' }, { status: 200 });
     } catch (error) {
-        console.error("[ERROR] Error processing webhook:", error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+        console.error('Error processing webhook:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
+
+// Route segment config
+// export const runtime = 'nodejs';
+// export const preferredRegion = 'auto';
