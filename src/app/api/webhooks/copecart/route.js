@@ -31,13 +31,6 @@ const updateSubscriptionStatus = async (event) => {
 
     console.log("[INFO] User found:", user.email);
 
-    // Check if the payment already exists for this user
-    const existingPayment = await Payments.findOne({ userId: user._id });
-    if (existingPayment) {
-        console.log("[INFO] Payment already exists for user:", user._id, "Transaction ID:", transaction_id);
-        return;
-    }
-
     // Map product names to plan
     const planMapping = {
         "1-Jahres-Premium Abonnement": "Premium",
@@ -47,6 +40,13 @@ const updateSubscriptionStatus = async (event) => {
     const plan = planMapping[productName];
 
     console.log("[INFO] Mapped plan:", plan);
+
+    // Check if the payment already exists for this user
+    const existingPayment = await Payments.findOne({ userId: user._id });
+    if (existingPayment) {
+        console.log("[INFO] Payment already exists for user:", user._id, "existingPayment:", existingPayment);
+        return;
+    }
 
     switch (eventType) {
         case 'payment.made':
