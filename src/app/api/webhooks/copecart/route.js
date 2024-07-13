@@ -51,7 +51,7 @@ const updateSubscriptionStatus = async (event) => {
                 } else if (frequency === 'yearly') {
                     nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
                 }
-                let paymentRecord = await Payments.findOne({ userId: user._id, 'Subscription.subscriptionId': transaction_id });
+                let paymentRecord = await Payments.findOne({ userId: user._id });
                 if (paymentRecord) {
                     console.log("[INFO] Payment already exists for user:", user._id, "paymentRecord", paymentRecord);
                     paymentRecord.Subscription = {
