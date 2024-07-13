@@ -685,26 +685,28 @@ const PortfolioComponent = ({
     return !portfolio?.assets ? (
       <></>
     ) : (
-      sortedPortfolio.slice().map((asset, index) => (
-        <PortfolioCard
-          key={asset.id} // Use a stable unique key
-          asset={asset}
-          index={index}
-          deleteIconIndex={deleteIconIndex}
-          handleMouseEnter={handleMouseEnter}
-          handleMouseLeave={handleMouseLeave}
-          setCoin={setCoin}
-          handleDeleteClick={handleDeleteClick}
-          currency={currency}
-          rates={rates}
-          getCategoryColors={getCategoryColors}
-          currencySign={currencySign}
-          setFinancialSummaryAPI={setFinancialSummaryAPI}
-          convertPrice={convertPrice}
-          addCommas={addCommas}
-          maxLenCrop={maxLenCrop}
-        />
-      ))
+      sortedPortfolio
+        .slice()
+        .map((asset, index) => (
+          <PortfolioCard
+            key={asset.id}
+            asset={asset}
+            index={index}
+            deleteIconIndex={deleteIconIndex}
+            handleMouseEnter={handleMouseEnter}
+            handleMouseLeave={handleMouseLeave}
+            setCoin={setCoin}
+            handleDeleteClick={handleDeleteClick}
+            currency={currency}
+            rates={rates}
+            getCategoryColors={getCategoryColors}
+            currencySign={currencySign}
+            setFinancialSummaryAPI={setFinancialSummaryAPI}
+            convertPrice={convertPrice}
+            addCommas={addCommas}
+            maxLenCrop={maxLenCrop}
+          />
+        ))
     );
   }, [portfolio]);
 

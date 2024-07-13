@@ -107,12 +107,17 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
           body: JSON.stringify({ userID }),
         });
       }
-    }
-    callCronJob()
+    };
+    callCronJob();
   }, [sessionJotai]);
 
   useEffect(() => {
-    if (sessionJotai && sessionJotai.user && sessionJotai.user.id && sessionJotai.user.accessToken) {
+    if (
+      sessionJotai &&
+      sessionJotai.user &&
+      sessionJotai.user.id &&
+      sessionJotai.user.accessToken
+    ) {
       const timer = setTimeout(() => {
         const fetchCookies = async () => {
           const userID = sessionJotai.user.id;
@@ -131,8 +136,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
             cookie?.CookiesPrompt
               ? setShowCookieDrawer(false)
               : setShowCookieDrawer(true);
-          } catch (err) {
-          }
+          } catch (err) {}
         };
 
         fetchCookies();
@@ -142,18 +146,17 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     }
   }, [sessionJotai]);
 
-
   // console.log("showCookieDrawer", showCookieDrawer);
 
   useEffect(() => {
     const fetchPortfolioCoinsLoop = async () => {
-      console.log("fetchPortfolioCoinsLoop")
+      console.log("fetchPortfolioCoinsLoop");
       const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
       setPortfolio(userPortfolio.data);
     };
 
     if (sessionJotai) {
-      const delay = 120 * 1000; // 2 minutes in milliseconds
+      const delay = 2 * 60 * 1000;
 
       const interval = setInterval(fetchPortfolioCoinsLoop, delay);
 
@@ -165,7 +168,6 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
       };
     }
   }, [sessionJotai, portfolio]);
-
 
   return (
     <>
