@@ -5,7 +5,16 @@ import Link from "next/link";
 const Impressum = () => {
   return (
     <>
-      <Typography sx={{ fontSize: "2.5rem" }}>Impressum</Typography>
+      <Typography
+        sx={{
+          fontSize: "2.5rem",
+          "@media only screen and (max-width: 600px)": {
+            fontSize: "1.5rem",
+          },
+        }}
+      >
+        Impressum
+      </Typography>
       <List>
         <ListItem
           sx={{
@@ -21,12 +30,25 @@ const Impressum = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             Angaben gemäß § 5 TMG
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Cryptoverse Solutions GbR
               <br style={{ marginBottom: "1rem" }}></br>
@@ -38,7 +60,16 @@ const Impressum = () => {
             </Typography>
           </Box>
 
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -48,7 +79,16 @@ const Impressum = () => {
               Ebrahim Gholamhosseinnejad
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -75,12 +115,25 @@ const Impressum = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             Haftung für Inhalte
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Ebrahim Gholamhosseinnejad haftet als alleiniger Geschäftsführer
               für die Inhalte auf dieser Webseite. Trotz sorgfältiger Erstellung
@@ -114,12 +167,25 @@ const Impressum = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             Haftung für Links
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Unser Angebot enthält Links zu externen Websites Dritter, auf
               deren Inhalte wir keinen Einfluss haben. Deshalb können wir für
@@ -149,12 +215,25 @@ const Impressum = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             Urheberrecht
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Die durch die Seitenbetreiber erstellten Inhalte und Werke auf
               diesen Seiten unterliegen dem deutschen Urheberrecht. Die
@@ -186,12 +265,25 @@ const Impressum = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             Streitschlichtung
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography sx={{ fontSize: "1.3rem" }}>
               Die Europäische Kommission stellt eine Plattform zur
               Online-Streitbeilegung (OS) bereit:

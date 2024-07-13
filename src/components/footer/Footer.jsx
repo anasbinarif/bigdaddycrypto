@@ -17,8 +17,22 @@ const Footer = () => {
         padding: "20px", // Add padding for spacing
       }}
     >
-      <Box sx={{ mb: "1rem" }}>
-        <List sx={{ display: "flex" }}>
+      <Box
+        sx={{
+          mb: "1rem",
+          "@media only screen and (max-width: 600px)": {
+            alignSelf: "flex-start",
+          },
+        }}
+      >
+        <List
+          sx={{
+            display: "flex",
+            "@media only screen and (max-width: 600px)": {
+              flexDirection: "column",
+            },
+          }}
+        >
           <ListItem>
             <Link href="/policy/datenschutz">Datenschutz</Link>
           </ListItem>

@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import { type } from "os";
 
-const userSchema = new mongoose.Schema(
-  {
+const userSchema = new mongoose.Schema({
     username: {
       type: String,
       required: true,
@@ -63,8 +62,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const PaymentsSchema = new mongoose.Schema(
-  {
+const PaymentsSchema = new mongoose.Schema({
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -121,8 +119,7 @@ const PaymentsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const assetsSchema = new mongoose.Schema(
-  {
+const assetsSchema = new mongoose.Schema({
     ID: {
       type: Number,
       unique: true,
@@ -210,8 +207,7 @@ const assetsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const portfolioSchema = new mongoose.Schema(
-  {
+const portfolioSchema = new mongoose.Schema({
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -307,8 +303,7 @@ const portfolioSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const pastUserSchema = new mongoose.Schema(
-  {
+const pastUserSchema = new mongoose.Schema({
     EditPIN: {
       type: String,
       maxlength: 255,
@@ -376,8 +371,7 @@ const pastUserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const pastPortfolioSchema = new mongoose.Schema(
-  {
+const pastPortfolioSchema = new mongoose.Schema({
     ID: {
       type: Number,
       required: true,
@@ -471,19 +465,10 @@ const CronJobStatusSchema = new mongoose.Schema({
 });
 
 export const CronJobStatus = mongoose.models?.CronJobStatus || mongoose.model('CronJobStatus', CronJobStatusSchema);
-export const Payments =
-  mongoose.models?.Payments || mongoose.model("Payments", PaymentsSchema);
-export const PastPortfolio =
-  mongoose.models?.PastPortfolio ||
-  mongoose.model("PastPortfolio", pastPortfolioSchema);
-export const PastUsers =
-  mongoose.models?.PastUsers || mongoose.model("PastUsers", pastUserSchema);
-export const PastBuyAndSell =
-  mongoose.models?.PastBuyAndSell ||
-  mongoose.model("PastBuyAndSell", pastBuyAndSellSchema);
-export const UserPortfolio =
-  mongoose.models?.UserPortfolio ||
-  mongoose.model("UserPortfolio", portfolioSchema);
-export const Assets =
-  mongoose.models?.Assets || mongoose.model("Assets", assetsSchema);
+export const Payments = mongoose.models?.Payments || mongoose.model("Payments", PaymentsSchema);
+export const PastPortfolio = mongoose.models?.PastPortfolio || mongoose.model("PastPortfolio", pastPortfolioSchema);
+export const PastUsers = mongoose.models?.PastUsers || mongoose.model("PastUsers", pastUserSchema);
+export const PastBuyAndSell = mongoose.models?.PastBuyAndSell || mongoose.model("PastBuyAndSell", pastBuyAndSellSchema);
+export const UserPortfolio = mongoose.models?.UserPortfolio || mongoose.model("UserPortfolio", portfolioSchema);
+export const Assets = mongoose.models?.Assets || mongoose.model("Assets", assetsSchema);
 export const User = mongoose.models?.User || mongoose.model("User", userSchema);

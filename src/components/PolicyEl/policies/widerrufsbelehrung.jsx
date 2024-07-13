@@ -5,7 +5,16 @@ import Link from "next/link";
 const Widerrufsbelehrung = () => {
   return (
     <>
-      <Typography sx={{ fontSize: "2.5rem" }}>Widerrufsbelehrung</Typography>
+      <Typography
+        sx={{
+          fontSize: "2.5rem",
+          "@media only screen and (max-width: 600px)": {
+            fontSize: "1.5rem",
+          },
+        }}
+      >
+        Widerrufsbelehrung
+      </Typography>
       <List>
         <ListItem
           sx={{
@@ -15,7 +24,16 @@ const Widerrufsbelehrung = () => {
             mb: "2rem",
           }}
         >
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -26,7 +44,16 @@ const Widerrufsbelehrung = () => {
               diesen Vertrag zu widerrufen.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -37,7 +64,16 @@ const Widerrufsbelehrung = () => {
               Vertragsabschlusses.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >

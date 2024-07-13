@@ -87,7 +87,7 @@ const AddAsset = () => {
     coinGeckoID: "",
     cgPrice: "",
     cgImageURL: "",
-    risk: false,
+    risk: "",
     potential: "",
     sicherheit: "",
     categories: [],
@@ -169,7 +169,7 @@ const AddAsset = () => {
   const handleCheckboxChange = (event) => {
     setFormData((prevState) => ({
       ...prevState,
-      risk: event.target.checked,
+      risk: event.target.checked ? "risk" : "",
     }));
   };
 
@@ -212,7 +212,7 @@ const AddAsset = () => {
       coinGeckoID: "",
       cgPrice: "",
       cgImageURL: "",
-      risk: false,
+      risk: "",
       potential: "",
       sicherheit: "",
       categories: [],
@@ -239,6 +239,7 @@ const AddAsset = () => {
         potential: asset.Potential,
         sicherheit: asset.Sicherheit,
         categories: asset.Category.map(category => menuItemDisplayMap[category]),
+        risk: asset.Risk
       }));
     } else {
       setFormData((prevState) => ({
@@ -276,8 +277,6 @@ const AddAsset = () => {
       !formData.ticker ||
       !formData.bottom ||
       !formData.cgPrice ||
-      !formData.potential ||
-      !formData.sicherheit ||
       formData.categories.length === 0
     ) {
       setAlertMessage(t("fillAllFields"));
@@ -317,11 +316,22 @@ const AddAsset = () => {
         coinGeckoID: "",
         cgPrice: "",
         cgImageURL: "",
-        risk: false,
+        risk: "",
         potential: "",
         sicherheit: "",
         categories: [],
       });
+      getAllAssets()
+          .then((data) => {
+            // console.log(data);
+            setAllAssets(data.data);
+            // setSearchData(data.data.slice(0, 5));
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            setLoading(false);
+          });
     } else {
       setAlertMessage(t("assetAddFailed"));
     }
@@ -583,7 +593,7 @@ const AddAsset = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={formData.risk}
+                      checked={formData.risk === "risk"}
                       onChange={handleCheckboxChange}
                       sx={{
                         color: pink[800],
@@ -628,6 +638,7 @@ const AddAsset = () => {
                 <MenuItem value="CBDC-Netzwerke">{t("cbdc")}</MenuItem>
                 <MenuItem value="eCommerce">{t("ecommerce")}</MenuItem>
                 <MenuItem value="Tokenisierung/RWA">{t("nft")}</MenuItem>
+                <MenuItem value="none">{t("none")}</MenuItem>
               </Select>
             </FormControl>
             <Box

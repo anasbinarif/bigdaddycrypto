@@ -145,7 +145,7 @@ export const getAllAssets = async () => {
     headers: {
       "Content-Type": "application/json",
     },
-    cache: "force-cache",
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -730,6 +730,7 @@ export const categoriesDisplay1 = {
   cbdc: "CBDC-Netzwerke",
   ecommerce: "eCommerce",
   nft: "Tokenisierung/RWA",
+  none: "none"
 };
 
 export const categoriesDisplay = {

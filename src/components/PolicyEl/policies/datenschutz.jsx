@@ -5,7 +5,16 @@ import Link from "next/link";
 const Datenschutz = () => {
   return (
     <>
-      <Typography sx={{ fontSize: "2.5rem" }}>Datenschutz</Typography>
+      <Typography
+        sx={{
+          fontSize: "2.5rem",
+          "@media only screen and (max-width: 600px)": {
+            fontSize: "1.5rem",
+          },
+        }}
+      >
+        Datenschutz
+      </Typography>
       <List>
         <ListItem
           sx={{
@@ -21,6 +30,10 @@ const Datenschutz = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
@@ -28,11 +41,25 @@ const Datenschutz = () => {
           </ListItemText>
           <Box sx={{ mb: "2rem" }}>
             <Typography
-              sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
+              sx={{
+                fontWeight: "bold",
+                fontSize: "1.5rem",
+                mb: "1rem",
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              }}
             >
               Allgemeine Hinweise
             </Typography>
-            <Typography sx={{ fontSize: "1.3rem" }}>
+            <Typography
+              sx={{
+                fontSize: "1.3rem",
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1rem",
+                },
+              }}
+            >
               Die folgenden Hinweise geben einen einfachen Überblick darüber,
               was mit Ihren personenbezogenen Daten passiert, wenn Sie diese
               Website besuchen. Personenbezogene Daten sind alle Daten, mit
@@ -41,9 +68,22 @@ const Datenschutz = () => {
               diesem Text aufgeführten Datenschutzerklärung.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
-              sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
+              sx={{
+                fontWeight: "bold",
+                fontSize: "1.5rem",
+                mb: "1rem",
+              }}
             >
               Datenerfassung auf dieser Website
             </Typography>
@@ -59,7 +99,16 @@ const Datenschutz = () => {
               Datenschutzerklärung entnehmen.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -77,7 +126,16 @@ const Datenschutz = () => {
               automatisch, sobald Sie diese Website betreten.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -89,7 +147,16 @@ const Datenschutz = () => {
               zur Analyse Ihres Nutzerverhaltens verwendet werden.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -126,12 +193,25 @@ const Datenschutz = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             2. Hosting
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -174,12 +254,25 @@ const Datenschutz = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             3. Allgemeine Hinweise und Pflichtinformationen
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -204,7 +297,16 @@ const Datenschutz = () => {
               Dritte ist nicht möglich.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -227,7 +329,16 @@ const Datenschutz = () => {
               E-Mail-Adressen o. Ä.) entscheidet.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -245,7 +356,16 @@ const Datenschutz = () => {
               Fall erfolgt die Löschung nach Fortfall dieser Gründe.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -276,7 +396,16 @@ const Datenschutz = () => {
               in den folgenden Absätzen dieser Datenschutzerklärung informiert.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -304,7 +433,16 @@ const Datenschutz = () => {
               Datenschutzerklärung.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -328,7 +466,16 @@ const Datenschutz = () => {
               geschlossen.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -342,7 +489,16 @@ const Datenschutz = () => {
               unberührt.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -375,7 +531,16 @@ const Datenschutz = () => {
               (WIDERSPRUCH NACH ART. 21 ABS. 2 DSGVO).
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -390,7 +555,16 @@ const Datenschutz = () => {
               gerichtlicher Rechtsbehelfe.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -405,7 +579,16 @@ const Datenschutz = () => {
               verlangen, erfolgt dies nur, soweit es technisch machbar ist.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -421,7 +604,16 @@ const Datenschutz = () => {
               jederzeit an uns wenden.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -485,12 +677,25 @@ const Datenschutz = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             4. Datenerfassung auf dieser Website
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -544,7 +749,16 @@ const Datenschutz = () => {
               können Sie dieser Datenschutzerklärung entnehmen.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -575,7 +789,16 @@ const Datenschutz = () => {
               Aufbewahrungsfristen – bleiben unberührt.
             </Typography>
           </Box>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -621,12 +844,25 @@ const Datenschutz = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             5. Analyse-Tools und Werbung
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -732,12 +968,25 @@ const Datenschutz = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             6. Newsletter
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
@@ -804,12 +1053,25 @@ const Datenschutz = () => {
               "& .MuiTypography-root": {
                 fontWeight: "bold",
                 fontSize: "1.5rem",
+
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
               },
             }}
           >
             7. Plugins und Tools
           </ListItemText>
-          <Box sx={{ mb: "2rem" }}>
+          <Box
+            sx={{
+              mb: "2rem",
+              "& .MuiTypography-root": {
+                "@media only screen and (max-width: 600px)": {
+                  fontSize: "1.2rem",
+                },
+              },
+            }}
+          >
             <Typography
               sx={{ fontWeight: "bold", fontSize: "1.5rem", mb: "1rem" }}
             >
