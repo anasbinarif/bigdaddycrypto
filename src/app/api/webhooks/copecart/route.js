@@ -6,7 +6,7 @@ import crypto from 'crypto';
 
 const COPECART_SECRET_KEY = "wbQ6MU5Q@4i%c!8MaQyL";
 
-export async function POST(req) {
+export async function GET(req) {
     await connectToDb();
     console.log("app/api/webhooks/copecart/route.js");
 
