@@ -31,13 +31,22 @@ const updateSubscriptionStatus = async (event) => {
 
     console.log("[INFO] User found:", user.email);
 
+    // Check if the payment already exists for this user
+    const existingPayment = await Payments.findOne({ userId: user._id });
+    if (existingPayment) {
+        console.log("[INFO] Payment already exists for user:", user._id, "Transaction ID:", transaction_id);
+        return;
+    }
+
     // Map product names to plan
     const planMapping = {
-        "Pro Abonnement": "Pro",
-        "Premium Abonnement": "Premium"
+        "1-Jahres-Premium Abonnement": "Premium",
+        "Pro Abonnement": "Pro"
     };
 
     const plan = planMapping[productName];
+
+    console.log("[INFO] Mapped plan:", plan);
 
     switch (eventType) {
         case 'payment.made':
