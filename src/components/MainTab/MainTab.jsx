@@ -152,7 +152,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
     const fetchPortfolioCoinsLoop = async () => {
       console.log("fetchPortfolioCoinsLoop");
       const userPortfolio = await getUserPortfolio(sessionJotai?.user.id);
-      setPortfolio(userPortfolio.data);
+      setPortfolio(userPortfolio?.data || []);
     };
 
     if (sessionJotai) {
