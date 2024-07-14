@@ -5,10 +5,11 @@ import { connectToDb } from '../../../../lib/utils';
 import { User, Payments } from '../../../../lib/models';
 
 const COPECART_SECRET_KEY = "wbQ6MU5Q@4i%c!8MaQyL";
+const COPECART_ONE_TIME_PAYMENT_SECRET_KEY = "wbQ6MU5Q@4i%c!8MaQyZ";
 
-const validateCopeCartSignature = (req, rawBody) => {
+const validateCopeCartSignature = (req, rawBody, secretKey) => {
     const copecartSignature = req.headers.get('x-copecart-signature');
-    const generatedSignature = crypto.createHmac('sha256', COPECART_SECRET_KEY).update(rawBody).digest('base64');
+    const generatedSignature = crypto.createHmac('sha256', secretKey).update(rawBody).digest('base64');
     return generatedSignature === copecartSignature;
 };
 
@@ -23,10 +24,7 @@ const updateSubscriptionStatus = async (event) => {
     console.log("[INFO] Payment status:", payment_status);
 
     const emailLowerCase = buyerEmail.toLowerCase();
-
     const user = await User.findOne({ email: { $regex: new RegExp(`^${emailLowerCase}$`, 'i') } });
-
-    // const user = await User.findOne({ email: buyerEmail });
 
     if (!user) {
         console.error("[ERROR] User not found for email:", buyerEmail);
@@ -45,55 +43,60 @@ const updateSubscriptionStatus = async (event) => {
 
     console.log("[INFO] Mapped plan:", plan);
 
-
     switch (eventType) {
         case 'payment.made':
             if (plan && payment_plan === 'abonement') {
-                // const nextBillingDate = new Date(transaction_date);
-                // if (frequency === 'monthly') {
-                //     nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
-                // } else if (frequency === 'yearly') {
-                //     nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
-                // }
-                // let paymentRecord = await Payments.findOne({ userId: user._id });
-                // if (paymentRecord) {
-                //     console.log("[INFO] Payment already exists for user:", user._id, "paymentRecord", paymentRecord);
-                //     paymentRecord.Subscription = {
-                //         plan: plan,
-                //         planId: productId,
-                //         billingCycle: frequency,
-                //         status: "active",
-                //         subscriptionId: transaction_id,
-                //         nextBilledAt: nextBillingDate.getTime(),
-                //         endDate: null,
-                //     };
-                // } else {
-                //     paymentRecord = new Payments({
-                //         userId: user._id,
-                //         Subscription: {
-                //             plan: plan,
-                //             planId: productId,
-                //             billingCycle: frequency,
-                //             status: "active",
-                //             subscriptionId: transaction_id,
-                //             nextBilledAt: nextBillingDate.getTime(),
-                //             endDate: null,
-                //         },
-                //         oneTimePayment: [],
-                //     });
-                // }
+                const nextBillingDate = new Date(transaction_date);
+                if (frequency === 'monthly') {
+                    nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
+                } else if (frequency === 'yearly') {
+                    nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
+                }
+                let paymentRecord = await Payments.findOne({ userId: user._id });
+                if (paymentRecord) {
+                    console.log("[INFO] Payment already exists for user:", user._id, "paymentRecord", paymentRecord);
+                    paymentRecord.Subscription = {
+                        plan: plan,
+                        planId: productId,
+                        billingCycle: frequency,
+                        status: "active",
+                        subscriptionId: transaction_id,
+                        nextBilledAt: nextBillingDate.getTime(),
+                        endDate: null,
+                    };
+                } else {
+                    paymentRecord = new Payments({
+                        userId: user._id,
+                        Subscription: {
+                            plan: plan,
+                            planId: productId,
+                            billingCycle: frequency,
+                            status: "active",
+                            subscriptionId: transaction_id,
+                            nextBilledAt: nextBillingDate.getTime(),
+                            endDate: null,
+                        },
+                        oneTimePayment: [],
+                    });
+                }
 
-                // await paymentRecord.save();
-                // console.log("[INFO] Stored/Updated subscription payment details:", paymentRecord);
+                await paymentRecord.save();
+                console.log("[INFO] Stored/Updated subscription payment details:", paymentRecord);
 
-                // user.subscribed = true;
-                // user.currentSubscription = paymentRecord._id;
-                // user.activated = true;
-                // await user.save();
-                // console.log("[INFO] User subscription updated:", user.email);
+                user.subscribed = true;
+                user.currentSubscription = paymentRecord._id;
+                user.activated = true;
+                await user.save();
+                console.log("[INFO] User subscription updated:", user.email);
             } else if (payment_plan === 'one_time_payment') {
                 let paymentRecord = await Payments.findOne({ userId: user._id });
-                
+                if (!paymentRecord) {
+                    paymentRecord = new Payments({
+                        userId: user._id,
+                        oneTimePayment: []
+                    });
+                }
+
                 const oneTimePayment = {
                     date: new Date(transaction_date),
                     price: transaction_amount,
@@ -113,8 +116,6 @@ const updateSubscriptionStatus = async (event) => {
             console.log("[INFO] User subscription failed:", user.email);
             break;
 
-        // Handle other events as necessary
-
         default:
             console.log("[INFO] Unhandled event type:", eventType);
     }
@@ -126,8 +127,10 @@ export async function POST(req) {
 
     console.log("[INFO] Received webhook event:", webhookEvent);
 
+    const secretKey = webhookEvent.payment_plan === 'one_time_payment' ? COPECART_ONE_TIME_PAYMENT_SECRET_KEY : COPECART_SECRET_KEY;
+
     try {
-        if (!validateCopeCartSignature(req, rawBody)) {
+        if (!validateCopeCartSignature(req, rawBody, secretKey)) {
             console.error("[ERROR] Invalid signature");
             return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
         }
