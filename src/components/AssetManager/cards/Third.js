@@ -26,18 +26,36 @@ const Third = () => {
   const [portfolio] = useAtom(portfolioAtom, { assets: [] });
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [values, setValues] = useState({
+    totalInvestment: 0,
+    totalGesamtwert: 0,
+    aktuellerProfit: 0,
+    gesamtwertPercentage: 0,
+  })
 
-  const totalInvestment = portfolio?.assetsCalculations.assets
-    .reduce((acc, curr) => acc + curr.totalInvest, 0)
-    .toFixed(2);
-  const totalGesamtwert = portfolio?.assetsCalculations.assets
-    .reduce((acc, curr) => acc + curr.Holdings, 0)
-    .toFixed(2);
-  const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
-  const gesamtwertPercentage = (
-    (aktuellerProfit / totalInvestment) *
-    100
-  ).toFixed(2);
+  useEffect(() => {
+    if (portfolio && portfolio.assetsCalculations) {
+      const totalInvestment = portfolio.assetsCalculations.assets
+        .reduce((acc, curr) => acc + curr.totalInvest, 0)
+        .toFixed(2);
+      const totalGesamtwert = portfolio.assetsCalculations.assets
+        .reduce((acc, curr) => acc + curr.Holdings, 0)
+        .toFixed(2);
+      const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
+      const gesamtwertPercentage = (
+        (aktuellerProfit / totalInvestment) *
+        100
+      ).toFixed(2);
+
+      setValues({
+        totalInvestment,
+        totalGesamtwert,
+        aktuellerProfit,
+        gesamtwertPercentage,
+      });
+    }
+  }, [portfolio]);
+
   const [currency, setCurrency] = useState("EUR");
   const [rates, setRates] = useState(null);
   const searchParams = useSearchParams();
@@ -104,28 +122,28 @@ const Third = () => {
           }}
         >
           {maxLenCrop(
-            addCommas(convertPrice(totalGesamtwert, currency, rates))
+            addCommas(convertPrice(values.totalGesamtwert, currency, rates))
           )}{" "}
           {currencySign[currency]}
-          {addCommas(convertPrice(totalGesamtwert, currency, rates)).length >
+          {addCommas(convertPrice(values.totalGesamtwert, currency, rates)).length >
             12 && (
-            <div
-              style={{
-                position: "absolute",
-                top: 10,
-                left: 10,
-                backgroundColor: "#818181ef",
-                borderRadius: "4px",
-                padding: "2px",
-                fontSize: "14px",
-              }}
-            >
-              {addCommas(convertPrice(totalGesamtwert, currency, rates))}
-            </div>
-          )}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 10,
+                  backgroundColor: "#818181ef",
+                  borderRadius: "4px",
+                  padding: "2px",
+                  fontSize: "14px",
+                }}
+              >
+                {addCommas(convertPrice(values.totalGesamtwert, currency, rates))}
+              </div>
+            )}
         </Typography>
         <Typography
-          className={gesamtwertPercentage < 0 ? "down" : "up"}
+          className={values.gesamtwertPercentage < 0 ? "down" : "up"}
           sx={{
             "&.down": {
               color: "red",
@@ -145,7 +163,7 @@ const Third = () => {
             },
           }}
         >
-          {isNaN(gesamtwertPercentage) ? 0 : gesamtwertPercentage}%
+          {isNaN(values.gesamtwertPercentage) ? 0 : values.gesamtwertPercentage}%
         </Typography>
       </Box>
       <Box
@@ -179,7 +197,7 @@ const Third = () => {
               fontWeight: "bold",
             }}
           >
-            {addCommas(convertPrice(totalInvestment, currency, rates))}{" "}
+            {addCommas(convertPrice(values.totalInvestment, currency, rates))}{" "}
             {currencySign[currency]}
           </Typography>
         </Box>
@@ -204,7 +222,7 @@ const Third = () => {
               fontWeight: "bold",
             }}
           >
-            {addCommas(convertPrice(aktuellerProfit, currency, rates))}{" "}
+            {addCommas(convertPrice(values.aktuellerProfit, currency, rates))}{" "}
             {currencySign[currency]}
           </Typography>
         </Box>
