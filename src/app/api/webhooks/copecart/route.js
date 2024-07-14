@@ -22,7 +22,11 @@ const updateSubscriptionStatus = async (event) => {
     console.log("[INFO] Payment plan:", payment_plan);
     console.log("[INFO] Payment status:", payment_status);
 
-    const user = await User.findOne({ email: buyerEmail });
+    const emailLowerCase = buyerEmail.toLowerCase();
+
+    const user = await User.findOne({ email: { $regex: new RegExp(`^${emailLowerCase}$`, 'i') } });
+
+    // const user = await User.findOne({ email: buyerEmail });
 
     if (!user) {
         console.error("[ERROR] User not found for email:", buyerEmail);
@@ -87,16 +91,18 @@ const updateSubscriptionStatus = async (event) => {
                 user.activated = true;
                 await user.save();
                 console.log("[INFO] User subscription updated:", user.email);
-            } else if (payment_plan !== 'abonement') {
-                // const oneTimePayment = {
-                //     date: new Date(transaction_date),
-                //     price: transaction_amount,
-                //     status: payment_status === 'paid' ? 'Paid' : 'Pending'
-                // };
+            } else if (payment_plan === 'one_time_payment') {
+                let paymentRecord = await Payments.findOne({ userId: user._id });
+                
+                const oneTimePayment = {
+                    date: new Date(transaction_date),
+                    price: transaction_amount,
+                    status: payment_status === 'paid' ? 'Paid' : 'Pending'
+                };
 
-                // paymentRecord.oneTimePayment.push(oneTimePayment);
-                // await paymentRecord.save();
-                // console.log("[INFO] Stored one-time payment details:", paymentRecord._id);
+                paymentRecord.oneTimePayment.push(oneTimePayment);
+                await paymentRecord.save();
+                console.log("[INFO] Stored one-time payment details:", paymentRecord._id);
             }
             break;
 

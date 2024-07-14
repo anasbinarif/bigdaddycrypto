@@ -40,7 +40,6 @@ const hypeCoinColor = {
 //   let pMaxXClean = 0;
 //   let totalAssetsAmount = 0;
 //   console.log("calculatePotential: ", portfolio);
-
 //   portfolio.forEach((asset) => {
 //     const { Potential, Sicherheit, Bottom, Price } = asset;
 //     const dataPotential = parseFloat(Potential);
@@ -48,13 +47,11 @@ const hypeCoinColor = {
 //     const dataBottom = parseFloat(Bottom);
 //     const dataEK = parseFloat(Price) || dataBottom;
 //     const assetAmount = 1;
-
 //     if (dataPotential) {
 //       totalPotential += dataPotential;
 //       totalSecurity += dataSecurity * assetAmount;
 //       totalAssets += 1;
 //       totalAssetsAmount += parseFloat(assetAmount);
-
 //       if (isNaN(dataSecurity) || isNaN(dataPotential)) {
 //         pMinX += 1 * assetAmount;
 //         pMaxX += 10 * assetAmount;
@@ -98,10 +95,8 @@ const hypeCoinColor = {
 //       }
 //     }
 //   });
-
 //   const avgMin = (pMinX / totalAssetsAmount).toFixed(0);
 //   const avgMax = (pMaxX / totalAssetsAmount).toFixed(0);
-
 //   return { avgMin, avgMax };
 // };
 
