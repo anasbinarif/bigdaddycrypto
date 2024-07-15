@@ -17,10 +17,14 @@ export async function POST(req) {
       );
     }
 
-    // Fetch each asset's details from the Assets table based on CoinGeckoID
     const assetDetails = await Promise.all(
       portfolio.assets.map(async (asset) => {
-        return Assets.findOne({ CoinGeckoID: asset.CoinGeckoID });
+        const assetDetail = await Assets.findOne({ CoinGeckoID: asset.CoinGeckoID });
+        if (assetDetail) {
+          const totalHoldingsValue = (asset.totalCoins * assetDetail.Price).toFixed(2);
+          asset.Holdings = totalHoldingsValue;
+        }
+        return assetDetail;
       })
     );
 
