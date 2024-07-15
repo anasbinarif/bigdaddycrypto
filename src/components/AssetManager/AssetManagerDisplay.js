@@ -70,6 +70,7 @@ const AssetManagerDisplay = ({
             operationHappening={operationHappening}
             loadingPortfolio={loadingPortfolio}
             assetsLeangth={assetsLeangth}
+            selectedCoin={selectedCoin}
             setSelectedCoin={setSelectedCoin}
             setTabSelector={setTabSelector}
           />
