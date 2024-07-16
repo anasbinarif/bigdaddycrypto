@@ -42,6 +42,8 @@ const updateSubscriptionStatus = async (event) => {
     const plan = planMapping[productName];
 
     console.log("[INFO] Mapped plan:", plan);
+    let paymentRecord = await Payments.findOne({ userId: user._id });
+
 
     switch (eventType) {
         case 'payment.made':
@@ -52,7 +54,6 @@ const updateSubscriptionStatus = async (event) => {
                 } else if (frequency === 'yearly') {
                     nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
                 }
-                let paymentRecord = await Payments.findOne({ userId: user._id });
                 if (paymentRecord) {
                     console.log("[INFO] Payment already exists for user:", user._id, "paymentRecord", paymentRecord);
                     paymentRecord.Subscription = {
@@ -60,6 +61,7 @@ const updateSubscriptionStatus = async (event) => {
                         planId: productId,
                         billingCycle: frequency,
                         status: "active",
+                        paymentMethod: "copecart",
                         subscriptionId: transaction_id,
                         nextBilledAt: nextBillingDate.getTime(),
                         endDate: null,
@@ -72,6 +74,7 @@ const updateSubscriptionStatus = async (event) => {
                             planId: productId,
                             billingCycle: frequency,
                             status: "active",
+                            paymentMethod: "copecart",
                             subscriptionId: transaction_id,
                             nextBilledAt: nextBillingDate.getTime(),
                             endDate: null,
@@ -85,7 +88,6 @@ const updateSubscriptionStatus = async (event) => {
 
                 user.subscribed = true;
                 user.currentSubscription = paymentRecord._id;
-                user.activated = true;
                 await user.save();
                 console.log("[INFO] User subscription updated:", user.email);
             } else if (payment_plan === 'one_time_payment') {
@@ -110,9 +112,14 @@ const updateSubscriptionStatus = async (event) => {
             break;
 
         case 'payment.failed':
+            paymentRecord.Subscription = {
+                plan: "free+",
+                status: "pastDue",
+            };
             user.subscribed = false;
-            user.currentSubscription = null;
+            // user.currentSubscription = null;
             await user.save();
+            await paymentRecord.save();
             console.log("[INFO] User subscription failed:", user.email);
             break;
 

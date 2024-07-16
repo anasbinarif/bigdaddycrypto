@@ -90,7 +90,38 @@ const SubscribeDialog = ({ open, handleClose }) => {
         const userId = sessionJotai?.user.id;
         const url = `${copecartUrls[selectedPlan][billingCycle]}?user_id=${userId}`;
         window.open(url, '_blank');
-        // Optionally handle post-subscription actions here
+    };
+
+    const handleCoinbasePurchase = async () => {
+        try {
+            const userId = sessionJotai?.user.id;
+            const response = await fetch('/api/createCoinbaseCheckout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                cache: "no-store",
+                body: JSON.stringify({
+                    name: selectedPlan,
+                    billingCycle,
+                    userId
+                }),
+            });
+
+            const data = await response.json();
+            console.log("handleCoinbasePurchase", data.data);
+            if (response.ok && data?.data?.data.hosted_url) {
+                window.open(data.data.data.hosted_url, '_blank');
+            } else {
+                setSnackbarMessage('Failed to initiate Coinbase transaction');
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+            }
+        } catch (error) {
+            setSnackbarMessage('Error initiating Coinbase transaction');
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
+        }
     };
 
     return (
@@ -141,9 +172,12 @@ const SubscribeDialog = ({ open, handleClose }) => {
                             <FormControlLabel value="yearly" control={<Radio />} label="Yearly" />
                         </RadioGroup>
                     </Box>
-                    <Box mt={2}>
+                    <Box mt={2} display="flex" justifyContent="space-between">
                         <Button variant="contained" color="primary" onClick={handleSubscribe}>
                             Subscribe via CopeCart
+                        </Button>
+                        <Button variant="contained" color="secondary" onClick={handleCoinbasePurchase}>
+                            Purchase via Coinbase
                         </Button>
                     </Box>
                 </DialogContent>
