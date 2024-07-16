@@ -92,12 +92,6 @@ const updateSubscriptionStatus = async (event) => {
                 console.log("[INFO] User subscription updated:", user.email);
             } else if (payment_plan === 'one_time_payment') {
                 let paymentRecord = await Payments.findOne({ userId: user._id });
-                if (!paymentRecord) {
-                    paymentRecord = new Payments({
-                        userId: user._id,
-                        oneTimePayment: []
-                    });
-                }
 
                 const oneTimePayment = {
                     date: new Date(transaction_date),

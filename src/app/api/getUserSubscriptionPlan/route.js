@@ -12,7 +12,7 @@ export async function POST(req) {
       "userId"
     );
 
-    if (!payment?.Subscription && user.pastUser !== "") {
+    if (!payment?.Subscription && user?.pastUser !== "") {
       return NextResponse.json({ plan: 'free+', payment: null });
     }
 
@@ -23,7 +23,7 @@ export async function POST(req) {
       return NextResponse.json({ plan: 'free', payment: payment });
     }
 
-    if (payment.Subscription.paymentMethod === "coinbase" && payment.Subscription.status === "active") {
+    if (payment?.Subscription.paymentMethod === "coinbase" && payment.Subscription.status === "active") {
       const currentTime = Date.now();
       const nextBilledAt = payment.Subscription.nextBilledAt;
       const isPastDue = currentTime > nextBilledAt + 48 * 60 * 60 * 1000;

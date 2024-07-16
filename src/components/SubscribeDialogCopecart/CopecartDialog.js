@@ -20,6 +20,9 @@ import {
     Slide,
     Alert,
 } from '@mui/material';
+import { ShoppingCart } from '@mui/icons-material';
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import CoinbaseIcon from '../iconSvgs/CoinbaseIcon';
 import { useAtom } from 'jotai';
 import { sessionAtom } from '../../app/stores/sessionStore';
 import { portfolioAtom } from '../../app/stores/portfolioStore';
@@ -95,6 +98,8 @@ const SubscribeDialog = ({ open, handleClose }) => {
     const handleCoinbasePurchase = async () => {
         try {
             const userId = sessionJotai?.user.id;
+            const userEmail = sessionJotai?.user;
+            console.log("userEmail", userEmail)
             const response = await fetch('/api/createCoinbaseCheckout', {
                 method: 'POST',
                 headers: {
@@ -173,10 +178,10 @@ const SubscribeDialog = ({ open, handleClose }) => {
                         </RadioGroup>
                     </Box>
                     <Box mt={2} display="flex" justifyContent="space-between">
-                        <Button variant="contained" color="primary" onClick={handleSubscribe}>
+                        <Button variant="contained" color="primary" onClick={handleSubscribe} startIcon={<SubscriptionsIcon />}>
                             Subscribe via CopeCart
                         </Button>
-                        <Button variant="contained" color="secondary" onClick={handleCoinbasePurchase}>
+                        <Button variant="contained" color="secondary" onClick={handleCoinbasePurchase} startIcon={<SubscriptionsIcon />}>
                             Purchase via Coinbase
                         </Button>
                     </Box>

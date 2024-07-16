@@ -359,8 +359,8 @@ const PricingPlans = () => {
                       fullWidth
                       onClick={handelSubModal}
                     >
-                      Subscribe
-                      {/*Comming Soon*/}
+                      {/*Subscribe*/}
+                      Coming Soon
                     </Button>
                   )}
                 {plan.title === "Premium" &&
@@ -371,8 +371,8 @@ const PricingPlans = () => {
                       fullWidth
                       onClick={handelSubModal}
                     >
-                      Subscribe
-                      {/*Comming Soon*/}
+                      {/*Subscribe*/}
+                      Coming Soon
                     </Button>
                   )}
                 <ul

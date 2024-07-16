@@ -38,7 +38,7 @@ import styled from "@emotion/styled";
 import { sessionAtom } from "../../stores/sessionStore";
 import { useAtom } from "jotai";
 import { portfolioAtom } from "../../stores/portfolioStore";
-import CopecartCheckout from "../../../components/oneTimePayment/copecartCheckout";
+import OneTimePaymentCheckout from "../../../components/oneTimePayment/copecartCheckout";
 
 const steps = [
   "Wieviele Assets hast du in deinem Portfolio?",
@@ -878,7 +878,7 @@ const PortfolioForm = () => {
                       price={totalOneTimePrice}
                       confirmOneTimePayment={confirmOneTimePayment}
                     /> */}
-                    <CopecartCheckout
+                    <OneTimePaymentCheckout
                       open={open}
                       handleClose={() => setOpen(false)}
                       price={totalOneTimePrice}

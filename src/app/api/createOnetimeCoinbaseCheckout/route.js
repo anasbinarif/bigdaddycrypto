@@ -1,19 +1,8 @@
-// pages/api/coinbase/create-checkout.js
+// pages/api/coinbase/create-one-time-checkout.js
 import { NextResponse } from 'next/server';
 
-const prices = {
-    Pro: {
-        monthly: { amount: '29.95', currency: 'EUR' },
-        yearly: { amount: '299.4', currency: 'EUR' },
-    },
-    Premium: {
-        monthly: { amount: '59.95', currency: 'EUR' },
-        yearly: { amount: '599.4', currency: 'EUR' },
-    },
-};
-
 export async function POST(request) {
-    const { name, billingCycle, userId } = await request.json();
+    const { price, userId } = await request.json();
 
     try {
         const response = await fetch('https://api.commerce.coinbase.com/charges', {
@@ -24,10 +13,13 @@ export async function POST(request) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name,
-                description: `${name} - ${billingCycle}`,
+                name: 'One Time Payment',
+                description: `Payment of ${price} EUR`,
                 pricing_type: 'fixed_price',
-                local_price: prices[name][billingCycle],
+                local_price: {
+                    amount: price,
+                    currency: 'EUR',
+                },
                 metadata: {
                     user_id: userId,
                 },
