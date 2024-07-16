@@ -33,6 +33,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import SubscribeDialog from "../../components/subscribeDialog/SubscribeDialog";
 import { MySwitch } from "../../components/styledSwitch/styledSwitch";
 import Link from "next/link";
+import CopecartDialog from "../../components/SubscribeDialogCopecart/CopecartDialog";
 
 const plans = [
   {
@@ -153,7 +154,8 @@ const PricingPlans = () => {
 
   return (
     <Box sx={{}}>
-      <SubscribeDialog open={open} handleClose={handleClose} />
+      {/*<SubscribeDialog open={open} handleClose={handleClose} />*/}
+      <CopecartDialog open={open} handleClose={handleClose}/>
       <Container>
         {userSubscription && userSubscription?.plan !== "free" && (
           <CurrentPlan
@@ -355,10 +357,10 @@ const PricingPlans = () => {
                       variant="contained"
                       color="secondary"
                       fullWidth
-                      // onClick={handelSubModal}
+                      onClick={handelSubModal}
                     >
                       {/*Subscribe*/}
-                      Comming Soon
+                      Coming Soon
                     </Button>
                   )}
                 {plan.title === "Premium" &&
@@ -367,10 +369,10 @@ const PricingPlans = () => {
                       variant="contained"
                       color="secondary"
                       fullWidth
-                      // onClick={handelSubModal}
+                      onClick={handelSubModal}
                     >
                       {/*Subscribe*/}
-                      Comming Soon
+                      Coming Soon
                     </Button>
                   )}
                 <ul

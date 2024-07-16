@@ -206,6 +206,7 @@ PortfolioCard.displayName = "PortfolioCard";
 const PortfolioComponent = ({
   loadingPortfolio,
   assetsLeangth,
+  selectedCoin,
   setSelectedCoin,
   setTabSelector,
   operationHappening = null,
@@ -229,6 +230,8 @@ const PortfolioComponent = ({
   const [file, setFile] = useState(null);
 
   const [delAllBtn, setDelAllBtn] = useState(false);
+
+  const [name, setName] = useState("");
 
   useEffect(() => {
     const handleResize = () => {
@@ -671,6 +674,10 @@ const PortfolioComponent = ({
   };
   // console.log("port,", portfolio);
 
+  useEffect(() => {
+    if (portfolio?.assets) setName(portfolio?.assets[selectedCoin]?.Name);
+  }, [selectedCoin]);
+
   const renderPortfolio = useMemo(() => {
     const sortedPortfolio =
       portfolio?.assets &&
@@ -680,7 +687,12 @@ const PortfolioComponent = ({
 
         return bCalc[1] - aCalc[1];
       });
-    // console.log(sortedPortfolio);
+    if (portfolio?.assets) {
+      const index = sortedPortfolio?.findIndex((asset) => asset.Name === name);
+      console.log(index);
+      setSelectedCoin(index);
+    }
+    // setSelectedCoin(index);
 
     return !portfolio?.assets ? (
       <></>

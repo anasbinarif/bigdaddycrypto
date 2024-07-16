@@ -38,6 +38,7 @@ import styled from "@emotion/styled";
 import { sessionAtom } from "../../stores/sessionStore";
 import { useAtom } from "jotai";
 import { portfolioAtom } from "../../stores/portfolioStore";
+import OneTimePaymentCheckout from "../../../components/oneTimePayment/copecartCheckout";
 
 const steps = [
   "Wieviele Assets hast du in deinem Portfolio?",
@@ -196,13 +197,13 @@ const PortfolioForm = () => {
       let price = await calculatePrice(portfolioData);
       const billingCycle = sessionJotai?.user?.billingCycle;
       const subscriptionPlan = sessionJotai?.user?.subscriptionPlan;
-      if (billingCycle === "yearly") {
-        if (subscriptionPlan === "Pro") {
-          price = price * 0.85;
-        } else if (subscriptionPlan === "Premium") {
-          price = price * 0.8;
-        }
-      }
+      // if (billingCycle === "yearly") {
+      //   if (subscriptionPlan === "Pro") {
+      //     price = price * 0.85;
+      //   } else if (subscriptionPlan === "Premium") {
+      //     price = price * 0.8;
+      //   }
+      // }
       console.log("Calculated Price:", price);
       setTotalOneTimePrice(price);
       const userId = sessionJotai?.user.id;
@@ -871,7 +872,13 @@ const PortfolioForm = () => {
                         Zum Warenkorb
                       </Button>
                     </Grid>
-                    <Checkout
+                    {/* <Checkout
+                      open={open}
+                      handleClose={() => setOpen(false)}
+                      price={totalOneTimePrice}
+                      confirmOneTimePayment={confirmOneTimePayment}
+                    /> */}
+                    <OneTimePaymentCheckout
                       open={open}
                       handleClose={() => setOpen(false)}
                       price={totalOneTimePrice}

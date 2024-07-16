@@ -88,6 +88,11 @@ const PaymentsSchema = new mongoose.Schema({
         enum: ["active", "pastDue"],
         required: false,
       },
+      paymentMethod: {
+        type: String,
+        enum: ["coinbase", "copecart"],
+        required: false,
+      },
       subscriptionId: {
         type: String,
         required: false,

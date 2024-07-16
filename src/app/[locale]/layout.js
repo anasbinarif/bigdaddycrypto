@@ -6,6 +6,7 @@ import { ThemeProvider } from "@mui/material";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import Script from "next/script";
+import Head from "next/head";
 
 export const metadata = {
   title: "koinfolio",
@@ -25,6 +26,9 @@ export default async function RootLayout({ children, params }) {
 
   return (
     <html lang={locale}>
+      <Head>
+        <script src="https://cope-cdn.copecart.com/cope.js" async></script>
+      </Head>
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
