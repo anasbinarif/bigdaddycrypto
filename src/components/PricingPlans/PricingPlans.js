@@ -30,10 +30,10 @@ import CurrentPlan from "./CurrentPlan";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
-import SubscribeDialog from "../../components/subscribeDialog/SubscribeDialog";
+// import SubscribeDialog from "../../components/subscribeDialog/SubscribeDialog";
 import { MySwitch } from "../../components/styledSwitch/styledSwitch";
 import Link from "next/link";
-import CopecartDialog from "../../components/SubscribeDialogCopecart/CopecartDialog";
+import SubscribeDialog from "../../components/SubscribeDialogNew/SubscribeDialog";
 
 const plans = [
   {
@@ -155,7 +155,7 @@ const PricingPlans = () => {
   return (
     <Box sx={{}}>
       {/*<SubscribeDialog open={open} handleClose={handleClose} />*/}
-      <CopecartDialog open={open} handleClose={handleClose}/>
+      <SubscribeDialog open={open} handleClose={handleClose}/>
       <Container>
         {userSubscription && userSubscription?.plan !== "free" && (
           <CurrentPlan

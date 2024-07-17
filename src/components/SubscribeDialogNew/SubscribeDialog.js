@@ -61,24 +61,6 @@ const SubscribeDialog = ({ open, handleClose }) => {
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [sessionJotai, setSession] = useAtom(sessionAtom);
     const [openLogin, setOpenLogin] = useState(false);
-    const [countdown, setCountdown] = useState(60);
-
-    useEffect(() => {
-        let timer;
-        if (openLogin) {
-            timer = setInterval(() => {
-                setCountdown((prevCountdown) => {
-                    if (prevCountdown === 1) {
-                        handleLogoutFun();
-                        clearInterval(timer);
-                        return prevCountdown;
-                    }
-                    return prevCountdown - 1;
-                });
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [openLogin]);
 
     const handleLogoutFun = async () => {
         await signOut({ redirect: true, callbackUrl: '/login' });
@@ -93,19 +75,19 @@ const SubscribeDialog = ({ open, handleClose }) => {
         const userId = sessionJotai?.user.id;
         const url = `${copecartUrls[selectedPlan][billingCycle]}?user_id=${userId}`;
         window.open(url, '_blank');
+        handleClose();
+        setOpenLogin(true);
     };
 
     const handleCoinbasePurchase = async () => {
         try {
             const userId = sessionJotai?.user.id;
-            const userEmail = sessionJotai?.user;
-            console.log("userEmail", userEmail)
             const response = await fetch('/api/createCoinbaseCheckout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                cache: "no-store",
+                cache: 'no-store',
                 body: JSON.stringify({
                     name: selectedPlan,
                     billingCycle,
@@ -114,9 +96,10 @@ const SubscribeDialog = ({ open, handleClose }) => {
             });
 
             const data = await response.json();
-            console.log("handleCoinbasePurchase", data.data);
             if (response.ok && data?.data?.data.hosted_url) {
                 window.open(data.data.data.hosted_url, '_blank');
+                handleClose();
+                setOpenLogin(true);
             } else {
                 setSnackbarMessage('Failed to initiate Coinbase transaction');
                 setSnackbarSeverity('error');
@@ -206,15 +189,19 @@ const SubscribeDialog = ({ open, handleClose }) => {
                 onClose={() => setOpenLogin(false)}
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>{'Session Expired'}</DialogTitle>
+                <DialogTitle>{'Subscription Confirmation'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
-                        You will be logged out in {countdown} seconds. Please log in again to access locked features.
+                        If you have completed the subscription process, please log out and log back in to reflect the changes.
+                        If you have not subscribed, you can close this dialog.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleLogoutFun} color="primary">
                         Logout Now
+                    </Button>
+                    <Button onClick={() => setOpenLogin(false)} color="secondary">
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>
