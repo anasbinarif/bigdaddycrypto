@@ -35,8 +35,10 @@ const updateSubscriptionStatus = async (event) => {
 
     // Map product names to plan
     const planMapping = {
-        "1-Jahres-Premium Abonnement": "Premium",
-        "Pro Abonnement": "Pro"
+        "Premium Abonnement": "Premium",
+        "Pro Abonnement": "Pro",
+        "1-Jahres-Pro Abonnement": "Pro",
+        "1-Jahres-Premium Abonnement": "Premium"
     };
 
     const plan = planMapping[productName];
