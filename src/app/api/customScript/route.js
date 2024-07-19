@@ -4,8 +4,8 @@ import { connectToDb } from '../../../lib/utils'; // Adjust the path based on yo
 import { User, Payments } from '../../../lib/models'; // Adjust the path based on your project structure
 
 // const usersToUpdate = [
-//     { email: 'manuelnoll@t-online.de', plan: 'Premium', billingCycle: 'monthly' },
-//     { email: 'timsondermann@gmx.ch', plan: 'Pro', billingCycle: 'monthly' }
+//     { email: 'fleurdesel@me.com', plan: 'Pro', billingCycle: 'yearly' },
+//     // { email: 'timsondermann@gmx.ch', plan: 'Pro', billingCycle: 'monthly' }
 // ];
 const usersToUpdate = [
 ];
