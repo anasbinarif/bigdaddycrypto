@@ -357,7 +357,7 @@ const PricingPlans = () => {
                       variant="contained"
                       color="secondary"
                       fullWidth
-                      onClick={handelSubModal}
+                      // onClick={handelSubModal}
                     >
                       Subscribe
                       {/*Coming Soon*/}
@@ -369,7 +369,7 @@ const PricingPlans = () => {
                       variant="contained"
                       color="secondary"
                       fullWidth
-                      onClick={handelSubModal}
+                      // onClick={handelSubModal}
                     >
                       Subscribe
                       {/*Coming Soon*/}
