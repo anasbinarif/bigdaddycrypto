@@ -177,8 +177,7 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
                     throw new Error(`Error retrieving price data. HTTP Status Code: ${response.status}`);
                 }
             }
-            const data = await response.json();
-            return data;
+            return await response.json();
         } catch (error) {
             console.error(`An error occurred: ${error.message}`);
             throw error;
@@ -187,7 +186,7 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
 
     try {
         const currentPrices = await getCurrentPrices(coinGeckoIDs, 'eur', apiKey);
-        console.log("currentPrices", currentPrices);
+        // console.log("currentPrices", currentPrices);
 
         const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
             const currentPrice = currentPrices[coinGeckoID]?.eur;
@@ -216,10 +215,6 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
     }
 }
 
-
-
-
-import { promises as fs } from 'fs';
 
 const BATCH_SIZE = 500;
 

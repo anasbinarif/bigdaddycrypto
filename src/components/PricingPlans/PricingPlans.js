@@ -357,10 +357,10 @@ const PricingPlans = () => {
                       variant="contained"
                       color="secondary"
                       fullWidth
-                      // onClick={handelSubModal}
+                      onClick={handelSubModal}
                     >
-                      {/*Subscribe*/}
-                      Coming Soon
+                      Subscribe
+                      {/*Coming Soon*/}
                     </Button>
                   )}
                 {plan.title === "Premium" &&
@@ -369,10 +369,10 @@ const PricingPlans = () => {
                       variant="contained"
                       color="secondary"
                       fullWidth
-                      // onClick={handelSubModal}
+                      onClick={handelSubModal}
                     >
-                      {/*Subscribe*/}
-                      Coming Soon
+                      Subscribe
+                      {/*Coming Soon*/}
                     </Button>
                   )}
                 <ul
