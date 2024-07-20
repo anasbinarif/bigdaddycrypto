@@ -19,7 +19,7 @@ const updateSubscriptionStatus = async (event) => {
     console.log("[INFO] Event type:", eventType);
     console.log("[INFO] Buyer email:", buyerEmail);
     console.log("[INFO] Product ID:", productId);
-    console.log("[INFO] Product name:", productName);
+    console.log("[INFO] Product namee:", productName);
     console.log("[INFO] Payment plan:", payment_plan);
     console.log("[INFO] Payment status:", payment_status);
 
@@ -35,8 +35,10 @@ const updateSubscriptionStatus = async (event) => {
 
     // Map product names to plan
     const planMapping = {
-        "1-Jahres-Premium Abonnement": "Premium",
-        "Pro Abonnement": "Pro"
+        "Premium Abonnement": "Premium",
+        "Pro Abonnement": "Pro",
+        "1-Jahres-Pro Abonnement": "Pro",
+        "1-Jahres-Premium Abonnement": "Premium"
     };
 
     const plan = planMapping[productName];
