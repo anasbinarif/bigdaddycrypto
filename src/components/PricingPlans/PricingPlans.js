@@ -362,10 +362,10 @@ const PricingPlans = () => {
                       variant="contained"
                       color="secondary"
                       fullWidth
-                      onClick={handelSubModal}
+                      // onClick={handelSubModal}
                     >
-                      Subscribe
-                      {/*Coming Soon*/}
+                      {/*Subscribe*/}
+                      Coming Soon
                     </Button>
                   )}
                 {plan.title === "Premium" &&
@@ -376,8 +376,8 @@ const PricingPlans = () => {
                       fullWidth
                       // onClick={handelSubModal}
                     >
-                      Subscribe
-                      {/*Coming Soon*/}
+                      {/*Subscribe*/}
+                      Coming Soon
                     </Button>
                   )}
                 <ul
@@ -570,7 +570,7 @@ const PricingPlans = () => {
               },
               "& .MuiTypography-root": {
                 color: "#ffffff",
-                fontSize: "14px", // Set desired font size here
+                fontSize: "14px", // Set the desired font size here
                 textAlign: "left",
               },
             }}
