@@ -58,6 +58,16 @@ const NavbarLink = ({ mobileView, handleClose }) => {
     const newPassword = event.target.elements.EditPIN.value;
     const token = sessionJotai?.user.accessToken;
 
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      setChgPwMsg({
+        msg: "Password must be atleast 8 characters, have a capital letter, number and special character",
+        ok: false,
+      });
+      return;
+    }
+
     try {
       const changePasswordRes = await fetch("/api/changePassword", {
         method: "POST",

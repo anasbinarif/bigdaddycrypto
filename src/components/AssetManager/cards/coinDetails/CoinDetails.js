@@ -95,7 +95,7 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
   }, [coin?.CoinGeckoID, portfolio?.assetsCalculations.assets]);
 
   useEffect(() => {
-    const totalCoins = rowVals.reduce((acc, row) => {
+    const totalCoins = rowVals?.reduce((acc, row) => {
       const coinsValue = parseFloat(row.Coins);
       return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
     }, 0);
@@ -104,7 +104,7 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
     );
     const totalInvested = rowVals
       .reduce((acc, row) => {
-        if (row.Type === "Kauf") {
+        if (row?.Type === "Kauf") {
           return acc + parseFloat(row.Betrag);
         }
         return acc;

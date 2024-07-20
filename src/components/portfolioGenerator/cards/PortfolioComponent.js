@@ -277,7 +277,7 @@ const PortfolioComponent = ({
   const handleDeleteConfirm = async () => {
     // const portfolioId = portfolio._id;
     const userId = sessionJotai?.user.id;
-    const CoinGeckoID = selectedAsset.CoinGeckoID;
+    const CoinGeckoID = selectedAsset?.CoinGeckoID;
     const token = sessionJotai?.user.accessToken;
 
     try {
