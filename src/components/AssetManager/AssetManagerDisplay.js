@@ -78,8 +78,10 @@ const AssetManagerDisplay = ({
         {isSmallScreen ? (
           <Grid item xs={4}>
             <CoinDetails
-              coin={portfolio?.assets[selectedCoin]}
-              index={selectedCoin}
+              coin={portfolio?.assets.find(
+                (asset) => asset.Ticker === selectedCoin
+              )}
+              id={selectedCoin}
               setOperationHappening={setOperationHappening}
             />
           </Grid>
@@ -90,11 +92,15 @@ const AssetManagerDisplay = ({
             sm={8}
             md={width > 1350 ? 8 : width < 1100 ? 12 : 7}
           >
-            <CoinDetails
-              coin={portfolio?.assets[selectedCoin]}
-              index={selectedCoin}
-              setOperationHappening={setOperationHappening}
-            />
+            {portfolio?.assets && (
+              <CoinDetails
+                coin={portfolio?.assets.find(
+                  (asset) => asset.Ticker === selectedCoin
+                )}
+                id={selectedCoin}
+                setOperationHappening={setOperationHappening}
+              />
+            )}
           </Grid>
         )}
       </Grid>

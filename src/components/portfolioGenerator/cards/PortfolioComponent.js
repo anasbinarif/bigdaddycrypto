@@ -79,6 +79,7 @@ const PortfolioCard = React.memo(
     addCommas,
     maxLenCrop,
   }) => {
+    console.log(asset);
     return (
       <Grid
         item
@@ -96,7 +97,7 @@ const PortfolioCard = React.memo(
         <Card
           onMouseEnter={() => handleMouseEnter(index)}
           onMouseLeave={() => handleMouseLeave()}
-          onDoubleClick={() => setCoin(index)}
+          onDoubleClick={() => setCoin(asset.Ticker)}
           id="hello"
           sx={{
             display: "flex",
@@ -276,7 +277,7 @@ const PortfolioComponent = ({
   const handleDeleteConfirm = async () => {
     // const portfolioId = portfolio._id;
     const userId = sessionJotai?.user.id;
-    const CoinGeckoID = selectedAsset.CoinGeckoID;
+    const CoinGeckoID = selectedAsset?.CoinGeckoID;
     const token = sessionJotai?.user.accessToken;
 
     try {
@@ -675,8 +676,11 @@ const PortfolioComponent = ({
   // console.log("port,", portfolio);
 
   useEffect(() => {
+    // console.log(portfolio?.assets[selectedCoin]?.Name);
     if (portfolio?.assets) setName(portfolio?.assets[selectedCoin]?.Name);
   }, [selectedCoin]);
+
+  // console.log(name);
 
   const renderPortfolio = useMemo(() => {
     const sortedPortfolio =
@@ -687,17 +691,19 @@ const PortfolioComponent = ({
 
         return bCalc[1] - aCalc[1];
       });
-    if (portfolio?.assets) {
-      const index = sortedPortfolio?.findIndex((asset) => asset.Name === name);
-      console.log(index);
-      setSelectedCoin(index);
-    }
+    // if (name && portfolio?.assets) {
+    //   const index = portfolio?.assets?.findIndex(
+    //     (asset) => asset.Name === name
+    //   );
+    //   console.log(index, portfolio?.assets[index]?.Name);
+    //   setSelectedCoin(index);
+    // }
     // setSelectedCoin(index);
 
     return !portfolio?.assets ? (
       <></>
     ) : (
-      sortedPortfolio
+      portfolio?.assets
         .slice()
         .map((asset, index) => (
           <PortfolioCard

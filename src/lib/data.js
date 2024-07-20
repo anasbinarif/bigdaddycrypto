@@ -26,6 +26,7 @@ export const convertPrice = (price, currency, rates) => {
   if (price >= 0.01) return (parseFloat(price) * rates[currency]).toFixed(2);
   else {
     let formattedNum = (parseFloat(price) * rates[currency]).toPrecision(2);
+    console.log(parseFloat(formattedNum));
 
     return parseFloat(formattedNum) * Math.sign(price);
   }
@@ -730,7 +731,7 @@ export const categoriesDisplay1 = {
   cbdc: "CBDC-Netzwerke",
   ecommerce: "eCommerce",
   nft: "Tokenisierung/RWA",
-  none: "none"
+  none: "none",
 };
 
 export const categoriesDisplay = {

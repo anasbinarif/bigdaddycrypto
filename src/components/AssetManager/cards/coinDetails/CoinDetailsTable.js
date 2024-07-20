@@ -133,7 +133,7 @@ const CoinDetailsTable = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {rowVals.map((row, index) => (
+          {rowVals?.map((row, index) => (
             <TableRow key={index}>
               <TableCell>
                 <Select
