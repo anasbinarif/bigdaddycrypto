@@ -118,15 +118,14 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
         return acc;
       }, 0)
       .toFixed(2);
-    const avgPurchasePrice_0 = (
+    const avgPurchasePrice_0 =
       totalInvested /
       rowVals.reduce((acc, row) => {
         if (row.Type === "Kauf") {
           return acc + parseFloat(row.Coins);
         }
         return acc;
-      }, 0)
-    ).toFixed(2);
+      }, 0);
     const avgPurchasePrice = isNaN(avgPurchasePrice_0) ? 0 : avgPurchasePrice_0;
     const kaufTotalCoin = rowVals
       .reduce((acc, row) => {

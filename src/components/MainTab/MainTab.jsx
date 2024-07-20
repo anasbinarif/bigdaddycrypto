@@ -46,7 +46,7 @@ export default function ColorTabs({ tabSelector, setTabSelector }) {
   const t = useTranslations("colorTabs");
   const [width, setWidth] = useState(0);
   const [value, setValue] = useState("one");
-  const [selectedCoin, setSelectedCoin] = useState(0);
+  const [selectedCoin, setSelectedCoin] = useState("");
   const [loading, setLoading] = useState(false);
   const [showCookieDrawer, setShowCookieDrawer] = useState(false);
   const handleChange = (event, newValue) => {

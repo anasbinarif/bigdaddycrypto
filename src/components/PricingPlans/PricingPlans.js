@@ -155,8 +155,13 @@ const PricingPlans = () => {
   return (
     <Box sx={{}}>
       {/*<SubscribeDialog open={open} handleClose={handleClose} />*/}
-      <SubscribeDialog open={open} handleClose={handleClose}/>
-      <Container>
+      <SubscribeDialog open={open} handleClose={handleClose} />
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {userSubscription && userSubscription?.plan !== "free" && (
           <CurrentPlan
             planDetails={userSubscription?.payment?.Subscription}
@@ -357,7 +362,7 @@ const PricingPlans = () => {
                       variant="contained"
                       color="secondary"
                       fullWidth
-                      // onClick={handelSubModal}
+                      onClick={handelSubModal}
                     >
                       Subscribe
                       {/*Coming Soon*/}
@@ -443,14 +448,15 @@ const PricingPlans = () => {
         <Box
           sx={{
             margin: "2rem 0 3rem",
-            display: "flex",
-            justifyContent: "center",
+            // display: "flex",
+            // justifyContent: "center",
+            alignSelf: "center",
           }}
         >
-          Um ihr Abonnement zu kündigen, senden Sie bitte eine E-Mail an{"    "}
+          Um ihr Abonnement zu kündigen, senden Sie bitte eine E-Mail an{"  "}
           <Link
             href="mailto:support@koinfolio.com"
-            style={{ color: "var(--color-secondary)" }}
+            style={{ color: "var(--color-secondary)", ml: "1rem" }}
           >
             support@koinfolio.com
           </Link>

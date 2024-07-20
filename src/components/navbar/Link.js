@@ -46,6 +46,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const [alert, setAlert] = useState("");
+  const [chgPwMsg, setChgPwMsg] = useState({ msg: "", ok: false });
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -72,20 +73,20 @@ const NavbarLink = ({ mobileView, handleClose }) => {
       });
 
       const changePasswordData = await changePasswordRes.json();
-      console.log(changePasswordRes, changePasswordData);
+      // console.log(changePasswordRes, changePasswordData);
 
       if (changePasswordRes.ok) {
-        console.log(1);
-        setAlert("Password changed succesfully");
-        setOpenDialog(false);
-        handleCloseDialog();
+        // console.log(1);
+        setChgPwMsg({ msg: "Password changed succesfully", ok: true });
+        // setOpenDialog(false);
+        // handleCloseDialog();
       } else if (changePasswordData.error === "Incorrect old password") {
-        setAlert("Incorrect old password");
+        setChgPwMsg({ msg: "Incorrect old password", ok: false });
       } else {
-        setAlert("Failed to change password");
+        setChgPwMsg({ msg: "Failed to change password", ok: false });
       }
     } catch (error) {
-      setAlert("An error occurred");
+      setChgPwMsg({ msg: "An error occurred", ok: false });
     }
   };
 
@@ -139,6 +140,7 @@ const NavbarLink = ({ mobileView, handleClose }) => {
   };
 
   const handleCloseDialog = () => {
+    setChgPwMsg({ ...chgPwMsg, msg: "" });
     setOpenDialog(false);
   };
 
@@ -629,6 +631,20 @@ const NavbarLink = ({ mobileView, handleClose }) => {
             fullWidth
             variant="filled"
           />
+          {chgPwMsg.msg && (
+            <Typography
+              sx={{
+                color: chgPwMsg.ok ? "green !important" : "red !important",
+                fontWeight: "bold",
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faExclamationCircle}
+                style={{ marginRight: "0.5rem" }}
+              />
+              {chgPwMsg.msg}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions
           sx={{
