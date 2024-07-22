@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -90,7 +90,7 @@ const SubscribeDialog = ({ open, handleClose }) => {
         cache: "no-store",
         body: JSON.stringify({
           name: selectedPlan,
-          billingCycle,
+          billingCycle: "yearly",
           userId,
         }),
       });
@@ -113,163 +113,165 @@ const SubscribeDialog = ({ open, handleClose }) => {
   };
 
   return (
-    <Box>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        fullScreen={fullScreen}
-        PaperProps={{
-          sx: {
-            width: { xs: "100%", sm: "90%", md: "70%" },
-            maxWidth: "600px",
-            backgroundColor: "#111826",
-            "& .MuiTypography-root": { color: "white" },
-          },
-        }}
-      >
-        <DialogTitle sx={{ fontWeight: "bold" }}>Subscribe</DialogTitle>
-        <DialogContent sx={{}}>
-          <DialogContentText>Select a Plan and Billing Cycle</DialogContentText>
-          <Grid container spacing={2}>
-            {plans.map((plan) => (
-              <Grid item xs={12} sm={6} key={plan.name}>
-                <Card
-                  sx={{
-                    cursor: "pointer",
-                    border:
-                      selectedPlan === plan.name
-                        ? "2px solid var(--color-secondary)"
-                        : "none",
-                    backgroundColor: "#202530",
-                  }}
-                  onClick={() => setSelectedPlan(plan.name)}
-                >
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {plan.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {plan.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-          <Box mt={2}>
-            <RadioGroup
-              aria-label="billingCycle"
-              value={billingCycle}
-              onChange={(e) => setBillingCycle(e.target.value)}
-              sx={{ "& .MuiRadio-root": { color: "var(--color-secondary)" } }}
-            >
-              <FormControlLabel
-                value="monthly"
-                control={<Radio />}
-                label="Monthly"
-              />
-              <FormControlLabel
-                value="yearly"
-                control={<Radio />}
-                label="Yearly"
-              />
-            </RadioGroup>
-          </Box>
-          <Box
-            mt={2}
-            display="flex"
-            justifyContent="space-between"
-            sx={{
-              "& .MuiButton-root": {
-                backgroundColor: "var(--color-secondary-2)",
+      <Box>
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            fullScreen={fullScreen}
+            PaperProps={{
+              sx: {
+                width: { xs: "100%", sm: "90%", md: "70%" },
+                maxWidth: "600px",
+                backgroundColor: "#111826",
+                "& .MuiTypography-root": { color: "white" },
               },
             }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubscribe}
-              startIcon={<SubscriptionsIcon />}
-            >
-              Subscribe via CopeCart
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleCoinbasePurchase}
-              startIcon={<SubscriptionsIcon />}
-            >
-              Purchase via Coinbase
-            </Button>
-          </Box>
-        </DialogContent>
-        <DialogActions
-          sx={{ "& .MuiButton-root": { color: "var(--color-secondary)" } }}
         >
-          <Button onClick={handleClose}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-      <Dialog
-        open={openLogin}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={() => setOpenLogin(false)}
-        aria-describedby="alert-dialog-slide-description"
-        PaperProps={{
-          sx: {
-            //   width: { xs: "100%", sm: "90%", md: "70%" },
-            //   maxWidth: "600px",
-            backgroundColor: "#111826",
-            "& .MuiTypography-root": { color: "white" },
-          },
-        }}
-      >
-        <DialogTitle sx={{ fontWeight: "bold" }}>
-          {"Subscription Confirmation"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            If you have completed the subscription process, please log out and
-            log back in to reflect the changes. If you have not subscribed, you
-            can close this dialog.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleLogoutFun}
-            color="primary"
-            sx={{ color: "var(--color-secondary)" }}
+          <DialogTitle sx={{ fontWeight: "bold" }}>Subscribe</DialogTitle>
+          <DialogContent>
+            <DialogContentText>Select a Plan and Billing Cycle</DialogContentText>
+            <Grid container spacing={2}>
+              {plans.map((plan) => (
+                  <Grid item xs={12} sm={6} key={plan.name}>
+                    <Card
+                        sx={{
+                          cursor: "pointer",
+                          border:
+                              selectedPlan === plan.name
+                                  ? "2px solid var(--color-secondary)"
+                                  : "none",
+                          backgroundColor: "#202530",
+                        }}
+                        onClick={() => setSelectedPlan(plan.name)}
+                    >
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {plan.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {plan.description}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+              ))}
+            </Grid>
+            <Box mt={2}>
+              <RadioGroup
+                  aria-label="billingCycle"
+                  value={billingCycle}
+                  onChange={(e) => setBillingCycle(e.target.value)}
+                  sx={{ "& .MuiRadio-root": { color: "var(--color-secondary)" } }}
+              >
+                <FormControlLabel
+                    value="monthly"
+                    control={<Radio />}
+                    label="Monthly"
+                />
+                <FormControlLabel
+                    value="yearly"
+                    control={<Radio />}
+                    label="Yearly"
+                />
+              </RadioGroup>
+            </Box>
+            <Box
+                mt={2}
+                display="flex"
+                justifyContent="space-between"
+                sx={{
+                  "& .MuiButton-root": {
+                    backgroundColor: "var(--color-secondary-2)",
+                  },
+                  "& .MuiButton-disabled": {
+                    color: "white",
+                  },
+                }}
+            >
+              <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubscribe}
+                  startIcon={<SubscriptionsIcon />}
+              >
+                Subscribe via CopeCart
+              </Button>
+              <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleCoinbasePurchase}
+                  startIcon={<SubscriptionsIcon />}
+                  disabled={billingCycle === "monthly"}
+              >
+                Purchase via Coinbase
+              </Button>
+            </Box>
+          </DialogContent>
+          <DialogActions
+              sx={{ "& .MuiButton-root": { color: "var(--color-secondary)" } }}
           >
-            Logout Now
-          </Button>
-          <Button
-            onClick={() => setOpenLogin(false)}
-            color="secondary"
-            sx={{
-              backgroundColor: "var(--color-secondary)",
-              color: "#111826",
-              "&:hover": { backgroundColor: "var(--color-secondary-2)" },
+            <Button onClick={handleClose}>Cancel</Button>
+          </DialogActions>
+        </Dialog>
+        <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+        >
+          <Alert
+              onClose={handleSnackbarClose}
+              severity={snackbarSeverity}
+              variant="filled"
+              sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+        <Dialog
+            open={openLogin}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={() => setOpenLogin(false)}
+            aria-describedby="alert-dialog-slide-description"
+            PaperProps={{
+              sx: {
+                backgroundColor: "#111826",
+                "& .MuiTypography-root": { color: "white" },
+              },
             }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+        >
+          <DialogTitle sx={{ fontWeight: "bold" }}>
+            {"Subscription Confirmation"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              If you have completed the subscription process, please log out and
+              log back in to reflect the changes. If you have not subscribed, you
+              can close this dialog.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+                onClick={handleLogoutFun}
+                color="primary"
+                sx={{ color: "var(--color-secondary)" }}
+            >
+              Logout Now
+            </Button>
+            <Button
+                onClick={() => setOpenLogin(false)}
+                color="secondary"
+                sx={{
+                  backgroundColor: "var(--color-secondary)",
+                  color: "#111826",
+                  "&:hover": { backgroundColor: "var(--color-secondary-2)" },
+                }}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
   );
 };
 
