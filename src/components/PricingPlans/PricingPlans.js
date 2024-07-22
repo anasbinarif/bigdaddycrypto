@@ -650,7 +650,7 @@ const PricingPlans = () => {
             <Typography>
               *Notice: For payments via copecart, please enter the email that is
               linked with your account on Koinfolio. The payment verification
-              will only be integrated with the email you'll specify during
+              will only be integrated with the email you&apos;ll specify during
               checkout
             </Typography>
           </Box>
