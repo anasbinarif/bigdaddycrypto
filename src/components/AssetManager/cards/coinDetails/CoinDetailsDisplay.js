@@ -229,14 +229,14 @@ const CoinDetailsDisplay = ({
                 }}
               >
                 {addCommas(
-                  convertPrice(financialSummary.totalWinLoss, currency, rates)
+                  convertPrice(financialSummary?.totalWinLoss, currency, rates)
                 )}
               </div>
             )}
           </Typography>
           <Typography
             className={
-              financialSummary.avgPurchasePricePercentage < 0 ? "down" : "up"
+              financialSummary?.totalWinLossPercentage < 0 ? "down" : "up"
             }
             sx={{
               "&.down": {
@@ -263,7 +263,7 @@ const CoinDetailsDisplay = ({
               },
             }}
           >
-            {financialSummary.totalWinLossPercentage} %
+            {Math.abs(financialSummary?.totalWinLossPercentage)} %
           </Typography>
         </Box>
         <Box className={styles.grid__item}>
@@ -282,7 +282,7 @@ const CoinDetailsDisplay = ({
               fontSize: "1.8rem",
               fontWeight: "bold",
               color: `${
-                financialSummary.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
+                financialSummary?.avgPurchasePrice > 0 ? "" : "rgb(68, 68, 68)"
               }`,
               whiteSpace: "nowrap",
               "@media only screen and (max-width: 1500px)": {
@@ -291,13 +291,23 @@ const CoinDetailsDisplay = ({
             }}
           >
             {financialSummary.avgPurchasePrice > 0
-              ? `${addCommas(
-                  convertPrice(
-                    financialSummary.avgPurchasePrice,
-                    currency,
-                    rates
-                  )
-                )} ${currencySign[currency]}`
+              ? `${
+                  financialSummary.avgPurchasePrice > 0.09
+                    ? addCommas(
+                        convertPrice(
+                          financialSummary.avgPurchasePrice,
+                          currency,
+                          rates
+                        ).toFixed(2)
+                      )
+                    : addCommas(
+                        convertPrice(
+                          financialSummary.avgPurchasePrice,
+                          currency,
+                          rates
+                        ).toPrecision(2)
+                      )
+                } ${currencySign[currency]}`
               : `--,-- ${currencySign[currency]}`}
           </Typography>
           <Typography

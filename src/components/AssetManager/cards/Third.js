@@ -31,10 +31,11 @@ const Third = () => {
     totalGesamtwert: 0,
     aktuellerProfit: 0,
     gesamtwertPercentage: 0,
-  })
+  });
 
   useEffect(() => {
     if (portfolio && portfolio.assetsCalculations) {
+      console.log(portfolio.assetsCalculations);
       const totalInvestment = portfolio.assetsCalculations.assets
         .reduce((acc, curr) => acc + curr.totalInvest, 0)
         .toFixed(2);
@@ -125,22 +126,22 @@ const Third = () => {
             addCommas(convertPrice(values.totalGesamtwert, currency, rates))
           )}{" "}
           {currencySign[currency]}
-          {addCommas(convertPrice(values.totalGesamtwert, currency, rates)).length >
-            12 && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 10,
-                  left: 10,
-                  backgroundColor: "#818181ef",
-                  borderRadius: "4px",
-                  padding: "2px",
-                  fontSize: "14px",
-                }}
-              >
-                {addCommas(convertPrice(values.totalGesamtwert, currency, rates))}
-              </div>
-            )}
+          {addCommas(convertPrice(values.totalGesamtwert, currency, rates))
+            .length > 12 && (
+            <div
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 10,
+                backgroundColor: "#818181ef",
+                borderRadius: "4px",
+                padding: "2px",
+                fontSize: "14px",
+              }}
+            >
+              {addCommas(convertPrice(values.totalGesamtwert, currency, rates))}
+            </div>
+          )}
         </Typography>
         <Typography
           className={values.gesamtwertPercentage < 0 ? "down" : "up"}
@@ -163,7 +164,8 @@ const Third = () => {
             },
           }}
         >
-          {isNaN(values.gesamtwertPercentage) ? 0 : values.gesamtwertPercentage}%
+          {isNaN(values.gesamtwertPercentage) ? 0 : values.gesamtwertPercentage}
+          %
         </Typography>
       </Box>
       <Box

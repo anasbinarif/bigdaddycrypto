@@ -9,26 +9,25 @@ import { ThemeProvider } from "@emotion/react";
 // const GA_TRACKING_ID = 'G-DWHG20ZNC7';
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
 export default function Home() {
-    const [tabSelector, setTabSelector] = useState("one");
-    const pathname = usePathname();
+  const [tabSelector, setTabSelector] = useState("one");
+  const pathname = usePathname();
 
-    useEffect(() => {
-        const handleRouteChange = (url) => {
-            window.gtag('config', GA_TRACKING_ID, {
-                page_path: url,
-            });
-        };
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      window.gtag("config", GA_TRACKING_ID, {
+        page_path: url,
+      });
+    };
 
-        // Trigger handleRouteChange whenever pathname changes
-        handleRouteChange(pathname);
+    // Trigger handleRouteChange whenever pathname changes
+    handleRouteChange(pathname);
+  }, [pathname]);
 
-    }, [pathname]);
-
-    return (
-        <LayoutWrapper tabSelector={tabSelector} setTabSelector={setTabSelector}>
-            <SessionProvider>
-                <MainTab tabSelector={tabSelector} setTabSelector={setTabSelector} />
-            </SessionProvider>
-        </LayoutWrapper>
-    );
+  return (
+    <LayoutWrapper tabSelector={tabSelector} setTabSelector={setTabSelector}>
+      <SessionProvider>
+        <MainTab tabSelector={tabSelector} setTabSelector={setTabSelector} />
+      </SessionProvider>
+    </LayoutWrapper>
+  );
 }
