@@ -33,7 +33,7 @@ import CoinDetailsTable from "./CoinDetailsTable";
 import CoinDetailsDisplay from "./CoinDetailsDisplay";
 import styles from "./coinDetails.module.css";
 
-const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
+const CoinDetails = ({ coin, setOperationHappening = null }) => {
   const t = useTranslations("coinDetails");
   // const { coin, index } = props;
   const [Loading, setLoading] = useState(false);
