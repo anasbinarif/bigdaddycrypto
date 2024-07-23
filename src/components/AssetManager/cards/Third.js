@@ -30,27 +30,69 @@ const Third = () => {
     totalInvestment: 0,
     totalGesamtwert: 0,
     aktuellerProfit: 0,
+    realized: 0,
     gesamtwertPercentage: 0,
-  })
+  });
 
   useEffect(() => {
     if (portfolio && portfolio.assetsCalculations) {
+      console.log("assets", portfolio.assetsCalculations.assets);
       const totalInvestment = portfolio.assetsCalculations.assets
         .reduce((acc, curr) => acc + curr.totalInvest, 0)
         .toFixed(2);
       const totalGesamtwert = portfolio.assetsCalculations.assets
         .reduce((acc, curr) => acc + curr.Holdings, 0)
         .toFixed(2);
-      const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
+      // let aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
+      let aktuellerProfit = portfolio.assetsCalculations?.assets.reduce(
+        (acc, curr) => {
+          const winLoss = curr.Holdings - (curr.totalInvest - curr.totalSold);
+          return acc + winLoss;
+        },
+        0
+      );
+      aktuellerProfit = parseFloat(
+        aktuellerProfit > 0.09
+          ? aktuellerProfit.toFixed(2)
+          : aktuellerProfit.toPrecision(2)
+      );
       const gesamtwertPercentage = (
         (aktuellerProfit / totalInvestment) *
         100
       ).toFixed(2);
 
+      const realized = portfolio.assetsCalculations?.assets.reduce(
+        (acc, asset) => {
+          let soldCoins = 0,
+            boughtCoins = 0;
+
+          for (let trans of asset?.buyAndSell) {
+            if (trans.Type === "Verkauf") soldCoins += parseFloat(trans.Coins);
+            if (trans.Type === "Kauf") boughtCoins += parseFloat(trans.Coins);
+          }
+
+          const purchasePrice = isNaN(asset.totalInvest / boughtCoins)
+            ? 0
+            : asset.totalInvest / boughtCoins;
+
+          const sellPrice = isNaN(asset.totalSold / soldCoins)
+            ? 0
+            : asset.totalSold / soldCoins;
+
+          const profit = sellPrice * soldCoins - soldCoins * purchasePrice;
+
+          return acc + profit;
+        },
+        0
+      );
+
+      console.log("coinssssss", realized);
+
       setValues({
         totalInvestment,
         totalGesamtwert,
         aktuellerProfit,
+        realized,
         gesamtwertPercentage,
       });
     }
@@ -125,22 +167,22 @@ const Third = () => {
             addCommas(convertPrice(values.totalGesamtwert, currency, rates))
           )}{" "}
           {currencySign[currency]}
-          {addCommas(convertPrice(values.totalGesamtwert, currency, rates)).length >
-            12 && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 10,
-                  left: 10,
-                  backgroundColor: "#818181ef",
-                  borderRadius: "4px",
-                  padding: "2px",
-                  fontSize: "14px",
-                }}
-              >
-                {addCommas(convertPrice(values.totalGesamtwert, currency, rates))}
-              </div>
-            )}
+          {addCommas(convertPrice(values.totalGesamtwert, currency, rates))
+            .length > 12 && (
+            <div
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 10,
+                backgroundColor: "#818181ef",
+                borderRadius: "4px",
+                padding: "2px",
+                fontSize: "14px",
+              }}
+            >
+              {addCommas(convertPrice(values.totalGesamtwert, currency, rates))}
+            </div>
+          )}
         </Typography>
         <Typography
           className={values.gesamtwertPercentage < 0 ? "down" : "up"}
@@ -163,7 +205,8 @@ const Third = () => {
             },
           }}
         >
-          {isNaN(values.gesamtwertPercentage) ? 0 : values.gesamtwertPercentage}%
+          {isNaN(values.gesamtwertPercentage) ? 0 : values.gesamtwertPercentage}
+          %
         </Typography>
       </Box>
       <Box
@@ -247,7 +290,12 @@ const Third = () => {
               fontWeight: "bold",
             }}
           >
-            0,00 {currencySign[currency]}
+            {addCommas(
+              convertPrice(values.realized, currency, rates) >= 0.09
+                ? convertPrice(values.realized, currency, rates).toFixed(2)
+                : convertPrice(values.realized, currency, rates).toPrecision(2)
+            )}{" "}
+            {currencySign[currency]}
           </Typography>
         </Box>
         <Box

@@ -11,6 +11,9 @@ import Head from "next/head";
 export const metadata = {
   title: "koinfolio",
   description: "Get your information regarding crypto",
+  other: {
+    google: "notranslate",
+  },
   icons: {
     icon: "/assets/favicons/favicon.ico",
   },
@@ -25,8 +28,9 @@ export default async function RootLayout({ children, params }) {
   const messages = await getMessages(locale);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} translate="no">
       <Head>
+        <meta name="google" content="notranslate" key="notranslate" />
         <script src="https://cope-cdn.copecart.com/cope.js" async></script>
       </Head>
       <body>

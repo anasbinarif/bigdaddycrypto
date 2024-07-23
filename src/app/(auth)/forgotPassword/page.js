@@ -121,6 +121,10 @@ const ForgotPasswordPage = () => {
             flexDirection: "column",
             alignItems: "center",
             minWidth: "400px",
+
+            "& .MuiTypography-root": {
+              color: "white",
+            },
           }}
         >
           <Box
@@ -164,6 +168,7 @@ const ForgotPasswordPage = () => {
               fontWeight: "bold",
               fontSize: "1rem",
               textAlign: "center",
+              color: "var(--color-secondary) !important",
             }}
           >
             Forgot Password
@@ -179,7 +184,7 @@ const ForgotPasswordPage = () => {
             sx={{
               mb: 2,
               "& .MuiFormHelperText-root": {
-                color: "#ffffff", // Helper text color
+                color: "#ffffff",
               },
               "& .MuiFilledInput-input": {
                 color: "#fff",

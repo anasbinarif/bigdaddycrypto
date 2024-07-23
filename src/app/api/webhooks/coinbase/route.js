@@ -14,6 +14,10 @@ const validateCoinbaseSignature = (req, rawBody, secretKey) => {
 
 const updateSubscriptionStatus = async (event) => {
     const { type: eventType, data } = event;
+
+    if (!data.id) {
+        data.id = "testing";
+    }
     const { id: transaction_id, metadata, pricing, timeline, hosted_url, description, name } = data;
     const { user_id: userId } = metadata;
 

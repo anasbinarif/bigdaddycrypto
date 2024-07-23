@@ -33,7 +33,7 @@ import CoinDetailsTable from "./CoinDetailsTable";
 import CoinDetailsDisplay from "./CoinDetailsDisplay";
 import styles from "./coinDetails.module.css";
 
-const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
+const CoinDetails = ({ coin, setOperationHappening = null }) => {
   const t = useTranslations("coinDetails");
   // const { coin, index } = props;
   const [Loading, setLoading] = useState(false);
@@ -82,7 +82,7 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
     const asset = portfolio?.assetsCalculations?.assets.find(
       (a) => a.CoinGeckoID === coin?.CoinGeckoID
     );
-    // console.log("date asset", asset);
+    console.log("date asset", asset);
     if (asset && asset.buyAndSell) {
       setRowVals(
         asset.buyAndSell.map((row) => ({
@@ -95,21 +95,23 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
   }, [coin?.CoinGeckoID, portfolio?.assetsCalculations.assets]);
 
   useEffect(() => {
-    const totalCoins = rowVals.reduce((acc, row) => {
+    const totalCoins = rowVals?.reduce((acc, row) => {
       const coinsValue = parseFloat(row.Coins);
       return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
     }, 0);
+    console.log(totalCoins, coin?.Price);
     const totalHoldingsValue = (totalCoins * parseFloat(coin?.Price)).toFixed(
       2
     );
     const totalInvested = rowVals
       .reduce((acc, row) => {
-        if (row.Type === "Kauf") {
+        if (row?.Type === "Kauf") {
           return acc + parseFloat(row.Betrag);
         }
         return acc;
       }, 0)
       .toFixed(2);
+    console.log(totalInvested);
     const realizedProfit = rowVals
       .reduce((acc, row) => {
         if (row.Type === "Verkauf") {
@@ -118,15 +120,16 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
         return acc;
       }, 0)
       .toFixed(2);
-    const avgPurchasePrice_0 = (
+    console.log(realizedProfit);
+    const avgPurchasePrice_0 =
       totalInvested /
       rowVals.reduce((acc, row) => {
         if (row.Type === "Kauf") {
           return acc + parseFloat(row.Coins);
         }
         return acc;
-      }, 0)
-    ).toFixed(2);
+      }, 0);
+    console.log(avgPurchasePrice_0);
     const avgPurchasePrice = isNaN(avgPurchasePrice_0) ? 0 : avgPurchasePrice_0;
     const kaufTotalCoin = rowVals
       .reduce((acc, row) => {
@@ -136,6 +139,7 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
         return acc;
       }, 0)
       .toFixed(2);
+    console.log(kaufTotalCoin);
     const verkaufTotalCoin = rowVals
       .reduce((acc, row) => {
         if (row.Type === "Verkauf") {
@@ -144,14 +148,17 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
         return acc;
       }, 0)
       .toFixed(2);
+    console.log(verkaufTotalCoin);
     const avgPurchasePricePercentage_0 = (
       100 -
       (totalInvested / (kaufTotalCoin * coin?.Price)) * 100
     ).toFixed(2);
+    console.log(avgPurchasePricePercentage_0);
     const avgPurchasePricePercentage = isNaN(avgPurchasePricePercentage_0)
       ? 0
       : avgPurchasePricePercentage_0;
     const avgSellingPrice = (realizedProfit / verkaufTotalCoin).toFixed(2);
+    console.log(avgSellingPrice);
     const avgSellingPricePercentage = (
       100 -
       (avgSellingPrice / avgPurchasePrice) * 100
@@ -160,10 +167,16 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
       totalHoldingsValue -
       (parseFloat(totalInvested) - parseFloat(realizedProfit))
     ).toFixed(2);
-    const totalWinLossPercentage = (
-      (totalWinLoss / totalInvested) *
-      100
-    ).toFixed(2);
+    console.log(totalWinLoss);
+    const winloss =
+      avgSellingPrice * verkaufTotalCoin -
+      verkaufTotalCoin * avgPurchasePrice +
+      (totalHoldingsValue - totalCoins * avgPurchasePrice);
+    console.log(winloss);
+    const totalWinLossPercentage = parseFloat(
+      ((totalWinLoss / totalInvested) * 100).toFixed(2)
+    );
+    // console.log(totalWinLossPercentage);
     const X = totalHoldingsValue / totalInvested;
 
     console.log(

@@ -185,6 +185,9 @@ function descendingComparator(a, b, orderBy) {
   let aValue = a[orderBy];
   let bValue = b[orderBy];
 
+  if (aValue === "NaN" || aValue === "Infinity" || aValue === "n/a") aValue = 0;
+  if (bValue === "NaN" || bValue === "Infinity" || bValue === "n/a") bValue = 0;
+
   if (nums.includes(aValue[0]) && nums.includes(bValue[0])) {
     aValue = parseFloat(aValue);
     bValue = parseFloat(bValue);
@@ -207,22 +210,8 @@ function descendingComparator(a, b, orderBy) {
   }
 
   // Handle NaN and Infinity cases
-  if (
-    isNaN(aValue) ||
-    aValue === "NaN" ||
-    aValue === "Infinity" ||
-    aValue === "n/a"
-  )
-    aValue = 0;
-  if (
-    isNaN(bValue) ||
-    bValue === "NaN" ||
-    bValue === "Infinity" ||
-    bValue === "n/a"
-  )
-    bValue = 0;
 
-  // console.log(aValue, bValue);
+  console.log(aValue, bValue);
 
   if (bValue < aValue) return -1;
   if (bValue > aValue) return 1;
@@ -237,7 +226,9 @@ function getComparator(order, orderBy) {
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
+  console.log(stabilizedThis);
   stabilizedThis.sort((a, b) => {
+    console.log(a[0], b[0]);
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
@@ -281,7 +272,7 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
           imageUrl: asset.cgImageURL,
           bestand: calc.Holdings || 0,
           totalCoins: calc.totalCoins || 0,
-          preisChange: asset.Price.toFixed(2),
+          preisChange: asset.Price,
           dcaPrice: calc.DCA || "n/a",
           investition: calc.totalInvest || 0,
           relevanz: calc.Relevanz || "n/a",
