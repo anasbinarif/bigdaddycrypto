@@ -176,7 +176,7 @@ const CoinDetails = ({ coin, setOperationHappening = null }) => {
     const totalWinLossPercentage = parseFloat(
       ((totalWinLoss / totalInvested) * 100).toFixed(2)
     );
-    console.log(totalWinLossPercentage);
+    // console.log(totalWinLossPercentage);
     const X = totalHoldingsValue / totalInvested;
 
     console.log(
