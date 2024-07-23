@@ -201,7 +201,7 @@ const SubscribeDialog = ({ open, handleClose }) => {
                   color="secondary"
                   onClick={handleCoinbasePurchase}
                   startIcon={<SubscriptionsIcon />}
-                  disabled={billingCycle === "monthly"}
+                  // disabled={billingCycle === "monthly"}
               >
                 Purchase via Coinbase
               </Button>
