@@ -105,7 +105,8 @@ const calculatePotential = (portfolio, buyAndSell) => {
   let totalPotentialMax = 0;
   let totalAssetsAmount = 0;
 
-  portfolio.forEach((asset) => {
+  portfolio.forEach((asset, index) => {
+    console.log("bewerrrrPotenn", asset, buyAndSell[index]);
     const { Potential, Bottom, Price, CoinGeckoID } = asset;
     const dataPotential = parseFloat(Potential) || 0;
     const dataBottom = parseFloat(Bottom);
@@ -119,7 +120,12 @@ const calculatePotential = (portfolio, buyAndSell) => {
 
     const assetAmount = 1;
 
-    if (dataPotential && dataBottom && dataPrice) {
+    if (
+      dataPotential &&
+      dataBottom &&
+      dataPrice &&
+      buyAndSell[index].buyAndSell.length > 0
+    ) {
       let potentialMin = 0;
       let potentialMax = 0;
 

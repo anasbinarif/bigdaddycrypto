@@ -637,6 +637,23 @@ const PricingPlans = () => {
               AGB.&quot;
             </Typography>
           </Box>
+
+          <Box
+            sx={{
+              padding: "1rem 2rem 0",
+              "& .MuiTypography-root": {
+                fontSize: "0.8rem",
+                color: "red",
+              },
+            }}
+          >
+            <Typography>
+              *Notice: For payments via copecart, please enter the email that is
+              linked with your account on Koinfolio. The payment verification
+              will only be integrated with the email you&apos;ll specify during
+              checkout
+            </Typography>
+          </Box>
         </DialogContent>
         <DialogActions
           sx={{

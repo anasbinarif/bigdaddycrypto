@@ -33,7 +33,7 @@ import CoinDetailsTable from "./CoinDetailsTable";
 import CoinDetailsDisplay from "./CoinDetailsDisplay";
 import styles from "./coinDetails.module.css";
 
-const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
+const CoinDetails = ({ coin, setOperationHappening = null }) => {
   const t = useTranslations("coinDetails");
   // const { coin, index } = props;
   const [Loading, setLoading] = useState(false);
@@ -176,7 +176,7 @@ const CoinDetails = ({ coin, index, setOperationHappening = null }) => {
     const totalWinLossPercentage = parseFloat(
       ((totalWinLoss / totalInvested) * 100).toFixed(2)
     );
-    console.log(totalWinLossPercentage);
+    // console.log(totalWinLossPercentage);
     const X = totalHoldingsValue / totalInvested;
 
     console.log(
