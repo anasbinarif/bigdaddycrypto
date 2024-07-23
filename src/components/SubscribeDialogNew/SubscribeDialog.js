@@ -90,7 +90,7 @@ const SubscribeDialog = ({ open, handleClose }) => {
         cache: "no-store",
         body: JSON.stringify({
           name: selectedPlan,
-          billingCycle: "yearly",
+          billingCycle: billingCycle,
           userId,
         }),
       });
