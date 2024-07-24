@@ -104,6 +104,15 @@ const calculatePotential = (portfolio, buyAndSell) => {
   let totalPotentialMin = 0;
   let totalPotentialMax = 0;
   let totalAssetsAmount = 0;
+  let transactionFound = false;
+
+  for (let transactions of buyAndSell) {
+    // console.log("HELLL", transactions);
+    if (transactions.buyAndSell && transactions.buyAndSell.length > 0) {
+      transactionFound = true;
+      break;
+    }
+  }
 
   portfolio.forEach((asset, index) => {
     console.log("bewerrrrPotenn", asset, buyAndSell[index]);
@@ -120,12 +129,7 @@ const calculatePotential = (portfolio, buyAndSell) => {
 
     const assetAmount = 1;
 
-    if (
-      dataPotential &&
-      dataBottom &&
-      dataPrice &&
-      buyAndSell[index].buyAndSell.length > 0
-    ) {
+    if (dataPotential && dataBottom && dataPrice) {
       let potentialMin = 0;
       let potentialMax = 0;
 
@@ -161,9 +165,16 @@ const calculatePotential = (portfolio, buyAndSell) => {
         adjustedMin = (dataBottom / userEntryPrice) * potentialMin;
         adjustedMax = (dataBottom / userEntryPrice) * potentialMax;
       }
-      totalPotentialMin += adjustedMin * assetAmount;
-      totalPotentialMax += adjustedMax * assetAmount;
-      totalAssetsAmount += assetAmount;
+
+      if (!transactionFound) {
+        totalPotentialMin += adjustedMin * assetAmount;
+        totalPotentialMax += adjustedMax * assetAmount;
+        totalAssetsAmount += assetAmount;
+      } else if (transactionFound && buyAndSell[index].buyAndSell.length > 0) {
+        totalPotentialMin += adjustedMin * assetAmount;
+        totalPotentialMax += adjustedMax * assetAmount;
+        totalAssetsAmount += assetAmount;
+      }
     }
   });
 

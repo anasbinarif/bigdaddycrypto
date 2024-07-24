@@ -9,7 +9,7 @@ import {
 import { faCrown, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai/index";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { portfolioAtom } from "../../../../src/app/stores/portfolioStore";
 import {
@@ -20,6 +20,90 @@ import {
 import { useSearchParams } from "next/navigation";
 import addCommas from "../../../lib/currencyFormatter";
 import maxLenCrop from "../../../lib/checkString";
+
+const calculatePotential = (portfolio, buyAndSell) => {
+  let totalPotentialMin = 0;
+  let totalPotentialMax = 0;
+  let totalAssetsAmount = 0;
+  let transactionFound = false;
+
+  for (let transactions of buyAndSell) {
+    // console.log("HELLL", transactions);
+    if (transactions.buyAndSell && transactions.buyAndSell.length > 0) {
+      transactionFound = true;
+      break;
+    }
+  }
+
+  portfolio.forEach((asset, index) => {
+    console.log("bewerrrrPotenn", asset, buyAndSell[index]);
+    const { Potential, Bottom, Price, CoinGeckoID } = asset;
+    const dataPotential = parseFloat(Potential) || 0;
+    const dataBottom = parseFloat(Bottom);
+    const dataPrice = parseFloat(Price);
+
+    const userEntryData = buyAndSell.find(
+      (item) => item.CoinGeckoID === CoinGeckoID
+    );
+    const userEntryPrice =
+      userEntryData.DCA == 0 ? dataPotential : userEntryData.DCA;
+
+    const assetAmount = 1;
+
+    if (dataPotential && dataBottom && dataPrice) {
+      let potentialMin = 0;
+      let potentialMax = 0;
+
+      if (dataPotential > 9.5) {
+        potentialMin = 130;
+        potentialMax = 160;
+      } else if (dataPotential > 9) {
+        potentialMin = 100;
+        potentialMax = 130;
+      } else if (dataPotential > 8.5) {
+        potentialMin = 75;
+        potentialMax = 100;
+      } else if (dataPotential > 8) {
+        potentialMin = 50;
+        potentialMax = 75;
+      } else if (dataPotential > 7.5) {
+        potentialMin = 30;
+        potentialMax = 50;
+      } else if (dataPotential > 7) {
+        potentialMin = 15;
+        potentialMax = 30;
+      } else if (dataPotential <= 7) {
+        potentialMin = 10;
+        potentialMax = 15;
+      }
+      let adjustedMin = 0;
+      let adjustedMax = 0;
+
+      if (userEntryData.DCA === 0) {
+        adjustedMin = potentialMin;
+        adjustedMax = potentialMax;
+      } else {
+        adjustedMin = (dataBottom / userEntryPrice) * potentialMin;
+        adjustedMax = (dataBottom / userEntryPrice) * potentialMax;
+      }
+
+      if (!transactionFound) {
+        totalPotentialMin += adjustedMin * assetAmount;
+        totalPotentialMax += adjustedMax * assetAmount;
+        totalAssetsAmount += assetAmount;
+      } else if (transactionFound && buyAndSell[index].buyAndSell.length > 0) {
+        totalPotentialMin += adjustedMin * assetAmount;
+        totalPotentialMax += adjustedMax * assetAmount;
+        totalAssetsAmount += assetAmount;
+      }
+    }
+  });
+
+  let avgMin = (totalPotentialMin / totalAssetsAmount).toFixed(1);
+  let avgMax = (totalPotentialMax / totalAssetsAmount).toFixed(1);
+
+  return { avgMin, avgMax };
+};
 
 const Third = () => {
   const t = useTranslations("third");
@@ -33,6 +117,13 @@ const Third = () => {
     realized: 0,
     gesamtwertPercentage: 0,
   });
+
+  const potential = useMemo(() => {
+    const assets = portfolio?.assets;
+    const buyAndSell = portfolio?.assetsCalculations.assets;
+
+    return calculatePotential(assets, buyAndSell);
+  }, [portfolio]);
 
   useEffect(() => {
     if (portfolio && portfolio.assetsCalculations) {
@@ -323,7 +414,8 @@ const Third = () => {
               fontWeight: "bold",
             }}
           >
-            0,00 {currencySign[currency]}
+            {isNaN(potential.avgMin) ? 0 : potential.avgMin}x -{" "}
+            {isNaN(potential.avgMax) ? 0 : potential.avgMax}x
           </Typography>
         </Box>
       </Box>
