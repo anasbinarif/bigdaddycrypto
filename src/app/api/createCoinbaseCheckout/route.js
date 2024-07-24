@@ -3,11 +3,11 @@ import { NextResponse } from 'next/server';
 
 const prices = {
     Pro: {
-        monthly: { amount: '0.00', currency: 'EUR' },
+        monthly: { amount: '0.01', currency: 'EUR' },
         yearly: { amount: '299.4', currency: 'EUR' },
     },
     Premium: {
-        monthly: { amount: '0.00', currency: 'EUR' },
+        monthly: { amount: '0.01', currency: 'EUR' },
         yearly: { amount: '599.4', currency: 'EUR' },
     },
 };
