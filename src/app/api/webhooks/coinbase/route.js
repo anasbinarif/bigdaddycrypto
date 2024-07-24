@@ -14,8 +14,22 @@ const validateCoinbaseSignature = (req, rawBody, secretKey) => {
 
 const updateSubscriptionStatus = async (event) => {
     const { type: eventType, data } = event;
-    const { id: transaction_id, metadata, pricing, timeline, hosted_url, description, name } = data;
-    const { user_id: userId } = metadata;
+
+    // Ensure data object exists
+    if (!data) {
+        console.error("[ERROR-coinbase] Missing data object in event");
+        return;
+    }
+
+    // Extract and log required properties from data
+    const transaction_id = data.id || "missing_transaction_id";
+    const { metadata = {}, pricing, timeline, hosted_url, description, name } = data;
+    const { user_id: userId, name: userName, email: userEmail } = metadata;
+
+    if (!userId) {
+        console.error("[ERROR-coinbase] Missing user ID in metadata");
+        return;
+    }
 
     console.log("[INFO-coinbase] Event type:", eventType);
     console.log("[INFO-coinbase] User ID:", userId);

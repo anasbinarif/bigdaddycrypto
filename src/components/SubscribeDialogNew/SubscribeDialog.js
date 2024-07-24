@@ -90,12 +90,13 @@ const SubscribeDialog = ({ open, handleClose }) => {
         cache: "no-store",
         body: JSON.stringify({
           name: selectedPlan,
-          billingCycle: "yearly",
+          billingCycle: billingCycle,
           userId,
         }),
       });
 
       const data = await response.json();
+        console.log("createCoinbaseCheckout: ", data)
       if (response.ok && data?.data?.data.hosted_url) {
         window.open(data.data.data.hosted_url, "_blank");
         handleClose();
@@ -201,7 +202,7 @@ const SubscribeDialog = ({ open, handleClose }) => {
                   color="secondary"
                   onClick={handleCoinbasePurchase}
                   startIcon={<SubscriptionsIcon />}
-                  disabled={billingCycle === "monthly"}
+                  // disabled={billingCycle === "monthly"}
               >
                 Purchase via Coinbase
               </Button>
