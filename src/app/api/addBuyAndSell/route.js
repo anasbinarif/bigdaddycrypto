@@ -10,7 +10,7 @@ export async function POST(req) {
   }
 
   const { userID, CoinGeckoID, rowVals, Portfolio_Assets } = await req.json();
-  console.log("debug add buy and sell", Portfolio_Assets);
+  // console.log("debug add buy and sell", Portfolio_Assets);
   try {
     const result = await UserPortfolio.findOneAndUpdate(
       { userId: userID, "assets.CoinGeckoID": CoinGeckoID },

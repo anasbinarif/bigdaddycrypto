@@ -186,6 +186,8 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
 
     try {
         const currentPrices = await getCurrentPrices(coinGeckoIDs, 'eur', apiKey);
+        const numberOfUpdates = Object.keys(currentPrices).length;
+        console.log(`Number of coins updated: ${numberOfUpdates}`);
         // console.log("currentPrices", currentPrices);
 
         const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
