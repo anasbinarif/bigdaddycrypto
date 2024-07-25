@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { UserPortfolio } from "../../../lib/models";
 import { updateCoinDetailsCron } from "../../../lib/action";
-import {connectToDb} from "@/lib/utils";
+import {connectToDb} from "../../../lib/utils";
 
 export async function POST(req) {
     console.log('######################################');
