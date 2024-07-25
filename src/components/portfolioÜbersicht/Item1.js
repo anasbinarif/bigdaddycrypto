@@ -129,7 +129,7 @@ export default function Item1({ preCalcPort = null }) {
 
   const assetsLength = portData?.assetsCalculations?.assets.length;
   const totalInvestment = portData?.assetsCalculations?.assets.reduce(
-    (acc, curr) => acc + curr.totalInvest,
+    (acc, curr) => acc + (curr.totalInvest - curr.totalSold),
     0
   );
   const totalGesamtwert = portData?.assetsCalculations?.assets

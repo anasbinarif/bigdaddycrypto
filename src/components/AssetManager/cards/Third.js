@@ -129,7 +129,7 @@ const Third = () => {
     if (portfolio && portfolio.assetsCalculations) {
       console.log("assets", portfolio.assetsCalculations.assets);
       const totalInvestment = portfolio.assetsCalculations.assets
-        .reduce((acc, curr) => acc + curr.totalInvest, 0)
+        .reduce((acc, curr) => acc + (curr.totalInvest - curr.totalSold), 0)
         .toFixed(2);
       const totalGesamtwert = portfolio.assetsCalculations.assets
         .reduce((acc, curr) => acc + curr.Holdings, 0)

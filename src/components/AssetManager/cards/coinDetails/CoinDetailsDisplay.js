@@ -434,7 +434,7 @@ const CoinDetailsDisplay = ({
             }}
           >
             {addCommas(
-              convertPrice(financialSummary.realizedProfit, currency, rates)
+              convertPrice(financialSummary?.realizedMoney, currency, rates)
             )}{" "}
             {currencySign[currency]}
           </Typography>
@@ -447,11 +447,11 @@ const CoinDetailsDisplay = ({
             }}
           >
             {isNaN(
-              financialSummary.realizedProfit / financialSummary.totalInvested
+              financialSummary.realizedMoney / financialSummary.totalInvested
             )
               ? ""
               : `${(
-                  (financialSummary.realizedProfit /
+                  (financialSummary.realizedMoney /
                     financialSummary.totalInvested) *
                   100
                 ).toFixed(2)} % ${t("ofInvestment")}`}{" "}

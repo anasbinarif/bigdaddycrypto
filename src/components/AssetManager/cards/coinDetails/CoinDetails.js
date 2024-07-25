@@ -55,6 +55,7 @@ const CoinDetails = ({ coin, setOperationHappening = null }) => {
     avgSellingPricePercentage: 0,
     totalWinLoss: 0,
     totalWinLossPercentage: 0,
+    realizedMoney: 0,
     X: 0,
   });
   const [changeTableValue, setChangeTableValue] = useState(0);
@@ -168,10 +169,10 @@ const CoinDetails = ({ coin, setOperationHappening = null }) => {
       (parseFloat(totalInvested) - parseFloat(realizedProfit))
     ).toFixed(2);
     console.log(totalWinLoss);
+    const realizedMoney =
+      avgSellingPrice * verkaufTotalCoin - verkaufTotalCoin * avgPurchasePrice;
     const winloss =
-      avgSellingPrice * verkaufTotalCoin -
-      verkaufTotalCoin * avgPurchasePrice +
-      (totalHoldingsValue - totalCoins * avgPurchasePrice);
+      realizedMoney + (totalHoldingsValue - totalCoins * avgPurchasePrice);
     console.log(winloss);
     const totalWinLossPercentage = parseFloat(
       ((totalWinLoss / totalInvested) * 100).toFixed(2)
@@ -197,6 +198,7 @@ const CoinDetails = ({ coin, setOperationHappening = null }) => {
       avgSellingPricePercentage: checkNaN(avgSellingPricePercentage),
       totalWinLoss: checkNaN(totalWinLoss),
       totalWinLossPercentage: checkNaN(totalWinLossPercentage),
+      realizedMoney: checkNaN(realizedMoney),
       X: checkNaN(X),
     });
     changeTableValue === 1 && setChangeTableValue(2);

@@ -34,6 +34,7 @@ export const DonutCard = ({ preCalcPort, preCalcCalculations }) => {
   // console.log(preCalcCalculations);
   // console.log(loadingPortfolio);
   // console.log(portfolioCalculations);
+  console.log(portfolio);
 
   return (
     <Box
