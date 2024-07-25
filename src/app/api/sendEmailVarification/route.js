@@ -27,7 +27,7 @@ export async function POST(req, res) {
             html: verificationHtml(verifyUrl),
         };
 
-        console.log("Sending mail with options:", msg);  // Logging the mail options
+        // console.log("Sending mail with options:", msg);
 
         await sgMail.send(msg);
 

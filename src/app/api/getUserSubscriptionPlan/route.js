@@ -11,7 +11,7 @@ export async function POST(req) {
     const payment = await Payments.findOne({ userId: userId }).populate(
       "userId"
     );
-    console.log("usersubpayments", payment)
+    // console.log("usersubpayments", payment)
 
     if (!payment?.Subscription && user?.pastUser !== "") {
       return NextResponse.json({ plan: 'free+', payment: null });
