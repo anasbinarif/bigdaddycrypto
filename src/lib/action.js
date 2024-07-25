@@ -183,12 +183,16 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
             throw error;
         }
     };
+    if (!coinGeckoIDs.length) {
+        console.error("Something went wrong with MongoDB: no CoinGeckoIDs provided.");
+        return; // Exit the function if coinGeckoIDs is empty
+    }
 
     try {
         const currentPrices = await getCurrentPrices(coinGeckoIDs, 'eur', apiKey);
         const numberOfUpdates = Object.keys(currentPrices).length;
         console.log(`Number of coins updated: ${numberOfUpdates}`);
-        // console.log("currentPrices", currentPrices);
+        console.log("currentPrices", currentPrices);
 
         const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
             const currentPrice = currentPrices[coinGeckoID]?.eur;
