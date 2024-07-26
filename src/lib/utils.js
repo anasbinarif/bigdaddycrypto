@@ -1,15 +1,20 @@
 import mongoose from "mongoose";
-import { CronJobStatus } from "./models";
+import jwt from "jsonwebtoken";
 
 const connection = {};
 
 export const connectToDb = async () => {
+    if (connection.isConnected) {
+        console.log("Using existing connection");
+        return;
+    }
+
     try {
-        if (connection.isConnected) {
-            console.log("Using existing connection");
-            return;
-        }
-        const db = await mongoose.connect(process.env.MONGODB_URI);
+        const db= await mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            serverSelectionTimeoutMS: 10000, // 10 seconds
+            socketTimeoutMS: 45000, // 45 seconds
+        });
         connection.isConnected = db.connections[0].readyState;
         console.log("MongoDB Connected");
 
@@ -17,16 +22,15 @@ export const connectToDb = async () => {
         // await CronJobStatus.updateOne({}, { isRunning: false });
 
     } catch (error) {
-        console.log(error);
-        throw new Error(error);
+        console.error("Error connecting to MongoDB:", error);
+        throw new Error("Error connecting to MongoDB");
     }
 };
 
 export const authorize = async (token) => {
     if (!token) return null;
     try {
-        const info = await jwt.verify(token, 'secret');
-        return info;
+        return await jwt.verify(token, 'secret');
     } catch (err) {
         console.error(err);
         return null;
