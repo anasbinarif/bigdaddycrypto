@@ -203,11 +203,12 @@ const setColorPot = (dataPotential) => {
 };
 
 const calculateDotColor = (name, score, portfolio) => {
+  // console.log(name, score);
   switch (name) {
     case "scoreFactor_Category":
-      if (score === 1) return green[500];
-      if (score === 2) return "orange";
-      if (score === 3) return "#ff0000";
+      if (score >= 10) return green[500];
+      if (score >= 7 && score < 10) return "orange";
+      if (score >= 5 && score < 7) return "#ff0000";
       return "#800000";
     case "scoreFactor_CategoryTwice":
       if (score === 1) return green[500];
@@ -272,6 +273,20 @@ function BewertungCard({ preCalcPort }) {
         const potentialResult = calculatePotential(assets, buyAndSell);
         setPotential(potentialResult);
 
+        let leastCat = "",
+          leastVal = 100;
+        for (const [key, value] of Object.entries(
+          userPortfolio?.calculation?.categoryPercentages
+        )) {
+          if (key !== "none") {
+            if (parseFloat(value) < leastVal) {
+              leastVal = parseFloat(value);
+              leastCat = key;
+            }
+          }
+          // console.log(key, value);
+        }
+        console.log(leastCat);
         // Calculate Hype Color Score
         try {
           const calculatedScore = await calculateScore(
@@ -279,10 +294,7 @@ function BewertungCard({ preCalcPort }) {
             userPortfolio?.calculation
           );
           setHypeColorScore({
-            scoreFactor_Category: Math.min(
-              Number(calculatedScore.scoreFactor_Category),
-              10
-            ),
+            scoreFactor_Category: Math.min(Number(leastVal), 10),
             scoreFactor_CategoryTwice: Math.min(
               Number(calculatedScore.scoreFactor_CategoryTwice),
               10

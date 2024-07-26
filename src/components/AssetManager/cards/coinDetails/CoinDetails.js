@@ -32,6 +32,7 @@ import { useTranslations } from "next-intl";
 import CoinDetailsTable from "./CoinDetailsTable";
 import CoinDetailsDisplay from "./CoinDetailsDisplay";
 import styles from "./coinDetails.module.css";
+import Decimal from "decimal.js";
 
 const CoinDetails = ({ coin, setOperationHappening = null }) => {
   const t = useTranslations("coinDetails");
@@ -96,10 +97,12 @@ const CoinDetails = ({ coin, setOperationHappening = null }) => {
   }, [coin?.CoinGeckoID, portfolio?.assetsCalculations.assets]);
 
   useEffect(() => {
-    const totalCoins = rowVals?.reduce((acc, row) => {
-      const coinsValue = parseFloat(row.Coins);
-      return row.Type === "Kauf" ? acc + coinsValue : acc - coinsValue;
-    }, 0);
+    const tolerance = 1e-10;
+    let totalCoins = rowVals?.reduce((acc, row) => {
+      const coinsValue = new Decimal(row.Coins || 0);
+      return row.Type === "Kauf" ? acc.plus(coinsValue) : acc.minus(coinsValue);
+    }, new Decimal(0));
+    totalCoins = parseFloat(totalCoins.toString());
     console.log(totalCoins, coin?.Price);
     const totalHoldingsValue = (totalCoins * parseFloat(coin?.Price)).toFixed(
       2
