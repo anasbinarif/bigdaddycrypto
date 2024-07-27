@@ -21,7 +21,8 @@ const updateSubscriptionStatus = async (webhookEvent) => {
 
     const { event } = webhookEvent;
     const { data } = event;
-    const { type: eventType, id: transaction_id, metadata = {}, pricing, timeline, hosted_url, description, name } = data;
+    const { type: eventType } = event;
+    const { id: transaction_id, metadata = {}, pricing, timeline, hosted_url, description, name } = data;
     const { user_id: userId, name: userName, email: userEmail } = metadata;
 
     if (!userId) {

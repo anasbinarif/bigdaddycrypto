@@ -5,7 +5,7 @@ const connection = {};
 
 export const connectToDb = async () => {
     if (connection.isConnected) {
-        console.log("Using existing connection");
+        // console.log("Using existing connection");
         return;
     }
 
