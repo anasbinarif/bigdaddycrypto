@@ -20,16 +20,21 @@ const categoryColors = {
 const DonutLegend = ({ portfolioCalculations }) => {
   const theme = useTheme();
   const t = useTranslations("donutLegend");
-  const categories = Object.entries(portfolioCalculations?.percentages || {})
+  const categories = Object.entries(
+    portfolioCalculations?.categoryPercentages || {}
+  )
     .filter(([key]) => key.toLowerCase() !== "none")
-    .map(([key, value]) => ({
-      name: key.toUpperCase(),
-      percentage: value,
-      color: categoryColors[key.toUpperCase()] || "#CCCCCC",
-      count: portfolioCalculations.counts[key.toLowerCase()] || 0,
-    }));
+    .map(([key, value]) => {
+      console.log(key, value);
+      return {
+        name: key.toUpperCase(),
+        percentage: value,
+        color: categoryColors[key.toUpperCase()] || "#CCCCCC",
+        count: portfolioCalculations.counts[key.toLowerCase()] || 0,
+      };
+    });
   useEffect(() => {
-    // console.log("whatdata", categories, portfolioCalculations)
+    console.log("whatdata", categories, portfolioCalculations);
   }, [categories]);
 
   // console.log(categories);

@@ -129,13 +129,25 @@ export default function Item1({ preCalcPort = null }) {
 
   const assetsLength = portData?.assetsCalculations?.assets.length;
   const totalInvestment = portData?.assetsCalculations?.assets.reduce(
-    (acc, curr) => acc + curr.totalInvest,
+    (acc, curr) => acc + (curr.totalInvest - curr.totalSold),
     0
   );
   const totalGesamtwert = portData?.assetsCalculations?.assets
     .reduce((acc, curr) => acc + curr.Holdings, 0)
     .toFixed(2);
-  const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
+  // const aktuellerProfit = (totalGesamtwert - totalInvestment).toFixed(2);
+  let aktuellerProfit = portData?.assetsCalculations?.assets.reduce(
+    (acc, curr) => {
+      const winLoss = curr.Holdings - (curr.totalInvest - curr.totalSold);
+      return acc + winLoss;
+    },
+    0
+  );
+  aktuellerProfit = parseFloat(
+    aktuellerProfit > 0.09
+      ? aktuellerProfit.toFixed(2)
+      : aktuellerProfit.toPrecision(2)
+  );
   const gesamtwertPercentage = (
     (aktuellerProfit / totalInvestment) *
     100

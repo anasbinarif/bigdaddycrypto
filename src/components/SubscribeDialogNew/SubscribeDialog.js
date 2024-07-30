@@ -96,6 +96,7 @@ const SubscribeDialog = ({ open, handleClose }) => {
       });
 
       const data = await response.json();
+        console.log("createCoinbaseCheckout: ", data)
       if (response.ok && data?.data?.data.hosted_url) {
         window.open(data.data.data.hosted_url, "_blank");
         handleClose();

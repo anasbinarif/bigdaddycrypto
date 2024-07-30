@@ -87,10 +87,7 @@ const DonutChart = ({
       const data = loadingPortfolio
         ? Object.entries(portfolioCalculations?.percentages || {}).map(
             ([key, value]) => {
-              return [
-                categoriesDisplay[key] || key,
-                parseFloat(value.replace("%", "")),
-              ];
+              return [categoriesDisplay[key] || key, parseFloat(value)];
             }
           )
         : [["AI", 100.0]];
@@ -172,10 +169,7 @@ const DonutChart = ({
     const data = loadingPortfolio
       ? Object.entries(portfolioCalculations?.percentages || {}).map(
           ([key, value]) => {
-            return [
-              categoriesDisplay[key] || key,
-              parseFloat(value.replace("%", "")),
-            ];
+            return [categoriesDisplay[key] || key, parseFloat(value)];
           }
         )
       : [["AI", 100.0]];
@@ -235,7 +229,6 @@ const DonutChart = ({
     };
     fetchScore();
   }, [portfolio, preCalcPort]);
-
 
   function calculateNote(score) {
     if (score >= 91) {

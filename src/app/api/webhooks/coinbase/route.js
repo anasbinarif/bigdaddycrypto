@@ -12,14 +12,23 @@ const validateCoinbaseSignature = (req, rawBody, secretKey) => {
     return generatedSignature === coinbaseSignature;
 };
 
-const updateSubscriptionStatus = async (event) => {
-    const { type: eventType, data } = event;
-
-    if (!data.id) {
-        data.id = "testing";
+const updateSubscriptionStatus = async (webhookEvent) => {
+    // Ensure the event object and event.data exist
+    if (!webhookEvent || !webhookEvent.event) {
+        console.error("[ERROR-coinbase] Missing data object in event");
+        return;
     }
-    const { id: transaction_id, metadata, pricing, timeline, hosted_url, description, name } = data;
-    const { user_id: userId } = metadata;
+
+    const { event } = webhookEvent;
+    const { data } = event;
+    const { type: eventType } = event;
+    const { id: transaction_id, metadata = {}, pricing, timeline, hosted_url, description, name } = data;
+    const { user_id: userId, name: userName, email: userEmail } = metadata;
+
+    if (!userId) {
+        console.error("[ERROR-coinbase] Missing user ID in metadata");
+        return;
+    }
 
     console.log("[INFO-coinbase] Event type:", eventType);
     console.log("[INFO-coinbase] User ID:", userId);
@@ -112,6 +121,7 @@ const updateSubscriptionStatus = async (event) => {
             console.log("[INFO-coinbase] Unhandled event type:", eventType);
     }
 };
+
 
 export async function POST(req) {
     const rawBody = await req.text();

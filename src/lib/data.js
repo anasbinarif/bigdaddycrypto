@@ -260,6 +260,69 @@ export const getUserPortfolio = async (userId) => {
     });
   });
 
+  const totalInvestment = data?.assetsCalculations?.assets.reduce(
+    (acc, curr) => acc + curr.totalInvest,
+    0
+  );
+  const categoryInvestments = {
+    ai: 0,
+    metaverse: 0,
+    defi: 0,
+    web3: 0,
+    green: 0,
+    btc: 0,
+    cbdc: 0,
+    ecommerce: 0,
+    nft: 0,
+    none: 0,
+  };
+
+  data?.assetsCalculations?.assets.forEach((asset) => {
+    const { totalInvest } = asset;
+    const { Category: categories } = data?.assets.find(
+      (asset1) => asset1.CoinGeckoID === asset.CoinGeckoID
+    );
+    const investmentPerCategory = totalInvest / categories.length;
+    console.log(totalInvest, categories);
+    categories.forEach((category) => {
+      if (!categoryInvestments[category]) {
+        categoryInvestments[category] = 0;
+      }
+      categoryInvestments[category] += investmentPerCategory;
+    });
+  });
+
+  // console.log(categoryInvestments);
+
+  const categoryShares = {};
+
+  Object.keys(categoryInvestments).forEach((category) => {
+    const investment = categoryInvestments[category];
+    const percentageShare = (investment / totalInvestment) * 100;
+    categoryShares[category] = percentageShare;
+  });
+
+  const totalPercentage = Object.values(categoryShares).reduce(
+    (sum, percentage) => sum + parseFloat(percentage),
+    0
+  );
+  const factor = 100 / totalPercentage;
+
+  Object.keys(categoryShares).forEach((category) => {
+    categoryShares[category] =
+      categoryShares[category] * factor > 0.09
+        ? (categoryShares[category] * factor).toFixed(2)
+        : (categoryShares[category] * factor).toPrecision(2);
+  });
+
+  // console.log(categoryShares);
+
+  // console.log(data.assets);
+  // console.log(data?.assetsCalculations);
+  // console.log(totalInvestment);
+  // console.log(categories);
+  // console.log(totalCategoryCount);
+
   // Calculate the total count of assets
   const totalCount = data.assets.length;
 
@@ -269,6 +332,8 @@ export const getUserPortfolio = async (userId) => {
     rawPercentages[category] =
       (categories[category] / totalCategoryCount) * 100;
   }
+
+  console.log(rawPercentages);
 
   // Normalize percentages to ensure they sum to 100%
   const normalizedPercentages = {};
@@ -286,6 +351,7 @@ export const getUserPortfolio = async (userId) => {
     calculation: {
       counts: categories,
       percentages: normalizedPercentages,
+      categoryPercentages: categoryShares,
     },
   };
 };

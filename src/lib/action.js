@@ -194,16 +194,25 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
         console.log(`Number of coins updated: ${numberOfUpdates}`);
         // console.log("currentPrices", currentPrices);
 
-        const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
+        const updatePromises = coinGeckoIDs.map(async (coinGeckoID) => {
             const currentPrice = currentPrices[coinGeckoID]?.eur;
             if (currentPrice !== undefined) {
+                const asset = await Assets.findOne({CoinGeckoID: coinGeckoID});
+
+                if (!asset) {
+                    console.warn(`No asset found for ${coinGeckoID}`);
+                    return;
+                }
+
+                const newBottom = (asset.Bottom === undefined || currentPrice < asset.Bottom) ? currentPrice : asset.Bottom;
                 return Assets.updateOne(
-                    { CoinGeckoID: coinGeckoID },
+                    {CoinGeckoID: coinGeckoID},
                     {
                         $set: {
                             Price: currentPrice,
                             cgPrice: currentPrice,
                             LastPriceUpdate: new Date(),
+                            Bottom: newBottom,
                         },
                     }
                 );
