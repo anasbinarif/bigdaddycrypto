@@ -76,6 +76,7 @@ const CoinCard = ({
   assetsLeangth,
   currentCategory,
   setData,
+  setRerender,
 }) => {
   const {
     Name,
@@ -233,27 +234,29 @@ const CoinCard = ({
     if (response.ok) {
       const userPortfolio = await getUserPortfolio(userId);
       setPortfolio(userPortfolio.data);
-      setData((prevData) => {
-        const updatedFavourite = prevData.favourite
-          ? [...prevData.favourite]
-          : [];
-        const coinIndex = updatedFavourite.findIndex(
-          (favCoin) => favCoin.CoinGeckoID === CoinGeckoID
-        );
+      setRerender && setRerender((prev) => prev + 1);
+      setData &&
+        setData((prevData) => {
+          const updatedFavourite = prevData.favourite
+            ? [...prevData.favourite]
+            : [];
+          const coinIndex = updatedFavourite.findIndex(
+            (favCoin) => favCoin.CoinGeckoID === CoinGeckoID
+          );
 
-        if (coinIndex > -1) {
-          // Coin is already in favourites, remove it
-          updatedFavourite.splice(coinIndex, 1);
-        } else {
-          // Coin is not in favourites, add it
-          updatedFavourite.push(coin);
-        }
+          if (coinIndex > -1) {
+            // Coin is already in favourites, remove it
+            updatedFavourite.splice(coinIndex, 1);
+          } else {
+            // Coin is not in favourites, add it
+            updatedFavourite.push(coin);
+          }
 
-        return {
-          ...prevData,
-          favourite: updatedFavourite,
-        };
-      });
+          return {
+            ...prevData,
+            favourite: updatedFavourite,
+          };
+        });
     } else {
       console.error("Failed to toggle favourite status.");
     }

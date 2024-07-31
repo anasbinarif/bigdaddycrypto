@@ -26,6 +26,8 @@ import {
 } from "../../../lib/data";
 import { useSearchParams } from "next/navigation";
 import addCommas from "../../../lib/currencyFormatter";
+import maxLenCrop from "../../../lib/checkString";
+import { max } from "date-fns";
 
 const valueMap = {
   1: "Scam?",
@@ -600,21 +602,26 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
                       >
                         <StyledTypography sx={{ fontSize: "14px" }}>
                           {row.bestand > 0
-                            ? `${addCommas(
-                                convertPrice(row.bestand, currency, rates)
+                            ? `${maxLenCrop(
+                                addCommas(
+                                  convertPrice(row.bestand, currency, rates)
+                                )
                               )} ${currencySign[currency]}`
                             : 0}
                         </StyledTypography>
                         <StyledTypography
                           sx={{ color: "#999", fontSize: "12px" }}
                         >
-                          {row.totalCoins} {row.ticker}
+                          {maxLenCrop(addCommas(row.totalCoins))} {row.ticker}
                         </StyledTypography>
                       </Box>
                     </TableCell>
                     <TableCell sx={{ padding: "5px 0 5px 5px" }}>
                       <StyledTypography>
-                        {row.X && !isNaN(row.X) ? row.X : "0"}x
+                        {row.X && !isNaN(row.X)
+                          ? maxLenCrop(addCommas(row.X))
+                          : "0"}
+                        x
                       </StyledTypography>
                     </TableCell>
                     <TableCell sx={{ padding: "5px" }}>
@@ -627,8 +634,10 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
                       >
                         <StyledTypography>
                           {row.preisChange !== 0
-                            ? `${addCommas(
-                                convertPrice(row.preisChange, currency, rates)
+                            ? `${maxLenCrop(
+                                addCommas(
+                                  convertPrice(row.preisChange, currency, rates)
+                                )
                               )} ${currencySign[currency]}`
                             : 0}
                         </StyledTypography>
@@ -655,11 +664,13 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
                             }}
                           >
                             {row.pricePercentage !== 0
-                              ? `${addCommas(
-                                  convertPrice(
-                                    row.pricePercentage,
-                                    currency,
-                                    rates
+                              ? `${maxLenCrop(
+                                  addCommas(
+                                    convertPrice(
+                                      row.pricePercentage,
+                                      currency,
+                                      rates
+                                    )
                                   )
                                 )} %`
                               : 0}
@@ -670,8 +681,10 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
                     <TableCell sx={{ padding: "5px" }}>
                       <StyledTypography>
                         {row.dcaPrice > 0
-                          ? `${addCommas(
-                              convertPrice(row.dcaPrice, currency, rates)
+                          ? `${maxLenCrop(
+                              addCommas(
+                                convertPrice(row.dcaPrice, currency, rates)
+                              )
                             )} ${currencySign[currency]}`
                           : 0}
                       </StyledTypography>
@@ -679,8 +692,10 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
                     <TableCell sx={{ padding: "5px" }}>
                       <StyledTypography>
                         {row.investition !== 0
-                          ? `${addCommas(
-                              convertPrice(row.investition, currency, rates)
+                          ? `${maxLenCrop(
+                              addCommas(
+                                convertPrice(row.investition, currency, rates)
+                              )
                             )} ${currencySign[currency]}`
                           : 0}
                       </StyledTypography>

@@ -327,7 +327,7 @@ const DonutChart = ({
           }}
         >
           {(portfolio?.assets?.length > 0 || preCalcPort?.assets?.length > 0) &&
-            score}
+            score.toFixed(2)}
         </Typography>
         <Typography variant="caption" style={{ color: "#FFFFFF" }}>
           {(portfolio?.assets?.length > 0 || preCalcPort?.assets?.length > 0) &&

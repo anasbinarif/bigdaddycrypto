@@ -33,7 +33,12 @@ const MenuProps = {
   },
 };
 
-const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
+const KryptoFilter = ({
+  userID,
+  priceIndicator,
+  setPriceIndicator,
+  setRerender,
+}) => {
   const t = useTranslations("kryptoFilter");
   const [width, setWidth] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -122,10 +127,10 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
   }, []);
 
   const handleChange = (event) => {
-    // if (sessionJotai?.user?.subscriptionPlan !== "Premium") {
-    //   setAlertOpen(true);
-    //   return;
-    // }
+    if (sessionJotai?.user?.subscriptionPlan !== "Premium") {
+      setAlertOpen(true);
+      return;
+    }
     setPriceIndicator(event.target.value);
   };
 
@@ -347,6 +352,7 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
                   coin={option}
                   selected={checkCoinSelected(option)}
                   search={true}
+                  setRerender={setRerender}
                 />
               );
             }}

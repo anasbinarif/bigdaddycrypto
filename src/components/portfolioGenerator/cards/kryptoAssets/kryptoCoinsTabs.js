@@ -76,6 +76,7 @@ const ScrollableKryptoTabs = ({
   userID,
   priceIndicator,
   assetsLeangth,
+  reload,
 }) => {
   const t = useTranslations("scrollableKryptoTabs");
   const t2 = useTranslations("donutLegend");
@@ -190,7 +191,6 @@ const ScrollableKryptoTabs = ({
     }));
   };
   // console.log(firstHalfLabels, secondHalfLabels);
-
 
   return (
     <>

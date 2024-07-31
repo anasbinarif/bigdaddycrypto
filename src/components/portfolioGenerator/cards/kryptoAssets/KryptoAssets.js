@@ -12,6 +12,7 @@ const KryptoAssets = ({ loadingPortfolio, assetsLeangth }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [priceIndicator, setPriceIndicator] = useState("pi");
   const [portfolio, setPortfolio] = useAtom(portfolioAtom, { assets: [] });
+  const [rerender, setRerender] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,12 +49,14 @@ const KryptoAssets = ({ loadingPortfolio, assetsLeangth }) => {
         userID={portfolio?.userID}
         priceIndicator={priceIndicator}
         setPriceIndicator={setPriceIndicator}
+        setRerender={setRerender}
       />
       <ScrollableKryptoTabs
         loadingPortfolio={loadingPortfolio}
         userID={portfolio?.userId}
         priceIndicator={priceIndicator}
         assetsLeangth={assetsLeangth}
+        key={rerender}
       />
       {/* <div className="divider"></div> */}
     </Box>
