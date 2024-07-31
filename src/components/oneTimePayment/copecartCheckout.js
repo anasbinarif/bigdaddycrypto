@@ -22,11 +22,11 @@ const OneTimePaymentCheckout = ({ open, handleClose, price, confirmOneTimePaymen
 
     const copecartUrls = {
         995: 'https://copecart.com/products/ba4fb51f/checkout',
-        1195: 'https://copecart.com/products/ba4fb51f/checkout',
+        1195: 'https://copecart.com/products/402de640/checkout',
         1295: 'https://copecart.com/products/c5a64eaa/checkout',
-        1495: 'https://copecart.com/products/dd118de8/checkout',
-        1695: 'https://copecart.com/products/64fd9228/checkout',
-        1895: 'https://copecart.com/products/3e31258b/checkout'
+        1495: 'https://copecart.com/products/afa49c6c/checkout',
+        1695: 'https://copecart.com/products/7f8e97ba/checkout',
+        1895: 'https://copecart.com/products/260d67c6/checkout'
     };
 
     const handleCopeCartCheckout = () => {
