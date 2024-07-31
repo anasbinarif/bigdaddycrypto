@@ -122,10 +122,10 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
   }, []);
 
   const handleChange = (event) => {
-    if (sessionJotai?.user?.subscriptionPlan !== "Premium") {
-      setAlertOpen(true);
-      return;
-    }
+    // if (sessionJotai?.user?.subscriptionPlan !== "Premium") {
+    //   setAlertOpen(true);
+    //   return;
+    // }
     setPriceIndicator(event.target.value);
   };
 
@@ -140,7 +140,6 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
           )
           .slice(0, 5)
       : [];
-
 
     setSearchData(filteredResults);
   };

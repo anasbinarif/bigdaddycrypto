@@ -74,7 +74,7 @@ const DonutChart = ({
       calculateSecurityScore();
     }
   }, [portfolio, preCalcPort]);
-  // console.log(securityScore);
+  console.log(securityScore);
 
   useEffect(() => {
     const drawChart = () => {
@@ -213,14 +213,16 @@ const DonutChart = ({
   };
   const [score, setScore] = useState(0);
 
+  // console.log(portfolio);
+
   useEffect(() => {
     const fetchScore = async () => {
       const portData = preCalcPort || portfolio;
       if (portData?.assets) {
         // console.log(portData.assets);
         try {
-          const calculatedScore = await calculateScore0(portData.assets);
-          setScore(calculatedScore?.score);
+          const calculatedScore = await calculateScore0(portData);
+          setScore(calculatedScore);
           // console.log("Calculated Score:", calculatedScore);
         } catch (error) {
           console.error("Error calculating score:", error);
