@@ -218,6 +218,7 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
       throw error;
     }
   };
+
   if (!coinGeckoIDs.length) {
     console.error(
       "Something went wrong with MongoDB: no CoinGeckoIDs provided."

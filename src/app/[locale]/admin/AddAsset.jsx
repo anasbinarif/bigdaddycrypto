@@ -246,6 +246,8 @@ const AddAsset = () => {
           (category) => menuItemDisplayMap[category]
         ),
         risk: asset.Risk,
+        cgPrice: asset.Price,
+        cgImageURL: asset.cgImageURL,
       }));
     } else {
       setFormData((prevState) => ({
@@ -264,8 +266,6 @@ const AddAsset = () => {
         setFormData((prevState) => ({
           ...prevState,
           bottom: assetDetails.data.lowestPrice,
-          cgPrice: assetDetails.data.currentPrice,
-          cgImageURL: assetDetails.data.cgImageURL,
         }));
       } else {
         console.error("Error fetching asset details:", response.statusText);
