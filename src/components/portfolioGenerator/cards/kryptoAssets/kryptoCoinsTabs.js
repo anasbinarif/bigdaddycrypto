@@ -1,29 +1,16 @@
-import React, { useState, useEffect } from "react";
-import {
-  Tab,
-  SvgIcon,
-  Box,
-  Typography,
-  useMediaQuery,
-  useTheme,
-  Button,
-  CircularProgress,
-} from "@mui/material";
-import {
-  categoryColors,
-  categoryColorsNew,
-  getAssets,
-} from "../../../../lib/data";
-import Tabs, { tabsClasses } from "@mui/material/Tabs";
+import React, {useEffect, useState} from "react";
+import {Box, Button, SvgIcon, Tab, Typography, useMediaQuery, useTheme,} from "@mui/material";
+import {categoryColors, getAssets,} from "../../../../lib/data";
+import Tabs, {tabsClasses} from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
 import CoinCardSkeleton from "../coinCard/CoinCardSkeleton";
 import FavoriteIcon from "@mui/icons-material/Star";
-import { useTranslations } from "next-intl";
-import { sessionAtom } from "../../../../app/stores/sessionStore";
-import { useAtom } from "jotai";
-import { portfolioAtom } from "../../../../app/stores/portfolioStore";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCrown } from "@fortawesome/free-solid-svg-icons";
+import {useTranslations} from "next-intl";
+import {sessionAtom} from "../../../../app/stores/sessionStore";
+import {useAtom} from "jotai";
+import {portfolioAtom} from "../../../../app/stores/portfolioStore";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCrown} from "@fortawesome/free-solid-svg-icons";
 
 function toCamelCase(str) {
   // Split the string based on '-' or '/' character
@@ -31,7 +18,7 @@ function toCamelCase(str) {
 
   // Convert each word to camelCase
   const camelCasedWords = words.map((word, index) => {
-    // Capitalize first letter of each word except for the first one
+    // Capitalize the first letter of each word except for the first one
     if (index !== 0) {
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     } else {
@@ -40,9 +27,7 @@ function toCamelCase(str) {
   });
 
   // Join the words back together
-  const camelCasedString = camelCasedWords.join("");
-
-  return camelCasedString;
+  return camelCasedWords.join("");
 }
 
 const ColorCircle = ({ color }) => (
@@ -139,7 +124,7 @@ const ScrollableKryptoTabs = ({
           setLoading(false);
         });
     }
-  }, [currentCategory, userId]);
+  }, [currentCategory, userId, portfolio]);
 
   const handleChange = (event, newValue, line) => {
     if (line === 2) {
