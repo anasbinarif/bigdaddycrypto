@@ -245,10 +245,8 @@ const CoinCard = ({
           );
 
           if (coinIndex > -1) {
-            // Coin is already in favourites, remove it
             updatedFavourite.splice(coinIndex, 1);
           } else {
-            // Coin is not in favourites, add it
             updatedFavourite.push(coin);
           }
 
