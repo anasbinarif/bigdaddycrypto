@@ -645,6 +645,7 @@ const EnhancedTable = ({ preCalcPort, preCalcSort }) => {
                           <Typography
                             className={row.pricePercentage < 0 ? "down" : "up"}
                             sx={{
+                              fontSize: "12px",
                               "&.down": {
                                 color: "red",
                               },
