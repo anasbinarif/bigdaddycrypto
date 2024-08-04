@@ -12,7 +12,7 @@ const periods = [
 ];
 
 const ManageUserProfile = () => {
-    const [email, setEmail] = useState("");
+    const [userID, setUserID] = useState("");
     const [paymentPlan, setPaymentPlan] = useState("");
     const [period, setPeriod] = useState("");
     const [alert, setAlert] = useState({ type: '', message: '', visible: false });
@@ -27,7 +27,7 @@ const ManageUserProfile = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, paymentPlan, period }),
+            body: JSON.stringify({ userID, paymentPlan, period }),
         });
 
         const data = await response.json();
@@ -62,12 +62,12 @@ const ManageUserProfile = () => {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                        label="User Email"
+                        label="User ID"
                         variant="outlined"
                         fullWidth
                         required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={userID}
+                        onChange={(e) => setUserID(e.target.value)}
                         sx={{ backgroundColor: '#374151', input: { color: 'white' }, label: { color: 'white' } }}
                     />
                 </Grid>

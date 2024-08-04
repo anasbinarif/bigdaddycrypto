@@ -5,16 +5,16 @@ import {Payments, User} from "../../../lib/models";
 
 export async function POST(req) {
 
-    const { email, paymentPlan, period } = await req.json();
+    const { userID, paymentPlan, period } = await req.json();
 
-    if (!email || !paymentPlan || !period) {
+    if (!userID || !paymentPlan || !period) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
     try {
         await connectToDb();
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ username: userID });
 
         if (!user) {
             return NextResponse.json({ message: 'User not found' }, { status: 404 });
