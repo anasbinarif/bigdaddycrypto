@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Grid, Paper, styled } from "@mui/material";
 import UserList from "./UserList";
 import UserPortfolioTable from "./UserPortfolioTable";
@@ -6,7 +7,6 @@ import Item1 from "../../../../components/portfolioÜbersicht/Item1";
 import { DonutCard } from "../../../../components/portfolioGenerator/cards/donutCard/DonutCard";
 import BewertungCard from "../../../../components/portfolioGenerator/cards/Bewertung";
 import Item4 from "../../../../components/portfolioÜbersicht/Item4";
-import {getOneTimePaidUsers} from "../../../../lib/action";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -37,7 +37,20 @@ const EditPortfolio = () => {
   }, []);
 
   useEffect(() => {
-
+    const getOneTimePaidUsers = async () => {
+      try {
+        const response = await axios.get("/api/getAllOneTimePayments", {
+          headers: { "Cache-Control": "no-store" },
+        });
+        if (response.status === 200) {
+          const data = response.data;
+          console.log("One-time paid users:", data);
+          setUsers(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching one-time paid users:", error);
+      }
+    };
     getOneTimePaidUsers();
   }, []);
 
