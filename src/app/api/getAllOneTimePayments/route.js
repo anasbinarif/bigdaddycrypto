@@ -34,9 +34,9 @@ export async function GET() {
     const paymentDetailsArrays = await Promise.all(paymentDetailsPromises);
     const paymentDetails = paymentDetailsArrays.flat();
 
-    return NextResponse.json({ success: true, data: paymentDetails });
+    return NextResponse.json({ success: true, data: paymentDetails }, { headers: { "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" } });
   } catch (error) {
     console.error("Error fetching payments:", error);
-    return NextResponse.json({ success: false, error: error.message });
+    return NextResponse.json({ success: false, error: error.message }, { headers: { "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" } });
   }
 }
