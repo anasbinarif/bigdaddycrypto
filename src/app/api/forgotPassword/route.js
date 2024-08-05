@@ -1,7 +1,7 @@
 // pages/api/forgot-password.js
 import { connectToDb } from "../../../lib/utils";
 import { User } from "../../../lib/models";
-import sgMail from "@sendgrid/mail";
+import sgMail from '@sendgrid/mail';
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
@@ -12,9 +12,9 @@ export async function POST(req, res) {
 
   try {
     await connectToDb();
-    // const emailLowerCase = email.toLowerCase();
+    const emailLowerCase = email.toLowerCase();
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: { $regex: new RegExp(`^${emailLowerCase}$`, 'i') } });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -39,8 +39,8 @@ export async function POST(req, res) {
   } catch (error) {
     console.error("Error occurred while sending password reset email:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
+        { error: "Internal Server Error" },
+        { status: 500 }
     );
   }
 }
