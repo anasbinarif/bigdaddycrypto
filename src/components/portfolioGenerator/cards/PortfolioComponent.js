@@ -29,6 +29,8 @@ import {
   getCurrencyAndRates,
   getUserPortfolio,
 } from "../../../lib/data";
+import Papa from "papaparse";
+import { addDays, parse } from "date-fns";
 import AlertBar from "../../customAllert/Alert";
 import { useAtom } from "jotai/index";
 import { sessionAtom } from "../../../app/stores/sessionStore";
@@ -456,7 +458,7 @@ const PortfolioComponent = ({
       setAlertOpen(true);
       return;
     }
-    // console.log("portfolioportfolioportfolio,", portfolio);
+    console.log("portfolioportfolioportfolio,", portfolio);
 
     const headers = ["Date", "Name", "Symbol", "Action", "Coins", "Amount"];
     const rows = [];
@@ -547,11 +549,8 @@ const PortfolioComponent = ({
           });
 
           if (validData.length === 0) {
-            setAlertInfo({
-              message: "No matching symbols found in the current portfolio.",
-              severity: "error",
-            });
-            setShowAlert(true);
+            setErr("No matching symbols found in the current portfolio.");
+            setAlertOpen(true);
             return;
           }
 
@@ -611,6 +610,9 @@ const PortfolioComponent = ({
               body: JSON.stringify({
                 userID: sessionJotai?.user.id,
                 data: apiData,
+                prices: portfolio?.assets.map((asset) => {
+                  return { id: asset?.CoinGeckoID, price: asset?.Price };
+                }),
               }),
             });
 
@@ -619,19 +621,16 @@ const PortfolioComponent = ({
                 sessionJotai?.user.id
               );
               setPortfolio(userPortfolio?.data);
-              setAlertInfo({
-                message: "Data successfully imported!",
-                severity: "success",
-              });
-              setShowAlert(true);
+              setErr("Data successfully imported!");
+              setAlertOpen(true);
               handleCloseImpDialog();
             } else {
               const errorData = await response.json();
               throw new Error(errorData.message || "Failed to import data");
             }
           } catch (error) {
-            setAlertInfo({ message: error.message, severity: "error" });
-            setShowAlert(true);
+            setErr(`${error.message}`);
+            setAlertOpen(true);
           }
         },
         error: (error) => {
@@ -996,7 +995,7 @@ const PortfolioComponent = ({
           variant="filled"
           sx={{ width: "100%" }}
         >
-          {err}
+          {err || alert.message}
         </Alert>
       </Snackbar>
       {loading && (

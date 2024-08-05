@@ -87,7 +87,7 @@ const DonutLegend = ({ portfolioCalculations }) => {
                 marginLeft: "5px",
               }}
             >
-              {category.percentage}
+              {isNaN(category.percentage) ? 0 : category.percentage}
             </Typography>
           )}
           {category.count > 1 && (

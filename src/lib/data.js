@@ -1226,6 +1226,7 @@ export const calculateScore0 = (portfolioData) => {
     if (parseFloat(val) >= 5) above5++;
   });
 
+  if (leastVal === 100) leastVal = 0;
   const diff = mostVal - leastVal;
 
   console.log(diff, above10, above8, above5);
@@ -1239,7 +1240,7 @@ export const calculateScore0 = (portfolioData) => {
       ? 20
       : above8 === 9 && diff > 10
       ? 15
-      : above5 < 8
+      : above5 < 8 && above5 >= 1
       ? 10
       : 0;
 
