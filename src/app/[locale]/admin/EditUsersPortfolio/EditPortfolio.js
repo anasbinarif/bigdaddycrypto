@@ -6,6 +6,7 @@ import Item1 from "../../../../components/portfolioÜbersicht/Item1";
 import { DonutCard } from "../../../../components/portfolioGenerator/cards/donutCard/DonutCard";
 import BewertungCard from "../../../../components/portfolioGenerator/cards/Bewertung";
 import Item4 from "../../../../components/portfolioÜbersicht/Item4";
+import {getOneTimePaidUsers} from "../../../../lib/data";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -36,16 +37,7 @@ const EditPortfolio = () => {
   }, []);
 
   useEffect(() => {
-    const getOneTimePaidUsers = async () => {
-      const response = await fetch("/api/getAllOneTimePayments", {
-        cache: "no-store",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log("One-time paid users:", data);
-        setUsers(data.data);
-      }
-    };
+
     getOneTimePaidUsers();
   }, []);
 
