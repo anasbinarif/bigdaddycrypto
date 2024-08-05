@@ -294,6 +294,7 @@ const ScrollableKryptoTabs = ({
             },
             "& .MuiTab-root": {
               width: "calc(20% - 12px)",
+              padding: "0 1rem",
               "@media only screen and (max-width: 1500px)": {
                 width: "calc(25% - 12px)",
               },
@@ -345,6 +346,13 @@ const ScrollableKryptoTabs = ({
                   backgroundColor: "rgba(0, 0, 0, 0.2)",
                   margin: "4px 6px",
                   minHeight: "55px",
+                  padding: "0 1rem",
+                  "@media only screen and (max-width: 1350px)": {
+                    fontSize: "11px",
+                  },
+                  "@media only screen and (max-width: 950px)": {
+                    fontSize: "14px",
+                  },
                   "&:not(:last-child)": {},
                   "&.Mui-selected": {
                     // borderBottomColor: "var(--color-secondary)",
