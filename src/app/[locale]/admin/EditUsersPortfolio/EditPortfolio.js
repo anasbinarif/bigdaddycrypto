@@ -6,7 +6,7 @@ import Item1 from "../../../../components/portfolioÜbersicht/Item1";
 import { DonutCard } from "../../../../components/portfolioGenerator/cards/donutCard/DonutCard";
 import BewertungCard from "../../../../components/portfolioGenerator/cards/Bewertung";
 import Item4 from "../../../../components/portfolioÜbersicht/Item4";
-import {getOneTimePaidUsers} from "../../../../lib/data";
+import {getOneTimePaidUsers} from "../../../../lib/action";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",

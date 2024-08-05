@@ -13,17 +13,6 @@ const fetchExchangeRates = async () => {
   return response.json();
 };
 
-export const getOneTimePaidUsers = async () => {
-  const response = await fetch("/api/getAllOneTimePayments", {
-    cache: "no-store",
-  });
-  if (response.ok) {
-    const data = await response.json();
-    console.log("One-time paid users:", data);
-    setUsers(data.data);
-  }
-};
-
 export const getCurrencyAndRates = async () => {
   const rates = await fetchExchangeRates();
 

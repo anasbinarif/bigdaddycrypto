@@ -12,6 +12,17 @@ import {
 import Hashids from "hashids";
 const hashids = new Hashids("this is my salt", 6);
 
+export const getOneTimePaidUsers = async () => {
+  const response = await fetch("/api/getAllOneTimePayments", {
+    cache: "no-store",
+  });
+  if (response.ok) {
+    const data = await response.json();
+    console.log("One-time paid users:", data);
+    setUsers(data.data);
+  }
+};
+
 export const getUsers = async () => {
   try {
     await connectToDb();
