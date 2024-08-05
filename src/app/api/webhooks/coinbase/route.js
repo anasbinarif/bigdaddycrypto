@@ -13,7 +13,6 @@ const validateCoinbaseSignature = (req, rawBody, secretKey) => {
 };
 
 const updateSubscriptionStatus = async (webhookEvent) => {
-    // Ensure the event object and event.data exist
     if (!webhookEvent || !webhookEvent.event) {
         console.error("[ERROR-coinbase] Missing data object in event");
         return;
@@ -117,11 +116,53 @@ const updateSubscriptionStatus = async (webhookEvent) => {
             }
             break;
 
+        case 'charge:pending':
+            if (name === "One Time Payment") {
+                console.log("[INFO-coinbase] One-time payment pending for user:", user.email);
+            } else {
+                if (paymentRecord) {
+                    paymentRecord.Subscription = {
+                        plan: name,
+                        planId: data.code,
+                        billingCycle: description.includes('monthly') ? 'monthly' : 'yearly',
+                        status: "pending",
+                        paymentMethod: "coinbase",
+                        subscriptionId: transaction_id,
+                        nextBilledAt: null,
+                        endDate: null,
+                    };
+                } else {
+                    paymentRecord = new Payments({
+                        userId: user._id,
+                        Subscription: {
+                            plan: name,
+                            planId: data.code,
+                            billingCycle: description.includes('monthly') ? 'monthly' : 'yearly',
+                            status: "pending",
+                            paymentMethod: "coinbase",
+                            subscriptionId: transaction_id,
+                            nextBilledAt: null,
+                            endDate: null,
+                        },
+                        oneTimePayment: [],
+                    });
+                }
+
+                await paymentRecord.save();
+                console.log("[INFO-coinbase] Stored/Updated pending subscription details:", paymentRecord);
+
+                user.subscribed = false;
+                user.currentSubscription = paymentRecord._id;
+                user.activated = false;
+                await user.save();
+                console.log("[INFO-coinbase] User subscription marked as pending:", user.email);
+            }
+            break;
+
         default:
             console.log("[INFO-coinbase] Unhandled event type:", eventType);
     }
 };
-
 
 export async function POST(req) {
     const rawBody = await req.text();
