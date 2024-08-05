@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Grid, Paper, styled } from "@mui/material";
 import UserList from "./UserList";
 import UserPortfolioTable from "./UserPortfolioTable";
@@ -38,17 +37,13 @@ const EditPortfolio = () => {
 
   useEffect(() => {
     const getOneTimePaidUsers = async () => {
-      try {
-        const response = await axios.get("/api/getAllOneTimePayments", {
-          headers: { "Cache-Control": "no-store" },
-        });
-        if (response.status === 200) {
-          const data = response.data;
-          console.log("One-time paid users:", data);
-          setUsers(data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching one-time paid users:", error);
+      const response = await fetch("/api/getAllOneTimeUserPayments", {
+        cache: "no-store",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("One-time paid users:", data);
+        setUsers(data.data);
       }
     };
     getOneTimePaidUsers();
