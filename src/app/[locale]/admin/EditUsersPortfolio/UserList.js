@@ -266,7 +266,7 @@ const UserList = ({
                         filter: blurEmail ? "blur(4px)" : "none",
                       }}
                     >
-                      {user.oneTimePayment.status}
+                      {user.oneTimePayment?.status}
                     </TableCell>
                     <TableCell
                       sx={{
