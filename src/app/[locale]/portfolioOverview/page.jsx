@@ -78,12 +78,13 @@ function sanitizeQueryParam(param) {
 const PortfolioForm = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [visitorString, setVisitorString] = useState("dummyVisitorString");
-  const [userComment, setUserComment] = useState(
-    "This is a sample user comment."
-  );
-  const [missingCoins, setMissingCoins] = useState(
-    "Sample missing coins data."
-  );
+  const [msg, setMsg] = useState({
+    UserComment: "",
+    MissingCoins: ""
+  });
+  const [notes, setNotes] = useState("");
+  const [userComment, setUserComment] = useState("");
+  const [missingCoins, setMissingCoins] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
@@ -98,8 +99,6 @@ const PortfolioForm = () => {
   });
   const [showNext, setShowNext] = useState(false);
   const [portfolio] = useAtom(portfolioAtom);
-  const [msg, setMsg] = useState("");
-  const [notes, setNotes] = useState("");
   const [id, setid] = useState("");
 
   const [promptOpen, setPromptOpen] = useState(false);
@@ -112,6 +111,20 @@ const PortfolioForm = () => {
       setid(portfolio?.assetsCalculations.userId);
     }
   }, [portfolio]);
+
+  useEffect(() => {
+    setUserComment(notes.UserComment)
+    setMissingCoins(notes.MissingCoins)
+  }, [notes]);
+
+  useEffect(() => {
+    setMsg({
+      UserComment: userComment,
+      MissingCoins: missingCoins
+    })
+  }, [userComment, missingCoins]);
+
+  // console.log("setNotes: ", notes, userComment, missingCoins)
 
   const router = useRouter();
   // const { query } = router;
@@ -135,7 +148,7 @@ const PortfolioForm = () => {
         const decodedMsg = decodeURIComponent(queryParams.msg);
         const sanitizedMsg = decodedMsg.split("+").join(" ");
 
-        setMsg(sanitizedMsg);
+        // setMsg(sanitizedMsg);
       }
     }
 
@@ -217,7 +230,14 @@ const PortfolioForm = () => {
       });
 
       if (response.ok) {
-        console.log("Payment data saved successfully");
+        console.log("Payment data saved successfully", msg);
+        const res = await fetch("/api/savePortfolioNotes", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId, msg }),
+        });
       } else {
         console.error("Failed to save payment data");
       }
@@ -707,8 +727,8 @@ const PortfolioForm = () => {
                         variant="outlined"
                         multiline
                         rows={4}
-                        value={notes?.UserComment}
-                        // onChange={(e) => setUserComment(e.target.value)}
+                        value={userComment}
+                        onChange={(e) => setUserComment(e.target.value)}
                         margin="normal"
                         required
                         InputLabelProps={{
@@ -738,8 +758,8 @@ const PortfolioForm = () => {
                         variant="outlined"
                         multiline
                         rows={4}
-                        value={notes?.MissingCoins}
-                        // onChange={(e) => setMissingCoins(e.target.value)}
+                        value={missingCoins}
+                        onChange={(e) => setMissingCoins(e.target.value)}
                         margin="normal"
                         InputLabelProps={{
                           style: { color: "white" },

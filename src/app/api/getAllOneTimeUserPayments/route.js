@@ -17,8 +17,12 @@ export async function GET(request) {
         .lean();
 
     // Flatten one-time payments and add user details to each payment
-    const allPayments = payments.flatMap(payment => {
+    const allPayments = await Promise.all(payments.flatMap(async payment => {
       if (payment.userId && payment.userId.email && payment.oneTimePayment && payment.oneTimePayment.length > 0) {
+        const portfolio = await UserPortfolio.findOne({
+          userId: payment.userId._id,
+        });
+        const notizen = portfolio ? portfolio.Notizen : null;
         return payment.oneTimePayment.map(oneTimePayment => ({
           userEmail: payment.userId.email,
           userId: payment.userId._id,
@@ -28,14 +32,17 @@ export async function GET(request) {
             price: oneTimePayment.price,
             status: oneTimePayment.status,
           },
-          notizen: payment.notizen || "",
+          notizen: notizen,
         }));
       }
       return [];
-    });
+    }));
+
+    // Flatten the array of arrays into a single array
+    const flatPayments = allPayments.flat();
 
     // Sort by payment date
-    const sortedPayments = allPayments.sort((a, b) => new Date(b.oneTimePayment.date) - new Date(a.oneTimePayment.date));
+    const sortedPayments = flatPayments.sort((a, b) => new Date(b.oneTimePayment.date) - new Date(a.oneTimePayment.date));
 
     // Paginate the payments
     const paginatedPayments = sortedPayments.slice(skip, skip + limit);
