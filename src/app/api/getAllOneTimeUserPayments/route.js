@@ -28,7 +28,7 @@ export async function GET(request) {
             price: oneTimePayment.price,
             status: oneTimePayment.status,
           },
-          notizen: payment.notizen || null,
+          notizen: payment.notizen || "",
         }));
       }
       return [];

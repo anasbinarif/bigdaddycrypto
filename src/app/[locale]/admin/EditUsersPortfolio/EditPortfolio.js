@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Paper, styled, Button, ButtonGroup, Typography } from "@mui/material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import UserList from "./UserList";
 import UserPortfolioTable from "./UserPortfolioTable";
 import Item1 from "../../../../components/portfolioÜbersicht/Item1";
@@ -72,8 +73,27 @@ const EditPortfolio = () => {
             Page {page} of {totalPages}
           </Typography>
           <ButtonGroup variant="contained" aria-label="outlined primary button group">
-            <Button onClick={() => setPage(page > 1 ? page - 1 : 1)} disabled={page === 1}>Previous</Button>
-            <Button onClick={() => setPage(page < totalPages ? page + 1 : totalPages)} disabled={page === totalPages}>Next</Button>
+            <Button
+                onClick={() => setPage(page > 1 ? page - 1 : 1)}
+                disabled={page === 1}
+                sx={{
+                  backgroundColor: "darkgrey",
+                  "&:hover": {
+                    backgroundColor: "grey",
+                  },
+                }}
+            >
+              <ArrowBack />
+              Previous
+            </Button>
+            <Button
+                onClick={() => setPage(page < totalPages ? page + 1 : totalPages)}
+                disabled={page === totalPages}
+                sx={{ marginLeft: "8px" }}
+            >
+              Next
+              <ArrowForward />
+            </Button>
           </ButtonGroup>
         </Grid>
         <Grid item xs={8} md={width > 1100 ? 8 : 12}>
