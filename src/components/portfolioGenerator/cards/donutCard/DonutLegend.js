@@ -25,7 +25,7 @@ const DonutLegend = ({ portfolioCalculations }) => {
   )
     .filter(([key]) => key.toLowerCase() !== "none")
     .map(([key, value]) => {
-      console.log(key, value);
+      // console.log(key, value);
       return {
         name: key.toUpperCase(),
         percentage: value,
@@ -87,7 +87,7 @@ const DonutLegend = ({ portfolioCalculations }) => {
                 marginLeft: "5px",
               }}
             >
-              {category.percentage}
+              {isNaN(category.percentage) ? 0 : category.percentage}
             </Typography>
           )}
           {category.count > 1 && (

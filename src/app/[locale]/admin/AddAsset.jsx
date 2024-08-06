@@ -29,7 +29,11 @@ import { useTranslations } from "next-intl";
 import { Close as CloseIcon } from "@mui/icons-material";
 import getCoins from "./coins.js";
 import { styled } from "@mui/material/styles";
-import { categoriesDisplay1, categoryColors, getAllAssets } from "../../../lib/data";
+import {
+  categoriesDisplay1,
+  categoryColors,
+  getAllAssets,
+} from "../../../lib/data";
 import { pink } from "@mui/material/colors";
 
 const StyledTextField = (props) => {
@@ -192,17 +196,17 @@ const AddAsset = () => {
   };
 
   const menuItemDisplayMap = {
-    "ai": "AI",
-    "web3": "Web3/Anonymität",
-    "defi": "DeFi",
-    "green": "Grüne Coins",
-    "metaverse": "Gaming/Metaverse",
-    "btc": "BTC-Zusammenhang",
-    "cbdc": "CBDC-Netzwerke",
-    "ecommerce": "eCommerce",
-    "nft": "Tokenisierung/RWA"
+    ai: "AI",
+    web3: "Web3/Anonymität",
+    defi: "DeFi",
+    green: "Grüne Coins",
+    metaverse: "Gaming/Metaverse",
+    btc: "BTC-Zusammenhang",
+    cbdc: "CBDC-Netzwerke",
+    ecommerce: "eCommerce",
+    nft: "Tokenisierung/RWA",
   };
-  
+
   const handleCoinClicked = async (row) => {
     setFormData({
       name: "",
@@ -229,7 +233,7 @@ const AddAsset = () => {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      const asset = data?.asset[0]
+      const asset = data?.asset[0];
       console.log("coindetainsfromdb", data);
       setFormData((prevState) => ({
         ...prevState,
@@ -238,10 +242,12 @@ const AddAsset = () => {
         coinGeckoID: row.id,
         potential: asset.Potential,
         sicherheit: asset.Sicherheit,
-        categories: asset.Category.map(category => menuItemDisplayMap[category]),
+        categories: asset.Category.map(
+          (category) => menuItemDisplayMap[category]
+        ),
         risk: asset.Risk,
         cgPrice: asset.Price,
-        cgImageURL: asset.cgImageURL
+        cgImageURL: asset.cgImageURL,
       }));
     } else {
       setFormData((prevState) => ({
@@ -322,16 +328,16 @@ const AddAsset = () => {
         categories: [],
       });
       getAllAssets()
-          .then((data) => {
-            // console.log(data);
-            setAllAssets(data.data);
-            // setSearchData(data.data.slice(0, 5));
-            setLoading(false);
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-            setLoading(false);
-          });
+        .then((data) => {
+          // console.log(data);
+          setAllAssets(data.data);
+          // setSearchData(data.data.slice(0, 5));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          setLoading(false);
+        });
     } else {
       setAlertMessage(t("assetAddFailed"));
     }
@@ -346,10 +352,10 @@ const AddAsset = () => {
   };
 
   const checkAssetInDB = (id) => {
-    const val = allAssets.some(asset => asset.CoinGeckoID === id);
+    const val = allAssets.some((asset) => asset.CoinGeckoID === id);
     // console.log("yoooo", val, id);
     return val;
-  }
+  };
 
   return (
     <Box>
@@ -435,9 +441,13 @@ const AddAsset = () => {
                       onClick={() => handleCoinClicked(row)}
                       sx={{
                         cursor: "pointer",
-                        backgroundColor: checkAssetInDB(row.id) ? "#32a7e1" : "#00000033",
+                        backgroundColor: checkAssetInDB(row.id)
+                          ? "#32a7e1"
+                          : "#00000033",
                         "&:hover": {
-                          backgroundColor: checkAssetInDB(row.id) ? "#064665" : "#00000050",
+                          backgroundColor: checkAssetInDB(row.id)
+                            ? "#064665"
+                            : "#00000050",
                         },
                       }}
                     >

@@ -106,8 +106,10 @@ const calculatePotential = (portfolio, buyAndSell) => {
   let totalAssetsAmount = 0;
   let transactionFound = false;
 
+  console.log(buyAndSell);
+
   for (let transactions of buyAndSell) {
-    // console.log("HELLL", transactions);
+    console.log("HELLL", transactions);
     if (transactions.buyAndSell && transactions.buyAndSell.length > 0) {
       transactionFound = true;
       break;
@@ -115,7 +117,11 @@ const calculatePotential = (portfolio, buyAndSell) => {
   }
 
   portfolio.forEach((asset, index) => {
-    console.log("bewerrrrPotenn", asset, buyAndSell[index]);
+    // console.log(
+    //   "bewerrrrPotenn",
+    //   asset,
+    //   buyAndSell.find((asset1) => asset1.CoinGeckoID === asset.CoinGeckoID)
+    // );
     const { Potential, Bottom, Price, CoinGeckoID } = asset;
     const dataPotential = parseFloat(Potential) || 0;
     const dataBottom = parseFloat(Bottom);
@@ -170,7 +176,11 @@ const calculatePotential = (portfolio, buyAndSell) => {
         totalPotentialMin += adjustedMin * assetAmount;
         totalPotentialMax += adjustedMax * assetAmount;
         totalAssetsAmount += assetAmount;
-      } else if (transactionFound && buyAndSell[index].buyAndSell.length > 0) {
+      } else if (
+        transactionFound &&
+        buyAndSell.find((asset1) => asset1.CoinGeckoID === asset.CoinGeckoID)
+          ?.buyAndSell?.length > 0
+      ) {
         totalPotentialMin += adjustedMin * assetAmount;
         totalPotentialMax += adjustedMax * assetAmount;
         totalAssetsAmount += assetAmount;
@@ -219,8 +229,8 @@ const calculateDotColor = (name, score, portfolio) => {
       if (score === 2) return "orange";
       return "#800000";
     case "scoreFactor_Allocation":
-      if (score === 3) return green[500];
-      if (score === 2) return "orange";
+      if (score < 5) return green[500];
+      if (score >= 5 && score < 8) return "orange";
       return "#800000";
     case "scoreFactor_CoinCount":
       if (score === 1) return green[500];
@@ -273,20 +283,22 @@ function BewertungCard({ preCalcPort }) {
         const potentialResult = calculatePotential(assets, buyAndSell);
         setPotential(potentialResult);
 
-        let leastCat = "",
-          leastVal = 100;
+        let leastVal = 100,
+          maxVal = 0;
         for (const [key, value] of Object.entries(
           userPortfolio?.calculation?.categoryPercentages
         )) {
           if (key !== "none") {
-            if (parseFloat(value) < leastVal) {
-              leastVal = parseFloat(value);
-              leastCat = key;
-            }
+            if (parseFloat(value) < leastVal) leastVal = parseFloat(value);
+            if (parseFloat(value) > maxVal) maxVal = parseFloat(value);
           }
           // console.log(key, value);
         }
-        console.log(leastCat);
+        console.log(userPortfolio?.calculation?.categoryPercentages);
+        leastVal = isNaN(userPortfolio?.calculation?.categoryPercentages["ai"])
+          ? 0
+          : leastVal;
+        console.log(leastVal, maxVal);
         // Calculate Hype Color Score
         try {
           const calculatedScore = await calculateScore(
@@ -303,10 +315,7 @@ function BewertungCard({ preCalcPort }) {
               Number(calculatedScore.scoreFactor_CategoryMissing),
               10
             ),
-            scoreFactor_Allocation: Math.min(
-              Number(calculatedScore.scoreFactor_Allocation),
-              10
-            ),
+            scoreFactor_Allocation: Math.min(Number(maxVal - leastVal), 10),
             scoreFactor_CoinCount: Math.min(
               Number(calculatedScore.scoreFactor_CoinCount),
               10

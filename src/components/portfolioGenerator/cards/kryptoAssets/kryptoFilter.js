@@ -33,7 +33,12 @@ const MenuProps = {
   },
 };
 
-const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
+const KryptoFilter = ({
+  userID,
+  priceIndicator,
+  setPriceIndicator,
+  setRerender,
+}) => {
   const t = useTranslations("kryptoFilter");
   const [width, setWidth] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -140,7 +145,6 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
           )
           .slice(0, 5)
       : [];
-
 
     setSearchData(filteredResults);
   };
@@ -348,6 +352,7 @@ const KryptoFilter = ({ userID, priceIndicator, setPriceIndicator }) => {
                   coin={option}
                   selected={checkCoinSelected(option)}
                   search={true}
+                  setRerender={setRerender}
                 />
               );
             }}

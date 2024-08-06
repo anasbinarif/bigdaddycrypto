@@ -1120,6 +1120,134 @@ export const calculateScore = (portfolioData, cals) => {
 // };
 
 export const calculateScore0 = (portfolioData) => {
+  const scores = { Honey: 65, Gut: 50.75, OK: 36.5, Naja: 22.5, Teuer: 8 };
+  const assets = portfolioData?.assets;
+  const assetCalculations = portfolioData?.assetsCalculations?.assets;
+
+  console.log(portfolioData);
+  let score65 = 0;
+  let score35 = 0;
+  const coinsPercentages = [];
+
+  const totalInvest = assetCalculations.reduce((acc, curr) => {
+    console.log(curr.CoinGeckoID, curr.totalInvest);
+    return acc + curr?.totalInvest;
+  }, 0);
+  console.log(totalInvest);
+
+  const tags = {};
+  assets.forEach((asset) => {
+    const rank = asset?.BottomRanking;
+    const xWert = +((1 / asset?.Bottom) * asset?.Price).toFixed(2);
+    const filterTag = bewerteAssetExtremPessimistisch(rank, xWert);
+    console.log(asset.Name, filterTag);
+    tags[asset?.CoinGeckoID] = filterTag;
+  });
+
+  console.log(tags);
+
+  assetCalculations.forEach((asset, index) => {
+    let score =
+      asset?.buyAndSell?.length > 0 ? asset.totalInvest / totalInvest : 0;
+    coinsPercentages.push(score);
+    console.log(score);
+    score = score * scores[tags[asset.CoinGeckoID]];
+    score65 += score;
+    console.log(asset.CoinGeckoID, score);
+  });
+
+  console.log(score65);
+  console.log(coinsPercentages);
+
+  const categoryInvestments = {
+    ai: 0,
+    metaverse: 0,
+    defi: 0,
+    web3: 0,
+    green: 0,
+    btc: 0,
+    cbdc: 0,
+    ecommerce: 0,
+    nft: 0,
+  };
+
+  assetCalculations.forEach((asset) => {
+    const { totalInvest } = asset;
+    const { Category: categories } = assets.find(
+      (asset1) => asset1.CoinGeckoID === asset.CoinGeckoID
+    );
+    const investmentPerCategory = totalInvest / categories.length;
+    console.log(totalInvest, categories);
+    categories.forEach((category) => {
+      if (!categoryInvestments[category]) {
+        categoryInvestments[category] = 0;
+      }
+      categoryInvestments[category] += investmentPerCategory;
+    });
+  });
+
+  console.log(categoryInvestments);
+
+  const categoryShares = {};
+
+  Object.keys(categoryInvestments).forEach((category) => {
+    const investment = categoryInvestments[category];
+    console.log(investment);
+    const percentageShare = (investment / totalInvest) * 100;
+    categoryShares[category] = percentageShare;
+  });
+
+  const totalPercentage = Object.values(categoryShares).reduce(
+    (sum, percentage) => sum + parseFloat(percentage),
+    0
+  );
+  const factor = 100 / totalPercentage;
+
+  Object.keys(categoryShares).forEach((category) => {
+    categoryShares[category] =
+      categoryShares[category] * factor > 0.09
+        ? (categoryShares[category] * factor).toFixed(2)
+        : (categoryShares[category] * factor).toPrecision(2);
+  });
+
+  console.log(categoryShares);
+
+  let leastVal = 100,
+    mostVal = 0,
+    above10 = 0,
+    above8 = 0,
+    above5 = 0;
+
+  Object.values(categoryShares).forEach((val) => {
+    if (leastVal > parseFloat(val)) leastVal = parseFloat(val);
+    if (mostVal < parseFloat(val)) mostVal = parseFloat(val);
+    if (parseFloat(val) >= 10) above10++;
+    if (parseFloat(val) >= 8) above8++;
+    if (parseFloat(val) >= 5) above5++;
+  });
+
+  if (leastVal === 100) leastVal = 0;
+  const diff = mostVal - leastVal;
+
+  console.log(diff, above10, above8, above5);
+
+  score35 =
+    above10 === 9 && diff <= 8
+      ? 35
+      : above10 === 9 && diff > 8
+      ? 27
+      : above8 === 9 && diff <= 10
+      ? 20
+      : above8 === 9 && diff > 10
+      ? 15
+      : above5 < 8 && above5 >= 1
+      ? 10
+      : 0;
+
+  console.log(score35);
+
+  return score65 + score35;
+
   const totalCategories = 9;
   const maxAssetsCount = 20;
   let selectedAssetsCount = 0;

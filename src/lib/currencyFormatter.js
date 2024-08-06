@@ -5,6 +5,8 @@ export default function addCommas(number) {
     return "";
   }
 
+  console.log(number);
+
   // Convert the number to a string
   let numberString = number.toString();
 

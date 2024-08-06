@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Tab,
-  SvgIcon,
   Box,
+  Button,
+  SvgIcon,
+  Tab,
   Typography,
   useMediaQuery,
   useTheme,
-  Button,
-  CircularProgress,
 } from "@mui/material";
-import {
-  categoryColors,
-  categoryColorsNew,
-  getAssets,
-} from "../../../../lib/data";
+import { categoryColors, getAssets } from "../../../../lib/data";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import CoinCard from "../coinCard/CoinCard";
 import CoinCardSkeleton from "../coinCard/CoinCardSkeleton";
@@ -31,7 +26,7 @@ function toCamelCase(str) {
 
   // Convert each word to camelCase
   const camelCasedWords = words.map((word, index) => {
-    // Capitalize first letter of each word except for the first one
+    // Capitalize the first letter of each word except for the first one
     if (index !== 0) {
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     } else {
@@ -40,9 +35,7 @@ function toCamelCase(str) {
   });
 
   // Join the words back together
-  const camelCasedString = camelCasedWords.join("");
-
-  return camelCasedString;
+  return camelCasedWords.join("");
 }
 
 const ColorCircle = ({ color }) => (
@@ -76,6 +69,7 @@ const ScrollableKryptoTabs = ({
   userID,
   priceIndicator,
   assetsLeangth,
+  reload,
 }) => {
   const t = useTranslations("scrollableKryptoTabs");
   const t2 = useTranslations("donutLegend");
@@ -139,7 +133,7 @@ const ScrollableKryptoTabs = ({
           setLoading(false);
         });
     }
-  }, [currentCategory, userId]);
+  }, [currentCategory, userId, portfolio]);
 
   const handleChange = (event, newValue, line) => {
     if (line === 2) {
@@ -190,7 +184,6 @@ const ScrollableKryptoTabs = ({
     }));
   };
   // console.log(firstHalfLabels, secondHalfLabels);
-
 
   return (
     <>
@@ -301,6 +294,7 @@ const ScrollableKryptoTabs = ({
             },
             "& .MuiTab-root": {
               width: "calc(20% - 12px)",
+              padding: "0 1rem",
               "@media only screen and (max-width: 1500px)": {
                 width: "calc(25% - 12px)",
               },
@@ -352,6 +346,13 @@ const ScrollableKryptoTabs = ({
                   backgroundColor: "rgba(0, 0, 0, 0.2)",
                   margin: "4px 6px",
                   minHeight: "55px",
+                  padding: "0 1rem",
+                  "@media only screen and (max-width: 1350px)": {
+                    fontSize: "11px",
+                  },
+                  "@media only screen and (max-width: 950px)": {
+                    fontSize: "14px",
+                  },
                   "&:not(:last-child)": {},
                   "&.Mui-selected": {
                     // borderBottomColor: "var(--color-secondary)",

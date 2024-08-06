@@ -89,7 +89,7 @@ const PaymentsSchema = new mongoose.Schema({
       },
       paymentMethod: {
         type: String,
-        enum: ["coinbase", "copecart"],
+        enum: ["coinbase", "copecart", "admin"],
         required: false,
       },
       subscriptionId: {
