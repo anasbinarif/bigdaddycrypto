@@ -122,7 +122,7 @@ const Third = () => {
     const assets = portfolio?.assets;
     const buyAndSell = portfolio?.assetsCalculations.assets;
 
-    return calculatePotential(assets, buyAndSell);
+    return calculatePotential(assets || [], buyAndSell || []);
   }, [portfolio]);
 
   useEffect(() => {
