@@ -145,8 +145,8 @@ export default function Item1({ preCalcPort = null }) {
   );
   aktuellerProfit = parseFloat(
     aktuellerProfit > 0.09
-      ? aktuellerProfit.toFixed(2)
-      : aktuellerProfit.toPrecision(2)
+      ? aktuellerProfit?.toFixed(2)
+      : aktuellerProfit?.toPrecision(2)
   );
   const gesamtwertPercentage = (
     (aktuellerProfit / totalInvestment) *
