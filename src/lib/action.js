@@ -215,11 +215,11 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
       if (!response.ok) {
         if (response.status === 429) {
           throw new Error(
-            "Rate limit exceeded. Please try again later or upgrade your plan."
+              "Rate limit exceeded. Please try again later or upgrade your plan."
           );
         } else {
           throw new Error(
-            `Error retrieving price data. HTTP Status Code: ${response.status}`
+              `Error retrieving price data. HTTP Status Code: ${response.status}`
           );
         }
       }
@@ -232,7 +232,7 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
 
   if (!coinGeckoIDs.length) {
     console.error(
-      "Something went wrong with MongoDB: no CoinGeckoIDs provided."
+        "Something went wrong with MongoDB: no CoinGeckoIDs provided."
     );
     return; // Exit the function if coinGeckoIDs is empty
   }

@@ -11,9 +11,13 @@ export async function POST(req) {
 
   const { userId, coin } = await req.json();
 
+  console.log(userId);
+
   try {
     // await updateCoinDetails(coin.CoinGeckoID);
     const userPortfolio = await UserPortfolio.findOne({ userId });
+
+    console.log(userPortfolio._doc);
 
     if (!userPortfolio) {
       const newPortfolio = new UserPortfolio({
@@ -29,6 +33,7 @@ export async function POST(req) {
       const index = userPortfolio.assets.findIndex(
         (c) => c.CoinGeckoID === coin.CoinGeckoID
       );
+      console.log(index);
       if (index > -1) {
         userPortfolio.assets.splice(index, 1);
       } else {
@@ -46,6 +51,7 @@ export async function POST(req) {
       );
     }
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { message: `Error updating portfolio: ${error.message}` },
       { status: 500 }

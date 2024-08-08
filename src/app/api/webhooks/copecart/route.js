@@ -98,7 +98,7 @@ const updateSubscriptionStatus = async (event) => {
                 const oneTimePayment = {
                     date: new Date(transaction_date),
                     price: transaction_amount,
-                    status: payment_status === 'paid' ? 'Paid' : 'Pending'
+                    status: (payment_status === 'paid' || payment_status === 'test_paid') ? 'Paid' : 'Pending'
                 };
 
                 paymentRecord.oneTimePayment.push(oneTimePayment);

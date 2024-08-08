@@ -33,6 +33,7 @@ import CoinDetailsTable from "./CoinDetailsTable";
 import CoinDetailsDisplay from "./CoinDetailsDisplay";
 import styles from "./coinDetails.module.css";
 import Decimal from "decimal.js";
+import CustomizedTooltips from "../../../toolTip/CustomizedTooltip";
 
 const CoinDetails = ({ coin, setOperationHappening = null }) => {
   const t = useTranslations("coinDetails");
@@ -235,6 +236,7 @@ const CoinDetails = ({ coin, setOperationHappening = null }) => {
     if (col === "Betrag" || col === "Coins") {
       const coins = parseFloat(row["Coins"]);
       const betrag = parseFloat(row["Betrag"]);
+      console.log(betrag, coins);
       let num = betrag / coins;
       // console.log(num);
       // if (num > 0.01) num = Number(num.toPrecision(2));
@@ -315,10 +317,12 @@ const CoinDetails = ({ coin, setOperationHappening = null }) => {
         }
       } catch (error) {
         setAlertInfo({ message: error.message, severity: "error" });
+        setLoading(false);
       }
       setShowAlert(true);
     }
     setOperationHappening(false);
+    setLoading(false);
   };
 
   const closeAlert = () => {
@@ -677,6 +681,14 @@ const CoinDetails = ({ coin, setOperationHappening = null }) => {
                 fontSize: "12px",
               }}
               disabled
+            />
+            <CustomizedTooltips
+              texts={[
+                "All values in a trasaction must follow universal number conventions, a value entered may only have numbers:",
+                "• 0-9",
+                "• a single . (signifying a decimal)",
+                "All other characters are discarded as invalid",
+              ]}
             />
           </Tabs>
           <Box>

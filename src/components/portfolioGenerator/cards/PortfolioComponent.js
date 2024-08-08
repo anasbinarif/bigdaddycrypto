@@ -42,6 +42,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import addCommas from "../../../lib/currencyFormatter";
 import maxLenCrop from "../../../lib/checkString";
 import LoadingCircle from "../../loading/Loading";
+import CustomizedTooltips from "../../toolTip/CustomizedTooltip";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -788,9 +789,16 @@ const PortfolioComponent = ({
                   marginBottom: "1rem",
                   mt: "8px",
                   color: "white",
+                  display: "flex",
                 }}
               >
                 {t("title")} ({assetsLeangth})
+                <CustomizedTooltips
+                  texts={[
+                    "Values are rounded to the nearest 2 digits, for more accurate representations, please look at the details in the asset manager for each coin",
+                  ]}
+                  // text2={"Hello"}
+                />
               </Typography>
               <Button
                 onClick={() => setDelAllBtn(true)}

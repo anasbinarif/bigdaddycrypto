@@ -247,12 +247,16 @@ const CoinDetailsTable = ({
                   }}
                 >
                   <input
-                    type="number"
+                    type="text"
                     id="betragInput"
                     value={row.Betrag}
-                    onChange={(e) =>
-                      handleRowData(parseFloat(e.target.value), index, "Betrag")
-                    }
+                    onChange={(e) => {
+                      let val = e.target.value;
+                      val = val.replace(/[^0-9.]/g, "");
+                      let dotCount = (val.match(/\./g) || []).length;
+                      if (dotCount > 1) val = val.replace(/\.(?=.*\.)/g, "");
+                      handleRowData(val, index, "Betrag");
+                    }}
                     className={styles.input}
                   />
                   €
@@ -273,9 +277,13 @@ const CoinDetailsTable = ({
                     type="number"
                     id="numberInput"
                     value={row.Coins}
-                    onChange={(e) =>
-                      handleRowData(parseFloat(e.target.value), index, "Coins")
-                    }
+                    onChange={(e) => {
+                      let val = e.target.value;
+                      val = val.replace(/[^0-9.]/g, "");
+                      let dotCount = (val.match(/\./g) || []).length;
+                      if (dotCount > 1) val = val.replace(/\.(?=.*\.)/g, "");
+                      handleRowData(val, index, "Coins");
+                    }}
                     className={styles.input}
                   />
                 </div>
