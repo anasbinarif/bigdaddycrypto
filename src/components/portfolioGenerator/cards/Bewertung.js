@@ -106,10 +106,10 @@ const calculatePotential = (portfolio, buyAndSell) => {
   let totalAssetsAmount = 0;
   let transactionFound = false;
 
-  console.log(buyAndSell);
+  // console.log(buyAndSell);
 
   for (let transactions of buyAndSell) {
-    console.log("HELLL", transactions);
+    // console.log("HELLL", transactions);
     if (transactions.buyAndSell && transactions.buyAndSell.length > 0) {
       transactionFound = true;
       break;
@@ -294,11 +294,11 @@ function BewertungCard({ preCalcPort }) {
           }
           // console.log(key, value);
         }
-        console.log(userPortfolio?.calculation?.categoryPercentages);
+        // console.log(userPortfolio?.calculation?.categoryPercentages);
         leastVal = isNaN(userPortfolio?.calculation?.categoryPercentages["ai"])
           ? 0
           : leastVal;
-        console.log(leastVal, maxVal);
+        // console.log(leastVal, maxVal);
         // Calculate Hype Color Score
         try {
           const calculatedScore = await calculateScore(

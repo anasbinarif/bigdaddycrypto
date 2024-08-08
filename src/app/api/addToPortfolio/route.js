@@ -17,7 +17,7 @@ export async function POST(req) {
     // await updateCoinDetails(coin.CoinGeckoID);
     const userPortfolio = await UserPortfolio.findOne({ userId });
 
-    console.log(userPortfolio._doc);
+    // console.log(userPortfolio._doc);
 
     if (!userPortfolio) {
       const newPortfolio = new UserPortfolio({
@@ -33,7 +33,7 @@ export async function POST(req) {
       const index = userPortfolio.assets.findIndex(
         (c) => c.CoinGeckoID === coin.CoinGeckoID
       );
-      console.log(index);
+      // console.log(index);
       if (index > -1) {
         userPortfolio.assets.splice(index, 1);
       } else {

@@ -19,6 +19,8 @@ import {
   Select,
 } from "@mui/material";
 import { categoryColors, categoryColorsNew } from "../../../../lib/data";
+import {useAtom} from "jotai/index";
+import {sessionAtom} from "./../../../../app/stores/sessionStore";
 
 const CategoryColorBar = styled(Box)(({ colors }) => {
   const gradient =
@@ -271,6 +273,8 @@ const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
   const [dropdownValues, setDropdownValues] = useState({});
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("asset");
+  const [sessionJotai] = useAtom(sessionAtom);
+
 
   console.log(orderBy, order);
 
@@ -373,12 +377,14 @@ const UserPortfolioTable = ({ portfolio, setSelectedUserPortfolio }) => {
       }
     );
     const userId = portfolio?.assetsCalculations.userId;
-    console.log("updatedValuesupdatedValues", updatedAssets);
+    // console.log("updatedValuesupdatedValues", updatedAssets);
+    const token = sessionJotai?.user.accessToken;
 
     const response = await fetch("/api/updateUserPortfolio", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         userId: userId,

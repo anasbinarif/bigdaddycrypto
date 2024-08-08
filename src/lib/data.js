@@ -26,7 +26,7 @@ export const convertPrice = (price, currency, rates) => {
   if (price >= 0.01) return parseFloat(price) * rates[currency];
   else {
     let formattedNum = parseFloat(price) * rates[currency];
-    console.log(parseFloat(formattedNum));
+    // console.log(parseFloat(formattedNum));
 
     return parseFloat(formattedNum);
   }
@@ -194,11 +194,11 @@ export const getAssets = async (category, userId) => {
 
 export const storeUserPortfolioCoin = async (userId, coin, token) => {
   // const coinData = setCoinObject(coin);
-  console.log(coin);
+  // console.log(coin);
   const newCoin = {
     CoinGeckoID: coin.CoinGeckoID,
   };
-  console.log(newCoin);
+  // console.log(newCoin);
   return fetch("/api/addToPortfolio", {
     method: "POST",
     headers: {
@@ -285,7 +285,7 @@ export const getUserPortfolio = async (userId) => {
       (asset1) => asset1.CoinGeckoID === asset.CoinGeckoID
     );
     const investmentPerCategory = totalInvest / categories.length;
-    console.log(totalInvest, categories);
+    // console.log(totalInvest, categories);
     categories.forEach((category) => {
       if (!categoryInvestments[category]) {
         categoryInvestments[category] = 0;
@@ -335,7 +335,7 @@ export const getUserPortfolio = async (userId) => {
       (categories[category] / totalCategoryCount) * 100;
   }
 
-  console.log(rawPercentages);
+  // console.log(rawPercentages);
 
   // Normalize percentages to ensure they sum to 100%
   const normalizedPercentages = {};
