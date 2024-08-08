@@ -245,6 +245,9 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
 
     const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
       const currentPrice = currentPrices[coinGeckoID]?.eur;
+      if (coinGeckoID==="bitcoin"){
+        console.log("bitcoin coinGeckoID prince", currentPrice)
+      }
       if (currentPrice !== undefined) {
         return Assets.updateOne(
           { CoinGeckoID: coinGeckoID },
