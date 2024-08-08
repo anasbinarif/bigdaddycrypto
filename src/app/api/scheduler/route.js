@@ -22,7 +22,7 @@ export async function POST(req) {
       ),
     ];
 
-    console.log(coinGeckoIDs);
+    // console.log(coinGeckoIDs);
     // Update coin details
     await updateCoinDetailsCron(coinGeckoIDs);
 
