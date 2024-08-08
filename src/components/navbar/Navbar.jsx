@@ -163,7 +163,29 @@ const Navbar = ({ tabSelector, setTabSelector }) => {
             <FormDialog />
           </SessionProvider>
           {isMobile ? (
-            <Box>
+            <Box
+              sx={{
+                "& a": {
+                  "@media only screen and (max-width:450px)": {
+                    padding: "0.5rem !important",
+                  },
+                },
+              }}
+            >
+              <Link
+                href="/pricingPlans"
+                className={styles.nav__link}
+                style={{
+                  marginRight: "0",
+                  fontFamily: "inherit",
+                  backgroundColor: "var(--color-secondary-2)",
+                  padding: "0.9em 1.2em",
+                  borderRadius: "50px",
+                  color: "black",
+                }}
+              >
+                {t("pricing")}
+              </Link>
               <IconButton color="inherit" onClick={handleMenuClick}>
                 <MenuIcon />
               </IconButton>
