@@ -23,7 +23,7 @@ export async function POST(req, res) {
       expiresIn: "1h",
     });
 
-    const resetUrl = `${process.env.NEXT_PUBLIC_URI}/resetPassword?token=${token}&email=${email}`;
+    const resetUrl = `${process.env.NEXT_PUBLIC_URI}/resetPassword?token=${token}&email=${emailLowerCase}`;
 
     const msg = {
       from: process.env.EMAIL_FROM,

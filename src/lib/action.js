@@ -215,11 +215,11 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
       if (!response.ok) {
         if (response.status === 429) {
           throw new Error(
-            "Rate limit exceeded. Please try again later or upgrade your plan."
+              "Rate limit exceeded. Please try again later or upgrade your plan."
           );
         } else {
           throw new Error(
-            `Error retrieving price data. HTTP Status Code: ${response.status}`
+              `Error retrieving price data. HTTP Status Code: ${response.status}`
           );
         }
       }
@@ -232,7 +232,7 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
 
   if (!coinGeckoIDs.length) {
     console.error(
-      "Something went wrong with MongoDB: no CoinGeckoIDs provided."
+        "Something went wrong with MongoDB: no CoinGeckoIDs provided."
     );
     return; // Exit the function if coinGeckoIDs is empty
   }
@@ -243,29 +243,30 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
     console.log(`Number of coins updated: ${numberOfUpdates}`);
     // console.log("currentPrices", currentPrices);
 
-    const updatePromises = coinGeckoIDs.map((coinGeckoID) => {
+    const updatePromises = coinGeckoIDs.map(async (coinGeckoID) => {
       const currentPrice = currentPrices[coinGeckoID]?.eur;
-      if (coinGeckoID==="bitcoin"){
-        console.log("bitcoin coinGeckoID prince", currentPrice)
+      if (coinGeckoID === "bitcoin") {
+        console.log("bitcoin coinGeckoID price", currentPrice);
       }
       if (currentPrice !== undefined) {
-        return Assets.updateOne(
-          { CoinGeckoID: coinGeckoID },
-          {
-            $set: {
-              Price: currentPrice,
-              cgPrice: currentPrice,
-              LastPriceUpdate: new Date(),
-              Bottom: {
-                $cond: {
-                  if: { $lt: [currentPrice, "$Bottom"] },
-                  then: currentPrice,
-                  else: "$Bottom",
+        const asset = await Assets.findOne({ CoinGeckoID: coinGeckoID });
+        if (asset) {
+          const newBottom = currentPrice < asset.Bottom ? currentPrice : asset.Bottom;
+          return Assets.updateOne(
+              { CoinGeckoID: coinGeckoID },
+              {
+                $set: {
+                  Price: currentPrice,
+                  cgPrice: currentPrice,
+                  LastPriceUpdate: new Date(),
+                  Bottom: newBottom,
                 },
-              },
-            },
-          }
-        );
+              }
+          );
+        } else {
+          console.warn(`Asset not found for CoinGeckoID: ${coinGeckoID}`);
+          return Promise.resolve();
+        }
       } else {
         console.warn(`No price data available for ${coinGeckoID}`);
         return Promise.resolve();
@@ -277,7 +278,7 @@ export async function updateCoinDetailsCron(coinGeckoIDs) {
     console.log("All coin details updated successfully.");
   } catch (error) {
     console.error(
-      `Failed to get current price or update asset: ${error.message}`
+        `Failed to get current price or update asset: ${error.message}`
     );
   }
 }
