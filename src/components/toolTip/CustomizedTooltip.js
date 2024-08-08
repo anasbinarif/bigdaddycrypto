@@ -6,23 +6,26 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#f5f5f9",
-    color: "rgba(0, 0, 0, 0.87)",
+    backgroundColor: "rgb(17, 24, 38)",
+    color: "white",
     maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
-    border: "1px solid #dadde9",
+    border: "1px solid var(--color-secondary)",
   },
 }));
 
-export default function CustomizedTooltips({ text1, text2 }) {
+export default function CustomizedTooltips({ texts = [] }) {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <HtmlTooltip
         title={
           <>
-            <em>{text1}</em> <br />
-            <br />
-            {text2}
+            {texts.map((text) => (
+              <>
+                {text}
+                <br />
+              </>
+            ))}
           </>
         }
       >

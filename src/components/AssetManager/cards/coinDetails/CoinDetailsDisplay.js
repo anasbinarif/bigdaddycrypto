@@ -428,15 +428,45 @@ const CoinDetailsDisplay = ({
               fontSize: "1.8rem",
               fontWeight: "bold",
               whiteSpace: "nowrap",
+              position: "relative",
               "@media only screen and (max-width: 1500px)": {
                 fontSize: "1.5rem",
               },
+
+              "& > div": {
+                display: "none",
+              },
+
+              "&:hover > div": {
+                display: "block",
+              },
             }}
           >
-            {addCommas(
-              convertPrice(financialSummary?.realizedMoney, currency, rates)
+            {maxLenCrop(
+              addCommas(
+                convertPrice(financialSummary?.realizedMoney, currency, rates)
+              )
             )}{" "}
             {currencySign[currency]}
+            {addCommas(
+              convertPrice(financialSummary.realizedMoney, currency, rates)
+            ).length > 12 && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 10,
+                  backgroundColor: "#818181ef",
+                  borderRadius: "4px",
+                  padding: "2px",
+                  fontSize: "14px",
+                }}
+              >
+                {addCommas(
+                  convertPrice(financialSummary?.realizedMoney, currency, rates)
+                )}
+              </div>
+            )}
           </Typography>
           <Typography
             sx={{

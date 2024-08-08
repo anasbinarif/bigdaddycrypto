@@ -443,8 +443,10 @@ function BewertungCard({ preCalcPort }) {
               >
                 {t("sicherheit")}
                 <CustomizedTooltips
-                  text1={t("sicherheitTooltipText1")}
-                  text2={t("sicherheitTooltipText2")}
+                  texts={[
+                    `${t("potentialTooltipText1")}`,
+                    `${t("potentialTooltipText2")}`,
+                  ]}
                 />
               </span>{" "}
               <span
@@ -482,8 +484,12 @@ function BewertungCard({ preCalcPort }) {
               >
                 {t("potential")}
                 <CustomizedTooltips
-                  text1={t("potentialTooltipText1")}
-                  text2={t("potentialTooltipText2")}
+                  texts={[
+                    `${t("potentialTooltipText1")}`,
+                    `${t("potentialTooltipText2")}`,
+                  ]}
+                  // text1={t("potentialTooltipText1")}
+                  // text2={t("potentialTooltipText2")}
                 />
               </span>{" "}
               <span

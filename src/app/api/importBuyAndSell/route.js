@@ -30,8 +30,8 @@ export async function POST(req) {
         (asset) => asset.CoinGeckoID === CoinGeckoID
       );
       if (asset) {
-        console.log(buyAndSell);
-        console.log(asset._doc);
+        // console.log(buyAndSell);
+        // console.log(asset._doc);
         const totalInvested = buyAndSell
           .reduce((acc, row) => {
             if (row?.Type === "Kauf") {
@@ -59,20 +59,36 @@ export async function POST(req) {
           totalCoins *
           parseFloat(prices?.find((asset) => asset.id === CoinGeckoID)?.price)
         ).toFixed(2);
-        const avgPurchasePrice =
+        const avgPurchasePrice = isNaN(
           totalInvested /
-          buyAndSell.reduce((acc, row) => {
-            if (row.Type === "Kauf") {
-              return acc + parseFloat(row.Coins);
-            }
-            return acc;
-          }, 0);
+            buyAndSell.reduce((acc, row) => {
+              if (row.Type === "Kauf") {
+                return acc + parseFloat(row.Coins);
+              }
+              return acc;
+            }, 0)
+        )
+          ? 0
+          : totalInvested /
+            buyAndSell.reduce((acc, row) => {
+              if (row.Type === "Kauf") {
+                return acc + parseFloat(row.Coins);
+              }
+              return acc;
+            }, 0);
 
-        asset.totalInvest += totalInvested;
-        asset.totalSold += realizedProfit;
-        asset.totalCoins += totalCoins;
-        asset.Holdings += totalHoldingsValue;
-        asset.DCA += avgPurchasePrice;
+        // console.log(
+        //   totalInvested,
+        //   realizedProfit,
+        //   totalCoins,
+        //   totalHoldingsValue,
+        //   avgPurchasePrice
+        // );
+        asset.totalInvest += parseFloat(totalInvested);
+        asset.totalSold += parseFloat(realizedProfit);
+        asset.totalCoins += parseFloat(totalCoins);
+        asset.Holdings += parseFloat(totalHoldingsValue);
+        asset.DCA += parseFloat(avgPurchasePrice);
         asset.buyAndSell = asset.buyAndSell.concat(buyAndSell);
       }
     });
@@ -85,6 +101,7 @@ export async function POST(req) {
       { status: 200 }
     );
   } catch (error) {
+    // console.log(error);
     console.error("Error importing buy and sell data:", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }

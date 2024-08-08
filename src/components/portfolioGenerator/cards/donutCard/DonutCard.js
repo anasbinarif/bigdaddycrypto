@@ -7,6 +7,7 @@ import { useAtom } from "jotai";
 import { getUserPortfolio } from "../../../../lib/data";
 import { sessionAtom } from "../../../../app/stores/sessionStore";
 import DonutLegendSkeleton from "../../../portfolioGenerator/cards/donutCard/DonutLegendSkeleton";
+import CustomizedTooltips from "../../../toolTip/CustomizedTooltip";
 
 export const DonutCard = ({ preCalcPort, preCalcCalculations }) => {
   const [portfolio] = useAtom(portfolioAtom);
@@ -52,11 +53,22 @@ export const DonutCard = ({ preCalcPort, preCalcCalculations }) => {
     >
       <Box sx={{ margin: "25px" }}>
         <Typography
-          sx={{ fontWeight: "bold", fontSize: "1.2rem", mb: "1.25rem" }}
+          sx={{
+            fontWeight: "bold",
+            fontSize: "1.2rem",
+            mb: "1.25rem",
+            display: "flex",
+          }}
           variant="h6"
           gutterBottom
         >
           Score und Allocation
+          <CustomizedTooltips
+            texts={[
+              "A coins percentage share is incorporated in both the category share percentage and the score chart",
+            ]}
+            // text2={"Hello"}
+          />
         </Typography>
         <Box
           sx={{
