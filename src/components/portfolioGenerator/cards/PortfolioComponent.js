@@ -82,7 +82,7 @@ const PortfolioCard = React.memo(
     addCommas,
     maxLenCrop,
   }) => {
-    console.log(asset);
+    // console.log(asset);
     return (
       <Grid
         item
